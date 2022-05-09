@@ -1,0 +1,35 @@
+name: watcha_body
+description: A Very Good Project created by Very Good CLI.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=2.16.0 <3.0.0"
+
+dependencies:
+  bloc: ^8.0.3
+  dartz: ^0.10.1
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.0.1
+  flutter_localizations:
+    sdk: flutter
+  freezed_annotation: ^1.1.0
+  google_fonts: ^2.3.2
+  intl: ^0.17.0
+  path: ^1.8.0
+  sqflite: ^2.0.2
+  syncfusion_flutter_charts: ^20.1.48
+
+dev_dependencies:
+  bloc_test: ^9.0.3
+  build_runner: ^2.1.10
+  flutter_test:
+    sdk: flutter
+  freezed: ^1.1.0
+  mocktail: ^0.3.0
+  very_good_analysis: ^2.4.0
+
+flutter:
+  uses-material-design: true
+  generate: true
