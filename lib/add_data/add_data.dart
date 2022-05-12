@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:watcha_body/add_data/cubit/adddata_cubit.dart';
-import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 
 class AddData extends StatefulWidget {
   const AddData({Key? key, required this.tableName}) : super(key: key);

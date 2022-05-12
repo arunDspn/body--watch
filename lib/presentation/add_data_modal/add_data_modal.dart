@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:watcha_body/add_data/cubit/adddata_cubit.dart';
 import 'package:watcha_body/data/domain/models/measurement_widget.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
-import 'package:watcha_body/overview/bloc/getallwidgetsdata_bloc.dart';
+import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
+import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/size_config.dart';
 
 class AddDataModal extends StatefulWidget {

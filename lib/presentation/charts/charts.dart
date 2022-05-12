@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-
-import '../data/domain/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 
 class Charts extends StatefulWidget {
   const Charts({Key? key}) : super(key: key);

@@ -9,15 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:watcha_body/add_data/cubit/adddata_cubit.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/data/repositories/widget_repository.dart';
-import 'package:watcha_body/home/home.dart';
-import 'package:watcha_body/overview/bloc/getallwidgetsdata_bloc.dart';
-import 'package:watcha_body/overview/overview.dart';
+import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
+import 'package:watcha_body/presentation/charts/charts.dart';
+import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
+import 'package:watcha_body/presentation/overview/overview.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -95,7 +95,7 @@ class App extends StatelessWidget {
                     );
                 }
               },
-              home: OverView(),
+              home: const OverView(),
             );
           },
         ),
