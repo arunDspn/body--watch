@@ -5,7 +5,9 @@ import 'package:watcha_body/add_data/cubit/adddata_cubit.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 
 class AddData extends StatefulWidget {
-  const AddData({Key? key}) : super(key: key);
+  const AddData({Key? key, required this.tableName}) : super(key: key);
+
+  final String tableName;
 
   @override
   State<AddData> createState() => _AddDataState();
@@ -53,12 +55,13 @@ class _AddDataState extends State<AddData> {
               const Spacer(),
               LongPrimaryButton(
                 onPressed: () {
-                  context.read<AdddataCubit>().insertData(
-                        Chest(
-                          int.parse(_measurementController.text),
-                          selectedDate ?? DateTime.now(),
-                        ),
-                      );
+                  // context.read<AdddataCubit>().insertData(
+                  //       Measurement(
+                  //         int.parse(_measurementController.text),
+                  //         selectedDate ?? DateTime.now(),
+                  //       ),
+                  //       widget.tableName,
+                  //     );
                 },
               ),
             ],

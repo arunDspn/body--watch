@@ -7,24 +7,64 @@ class DatabaseService {
   static final DatabaseService _instance = DatabaseService._internal();
 
   static const String _databaseName = 'flutter_database.db';
+  static const String chestTableName = 'chest';
+  static const String waistTableName = 'waist';
+  static const String hipTableName = 'hip';
+  static const String addedWidgetsTableName = 'added_widgets';
+  static const String allWidgetsTableName = 'all_widgets';
   static const _databaseVersion = 1;
+
+  Map<String, String> tableCreationQuery = {
+    chestTableName: _createChestTable,
+    waistTableName: _createWaistTable,
+    hipTableName: _createHipTable,
+  };
 
   // static queries
   static const String _createChestTable = '''
-  CREATE TABLE "chest" (
+  CREATE TABLE "$chestTableName" (
     "chest_id"	INTEGER NOT NULL UNIQUE,
-    "measurement"	INTEGER NOT NULL,
+    "measurement"	REAL NOT NULL,
     "date"	TEXT NOT NULL,
     PRIMARY KEY("chest_id" AUTOINCREMENT)
   );
   ''';
   static const String _createWaistTable = '''
-  CREATE TABLE "waist" (
+  CREATE TABLE "$waistTableName" (
     "waist_id"	INTEGER NOT NULL UNIQUE,
-    "measurement"	INTEGER NOT NULL,
+    "measurement"	REAL NOT NULL,
     "date"	TEXT NOT NULL,
     PRIMARY KEY("waist_id" AUTOINCREMENT)
   );
+  ''';
+
+  static const String _createHipTable = '''
+  CREATE TABLE "$hipTableName" (
+    "hip_id"	INTEGER NOT NULL UNIQUE,
+    "measurement"	REAL NOT NULL,
+    "date"	TEXT NOT NULL,
+    PRIMARY KEY("hip_id" AUTOINCREMENT)
+  );
+  ''';
+  static const String _createAddedWidgetsTable = '''
+  CREATE TABLE "$addedWidgetsTableName" (
+    "name"	TEXT NOT NULL UNIQUE,
+    "table_name"	TEXT NOT NULL UNIQUE
+  );
+  ''';
+  static const String _createAllWidgetsTable = '''
+  CREATE TABLE "$allWidgetsTableName" (
+    "name"	TEXT NOT NULL UNIQUE,
+    "table_name"	TEXT NOT NULL UNIQUE
+  );
+  ''';
+
+  static const String _insertDataToAllWidgetsTable = '''
+  INSERT INTO $allWidgetsTableName (name,table_name) 
+  VALUES 
+  ('Chest','$chestTableName'),
+  ('Waist','$waistTableName'),
+  ('Hip','$hipTableName');
   ''';
 
   Database? _database;
@@ -51,8 +91,11 @@ class DatabaseService {
 
   Future _onCreateDB(Database db, int version) async {
     //create tables
-    await db.execute(_createChestTable);
-    await db.execute(_createWaistTable);
+    // await db.execute(_createChestTable);
+    // await db.execute(_createWaistTable);
+    await db.execute(_createAddedWidgetsTable);
+    await db.execute(_createAllWidgetsTable);
+    await db.execute(_insertDataToAllWidgetsTable);
   }
 
   Future<void> insert({
@@ -88,16 +131,28 @@ class DatabaseService {
   void delete({required String tableName, required int id}) {}
   Future<List<Map<String, dynamic>>> getData({
     required String tableName,
-    int limit = 0,
+    int? limit,
+    String? orderBy,
   }) async {
     try {
       final _db = await database;
       final _data = await _db.query(
         tableName,
         limit: limit,
-        orderBy: 'date DESC',
+        orderBy: orderBy,
       );
       return _data;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<void> createTable({
+    required String query,
+  }) async {
+    try {
+      final _db = await database;
+      await _db.execute(query);
     } catch (e) {
       return Future.error(e);
     }

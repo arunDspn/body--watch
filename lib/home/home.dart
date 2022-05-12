@@ -3,14 +3,16 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../data/domain/models/pmeasurement.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class Charts extends StatefulWidget {
+  const Charts({Key? key}) : super(key: key);
+
+  static const routeName = '/charts';
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Charts> createState() => _ChartsState();
 }
 
-class _HomeState extends State<Home> {
+class _ChartsState extends State<Charts> {
   late TooltipBehavior _tooltipBehavior;
 
   @override
@@ -33,22 +35,22 @@ class _HomeState extends State<Home> {
             ),
             title: ChartTitle(text: 'Chest Measurements'),
             tooltipBehavior: _tooltipBehavior,
-            series: <LineSeries<Chest, DateTime>>[
-              LineSeries<Chest, DateTime>(
-                dataSource: <Chest>[
-                  Chest(50, DateTime(2020, 1, 1)),
-                  Chest(51, DateTime(2020, 1, 2)),
-                  Chest(52, DateTime(2020, 1, 3)),
-                  Chest(51, DateTime(2020, 2, 1)),
-                  Chest(48, DateTime(2020, 3, 1)),
-                  Chest(49, DateTime(2020, 4, 1)),
-                  Chest(50, DateTime(2020, 5, 1)),
-                  Chest(51, DateTime(2020, 6, 1)),
-                  Chest(48, DateTime(2020, 7, 1)),
-                  Chest(49, DateTime(2020, 8, 1)),
+            series: <LineSeries<Measurement, DateTime>>[
+              LineSeries<Measurement, DateTime>(
+                dataSource: <Measurement>[
+                  Measurement(50, DateTime(2020, 1, 1)),
+                  Measurement(51, DateTime(2020, 1, 2)),
+                  Measurement(52, DateTime(2020, 1, 3)),
+                  Measurement(51, DateTime(2020, 2, 1)),
+                  Measurement(48, DateTime(2020, 3, 1)),
+                  Measurement(49, DateTime(2020, 4, 1)),
+                  Measurement(50, DateTime(2020, 5, 1)),
+                  Measurement(51, DateTime(2020, 6, 1)),
+                  Measurement(48, DateTime(2020, 7, 1)),
+                  Measurement(49, DateTime(2020, 8, 1)),
                 ],
-                xValueMapper: (Chest chest, _) => chest.date,
-                yValueMapper: (Chest chest, _) => chest.measurement,
+                xValueMapper: (Measurement chest, _) => chest.date,
+                yValueMapper: (Measurement chest, _) => chest.measurement,
                 // Enable data label
                 dataLabelSettings: const DataLabelSettings(isVisible: true),
               )

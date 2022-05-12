@@ -2,7 +2,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
-part of 'getchestdata_cubit.dart';
+part of 'getallwidgetsdata_bloc.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,8 +14,172 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-class _$GetchestdataStateTearOff {
-  const _$GetchestdataStateTearOff();
+class _$GetallwidgetsdataEventTearOff {
+  const _$GetallwidgetsdataEventTearOff();
+
+  _FetchAllData fetchAllData() {
+    return const _FetchAllData();
+  }
+}
+
+/// @nodoc
+const $GetallwidgetsdataEvent = _$GetallwidgetsdataEventTearOff();
+
+/// @nodoc
+mixin _$GetallwidgetsdataEvent {
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() fetchAllData,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? fetchAllData,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? fetchAllData,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_FetchAllData value) fetchAllData,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_FetchAllData value)? fetchAllData,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_FetchAllData value)? fetchAllData,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $GetallwidgetsdataEventCopyWith<$Res> {
+  factory $GetallwidgetsdataEventCopyWith(GetallwidgetsdataEvent value,
+          $Res Function(GetallwidgetsdataEvent) then) =
+      _$GetallwidgetsdataEventCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class _$GetallwidgetsdataEventCopyWithImpl<$Res>
+    implements $GetallwidgetsdataEventCopyWith<$Res> {
+  _$GetallwidgetsdataEventCopyWithImpl(this._value, this._then);
+
+  final GetallwidgetsdataEvent _value;
+  // ignore: unused_field
+  final $Res Function(GetallwidgetsdataEvent) _then;
+}
+
+/// @nodoc
+abstract class _$FetchAllDataCopyWith<$Res> {
+  factory _$FetchAllDataCopyWith(
+          _FetchAllData value, $Res Function(_FetchAllData) then) =
+      __$FetchAllDataCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$FetchAllDataCopyWithImpl<$Res>
+    extends _$GetallwidgetsdataEventCopyWithImpl<$Res>
+    implements _$FetchAllDataCopyWith<$Res> {
+  __$FetchAllDataCopyWithImpl(
+      _FetchAllData _value, $Res Function(_FetchAllData) _then)
+      : super(_value, (v) => _then(v as _FetchAllData));
+
+  @override
+  _FetchAllData get _value => super._value as _FetchAllData;
+}
+
+/// @nodoc
+
+class _$_FetchAllData implements _FetchAllData {
+  const _$_FetchAllData();
+
+  @override
+  String toString() {
+    return 'GetallwidgetsdataEvent.fetchAllData()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _FetchAllData);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() fetchAllData,
+  }) {
+    return fetchAllData();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function()? fetchAllData,
+  }) {
+    return fetchAllData?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? fetchAllData,
+    required TResult orElse(),
+  }) {
+    if (fetchAllData != null) {
+      return fetchAllData();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_FetchAllData value) fetchAllData,
+  }) {
+    return fetchAllData(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_FetchAllData value)? fetchAllData,
+  }) {
+    return fetchAllData?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_FetchAllData value)? fetchAllData,
+    required TResult orElse(),
+  }) {
+    if (fetchAllData != null) {
+      return fetchAllData(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _FetchAllData implements GetallwidgetsdataEvent {
+  const factory _FetchAllData() = _$_FetchAllData;
+}
+
+/// @nodoc
+class _$GetallwidgetsdataStateTearOff {
+  const _$GetallwidgetsdataStateTearOff();
 
   _Initial initial() {
     return const _Initial();
@@ -25,46 +189,47 @@ class _$GetchestdataStateTearOff {
     return const _Loading();
   }
 
-  _Failure failure(String casue) {
+  _Failure failure(String cause) {
     return _Failure(
-      casue,
+      cause,
     );
   }
 
-  _Success success(List<Chest> list) {
+  _Success success(List<LatestMeasurementDisplayModel> widgets) {
     return _Success(
-      list,
+      widgets,
     );
   }
 }
 
 /// @nodoc
-const $GetchestdataState = _$GetchestdataStateTearOff();
+const $GetallwidgetsdataState = _$GetallwidgetsdataStateTearOff();
 
 /// @nodoc
-mixin _$GetchestdataState {
+mixin _$GetallwidgetsdataState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String casue) failure,
-    required TResult Function(List<Chest> list) success,
+    required TResult Function(String cause) failure,
+    required TResult Function(List<LatestMeasurementDisplayModel> widgets)
+        success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String casue)? failure,
-    TResult Function(List<Chest> list)? success,
+    TResult Function(String cause)? failure,
+    TResult Function(List<LatestMeasurementDisplayModel> widgets)? success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String casue)? failure,
-    TResult Function(List<Chest> list)? success,
+    TResult Function(String cause)? failure,
+    TResult Function(List<LatestMeasurementDisplayModel> widgets)? success,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -96,20 +261,20 @@ mixin _$GetchestdataState {
 }
 
 /// @nodoc
-abstract class $GetchestdataStateCopyWith<$Res> {
-  factory $GetchestdataStateCopyWith(
-          GetchestdataState value, $Res Function(GetchestdataState) then) =
-      _$GetchestdataStateCopyWithImpl<$Res>;
+abstract class $GetallwidgetsdataStateCopyWith<$Res> {
+  factory $GetallwidgetsdataStateCopyWith(GetallwidgetsdataState value,
+          $Res Function(GetallwidgetsdataState) then) =
+      _$GetallwidgetsdataStateCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$GetchestdataStateCopyWithImpl<$Res>
-    implements $GetchestdataStateCopyWith<$Res> {
-  _$GetchestdataStateCopyWithImpl(this._value, this._then);
+class _$GetallwidgetsdataStateCopyWithImpl<$Res>
+    implements $GetallwidgetsdataStateCopyWith<$Res> {
+  _$GetallwidgetsdataStateCopyWithImpl(this._value, this._then);
 
-  final GetchestdataState _value;
+  final GetallwidgetsdataState _value;
   // ignore: unused_field
-  final $Res Function(GetchestdataState) _then;
+  final $Res Function(GetallwidgetsdataState) _then;
 }
 
 /// @nodoc
@@ -119,7 +284,8 @@ abstract class _$InitialCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$InitialCopyWithImpl<$Res> extends _$GetchestdataStateCopyWithImpl<$Res>
+class __$InitialCopyWithImpl<$Res>
+    extends _$GetallwidgetsdataStateCopyWithImpl<$Res>
     implements _$InitialCopyWith<$Res> {
   __$InitialCopyWithImpl(_Initial _value, $Res Function(_Initial) _then)
       : super(_value, (v) => _then(v as _Initial));
@@ -135,7 +301,7 @@ class _$_Initial implements _Initial {
 
   @override
   String toString() {
-    return 'GetchestdataState.initial()';
+    return 'GetallwidgetsdataState.initial()';
   }
 
   @override
@@ -152,8 +318,9 @@ class _$_Initial implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String casue) failure,
-    required TResult Function(List<Chest> list) success,
+    required TResult Function(String cause) failure,
+    required TResult Function(List<LatestMeasurementDisplayModel> widgets)
+        success,
   }) {
     return initial();
   }
@@ -163,8 +330,8 @@ class _$_Initial implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String casue)? failure,
-    TResult Function(List<Chest> list)? success,
+    TResult Function(String cause)? failure,
+    TResult Function(List<LatestMeasurementDisplayModel> widgets)? success,
   }) {
     return initial?.call();
   }
@@ -174,8 +341,8 @@ class _$_Initial implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String casue)? failure,
-    TResult Function(List<Chest> list)? success,
+    TResult Function(String cause)? failure,
+    TResult Function(List<LatestMeasurementDisplayModel> widgets)? success,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -222,7 +389,7 @@ class _$_Initial implements _Initial {
   }
 }
 
-abstract class _Initial implements GetchestdataState {
+abstract class _Initial implements GetallwidgetsdataState {
   const factory _Initial() = _$_Initial;
 }
 
@@ -233,7 +400,8 @@ abstract class _$LoadingCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$LoadingCopyWithImpl<$Res> extends _$GetchestdataStateCopyWithImpl<$Res>
+class __$LoadingCopyWithImpl<$Res>
+    extends _$GetallwidgetsdataStateCopyWithImpl<$Res>
     implements _$LoadingCopyWith<$Res> {
   __$LoadingCopyWithImpl(_Loading _value, $Res Function(_Loading) _then)
       : super(_value, (v) => _then(v as _Loading));
@@ -249,7 +417,7 @@ class _$_Loading implements _Loading {
 
   @override
   String toString() {
-    return 'GetchestdataState.loading()';
+    return 'GetallwidgetsdataState.loading()';
   }
 
   @override
@@ -266,8 +434,9 @@ class _$_Loading implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String casue) failure,
-    required TResult Function(List<Chest> list) success,
+    required TResult Function(String cause) failure,
+    required TResult Function(List<LatestMeasurementDisplayModel> widgets)
+        success,
   }) {
     return loading();
   }
@@ -277,8 +446,8 @@ class _$_Loading implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String casue)? failure,
-    TResult Function(List<Chest> list)? success,
+    TResult Function(String cause)? failure,
+    TResult Function(List<LatestMeasurementDisplayModel> widgets)? success,
   }) {
     return loading?.call();
   }
@@ -288,8 +457,8 @@ class _$_Loading implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String casue)? failure,
-    TResult Function(List<Chest> list)? success,
+    TResult Function(String cause)? failure,
+    TResult Function(List<LatestMeasurementDisplayModel> widgets)? success,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -336,7 +505,7 @@ class _$_Loading implements _Loading {
   }
 }
 
-abstract class _Loading implements GetchestdataState {
+abstract class _Loading implements GetallwidgetsdataState {
   const factory _Loading() = _$_Loading;
 }
 
@@ -344,11 +513,12 @@ abstract class _Loading implements GetchestdataState {
 abstract class _$FailureCopyWith<$Res> {
   factory _$FailureCopyWith(_Failure value, $Res Function(_Failure) then) =
       __$FailureCopyWithImpl<$Res>;
-  $Res call({String casue});
+  $Res call({String cause});
 }
 
 /// @nodoc
-class __$FailureCopyWithImpl<$Res> extends _$GetchestdataStateCopyWithImpl<$Res>
+class __$FailureCopyWithImpl<$Res>
+    extends _$GetallwidgetsdataStateCopyWithImpl<$Res>
     implements _$FailureCopyWith<$Res> {
   __$FailureCopyWithImpl(_Failure _value, $Res Function(_Failure) _then)
       : super(_value, (v) => _then(v as _Failure));
@@ -358,12 +528,12 @@ class __$FailureCopyWithImpl<$Res> extends _$GetchestdataStateCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? casue = freezed,
+    Object? cause = freezed,
   }) {
     return _then(_Failure(
-      casue == freezed
-          ? _value.casue
-          : casue // ignore: cast_nullable_to_non_nullable
+      cause == freezed
+          ? _value.cause
+          : cause // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -372,14 +542,14 @@ class __$FailureCopyWithImpl<$Res> extends _$GetchestdataStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_Failure implements _Failure {
-  const _$_Failure(this.casue);
+  const _$_Failure(this.cause);
 
   @override
-  final String casue;
+  final String cause;
 
   @override
   String toString() {
-    return 'GetchestdataState.failure(casue: $casue)';
+    return 'GetallwidgetsdataState.failure(cause: $cause)';
   }
 
   @override
@@ -387,12 +557,12 @@ class _$_Failure implements _Failure {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Failure &&
-            const DeepCollectionEquality().equals(other.casue, casue));
+            const DeepCollectionEquality().equals(other.cause, cause));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(casue));
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(cause));
 
   @JsonKey(ignore: true)
   @override
@@ -404,10 +574,11 @@ class _$_Failure implements _Failure {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String casue) failure,
-    required TResult Function(List<Chest> list) success,
+    required TResult Function(String cause) failure,
+    required TResult Function(List<LatestMeasurementDisplayModel> widgets)
+        success,
   }) {
-    return failure(casue);
+    return failure(cause);
   }
 
   @override
@@ -415,10 +586,10 @@ class _$_Failure implements _Failure {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String casue)? failure,
-    TResult Function(List<Chest> list)? success,
+    TResult Function(String cause)? failure,
+    TResult Function(List<LatestMeasurementDisplayModel> widgets)? success,
   }) {
-    return failure?.call(casue);
+    return failure?.call(cause);
   }
 
   @override
@@ -426,12 +597,12 @@ class _$_Failure implements _Failure {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String casue)? failure,
-    TResult Function(List<Chest> list)? success,
+    TResult Function(String cause)? failure,
+    TResult Function(List<LatestMeasurementDisplayModel> widgets)? success,
     required TResult orElse(),
   }) {
     if (failure != null) {
-      return failure(casue);
+      return failure(cause);
     }
     return orElse();
   }
@@ -474,10 +645,10 @@ class _$_Failure implements _Failure {
   }
 }
 
-abstract class _Failure implements GetchestdataState {
-  const factory _Failure(String casue) = _$_Failure;
+abstract class _Failure implements GetallwidgetsdataState {
+  const factory _Failure(String cause) = _$_Failure;
 
-  String get casue;
+  String get cause;
   @JsonKey(ignore: true)
   _$FailureCopyWith<_Failure> get copyWith =>
       throw _privateConstructorUsedError;
@@ -487,11 +658,12 @@ abstract class _Failure implements GetchestdataState {
 abstract class _$SuccessCopyWith<$Res> {
   factory _$SuccessCopyWith(_Success value, $Res Function(_Success) then) =
       __$SuccessCopyWithImpl<$Res>;
-  $Res call({List<Chest> list});
+  $Res call({List<LatestMeasurementDisplayModel> widgets});
 }
 
 /// @nodoc
-class __$SuccessCopyWithImpl<$Res> extends _$GetchestdataStateCopyWithImpl<$Res>
+class __$SuccessCopyWithImpl<$Res>
+    extends _$GetallwidgetsdataStateCopyWithImpl<$Res>
     implements _$SuccessCopyWith<$Res> {
   __$SuccessCopyWithImpl(_Success _value, $Res Function(_Success) _then)
       : super(_value, (v) => _then(v as _Success));
@@ -501,13 +673,13 @@ class __$SuccessCopyWithImpl<$Res> extends _$GetchestdataStateCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? list = freezed,
+    Object? widgets = freezed,
   }) {
     return _then(_Success(
-      list == freezed
-          ? _value.list
-          : list // ignore: cast_nullable_to_non_nullable
-              as List<Chest>,
+      widgets == freezed
+          ? _value.widgets
+          : widgets // ignore: cast_nullable_to_non_nullable
+              as List<LatestMeasurementDisplayModel>,
     ));
   }
 }
@@ -515,14 +687,14 @@ class __$SuccessCopyWithImpl<$Res> extends _$GetchestdataStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_Success implements _Success {
-  const _$_Success(this.list);
+  const _$_Success(this.widgets);
 
   @override
-  final List<Chest> list;
+  final List<LatestMeasurementDisplayModel> widgets;
 
   @override
   String toString() {
-    return 'GetchestdataState.success(list: $list)';
+    return 'GetallwidgetsdataState.success(widgets: $widgets)';
   }
 
   @override
@@ -530,12 +702,12 @@ class _$_Success implements _Success {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Success &&
-            const DeepCollectionEquality().equals(other.list, list));
+            const DeepCollectionEquality().equals(other.widgets, widgets));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(list));
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(widgets));
 
   @JsonKey(ignore: true)
   @override
@@ -547,10 +719,11 @@ class _$_Success implements _Success {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String casue) failure,
-    required TResult Function(List<Chest> list) success,
+    required TResult Function(String cause) failure,
+    required TResult Function(List<LatestMeasurementDisplayModel> widgets)
+        success,
   }) {
-    return success(list);
+    return success(widgets);
   }
 
   @override
@@ -558,10 +731,10 @@ class _$_Success implements _Success {
   TResult? whenOrNull<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String casue)? failure,
-    TResult Function(List<Chest> list)? success,
+    TResult Function(String cause)? failure,
+    TResult Function(List<LatestMeasurementDisplayModel> widgets)? success,
   }) {
-    return success?.call(list);
+    return success?.call(widgets);
   }
 
   @override
@@ -569,12 +742,12 @@ class _$_Success implements _Success {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String casue)? failure,
-    TResult Function(List<Chest> list)? success,
+    TResult Function(String cause)? failure,
+    TResult Function(List<LatestMeasurementDisplayModel> widgets)? success,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success(list);
+      return success(widgets);
     }
     return orElse();
   }
@@ -617,10 +790,11 @@ class _$_Success implements _Success {
   }
 }
 
-abstract class _Success implements GetchestdataState {
-  const factory _Success(List<Chest> list) = _$_Success;
+abstract class _Success implements GetallwidgetsdataState {
+  const factory _Success(List<LatestMeasurementDisplayModel> widgets) =
+      _$_Success;
 
-  List<Chest> get list;
+  List<LatestMeasurementDisplayModel> get widgets;
   @JsonKey(ignore: true)
   _$SuccessCopyWith<_Success> get copyWith =>
       throw _privateConstructorUsedError;
