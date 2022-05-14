@@ -10,12 +10,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
+import 'package:watcha_body/data/domain/models/measurement_widget.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/data/repositories/widget_repository.dart';
+import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
 import 'package:watcha_body/presentation/charts/charts.dart';
+import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
+import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/overview.dart';
 
@@ -63,13 +67,28 @@ class App extends StatelessWidget {
                 inputDecorationTheme: const InputDecorationTheme(
                   border: InputBorder.none,
                 ),
+                //   textTheme: const TextTheme().copyWith(
+                //     titleMedium: const TextStyle(
+                //       fontSize: 18,
+                //       fontWeight: FontWeight.bold,
+                //     ),
+                //     bodyText1: const TextStyle(
+                //       fontSize: 16,
+                //       fontWeight: FontWeight.w600,
+                //     ),
+                //     bodyText2: const TextStyle(
+                //       fontSize: 14,
+                //       fontWeight: FontWeight.w600,
+                //       color: Colors.blue,
+                //     ),
+                //   ),
               ),
               // darkTheme: ThemeData.dark(),
               // themeMode: ThemeMode.dark,
               localizationsDelegates: const [
                 GlobalMaterialLocalizations.delegate,
-                // AppLocalizations.delegate,
-                // GlobalMaterialLocalizations.delegate,
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
               ],
               onGenerateRoute: (settings) {
                 switch (settings.name) {
@@ -77,7 +96,23 @@ class App extends StatelessWidget {
                     return MaterialPageRoute<void>(
                       builder: (context) => const Charts(),
                     );
-
+                  case MeasurementInDetail.routeName:
+                    final _args = settings.arguments;
+                    if (_args is MeasurementWidget) {
+                      return MaterialPageRoute<void>(
+                        builder: (context) => BlocProvider(
+                          create: (context) => GetallmeasurmentsCubit(
+                            context.read<MeasurementRepository>(),
+                          )..fetchAllData(
+                              tableName: _args.tableName,
+                            ),
+                          child: MeasurementInDetail(
+                            measurementWidget: _args,
+                          ),
+                        ),
+                      );
+                    }
+                    break;
                   case AddWidget.routeName:
                     return MaterialPageRoute<void>(
                       builder: (context) {

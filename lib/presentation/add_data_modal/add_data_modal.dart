@@ -126,56 +126,63 @@ class _AddDataModalState extends State<AddDataModal> {
                 ),
               ],
             ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.94,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.grey.shade100,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Measurement'),
-                        SizedBox(
-                          width: SizeConfig.screenWidth! * 0.5,
-                          child: TextFormField(
-                            controller: _measurementController,
-                            decoration:
-                                const InputDecoration(suffixText: 'inches'),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('Date'),
-                        SizedBox(
-                          width: SizeConfig.screenWidth! * 0.5,
-                          child: GestureDetector(
-                            onTap: () {
-                              _selectDate(context);
-                            },
-                            child: AbsorbPointer(
-                              child: TextFormField(
-                                controller: _dateController,
-                              ),
+            Padding(
+              padding: MediaQuery.of(context).viewInsets,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.94,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.grey.shade100,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Measurement'),
+                          SizedBox(
+                            width: SizeConfig.screenWidth! * 0.5,
+                            child: TextFormField(
+                              controller: _measurementController,
+                              keyboardType: TextInputType.number,
+                              decoration:
+                                  const InputDecoration(suffixText: 'inches'),
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                      const Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Date'),
+                          SizedBox(
+                            width: SizeConfig.screenWidth! * 0.5,
+                            child: GestureDetector(
+                              onTap: () {
+                                _selectDate(context);
+                              },
+                              child: AbsorbPointer(
+                                child: TextFormField(
+                                  controller: _dateController,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            )
+            ),
+            SizedBox(
+              height: SizeConfig.screenHeight! * 0.019,
+            ),
           ],
         ),
       ),

@@ -35,9 +35,17 @@ class MeasurementRepository extends IMeasurementsFacade {
   @override
   Future<Either<String, List<Measurement>>> getAllDetails({
     required String tableName,
-  }) {
-    // TODO: implement getAllDetails
-    throw UnimplementedError();
+  }) async {
+    try {
+      final _data = await databaseService.getData(
+        tableName: tableName,
+        orderBy: 'date DESC',
+      );
+      final _dData = _data.map(Measurement.fromMap).toList();
+      return Right(_dData);
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 
   @override
