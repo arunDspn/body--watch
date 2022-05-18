@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/data/domain/models/measurement_widget.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
@@ -20,21 +21,26 @@ class OverView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white10,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'Overview',
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: 20,
-          ),
+          style: Theme.of(context).textTheme.headline3,
         ),
         centerTitle: true,
+        leading: IconButton(
+          icon: Icon(
+            Icons.settings,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, '/settings');
+          },
+        ),
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.add,
-              color: Colors.black54,
+              color: Theme.of(context).colorScheme.secondary,
             ),
             onPressed: () {
               Navigator.pushNamed(context, AddWidget.routeName);
@@ -87,6 +93,7 @@ class _WidgetBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _preferences = context.watch<ApppreferencesBloc>().state;
     return Padding(
       padding: const EdgeInsets.all(8),
       child: GestureDetector(
@@ -101,7 +108,7 @@ class _WidgetBox extends StatelessWidget {
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(12)),
-            color: Colors.grey.shade200,
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
           ),
           width: double.infinity,
           child: Row(
@@ -112,13 +119,20 @@ class _WidgetBox extends StatelessWidget {
                 children: [
                   Align(
                     alignment: Alignment.topLeft,
-                    child: Text(
-                      '${data.name} : ${data.latest.measurement.toString()}',
-                      style: const TextStyle(
-                        fontSize: 42,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.left,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          '${data.name} : ${data.latest.measurement.toString()} ',
+                          style: Theme.of(context).textTheme.headline2,
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          _preferences.lengthUnitString,
+                          style: Theme.of(context).textTheme.headline3,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   ),
                   Align(
@@ -127,12 +141,7 @@ class _WidgetBox extends StatelessWidget {
                       padding: const EdgeInsets.all(5),
                       child: Text(
                         formatter.format(data.latest.date),
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                          color: Colors.black54,
-                        ),
+                        style: Theme.of(context).textTheme.headline4,
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -153,9 +162,7 @@ class _WidgetBox extends StatelessWidget {
                           alignment: Alignment.topLeft,
                           child: Text(
                             '${data.delta!.toStringAsFixed(1)} than ${formatter.format(data.previous!)}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                            ),
+                            style: Theme.of(context).textTheme.headline5,
                             textAlign: TextAlign.left,
                           ),
                         ),
@@ -177,7 +184,10 @@ class _WidgetBox extends StatelessWidget {
                     },
                   );
                 },
-                icon: const Icon(Icons.add),
+                icon: Icon(
+                  Icons.add,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               )
             ],
           ),

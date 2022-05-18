@@ -34,7 +34,7 @@ class MeasurementInDetail extends StatelessWidget {
                     Align(
                       child: Text(
                         measurementWidget.name,
-                        style: Theme.of(context).textTheme.headline6,
+                        style: Theme.of(context).textTheme.headline3,
                       ),
                     ),
                     Align(
@@ -119,7 +119,7 @@ class _MeasurementList extends StatelessWidget {
             children: [
               Text(
                 'Measurement(${measurementList.length})',
-                style: Theme.of(context).textTheme.titleSmall,
+                style: Theme.of(context).textTheme.headline6,
               ),
               TextButton(
                 onPressed: () {
@@ -149,9 +149,10 @@ class _MeasurementList extends StatelessWidget {
               width: SizeConfig.screenWidth! * 0.85,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
               child: ListView.builder(
+                shrinkWrap: true,
                 physics: const BouncingScrollPhysics(
                   parent: AlwaysScrollableScrollPhysics(),
                 ),
@@ -190,12 +191,13 @@ class _TableCell extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(measurement.toStringAsFixed(2)),
+          Text(
+            measurement.toStringAsFixed(2),
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
           Text(
             formatter.format(date),
-            style: const TextStyle(
-              color: Colors.grey,
-            ),
+            style: Theme.of(context).textTheme.bodyText2,
           ),
         ],
       ),
