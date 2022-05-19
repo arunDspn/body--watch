@@ -77,9 +77,10 @@ class App extends StatelessWidget {
                           : ThemeMode.light,
                       localizationsDelegates: const [
                         GlobalMaterialLocalizations.delegate,
-                        // AppLocalizations.delegate,
-                        GlobalMaterialLocalizations.delegate,
+                        AppLocalizations.delegate,
                       ],
+                      supportedLocales: AppLocalizations.supportedLocales,
+                      locale: Locale(appPrefState.lang),
                       onGenerateRoute: (settings) {
                         switch (settings.name) {
                           case '/':
@@ -257,4 +258,11 @@ final darkTheme = ThemeData(
       color: Colors.white,
     ),
   ),
+  popupMenuTheme: const PopupMenuThemeData(
+    color: Colors.black,
+    textStyle: TextStyle(
+      color: Colors.white,
+    ),
+  ),
+  canvasColor: Colors.black87,
 );

@@ -3,5 +3,10 @@
     "counterAppBarTitle": "Contador",
     "@counterAppBarTitle": {
         "description": "Texto mostrado en la AppBar de la página del contador"
-    }
+    },
+    "overViewTitle" : "Visión General",
+    "@overViewTitle": {
+        "description": "Texto mostrado en la AppBar de la página del contador"
+    },
+    "settingsTitle" :"Ajustes"
 }

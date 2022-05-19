@@ -1,12 +1,12 @@
 {
-    "@@locale": "en",
-    "counterAppBarTitle": "Counter",
+    "@@locale": "ml",
+    "counterAppBarTitle": "അവലോകനം",
     "@counterAppBarTitle": {
         "description": "Text shown in the AppBar of the Counter Page"
     },
-    "overViewTitle" : "Overview",
+    "overViewTitle" : "അവലോകനം",
     "@overViewTitle": {
         "description": "Texto mostrado en la AppBar de la página del contador"
     },
-    "settingsTitle" : "Settings"
+    "settingsTitle" :"ക്രമീകരണങ്ങൾ"
 }

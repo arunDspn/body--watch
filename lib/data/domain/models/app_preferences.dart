@@ -24,10 +24,12 @@ class AppPreferences {
   AppPreferences(
     this.weightUnit,
     this.lengthUnit,
+    this.lang,
   );
 
   final WeightUnit weightUnit;
   final LengthUnit lengthUnit;
+  final String lang;
 
   String get weightUnitString => EnumToString.convertToString(weightUnit);
   String get lengthUnitString => EnumToString.convertToString(lengthUnit);
@@ -35,9 +37,11 @@ class AppPreferences {
   AppPreferences copyWith({
     WeightUnit? weightUnit,
     LengthUnit? lengthUnit,
+    String? lang,
   }) =>
       AppPreferences(
         weightUnit ?? this.weightUnit,
         lengthUnit ?? this.lengthUnit,
+        lang ?? this.lang,
       );
 }

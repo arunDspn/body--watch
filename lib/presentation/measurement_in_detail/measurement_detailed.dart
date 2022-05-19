@@ -141,16 +141,20 @@ class _MeasurementList extends StatelessWidget {
             ],
           ),
         ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Container(
-              padding: const EdgeInsets.only(top: 8),
-              width: SizeConfig.screenWidth! * 0.85,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Container(
+            constraints: BoxConstraints(
+              maxHeight: SizeConfig.screenHeight! * 0.6,
+            ),
+            // padding: const EdgeInsets.only(top: 8),
+            width: SizeConfig.screenWidth! * 0.85,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
               child: ListView.builder(
                 shrinkWrap: true,
                 physics: const BouncingScrollPhysics(
@@ -189,7 +193,7 @@ class _TableCell extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             measurement.toStringAsFixed(2),

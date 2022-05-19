@@ -1,9 +1,11 @@
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
+import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/size_config.dart';
 
 class SettingsView extends StatelessWidget {
@@ -26,7 +28,7 @@ class SettingsView extends StatelessWidget {
                     children: [
                       Align(
                         child: Text(
-                          'Settings',
+                          AppLocalizations.of(context).settingsTitle,
                           style: Theme.of(context).textTheme.headline3,
                         ),
                       ),
@@ -45,7 +47,9 @@ class SettingsView extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                const _LanguageSelector(),
+                _LanguageSelector(
+                  appPreferences: state,
+                ),
                 WeightChoiceChip(
                   appPreferences: state,
                 ),
@@ -136,42 +140,46 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
               'Weigth Unit',
               style: Theme.of(context).textTheme.headline6,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(WeightUnit.values.length, (index) {
-                return ChoiceChip(
-                  label: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      EnumToString.convertToString(WeightUnit.values[index]),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(WeightUnit.values.length, (index) {
+                  return ChoiceChip(
+                    label: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Text(
+                        EnumToString.convertToString(WeightUnit.values[index]),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  backgroundColor: Colors.grey.shade100,
-                  selectedColor: Colors.blueAccent,
-                  elevation: 0,
-                  pressElevation: 0,
-                  selected: currentValue == WeightUnit.values[index],
-                  labelStyle: TextStyle(
-                    color: currentValue == WeightUnit.values[index]
-                        ? Colors.white
-                        : Colors.blueAccent,
-                  ),
-                  onSelected: (value) {
-                    context.read<ApppreferencesBloc>().add(
-                          ApppreferencesEvent.updatePreferences(
-                            appPreferences: AppPreferences(
-                              WeightUnit.values[index],
-                              widget.appPreferences.lengthUnit,
+                    backgroundColor: Colors.grey.shade100,
+                    selectedColor: Colors.blueAccent,
+                    elevation: 0,
+                    pressElevation: 0,
+                    selected: currentValue == WeightUnit.values[index],
+                    labelStyle: TextStyle(
+                      color: currentValue == WeightUnit.values[index]
+                          ? Colors.white
+                          : Colors.blueAccent,
+                    ),
+                    onSelected: (value) {
+                      context.read<ApppreferencesBloc>().add(
+                            ApppreferencesEvent.updatePreferences(
+                              appPreferences: AppPreferences(
+                                WeightUnit.values[index],
+                                widget.appPreferences.lengthUnit,
+                                widget.appPreferences.lang,
+                              ),
                             ),
-                          ),
-                        );
-                  },
-                );
-              }),
+                          );
+                    },
+                  );
+                }),
+              ),
             ),
           ],
         ),
@@ -208,42 +216,48 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Length Unit',
+              'Theme',
               style: Theme.of(context).textTheme.headline6,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(AppTheme.values.length, (index) {
-                return ChoiceChip(
-                  label: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      EnumToString.convertToString(AppTheme.values[index]),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(AppTheme.values.length, (index) {
+                  return ChoiceChip(
+                    label: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Text(
+                        EnumToString.convertToString(
+                          AppTheme.values[index],
+                          camelCase: true,
+                        ),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  backgroundColor: Colors.grey.shade100,
-                  selectedColor: Colors.blueAccent,
-                  elevation: 0,
-                  pressElevation: 0,
-                  selected: currentValue == AppTheme.values[index],
-                  labelStyle: TextStyle(
-                    color: currentValue == AppTheme.values[index]
-                        ? Colors.white
-                        : Colors.blueAccent,
-                  ),
-                  onSelected: (value) {
-                    context.read<AppthemeBloc>().add(
-                          AppthemeEvent.changeTheme(
-                            appTheme: AppTheme.values[index],
-                          ),
-                        );
-                  },
-                );
-              }),
+                    backgroundColor: Colors.grey.shade100,
+                    selectedColor: Colors.blueAccent,
+                    elevation: 0,
+                    pressElevation: 0,
+                    selected: currentValue == AppTheme.values[index],
+                    labelStyle: TextStyle(
+                      color: currentValue == AppTheme.values[index]
+                          ? Colors.white
+                          : Colors.blueAccent,
+                    ),
+                    onSelected: (value) {
+                      context.read<AppthemeBloc>().add(
+                            AppthemeEvent.changeTheme(
+                              appTheme: AppTheme.values[index],
+                            ),
+                          );
+                    },
+                  );
+                }),
+              ),
             ),
           ],
         ),
@@ -282,42 +296,46 @@ class _LengthChoiceChipState extends State<LengthChoiceChip> {
               'Length Unit',
               style: Theme.of(context).textTheme.headline6,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(LengthUnit.values.length, (index) {
-                return ChoiceChip(
-                  label: Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      EnumToString.convertToString(LengthUnit.values[index]),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(LengthUnit.values.length, (index) {
+                  return ChoiceChip(
+                    label: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Text(
+                        EnumToString.convertToString(LengthUnit.values[index]),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  backgroundColor: Colors.grey.shade100,
-                  selectedColor: Colors.blueAccent,
-                  elevation: 0,
-                  pressElevation: 0,
-                  selected: currentValue == LengthUnit.values[index],
-                  labelStyle: TextStyle(
-                    color: currentValue == LengthUnit.values[index]
-                        ? Colors.white
-                        : Colors.blueAccent,
-                  ),
-                  onSelected: (value) {
-                    context.read<ApppreferencesBloc>().add(
-                          ApppreferencesEvent.updatePreferences(
-                            appPreferences: AppPreferences(
-                              widget.appPreferences.weightUnit,
-                              LengthUnit.values[index],
+                    backgroundColor: Colors.grey.shade100,
+                    selectedColor: Colors.blueAccent,
+                    elevation: 0,
+                    pressElevation: 0,
+                    selected: currentValue == LengthUnit.values[index],
+                    labelStyle: TextStyle(
+                      color: currentValue == LengthUnit.values[index]
+                          ? Colors.white
+                          : Colors.blueAccent,
+                    ),
+                    onSelected: (value) {
+                      context.read<ApppreferencesBloc>().add(
+                            ApppreferencesEvent.updatePreferences(
+                              appPreferences: AppPreferences(
+                                widget.appPreferences.weightUnit,
+                                LengthUnit.values[index],
+                                widget.appPreferences.lang,
+                              ),
                             ),
-                          ),
-                        );
-                  },
-                );
-              }),
+                          );
+                    },
+                  );
+                }),
+              ),
             ),
           ],
         ),
@@ -408,47 +426,65 @@ class _HereChoiceChiperState<T> extends State<HereChoiceChiper> {
 class _LanguageSelector extends StatefulWidget {
   const _LanguageSelector({
     Key? key,
+    required this.appPreferences,
   }) : super(key: key);
+
+  final AppPreferences appPreferences;
 
   @override
   State<_LanguageSelector> createState() => _LanguageSelectorState();
 }
 
 class _LanguageSelectorState extends State<_LanguageSelector> {
-  String _option = 'en';
+  late List<Locale> _list;
+  late Locale _currentLocale;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    _list = AppLocalizations.supportedLocales;
+    _currentLocale = Localizations.localeOf(context);
+
     return _SettingsChildContainer(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text(
             'Language',
             style: Theme.of(context).textTheme.headline6,
           ),
-          DropdownButton<String>(
-            value: _option,
+          DropdownButton<Locale>(
+            value: _currentLocale,
             borderRadius: BorderRadius.circular(10),
             underline: const SizedBox.shrink(),
             style: Theme.of(context).textTheme.headline6,
-            items: const [
-              DropdownMenuItem(
-                value: 'en',
-                child: Text('English'),
-              ),
-              DropdownMenuItem(
-                value: 'ml',
-                child: Text('Malayalam'),
-              ),
-              DropdownMenuItem(
-                value: 'hi',
-                child: Text('Hindi'),
-              ),
-            ],
+            items: _list
+                .map(
+                  (e) => DropdownMenuItem(
+                    value: e,
+                    child: Text(
+                      e.toString().split('.').last,
+                    ),
+                  ),
+                )
+                .toList(),
             onChanged: (value) {
               setState(() {
-                _option = value!;
+                _currentLocale = value!;
               });
+              context.read<ApppreferencesBloc>().add(
+                    ApppreferencesEvent.updatePreferences(
+                      appPreferences: AppPreferences(
+                        widget.appPreferences.weightUnit,
+                        widget.appPreferences.lengthUnit,
+                        _currentLocale.toString().split('.').last,
+                      ),
+                    ),
+                  );
             },
           ),
         ],

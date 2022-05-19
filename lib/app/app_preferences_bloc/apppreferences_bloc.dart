@@ -32,6 +32,7 @@ class ApppreferencesBloc
             json['lengthUnit'] as String,
           ) ??
           LengthUnit.inch,
+      json['lang'] as String,
     );
   }
 
@@ -40,9 +41,10 @@ class ApppreferencesBloc
     return <String, dynamic>{
       'weightUnit': EnumToString.convertToString(state.weightUnit),
       'lengthUnit': EnumToString.convertToString(state.lengthUnit),
+      'lang': state.lang,
     };
   }
 }
 
 final AppPreferences intialappPreferences =
-    AppPreferences(WeightUnit.kg, LengthUnit.inch);
+    AppPreferences(WeightUnit.kg, LengthUnit.inch, 'en');
