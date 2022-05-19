@@ -20,7 +20,9 @@ import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
-import 'package:watcha_body/presentation/charts/charts.dart';
+import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
+import 'package:watcha_body/presentation/home/charts/charts.dart';
+import 'package:watcha_body/presentation/home/home.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
@@ -55,6 +57,13 @@ class App extends StatelessWidget {
               context.read<WidgetRepository>(),
               context.read<MeasurementRepository>(),
             )..add(const GetallwidgetsdataEvent.fetchAllData()),
+          ),
+          BlocProvider<ChartdataBloc>(
+            create: (context) => ChartdataBloc(
+              context.read<WidgetRepository>(),
+              context.read<MeasurementRepository>(),
+            )..add(
+                const ChartdataEvent.fetchData(duration: Duration(minutes: 1))),
           ),
           BlocProvider<ApppreferencesBloc>(
             create: (context) => ApppreferencesBloc(),
@@ -126,7 +135,7 @@ class App extends StatelessWidget {
                             );
                         }
                       },
-                      home: const OverView(),
+                      home: const HomeView(),
                     );
                   },
                 );

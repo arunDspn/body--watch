@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:watcha_body/data/domain/models/measurement_widget.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
+import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/overview.dart';
 import 'package:watcha_body/size_config.dart';
@@ -67,6 +68,9 @@ class _AddDataModalState extends State<AddDataModal> {
               context
                   .read<GetallwidgetsdataBloc>()
                   .add(const GetallwidgetsdataEvent.fetchAllData());
+
+              context.read<ChartdataBloc>().add(
+                  const ChartdataEvent.fetchData(duration: Duration(days: 7)));
 
               // Get.toNamed("/NextScreen");
               // Navigator.of(context).popUntil((route) {
