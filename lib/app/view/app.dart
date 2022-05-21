@@ -63,7 +63,8 @@ class App extends StatelessWidget {
               context.read<WidgetRepository>(),
               context.read<MeasurementRepository>(),
             )..add(
-                const ChartdataEvent.fetchData(duration: Duration(minutes: 1))),
+                const ChartdataEvent.fetchData(duration: DurationsEnum.month1),
+              ),
           ),
           BlocProvider<ApppreferencesBloc>(
             create: (context) => ApppreferencesBloc(),

@@ -65,12 +65,17 @@ class _AddDataModalState extends State<AddDataModal> {
                 ),
               );
 
+              // Refreshing Overview data
               context
                   .read<GetallwidgetsdataBloc>()
                   .add(const GetallwidgetsdataEvent.fetchAllData());
 
+              // Refreshing Chart data but with previous duration
               context.read<ChartdataBloc>().add(
-                  const ChartdataEvent.fetchData(duration: Duration(days: 7)));
+                    const ChartdataEvent.fetchData(
+                      duration: DurationsEnum.month1,
+                    ),
+                  );
 
               // Get.toNamed("/NextScreen");
               // Navigator.of(context).popUntil((route) {

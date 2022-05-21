@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 class _$ChartdataEventTearOff {
   const _$ChartdataEventTearOff();
 
-  _FetchData fetchData({required Duration duration}) {
+  _FetchData fetchData({required DurationsEnum duration}) {
     return _FetchData(
       duration: duration,
     );
@@ -29,21 +29,21 @@ const $ChartdataEvent = _$ChartdataEventTearOff();
 
 /// @nodoc
 mixin _$ChartdataEvent {
-  Duration get duration => throw _privateConstructorUsedError;
+  DurationsEnum get duration => throw _privateConstructorUsedError;
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(Duration duration) fetchData,
+    required TResult Function(DurationsEnum duration) fetchData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(Duration duration)? fetchData,
+    TResult Function(DurationsEnum duration)? fetchData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(Duration duration)? fetchData,
+    TResult Function(DurationsEnum duration)? fetchData,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -74,7 +74,7 @@ abstract class $ChartdataEventCopyWith<$Res> {
   factory $ChartdataEventCopyWith(
           ChartdataEvent value, $Res Function(ChartdataEvent) then) =
       _$ChartdataEventCopyWithImpl<$Res>;
-  $Res call({Duration duration});
+  $Res call({DurationsEnum duration});
 }
 
 /// @nodoc
@@ -94,7 +94,7 @@ class _$ChartdataEventCopyWithImpl<$Res>
       duration: duration == freezed
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
-              as Duration,
+              as DurationsEnum,
     ));
   }
 }
@@ -106,7 +106,7 @@ abstract class _$FetchDataCopyWith<$Res>
           _FetchData value, $Res Function(_FetchData) then) =
       __$FetchDataCopyWithImpl<$Res>;
   @override
-  $Res call({Duration duration});
+  $Res call({DurationsEnum duration});
 }
 
 /// @nodoc
@@ -126,7 +126,7 @@ class __$FetchDataCopyWithImpl<$Res> extends _$ChartdataEventCopyWithImpl<$Res>
       duration: duration == freezed
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
-              as Duration,
+              as DurationsEnum,
     ));
   }
 }
@@ -137,7 +137,7 @@ class _$_FetchData implements _FetchData {
   const _$_FetchData({required this.duration});
 
   @override
-  final Duration duration;
+  final DurationsEnum duration;
 
   @override
   String toString() {
@@ -164,7 +164,7 @@ class _$_FetchData implements _FetchData {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(Duration duration) fetchData,
+    required TResult Function(DurationsEnum duration) fetchData,
   }) {
     return fetchData(duration);
   }
@@ -172,7 +172,7 @@ class _$_FetchData implements _FetchData {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(Duration duration)? fetchData,
+    TResult Function(DurationsEnum duration)? fetchData,
   }) {
     return fetchData?.call(duration);
   }
@@ -180,7 +180,7 @@ class _$_FetchData implements _FetchData {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(Duration duration)? fetchData,
+    TResult Function(DurationsEnum duration)? fetchData,
     required TResult orElse(),
   }) {
     if (fetchData != null) {
@@ -219,10 +219,10 @@ class _$_FetchData implements _FetchData {
 }
 
 abstract class _FetchData implements ChartdataEvent {
-  const factory _FetchData({required Duration duration}) = _$_FetchData;
+  const factory _FetchData({required DurationsEnum duration}) = _$_FetchData;
 
   @override
-  Duration get duration;
+  DurationsEnum get duration;
   @override
   @JsonKey(ignore: true)
   _$FetchDataCopyWith<_FetchData> get copyWith =>

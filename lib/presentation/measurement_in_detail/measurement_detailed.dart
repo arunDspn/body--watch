@@ -5,6 +5,8 @@ import 'package:watcha_body/data/domain/models/measurement_widget.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
+import 'package:watcha_body/presentation/display_models/chart_display.dart';
+import 'package:watcha_body/presentation/home/charts/charts.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/size_config.dart';
 
@@ -112,6 +114,13 @@ class _MeasurementList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        ChartContainer(
+          chartDisplayModel: ChartDisplayModel.fromMeasurementList(
+            measurement: measurementList,
+            name: measurementWidget.name,
+            tableName: measurementWidget.tableName,
+          ),
+        ),
         SizedBox(
           width: SizeConfig.screenWidth! * 0.85,
           child: Row(
@@ -145,7 +154,7 @@ class _MeasurementList extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 12),
           child: Container(
             constraints: BoxConstraints(
-              maxHeight: SizeConfig.screenHeight! * 0.6,
+              maxHeight: SizeConfig.screenHeight! * 0.4,
             ),
             // padding: const EdgeInsets.only(top: 8),
             width: SizeConfig.screenWidth! * 0.85,

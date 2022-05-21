@@ -3,11 +3,19 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/data/repositories/widget_repository.dart';
 import 'package:watcha_body/presentation/display_models/chart_display.dart';
-import 'package:watcha_body/presentation/display_models/measurement_display.dart';
 
 part 'chartdata_event.dart';
 part 'chartdata_state.dart';
 part 'chartdata_bloc.freezed.dart';
+
+enum DurationsEnum {
+  month1,
+  month2,
+  month3,
+  month4,
+  month6,
+  month12,
+}
 
 class ChartdataBloc extends Bloc<ChartdataEvent, ChartdataState> {
   ChartdataBloc(this.widgetRepository, this.measurementRepository)
