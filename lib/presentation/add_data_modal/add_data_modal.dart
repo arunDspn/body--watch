@@ -226,7 +226,7 @@ class _AddDataModalState extends State<AddDataModal> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2021),
-      lastDate: DateTime(2101),
+      lastDate: DateTime.now(),
     );
     if (picked != null && picked != selectedDate) {
       setState(() {

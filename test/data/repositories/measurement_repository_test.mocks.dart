@@ -58,9 +58,13 @@ class MockMeasurementRepository extends _i1.Mock
           as _i5.Future<_i3.Either<String, _i3.Unit>>);
   @override
   _i5.Future<_i3.Either<String, List<_i6.Measurement>>> getAllDetails(
-          {String? tableName}) =>
+          {String? tableName, DateTime? startDate, DateTime? endDate}) =>
       (super.noSuchMethod(
-          Invocation.method(#getAllDetails, [], {#tableName: tableName}),
+          Invocation.method(#getAllDetails, [], {
+            #tableName: tableName,
+            #startDate: startDate,
+            #endDate: endDate
+          }),
           returnValue: Future<_i3.Either<String, List<_i6.Measurement>>>.value(
               _FakeEither_1<String, List<_i6.Measurement>>())) as _i5
           .Future<_i3.Either<String, List<_i6.Measurement>>>);

@@ -133,14 +133,30 @@ class DatabaseService {
     required String tableName,
     int? limit,
     String? orderBy,
+    DateTime? startDate,
+    DateTime? endDate,
   }) async {
     try {
       final _db = await database;
-      final _data = await _db.query(
-        tableName,
-        limit: limit,
-        orderBy: orderBy,
-      );
+      late List<Map<String, Object?>> _data;
+      if (startDate != null && endDate != null) {
+        _data = await _db.query(
+          tableName,
+          where: 'date BETWEEN ? AND ?',
+          // where: 'measurement BETWEEN ? AND ?',
+          whereArgs: [startDate.toIso8601String(), endDate.toIso8601String()],
+          // whereArgs: [50, 60],
+          limit: limit,
+          orderBy: orderBy,
+        );
+      } else {
+        _data = await _db.query(
+          tableName,
+          limit: limit,
+          orderBy: orderBy,
+        );
+      }
+
       return _data;
     } catch (e) {
       return Future.error(e);

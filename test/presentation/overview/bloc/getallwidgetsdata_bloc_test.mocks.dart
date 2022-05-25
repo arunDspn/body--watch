@@ -63,9 +63,13 @@ class MockMeasurementRepository extends _i1.Mock
           as _i6.Future<_i3.Either<String, _i3.Unit>>);
   @override
   _i6.Future<_i3.Either<String, List<_i7.Measurement>>> getAllDetails(
-          {String? tableName}) =>
+          {String? tableName, DateTime? startDate, DateTime? endDate}) =>
       (super.noSuchMethod(
-          Invocation.method(#getAllDetails, [], {#tableName: tableName}),
+          Invocation.method(#getAllDetails, [], {
+            #tableName: tableName,
+            #startDate: startDate,
+            #endDate: endDate
+          }),
           returnValue: Future<_i3.Either<String, List<_i7.Measurement>>>.value(
               _FakeEither_1<String, List<_i7.Measurement>>())) as _i6
           .Future<_i3.Either<String, List<_i7.Measurement>>>);
@@ -173,10 +177,19 @@ class MockDatabaseService extends _i1.Mock implements _i2.DatabaseService {
       returnValueForMissingStub: null);
   @override
   _i6.Future<List<Map<String, dynamic>>> getData(
-          {String? tableName, int? limit, String? orderBy}) =>
+          {String? tableName,
+          int? limit,
+          String? orderBy,
+          DateTime? startDate,
+          DateTime? endDate}) =>
       (super.noSuchMethod(
-              Invocation.method(#getData, [],
-                  {#tableName: tableName, #limit: limit, #orderBy: orderBy}),
+              Invocation.method(#getData, [], {
+                #tableName: tableName,
+                #limit: limit,
+                #orderBy: orderBy,
+                #startDate: startDate,
+                #endDate: endDate
+              }),
               returnValue: Future<List<Map<String, dynamic>>>.value(
                   <Map<String, dynamic>>[]))
           as _i6.Future<List<Map<String, dynamic>>>);

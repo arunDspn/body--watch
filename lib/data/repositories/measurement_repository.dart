@@ -35,11 +35,15 @@ class MeasurementRepository extends IMeasurementsFacade {
   @override
   Future<Either<String, List<Measurement>>> getAllDetails({
     required String tableName,
+    DateTime? startDate,
+    DateTime? endDate,
   }) async {
     try {
       final _data = await databaseService.getData(
         tableName: tableName,
         orderBy: 'date DESC',
+        startDate: startDate,
+        endDate: endDate,
       );
       final _dData = _data.map(Measurement.fromMap).toList();
       return Right(_dData);

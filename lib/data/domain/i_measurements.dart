@@ -7,6 +7,8 @@ abstract class IMeasurementsFacade {
   });
   Future<Either<String, List<Measurement>>> getAllDetails({
     required String tableName,
+    DateTime? startDate,
+    DateTime? endDate,
   });
   Future<Either<String, Unit>> createMeasurement({
     required String tableName,

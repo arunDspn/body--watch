@@ -85,6 +85,8 @@ class MeasurementInDetail extends StatelessWidget {
                           child: _MeasurementList(
                             measurementList: value.list,
                             measurementWidget: measurementWidget,
+                            startDate: DateTime.now()
+                                .subtract(const Duration(days: 30)),
                           ),
                         );
                       },
@@ -105,16 +107,19 @@ class _MeasurementList extends StatelessWidget {
     Key? key,
     required this.measurementList,
     required this.measurementWidget,
+    required this.startDate,
   }) : super(key: key);
 
   final List<Measurement> measurementList;
   final MeasurementWidget measurementWidget;
+  final DateTime startDate;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ChartContainer(
+        ChartContainer.withDateLimiter(
+          startDate: startDate,
           chartDisplayModel: ChartDisplayModel.fromMeasurementList(
             measurement: measurementList,
             name: measurementWidget.name,

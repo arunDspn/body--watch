@@ -36,6 +36,8 @@ class ChartdataBloc extends Bloc<ChartdataEvent, ChartdataState> {
               for (final e in r) {
                 final _data = await measurementRepository.getAllDetails(
                   tableName: e.tableName,
+                  startDate: _enumToStartDate(value.duration),
+                  endDate: DateTime.now(),
                 );
                 _data.fold(
                   (l) {
@@ -52,12 +54,35 @@ class ChartdataBloc extends Bloc<ChartdataEvent, ChartdataState> {
                   },
                 );
               }
-              emit(ChartdataState.success(chartDisplayModel: list));
+              emit(
+                ChartdataState.success(
+                  chartDisplayModel: list,
+                  durationsEnum: value.duration,
+                  startDate: _enumToStartDate(value.duration),
+                ),
+              );
             },
           );
         },
       );
     });
+  }
+
+  DateTime _enumToStartDate(DurationsEnum durationsEnum) {
+    switch (durationsEnum) {
+      case DurationsEnum.month1:
+        return DateTime.now().subtract(const Duration(days: 30));
+      case DurationsEnum.month2:
+        return DateTime.now().subtract(const Duration(days: 60));
+      case DurationsEnum.month3:
+        return DateTime.now().subtract(const Duration(days: 90));
+      case DurationsEnum.month4:
+        return DateTime.now().subtract(const Duration(days: 120));
+      case DurationsEnum.month6:
+        return DateTime.now().subtract(const Duration(days: 180));
+      case DurationsEnum.month12:
+        return DateTime.now().subtract(const Duration(days: 365));
+    }
   }
 
   final WidgetRepository widgetRepository;

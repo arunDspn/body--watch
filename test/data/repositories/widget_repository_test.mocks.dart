@@ -61,10 +61,19 @@ class MockDatabaseService extends _i1.Mock implements _i3.DatabaseService {
       returnValueForMissingStub: null);
   @override
   _i4.Future<List<Map<String, dynamic>>> getData(
-          {String? tableName, int? limit, String? orderBy}) =>
+          {String? tableName,
+          int? limit,
+          String? orderBy,
+          DateTime? startDate,
+          DateTime? endDate}) =>
       (super.noSuchMethod(
-              Invocation.method(#getData, [],
-                  {#tableName: tableName, #limit: limit, #orderBy: orderBy}),
+              Invocation.method(#getData, [], {
+                #tableName: tableName,
+                #limit: limit,
+                #orderBy: orderBy,
+                #startDate: startDate,
+                #endDate: endDate
+              }),
               returnValue: Future<List<Map<String, dynamic>>>.value(
                   <Map<String, dynamic>>[]))
           as _i4.Future<List<Map<String, dynamic>>>);

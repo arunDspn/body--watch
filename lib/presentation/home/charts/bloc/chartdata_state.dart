@@ -6,6 +6,8 @@ class ChartdataState with _$ChartdataState {
   const factory ChartdataState.loading() = _Loading;
   const factory ChartdataState.success({
     required List<ChartDisplayModel> chartDisplayModel,
+    required DurationsEnum durationsEnum,
+    required DateTime startDate,
   }) = _Success;
   const factory ChartdataState.failed({
     required String cause,

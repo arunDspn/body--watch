@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:charts_flutter/flutter.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -26,6 +27,52 @@ class Charts extends StatelessWidget {
           'Charts',
           style: Theme.of(context).textTheme.headline3,
         ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.settings,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, '/settings');
+          },
+        ),
+        actions: [
+          BlocBuilder<ChartdataBloc, ChartdataState>(
+            builder: (context, state) {
+              return state.maybeMap(
+                orElse: SizedBox.shrink,
+                success: (state) {
+                  return DropdownButton<DurationsEnum>(
+                    value: state.durationsEnum,
+                    icon: Icon(
+                      Icons.arrow_drop_down,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    underline: Container(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        context
+                            .read<ChartdataBloc>()
+                            .add(ChartdataEvent.fetchData(duration: value));
+                      }
+                    },
+                    items: DurationsEnum.values.map((e) {
+                      return DropdownMenuItem(
+                        value: e,
+                        child: Text(
+                          EnumToString.convertToString(
+                            e,
+                            camelCase: true,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: BlocBuilder<ChartdataBloc, ChartdataState>(
         builder: (context, state) {
@@ -39,6 +86,7 @@ class Charts extends StatelessWidget {
             success: (value) {
               return _SucessBody(
                 list: value.chartDisplayModel,
+                startDate: value.startDate,
               );
             },
             failed: (value) {
@@ -58,9 +106,11 @@ class _SucessBody extends StatelessWidget {
   const _SucessBody({
     Key? key,
     required this.list,
+    required this.startDate,
   }) : super(key: key);
 
   final List<ChartDisplayModel> list;
+  final DateTime startDate;
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +119,7 @@ class _SucessBody extends StatelessWidget {
       itemBuilder: (context, index) {
         return ChartContainer(
           chartDisplayModel: list[index],
+          startDate: startDate,
         );
       },
     );
@@ -79,9 +130,20 @@ class ChartContainer extends StatelessWidget {
   const ChartContainer({
     Key? key,
     required this.chartDisplayModel,
+    required this.startDate,
+    this.withLimiter = false,
+  }) : super(key: key);
+
+  const ChartContainer.withDateLimiter({
+    Key? key,
+    required this.chartDisplayModel,
+    required this.startDate,
+    this.withLimiter = true,
   }) : super(key: key);
 
   final ChartDisplayModel chartDisplayModel;
+  final DateTime startDate;
+  final bool withLimiter;
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +165,8 @@ class ChartContainer extends StatelessWidget {
                   '${chartDisplayModel.measurementName} ${chartDisplayModel.lastMeasurement}',
                   style: Theme.of(context).textTheme.headline3,
                 ),
-                TextButton(
+                if (!withLimiter)
+                  TextButton(
                     onPressed: () {
                       showModalBottomSheet<void>(
                         context: context,
@@ -115,13 +178,51 @@ class ChartContainer extends StatelessWidget {
                         },
                       );
                     },
-                    child: const Text('Add')),
+                    child: const Text('Add'),
+                  )
+                else
+                  BlocBuilder<ChartdataBloc, ChartdataState>(
+                    builder: (context, state) {
+                      return state.maybeMap(
+                        orElse: SizedBox.shrink,
+                        success: (state) {
+                          return DropdownButton<DurationsEnum>(
+                            value: state.durationsEnum,
+                            icon: Icon(
+                              Icons.arrow_drop_down,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                            underline: Container(),
+                            onChanged: (value) {
+                              if (value != null) {
+                                context.read<ChartdataBloc>().add(
+                                      ChartdataEvent.fetchData(duration: value),
+                                    );
+                              }
+                            },
+                            items: DurationsEnum.values.map((e) {
+                              return DropdownMenuItem(
+                                value: e,
+                                child: Text(
+                                  EnumToString.convertToString(
+                                    e,
+                                    camelCase: true,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          );
+                        },
+                      );
+                    },
+                  ),
               ],
             ),
             Expanded(
               child: TimeSeriesLineAnnotationChart(
                 chartDisplayModel.measurementList,
                 animate: true,
+                startDate: startDate,
               ),
             ),
           ],
@@ -144,12 +245,13 @@ class TimeSeriesLineAnnotationChart extends StatelessWidget {
   const TimeSeriesLineAnnotationChart(
     this.seriesList, {
     required this.animate,
+    required this.startDate,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final _endDate = DateTime.now().subtract(const Duration(days: 30));
+    // final _endDate = DateTime.now().subtract(const Duration(days: 60));
     return charts.TimeSeriesChart(
       seriesList,
       animate: animate,
@@ -182,9 +284,9 @@ class TimeSeriesLineAnnotationChart extends StatelessWidget {
         charts.RangeAnnotation(
           [
             charts.LineAnnotationSegment(
-              _endDate,
+              startDate,
               charts.RangeAnnotationAxisType.domain,
-              endLabel: '${_endDate.day}-${_endDate.month}',
+              endLabel: '${startDate.day}-${startDate.month}',
             ),
             charts.LineAnnotationSegment(
               DateTime.now(),
@@ -202,6 +304,7 @@ class TimeSeriesLineAnnotationChart extends StatelessWidget {
 
   final List<charts.Series<dynamic, DateTime>> seriesList;
   final bool animate;
+  final DateTime startDate;
 }
 
 class CustomCircleSymbolRenderer extends CircleSymbolRenderer {
