@@ -1,13 +1,15 @@
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
+import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/data/domain/models/measurement_widget.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
-import 'package:watcha_body/presentation/overview/overview.dart';
 import 'package:watcha_body/size_config.dart';
 
 class AddDataModal extends StatefulWidget {
@@ -43,6 +45,9 @@ class _AddDataModalState extends State<AddDataModal> {
   final _dateController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final measurementUnit = EnumToString.convertToString(
+      context.read<ApppreferencesBloc>().state.lengthUnit,
+    );
     return SafeArea(
       // height: 400,
       child: BlocListener<AdddataCubit, AdddataState>(
@@ -97,7 +102,10 @@ class _AddDataModalState extends State<AddDataModal> {
           );
         },
         child: Container(
-          color: Theme.of(context).colorScheme.secondaryContainer,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Theme.of(context).colorScheme.secondaryContainer,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -162,11 +170,11 @@ class _AddDataModalState extends State<AddDataModal> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text('Measurement'),
+                            const Spacer(),
                             SizedBox(
-                              width: SizeConfig.screenWidth! * 0.5,
+                              width: SizeConfig.screenWidth! * 0.1,
                               child: TextFormField(
                                 // maxLength: 5,
                                 inputFormatters: [
@@ -177,20 +185,21 @@ class _AddDataModalState extends State<AddDataModal> {
                                 controller: _measurementController,
                                 keyboardType: TextInputType.number,
                                 style: Theme.of(context).textTheme.bodyText1,
-                                decoration: const InputDecoration(
-                                  suffixText: 'inches',
-                                ),
                               ),
                             ),
+                            Text(
+                              measurementUnit,
+                              style: Theme.of(context).textTheme.bodyText1,
+                            )
                           ],
                         ),
                         const Divider(),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text('Date'),
+                            const Spacer(),
                             SizedBox(
-                              width: SizeConfig.screenWidth! * 0.5,
+                              width: SizeConfig.screenWidth! * 0.3,
                               child: GestureDetector(
                                 onTap: () {
                                   _selectDate(context);

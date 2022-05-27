@@ -24,78 +24,75 @@ class MeasurementInDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                height: SizeConfig.screenHeight! * 0.08,
-                child: Stack(
-                  children: [
-                    Align(
-                      child: Text(
-                        measurementWidget.name,
-                        style: Theme.of(context).textTheme.headline3,
-                      ),
+        child: Column(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              height: SizeConfig.screenHeight! * 0.08,
+              child: Stack(
+                children: [
+                  Align(
+                    child: Text(
+                      measurementWidget.name,
+                      style: Theme.of(context).textTheme.headline3,
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Cancel'),
-                      ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Cancel'),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              BlocListener<AdddataCubit, AdddataState>(
-                listener: (context, state) {
-                  state.maybeMap(
-                    orElse: () {},
-                    success: (_) {
-                      context.read<GetallmeasurmentsCubit>().fetchAllData(
-                            tableName: measurementWidget.tableName,
-                          );
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            BlocListener<AdddataCubit, AdddataState>(
+              listener: (context, state) {
+                state.maybeMap(
+                  orElse: () {},
+                  success: (_) {
+                    context.read<GetallmeasurmentsCubit>().fetchAllData(
+                          tableName: measurementWidget.tableName,
+                        );
+                  },
+                );
+              },
+              child:
+                  BlocBuilder<GetallmeasurmentsCubit, GetallmeasurmentsState>(
+                builder: (context, state) {
+                  return state.maybeMap(
+                    orElse: () {
+                      return const Text('No You Cant See Me');
+                    },
+                    loading: (_) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                    failed: (value) {
+                      return Text(value.cause);
+                    },
+                    success: (value) {
+                      return Expanded(
+                        child: _MeasurementList(
+                          measurementList: value.list,
+                          measurementWidget: measurementWidget,
+                          startDate:
+                              DateTime.now().subtract(const Duration(days: 30)),
+                        ),
+                      );
                     },
                   );
                 },
-                child:
-                    BlocBuilder<GetallmeasurmentsCubit, GetallmeasurmentsState>(
-                  builder: (context, state) {
-                    return state.maybeMap(
-                      orElse: () {
-                        return const Text('No You Cant See Me');
-                      },
-                      loading: (_) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
-                      failed: (value) {
-                        return Text(value.cause);
-                      },
-                      success: (value) {
-                        return Expanded(
-                          child: _MeasurementList(
-                            measurementList: value.list,
-                            measurementWidget: measurementWidget,
-                            startDate: DateTime.now()
-                                .subtract(const Duration(days: 30)),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -118,7 +115,7 @@ class _MeasurementList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ChartContainer.withDateLimiter(
+        ChartContainerForDetailed(
           startDate: startDate,
           chartDisplayModel: ChartDisplayModel.fromMeasurementList(
             measurement: measurementList,

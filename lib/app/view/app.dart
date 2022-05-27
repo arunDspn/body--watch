@@ -216,8 +216,9 @@ final darkTheme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
     seedColor: Colors.red,
     primary: Colors.blue,
-    secondary: Colors.white60,
-    secondaryContainer: Colors.black87,
+    // used icons
+    secondary: Colors.grey.shade400,
+    secondaryContainer: Colors.grey.shade900,
     onPrimaryContainer: const Color.fromARGB(255, 53, 53, 53),
   ),
   fontFamily: GoogleFonts.inter(

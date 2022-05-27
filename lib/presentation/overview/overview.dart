@@ -187,7 +187,8 @@ class _WidgetBox extends StatelessWidget {
                 },
                 icon: Icon(
                   Icons.add,
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: getProportionateScreenHeight(30),
                 ),
               )
             ],

@@ -43,6 +43,8 @@ class Charts extends StatelessWidget {
                 orElse: SizedBox.shrink,
                 success: (state) {
                   return DropdownButton<DurationsEnum>(
+                    //TODO: Better universal
+                    borderRadius: BorderRadius.circular(20),
                     value: state.durationsEnum,
                     icon: Icon(
                       Icons.arrow_drop_down,
@@ -64,6 +66,7 @@ class Charts extends StatelessWidget {
                             e,
                             camelCase: true,
                           ),
+                          style: Theme.of(context).textTheme.bodyText1,
                         ),
                       );
                     }).toList(),
@@ -148,12 +151,12 @@ class ChartContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.secondaryContainer,
         ),
         height: SizeConfig.screenHeight! * 0.3,
         child: Column(
@@ -161,9 +164,12 @@ class ChartContainer extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '${chartDisplayModel.measurementName} ${chartDisplayModel.lastMeasurement}',
-                  style: Theme.of(context).textTheme.headline3,
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Text(
+                    '${chartDisplayModel.measurementName}  ${chartDisplayModel.lastMeasurement}',
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
                 ),
                 if (!withLimiter)
                   TextButton(
@@ -251,16 +257,73 @@ class TimeSeriesLineAnnotationChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // State
+    // Now we have almost
+    // but those grids and end date start date at end of graph
     // final _endDate = DateTime.now().subtract(const Duration(days: 60));
     return charts.TimeSeriesChart(
       seriesList,
       animate: animate,
+
+      // this is how we can add annotations
+      // Date
+      domainAxis: const charts.DateTimeAxisSpec(
+        renderSpec: charts.GridlineRendererSpec(
+          labelStyle: charts.TextStyleSpec(
+            color: charts.MaterialPalette.white,
+          ),
+          // 2 vertical lines
+          lineStyle: charts.LineStyleSpec(
+            color: charts.MaterialPalette.black,
+            thickness: 0,
+          ),
+          // dont know what it si
+          axisLineStyle: charts.LineStyleSpec(
+            color: charts.MaterialPalette.white,
+          ),
+          tickLengthPx: 0,
+          labelCollisionRotation: 2,
+        ),
+        showAxisLine: false,
+        // How Months show at down
+        // recurrent
+        // tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
+        //   month: charts.TimeFormatterSpec(
+        //     format: 'M',
+        //     transitionFormat: 'mm',
+        //   ),
+        // ),
+      ),
+      // Measurements
+      primaryMeasureAxis: const charts.NumericAxisSpec(
+        renderSpec: charts.GridlineRendererSpec(
+          axisLineStyle: charts.LineStyleSpec(
+            color: charts.MaterialPalette.black,
+          ),
+          labelStyle: charts.TextStyleSpec(
+            fontSize: 10,
+            color: charts.MaterialPalette.white,
+          ), //chnage white color as per your requirement.
+          tickLengthPx: 0,
+          lineStyle: charts.LineStyleSpec(
+            color: charts.MaterialPalette.black,
+            thickness: 0,
+          ),
+        ),
+        showAxisLine: false,
+        // those divisons 2 4 6 8 9 22
+        tickProviderSpec: charts.BasicNumericTickProviderSpec(
+          zeroBound: false,
+          dataIsInWholeNumbers: true,
+          desiredTickCount: 5,
+        ),
+      ),
       defaultRenderer: charts.LineRendererConfig(
         includeArea: false,
         includePoints: true,
         includeLine: true,
-        stacked: true,
-        roundEndCaps: true,
+        stacked: false,
+        roundEndCaps: false,
       ),
       selectionModels: [
         SelectionModelConfig(
@@ -287,11 +350,29 @@ class TimeSeriesLineAnnotationChart extends StatelessWidget {
               startDate,
               charts.RangeAnnotationAxisType.domain,
               endLabel: '${startDate.day}-${startDate.month}',
+              labelPosition: charts.AnnotationLabelPosition.outside,
+              labelAnchor: charts.AnnotationLabelAnchor.middle,
+              labelStyleSpec: const charts.TextStyleSpec(
+                fontSize: 8,
+                color: charts.MaterialPalette.white,
+              ),
+              // TODO(me): add end date
+              color: charts.ColorUtil.fromDartColor(Colors.grey.shade900),
+
+              // labelAnchor: charts.AnnotationLabelAnchor.end,
             ),
             charts.LineAnnotationSegment(
-              DateTime.now(),
-              charts.RangeAnnotationAxisType.domain,
+              DateTime.now(), charts.RangeAnnotationAxisType.domain,
               startLabel: '${DateTime.now().day}-${DateTime.now().month}',
+              labelStyleSpec: const charts.TextStyleSpec(
+                fontSize: 8,
+                color: charts.MaterialPalette.white,
+              ),
+              labelPosition: charts.AnnotationLabelPosition.outside,
+              labelAnchor: charts.AnnotationLabelAnchor.middle,
+              //TODO: Use custom
+              color: charts.ColorUtil.fromDartColor(Colors.grey.shade900),
+              // labelPosition: AnnotationLabelPosition.margin,
             ),
           ],
         ),
@@ -361,5 +442,101 @@ class CustomCircleSymbolRenderer extends CircleSymbolRenderer {
         (bounds.left).round(),
         (bounds.top - 10).round(),
       );
+  }
+}
+
+class ChartContainerForDetailed extends StatelessWidget {
+  const ChartContainerForDetailed({
+    Key? key,
+    required this.chartDisplayModel,
+    required this.startDate,
+    this.withLimiter = false,
+  }) : super(key: key);
+
+  final ChartDisplayModel chartDisplayModel;
+  final DateTime startDate;
+  final bool withLimiter;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Theme.of(context).colorScheme.secondaryContainer,
+      ),
+      height: SizeConfig.screenHeight! * 0.3,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${chartDisplayModel.measurementName} ${chartDisplayModel.lastMeasurement}',
+                style: Theme.of(context).textTheme.headline3,
+              ),
+              if (!withLimiter)
+                TextButton(
+                  onPressed: () {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      builder: (context) {
+                        return AddDataModal.add(
+                          tableName: chartDisplayModel.tableName,
+                          measurementName: chartDisplayModel.measurementName,
+                        );
+                      },
+                    );
+                  },
+                  child: const Text('Add'),
+                )
+              else
+                BlocBuilder<ChartdataBloc, ChartdataState>(
+                  builder: (context, state) {
+                    return state.maybeMap(
+                      orElse: SizedBox.shrink,
+                      success: (state) {
+                        return DropdownButton<DurationsEnum>(
+                          value: state.durationsEnum,
+                          icon: Icon(
+                            Icons.arrow_drop_down,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          underline: Container(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              context.read<ChartdataBloc>().add(
+                                    ChartdataEvent.fetchData(duration: value),
+                                  );
+                            }
+                          },
+                          items: DurationsEnum.values.map((e) {
+                            return DropdownMenuItem(
+                              value: e,
+                              child: Text(
+                                EnumToString.convertToString(
+                                  e,
+                                  camelCase: true,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      },
+                    );
+                  },
+                ),
+            ],
+          ),
+          Expanded(
+            child: TimeSeriesLineAnnotationChart(
+              chartDisplayModel.measurementList,
+              animate: true,
+              startDate: startDate,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
