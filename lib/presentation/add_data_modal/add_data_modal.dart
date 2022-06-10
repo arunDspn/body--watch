@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
+import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
-import 'package:watcha_body/data/domain/models/measurement_widget.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
@@ -15,20 +15,17 @@ import 'package:watcha_body/size_config.dart';
 class AddDataModal extends StatefulWidget {
   const AddDataModal({
     Key? key,
-    required this.tableName,
-    required this.measurementName,
+    required this.type,
     this.add = false,
   }) : super(key: key);
 
   const AddDataModal.add({
     Key? key,
-    required this.tableName,
-    required this.measurementName,
+    required this.type,
     this.add = true,
   }) : super(key: key);
 
-  final String tableName;
-  final String measurementName;
+  final MeasurementType type;
   final bool add;
 
   @override
@@ -37,6 +34,7 @@ class AddDataModal extends StatefulWidget {
 
 class _AddDataModalState extends State<AddDataModal> {
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
+  late String measurementUnit;
 
   DateTime? selectedDate;
 
@@ -45,9 +43,19 @@ class _AddDataModalState extends State<AddDataModal> {
   final _dateController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final measurementUnit = EnumToString.convertToString(
-      context.read<ApppreferencesBloc>().state.lengthUnit,
-    );
+    // Getting current Unit
+    if (widget.type is LengthMeasurementType) {
+      measurementUnit = EnumToString.convertToString(
+        context.read<ApppreferencesBloc>().state.lengthUnit,
+      );
+    } else if (widget.type is WeightMeasurementType) {
+      measurementUnit = EnumToString.convertToString(
+        context.read<ApppreferencesBloc>().state.weightUnit,
+      );
+    } else {
+      measurementUnit = '%';
+    }
+    final _appPref = context.read<ApppreferencesBloc>().state;
     return SafeArea(
       // height: 400,
       child: BlocListener<AdddataCubit, AdddataState>(
@@ -71,14 +79,17 @@ class _AddDataModalState extends State<AddDataModal> {
               );
 
               // Refreshing Overview data
-              context
-                  .read<GetallwidgetsdataBloc>()
-                  .add(const GetallwidgetsdataEvent.fetchAllData());
+              context.read<GetallwidgetsdataBloc>().add(
+                    GetallwidgetsdataEvent.fetchAllData(
+                      appPreferences: _appPref,
+                    ),
+                  );
 
               // Refreshing Chart data but with previous duration
               context.read<ChartdataBloc>().add(
-                    const ChartdataEvent.fetchData(
+                    ChartdataEvent.fetchData(
                       duration: DurationsEnum.month1,
+                      appPreferences: _appPref,
                     ),
                   );
 
@@ -121,35 +132,21 @@ class _AddDataModalState extends State<AddDataModal> {
                     ),
                   ),
                   Text(
-                    widget.measurementName,
+                    widget.type.name,
                     style: Theme.of(context).textTheme.headline3,
                   ),
                   TextButton(
                     onPressed: () {
-                      if (widget.add) {
-                        context.read<AdddataCubit>().insertData(
-                              measurement: Measurement(
-                                double.parse(_measurementController.text),
-                                selectedDate ?? DateTime.now(),
-                              ),
-                              tableName: widget.tableName,
-                            );
+                      context.read<AdddataCubit>().insertData(
+                            measurement: Measurement(
+                              date: selectedDate ?? DateTime.now(),
+                              value: double.parse(_measurementController.text),
+                              unit: measurementUnit,
+                              type: widget.type.name,
+                            ),
+                          );
 
-                        Navigator.pop(context);
-                      } else {
-                        context.read<AdddataCubit>().insertInitalData(
-                              measurement: Measurement(
-                                double.parse(_measurementController.text),
-                                selectedDate ?? DateTime.now(),
-                              ),
-                              measurementWidget: MeasurementWidget(
-                                widget.measurementName,
-                                widget.tableName,
-                              ),
-                            );
-
-                        Navigator.pop(context);
-                      }
+                      Navigator.pop(context);
                     },
                     child: const Text('Save'),
                   ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:watcha_body/data/domain/models/measurement_widget.dart';
+import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
+import 'package:watcha_body/app/data/app_data.dart';
+import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
@@ -13,15 +15,16 @@ import 'package:watcha_body/size_config.dart';
 class MeasurementInDetail extends StatelessWidget {
   const MeasurementInDetail({
     Key? key,
-    required this.measurementWidget,
+    required this.measurementType,
   }) : super(key: key);
 
   static const routeName = '/measurement_in_detail';
 
-  final MeasurementWidget measurementWidget;
+  final MeasurementType measurementType;
 
   @override
   Widget build(BuildContext context) {
+    final appPref = context.read<ApppreferencesBloc>().state;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -33,7 +36,7 @@ class MeasurementInDetail extends StatelessWidget {
                 children: [
                   Align(
                     child: Text(
-                      measurementWidget.name,
+                      measurementType.name,
                       style: Theme.of(context).textTheme.headline3,
                     ),
                   ),
@@ -58,7 +61,8 @@ class MeasurementInDetail extends StatelessWidget {
                   orElse: () {},
                   success: (_) {
                     context.read<GetallmeasurmentsCubit>().fetchAllData(
-                          tableName: measurementWidget.tableName,
+                          type: measurementType.name,
+                          appPreferences: appPref,
                         );
                   },
                 );
@@ -82,7 +86,7 @@ class MeasurementInDetail extends StatelessWidget {
                       return Expanded(
                         child: _MeasurementList(
                           measurementList: value.list,
-                          measurementWidget: measurementWidget,
+                          measurementType: measurementType,
                           startDate:
                               DateTime.now().subtract(const Duration(days: 30)),
                         ),
@@ -103,12 +107,12 @@ class _MeasurementList extends StatelessWidget {
   const _MeasurementList({
     Key? key,
     required this.measurementList,
-    required this.measurementWidget,
+    required this.measurementType,
     required this.startDate,
   }) : super(key: key);
 
   final List<Measurement> measurementList;
-  final MeasurementWidget measurementWidget;
+  final MeasurementType measurementType;
   final DateTime startDate;
 
   @override
@@ -119,8 +123,7 @@ class _MeasurementList extends StatelessWidget {
           startDate: startDate,
           chartDisplayModel: ChartDisplayModel.fromMeasurementList(
             measurement: measurementList,
-            name: measurementWidget.name,
-            tableName: measurementWidget.tableName,
+            name: measurementType.name,
           ),
         ),
         SizedBox(
@@ -138,8 +141,7 @@ class _MeasurementList extends StatelessWidget {
                     context: context,
                     builder: (context) {
                       return AddDataModal.add(
-                        tableName: measurementWidget.tableName,
-                        measurementName: measurementWidget.name,
+                        type: measurementType,
                       );
                     },
                   );
@@ -175,7 +177,7 @@ class _MeasurementList extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return _TableCell(
                     date: measurementList[index].date,
-                    measurement: measurementList[index].measurement,
+                    measurement: measurementList[index].value,
                   );
                 },
               ),

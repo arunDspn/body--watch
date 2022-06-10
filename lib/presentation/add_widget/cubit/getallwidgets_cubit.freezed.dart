@@ -31,7 +31,7 @@ class _$GetallwidgetsStateTearOff {
     );
   }
 
-  _Success success(List<MeasurementWidget> widgets) {
+  _Success success(List<MeasurementType> widgets) {
     return _Success(
       widgets,
     );
@@ -48,7 +48,7 @@ mixin _$GetallwidgetsState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String cause) failure,
-    required TResult Function(List<MeasurementWidget> widgets) success,
+    required TResult Function(List<MeasurementType> widgets) success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -56,7 +56,7 @@ mixin _$GetallwidgetsState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementWidget> widgets)? success,
+    TResult Function(List<MeasurementType> widgets)? success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -64,7 +64,7 @@ mixin _$GetallwidgetsState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementWidget> widgets)? success,
+    TResult Function(List<MeasurementType> widgets)? success,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -154,7 +154,7 @@ class _$_Initial implements _Initial {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String cause) failure,
-    required TResult Function(List<MeasurementWidget> widgets) success,
+    required TResult Function(List<MeasurementType> widgets) success,
   }) {
     return initial();
   }
@@ -165,7 +165,7 @@ class _$_Initial implements _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementWidget> widgets)? success,
+    TResult Function(List<MeasurementType> widgets)? success,
   }) {
     return initial?.call();
   }
@@ -176,7 +176,7 @@ class _$_Initial implements _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementWidget> widgets)? success,
+    TResult Function(List<MeasurementType> widgets)? success,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -269,7 +269,7 @@ class _$_Loading implements _Loading {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String cause) failure,
-    required TResult Function(List<MeasurementWidget> widgets) success,
+    required TResult Function(List<MeasurementType> widgets) success,
   }) {
     return loading();
   }
@@ -280,7 +280,7 @@ class _$_Loading implements _Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementWidget> widgets)? success,
+    TResult Function(List<MeasurementType> widgets)? success,
   }) {
     return loading?.call();
   }
@@ -291,7 +291,7 @@ class _$_Loading implements _Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementWidget> widgets)? success,
+    TResult Function(List<MeasurementType> widgets)? success,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -408,7 +408,7 @@ class _$_Failure implements _Failure {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String cause) failure,
-    required TResult Function(List<MeasurementWidget> widgets) success,
+    required TResult Function(List<MeasurementType> widgets) success,
   }) {
     return failure(cause);
   }
@@ -419,7 +419,7 @@ class _$_Failure implements _Failure {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementWidget> widgets)? success,
+    TResult Function(List<MeasurementType> widgets)? success,
   }) {
     return failure?.call(cause);
   }
@@ -430,7 +430,7 @@ class _$_Failure implements _Failure {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementWidget> widgets)? success,
+    TResult Function(List<MeasurementType> widgets)? success,
     required TResult orElse(),
   }) {
     if (failure != null) {
@@ -490,7 +490,7 @@ abstract class _Failure implements GetallwidgetsState {
 abstract class _$SuccessCopyWith<$Res> {
   factory _$SuccessCopyWith(_Success value, $Res Function(_Success) then) =
       __$SuccessCopyWithImpl<$Res>;
-  $Res call({List<MeasurementWidget> widgets});
+  $Res call({List<MeasurementType> widgets});
 }
 
 /// @nodoc
@@ -511,7 +511,7 @@ class __$SuccessCopyWithImpl<$Res>
       widgets == freezed
           ? _value.widgets
           : widgets // ignore: cast_nullable_to_non_nullable
-              as List<MeasurementWidget>,
+              as List<MeasurementType>,
     ));
   }
 }
@@ -522,7 +522,7 @@ class _$_Success implements _Success {
   const _$_Success(this.widgets);
 
   @override
-  final List<MeasurementWidget> widgets;
+  final List<MeasurementType> widgets;
 
   @override
   String toString() {
@@ -552,7 +552,7 @@ class _$_Success implements _Success {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String cause) failure,
-    required TResult Function(List<MeasurementWidget> widgets) success,
+    required TResult Function(List<MeasurementType> widgets) success,
   }) {
     return success(widgets);
   }
@@ -563,7 +563,7 @@ class _$_Success implements _Success {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementWidget> widgets)? success,
+    TResult Function(List<MeasurementType> widgets)? success,
   }) {
     return success?.call(widgets);
   }
@@ -574,7 +574,7 @@ class _$_Success implements _Success {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementWidget> widgets)? success,
+    TResult Function(List<MeasurementType> widgets)? success,
     required TResult orElse(),
   }) {
     if (success != null) {
@@ -622,9 +622,9 @@ class _$_Success implements _Success {
 }
 
 abstract class _Success implements GetallwidgetsState {
-  const factory _Success(List<MeasurementWidget> widgets) = _$_Success;
+  const factory _Success(List<MeasurementType> widgets) = _$_Success;
 
-  List<MeasurementWidget> get widgets;
+  List<MeasurementType> get widgets;
   @JsonKey(ignore: true)
   _$SuccessCopyWith<_Success> get copyWith =>
       throw _privateConstructorUsedError;

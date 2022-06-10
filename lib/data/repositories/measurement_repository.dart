@@ -7,14 +7,23 @@ class MeasurementRepository extends IMeasurementsFacade {
   MeasurementRepository(this.databaseService);
 
   final DatabaseService databaseService;
+
+  static const latestDetailsQuery = '''
+    WITH ranked AS
+    (SELECT id, value, date, type, unit,
+    row_number() OVER (PARTITION BY type ORDER BY date DESC) AS rn
+    FROM measurements)
+    SELECT id, value, date, type, unit
+    FROM ranked
+    WHERE rn <= 2
+    ORDER BY type, date DESC;
+    ''';
   @override
   Future<Either<String, Unit>> createMeasurement({
-    required String tableName,
     required Measurement measurement,
   }) async {
     try {
       await databaseService.insert(
-        tableName: tableName,
         map: measurement.toMap(),
       );
       return const Right(unit);
@@ -25,7 +34,6 @@ class MeasurementRepository extends IMeasurementsFacade {
 
   @override
   Future<Either<String, Unit>> deleteMeasurement({
-    required String tableName,
     required String id,
   }) {
     // TODO: implement deleteMeasurement
@@ -33,48 +41,107 @@ class MeasurementRepository extends IMeasurementsFacade {
   }
 
   @override
-  Future<Either<String, List<Measurement>>> getAllDetails({
-    required String tableName,
+  Future<Either<String, List<Measurement>>> getDetailsByDate({
+    required String preferredWeightUnit,
+    required String preferredLengthUnit,
     DateTime? startDate,
     DateTime? endDate,
+    String? type,
   }) async {
     try {
       final _data = await databaseService.getData(
-        tableName: tableName,
-        orderBy: 'date DESC',
         startDate: startDate,
         endDate: endDate,
+        type: type,
       );
       final _dData = _data.map(Measurement.fromMap).toList();
-      return Right(_dData);
+      final _fixedData = _convertToPreferredUnits(
+        _dData,
+        preferredWeightUnit,
+        preferredLengthUnit,
+      );
+      return Right(_fixedData);
     } catch (e) {
       return Left(e.toString());
     }
   }
 
+  double _convertInchToCm(double inch) => (inch * 2.54).ceilToDouble();
+  double _convertCmToInch(double cm) => (cm / 2.54).ceilToDouble();
+  double _convertPoundToKg(double pound) => (pound / 2.20462262).ceilToDouble();
+  double _convertKgToPound(double kg) => (kg * 2.20462262).ceilToDouble();
+
   @override
   Future<Either<String, List<Measurement>>> getLatestDetails({
-    required String tableName,
+    required String preferredWeightUnit,
+    required String preferredLengthUnit,
   }) async {
     try {
-      final _data = await databaseService.getData(
-        tableName: tableName,
-        limit: 2,
-        orderBy: 'date DESC',
-      );
+      final _db = await databaseService.database;
+      final _data = await _db.rawQuery(latestDetailsQuery);
       final _dData = _data.map(Measurement.fromMap).toList();
-      return Right(_dData);
+      final _fixedData = _convertToPreferredUnits(
+        _dData,
+        preferredWeightUnit,
+        preferredLengthUnit,
+      );
+      return Right(_fixedData);
     } catch (e) {
       return Left(e.toString());
     }
+  }
+
+  List<Measurement> _convertToPreferredUnits(
+    List<Measurement> measurements,
+    String preferredWeightUnit,
+    String preferredLengthUnit,
+  ) {
+    return measurements.map((e) {
+      if (e.unit == 'inch' || e.unit == 'cm') {
+        if (e.unit != preferredLengthUnit) {
+          if (preferredLengthUnit == 'inch') {
+            return e.copyWith(value: _convertCmToInch(e.value));
+          } else {
+            return e.copyWith(value: _convertInchToCm(e.value));
+          }
+          // e.copyWith(unit: preferredLengthUnit);
+        }
+        return e;
+      } else if (e.unit == 'kg' || e.unit == 'lbs') {
+        if (e.unit != preferredWeightUnit) {
+          if (preferredWeightUnit == 'kg') {
+            return e.copyWith(value: _convertPoundToKg(e.value));
+          } else {
+            return e.copyWith(value: _convertKgToPound(e.value));
+          }
+          // e.copyWith(unit: preferredWeightUnit);
+        }
+        return e;
+      } else {
+        return e;
+      }
+    }).toList();
   }
 
   @override
   Future<Either<String, Unit>> updateMeasurement({
-    required String tableName,
     required Measurement measurement,
   }) {
     // TODO: implement updateMeasurement
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<String, List<String>>> getAddedTypes() async {
+    try {
+      final _db = await databaseService.database;
+      final _data =
+          await _db.rawQuery('SELECT DISTINCT(type) from measurements');
+
+      final _dData = _data.map((e) => e['type'] as String).toList();
+      return Right(_dData);
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 }

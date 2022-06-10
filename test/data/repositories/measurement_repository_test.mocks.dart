@@ -40,49 +40,61 @@ class MockMeasurementRepository extends _i1.Mock
           returnValue: _FakeDatabaseService_0()) as _i2.DatabaseService);
   @override
   _i5.Future<_i3.Either<String, _i3.Unit>> createMeasurement(
-          {String? tableName, _i6.Measurement? measurement}) =>
-      (super.noSuchMethod(
-              Invocation.method(#createMeasurement, [],
-                  {#tableName: tableName, #measurement: measurement}),
-              returnValue: Future<_i3.Either<String, _i3.Unit>>.value(
-                  _FakeEither_1<String, _i3.Unit>()))
-          as _i5.Future<_i3.Either<String, _i3.Unit>>);
-  @override
-  _i5.Future<_i3.Either<String, _i3.Unit>> deleteMeasurement(
-          {String? tableName, String? id}) =>
+          {_i6.Measurement? measurement}) =>
       (super.noSuchMethod(
               Invocation.method(
-                  #deleteMeasurement, [], {#tableName: tableName, #id: id}),
+                  #createMeasurement, [], {#measurement: measurement}),
               returnValue: Future<_i3.Either<String, _i3.Unit>>.value(
                   _FakeEither_1<String, _i3.Unit>()))
           as _i5.Future<_i3.Either<String, _i3.Unit>>);
   @override
-  _i5.Future<_i3.Either<String, List<_i6.Measurement>>> getAllDetails(
-          {String? tableName, DateTime? startDate, DateTime? endDate}) =>
+  _i5.Future<_i3.Either<String, _i3.Unit>> deleteMeasurement({String? id}) =>
+      (super.noSuchMethod(Invocation.method(#deleteMeasurement, [], {#id: id}),
+              returnValue: Future<_i3.Either<String, _i3.Unit>>.value(
+                  _FakeEither_1<String, _i3.Unit>()))
+          as _i5.Future<_i3.Either<String, _i3.Unit>>);
+  @override
+  _i5.Future<_i3.Either<String, List<_i6.Measurement>>> getDetailsByDate(
+          {String? preferredWeightUnit,
+          String? preferredLengthUnit,
+          DateTime? startDate,
+          DateTime? endDate,
+          String? type}) =>
       (super.noSuchMethod(
-          Invocation.method(#getAllDetails, [], {
-            #tableName: tableName,
+          Invocation.method(#getDetailsByDate, [], {
+            #preferredWeightUnit: preferredWeightUnit,
+            #preferredLengthUnit: preferredLengthUnit,
             #startDate: startDate,
-            #endDate: endDate
+            #endDate: endDate,
+            #type: type
           }),
           returnValue: Future<_i3.Either<String, List<_i6.Measurement>>>.value(
               _FakeEither_1<String, List<_i6.Measurement>>())) as _i5
           .Future<_i3.Either<String, List<_i6.Measurement>>>);
   @override
   _i5.Future<_i3.Either<String, List<_i6.Measurement>>> getLatestDetails(
-          {String? tableName}) =>
+          {String? preferredWeightUnit, String? preferredLengthUnit}) =>
       (super.noSuchMethod(
-          Invocation.method(#getLatestDetails, [], {#tableName: tableName}),
+          Invocation.method(#getLatestDetails, [], {
+            #preferredWeightUnit: preferredWeightUnit,
+            #preferredLengthUnit: preferredLengthUnit
+          }),
           returnValue: Future<_i3.Either<String, List<_i6.Measurement>>>.value(
               _FakeEither_1<String, List<_i6.Measurement>>())) as _i5
           .Future<_i3.Either<String, List<_i6.Measurement>>>);
   @override
   _i5.Future<_i3.Either<String, _i3.Unit>> updateMeasurement(
-          {String? tableName, _i6.Measurement? measurement}) =>
+          {_i6.Measurement? measurement}) =>
       (super.noSuchMethod(
-              Invocation.method(#updateMeasurement, [],
-                  {#tableName: tableName, #measurement: measurement}),
+              Invocation.method(
+                  #updateMeasurement, [], {#measurement: measurement}),
               returnValue: Future<_i3.Either<String, _i3.Unit>>.value(
                   _FakeEither_1<String, _i3.Unit>()))
           as _i5.Future<_i3.Either<String, _i3.Unit>>);
+  @override
+  _i5.Future<_i3.Either<String, List<String>>> getAddedTypes() =>
+      (super.noSuchMethod(Invocation.method(#getAddedTypes, []),
+              returnValue: Future<_i3.Either<String, List<String>>>.value(
+                  _FakeEither_1<String, List<String>>()))
+          as _i5.Future<_i3.Either<String, List<String>>>);
 }

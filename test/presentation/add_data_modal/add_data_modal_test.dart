@@ -15,8 +15,7 @@ void main() {
             builder: (context) {
               SizeConfig().init(context);
               return const AddDataModal(
-                tableName: tableName,
-                measurementName: measurementName,
+                type: tableName,
               );
             },
           ),

@@ -1,0 +1,17 @@
+// const List<String> allWidgets = [
+//   'Chest',
+//   'Waist',
+//   'Hips',
+//   'Thigh · Left',
+//   'Thigh · Right',
+//   'Calf · Left',
+//   'Calf · Right',
+//   'Neck',
+//   'Biceps · Left',
+//   'Biceps · Right',
+//   'Forearm · Left',
+//   'Forearm · Right',
+//   'Wrist · Left',
+//   'Wrist · Right',
+//   'Shoulder',
+// ];

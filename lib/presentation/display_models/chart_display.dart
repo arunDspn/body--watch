@@ -1,12 +1,13 @@
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ChartDisplayModel {
   ChartDisplayModel({
     required this.measurementName,
-    required this.tableName,
+    required this.type,
     required this.measurementList,
     required this.lastMeasurement,
   });
@@ -14,18 +15,17 @@ class ChartDisplayModel {
   factory ChartDisplayModel.fromMeasurementList({
     required List<Measurement> measurement,
     required String name,
-    required String tableName,
   }) {
     return ChartDisplayModel(
-      tableName: tableName,
+      type: measurementTypeFromString(name)!,
       measurementName: name,
       measurementList: _createSampleData(measurement),
-      lastMeasurement: measurement.first.measurement.toStringAsFixed(2),
+      lastMeasurement: measurement.first.value.toStringAsFixed(2),
     );
   }
 
   final String measurementName;
-  final String tableName;
+  final MeasurementType type;
   final String lastMeasurement;
   final List<charts.Series<Measurement, DateTime>> measurementList;
 }
@@ -38,7 +38,7 @@ List<charts.Series<Measurement, DateTime>> _createSampleData(
     charts.Series<Measurement, DateTime>(
       id: 'Measurements',
       domainFn: (Measurement sales, _) => sales.date,
-      measureFn: (Measurement sales, _) => sales.measurement,
+      measureFn: (Measurement sales, _) => sales.value,
       fillColorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.blue),
       colorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.blue),
       areaColorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.purple),

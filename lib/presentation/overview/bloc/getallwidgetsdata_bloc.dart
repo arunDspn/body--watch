@@ -1,50 +1,59 @@
 import 'package:bloc/bloc.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
-import 'package:watcha_body/data/repositories/widget_repository.dart';
 import 'package:watcha_body/presentation/display_models/measurement_display.dart';
 
 part 'getallwidgetsdata_event.dart';
 part 'getallwidgetsdata_state.dart';
 part 'getallwidgetsdata_bloc.freezed.dart';
 
+// Used in Overview
 class GetallwidgetsdataBloc
     extends Bloc<GetallwidgetsdataEvent, GetallwidgetsdataState> {
-  GetallwidgetsdataBloc(this.widgetRepository, this.measurementRepository)
-      : super(const _Initial()) {
+  GetallwidgetsdataBloc(this.measurementRepository) : super(const _Initial()) {
     on<GetallwidgetsdataEvent>((event, emit) async {
       await event.map(
         fetchAllData: (value) async {
           emit(const GetallwidgetsdataState.loading());
-          final _widgetList = await widgetRepository.getAddedWidgets();
+          final _addedWidgets = await measurementRepository.getAddedTypes();
 
-          List<LatestMeasurementDisplayModel> list = [];
+          // emit(const GetallwidgetsdataState.success([]));
 
-          await _widgetList.fold(
+          await _addedWidgets.fold(
             (l) {
               emit(GetallwidgetsdataState.failure(l));
             },
-            (r) async {
-              for (final e in r) {
-                final _data = await measurementRepository.getLatestDetails(
-                  tableName: e.tableName,
-                );
-                _data.fold(
-                  (l) {
-                    emit(GetallwidgetsdataState.failure(l));
-                  },
-                  (r) {
-                    list.add(
-                      LatestMeasurementDisplayModel.fromMeasurementList(
-                        measurement: r,
-                        name: e.name,
-                        tableName: e.tableName,
-                      ),
+            (addedWidgets) async {
+              final _allDetailsresult =
+                  await measurementRepository.getLatestDetails(
+                preferredWeightUnit: EnumToString.convertToString(
+                  value.appPreferences.weightUnit,
+                ),
+                preferredLengthUnit: EnumToString.convertToString(
+                  value.appPreferences.lengthUnit,
+                ),
+              );
+
+              //TODO: I think we can directly groupby the widget type
+              _allDetailsresult.fold(
+                (l) => emit(GetallwidgetsdataState.failure(l)),
+                (allDetails) {
+                  final _allDetails = <LatestMeasurementDisplayModel>[];
+                  for (final e in addedWidgets) {
+                    final _measurement = allDetails
+                        .where((element) => element.type == e)
+                        .toList();
+                    final _measurementDisplay =
+                        LatestMeasurementDisplayModel.fromMeasurementList(
+                      measurement: _measurement,
                     );
-                  },
-                );
-              }
-              emit(GetallwidgetsdataState.success(list));
+                    _allDetails.add(_measurementDisplay);
+                  }
+                  emit(GetallwidgetsdataState.success(_allDetails));
+                },
+              );
             },
           );
         },
@@ -52,27 +61,5 @@ class GetallwidgetsdataBloc
     });
   }
 
-  //   Future<GetallwidgetsdataState> _latestDetails(MeasurementWidget e) async {
-  //   List<LatestMeasurementDisplayModel> list = [];
-
-  //   final _data = await measurementRepository.getLatestDetails(
-  //     tableName: e.tableName,
-  //   );
-  //   _data.fold(
-  //     (l) {
-  //       return GetallwidgetsdataState.failure(l);
-  //     },
-  //     (r) {
-  //       list.add(
-  //         LatestMeasurementDisplayModel.fromMeasurementList(
-  //           measurement: r,
-  //           name: e.name,
-  //         ),
-  //       );
-  //     },
-  //   );
-  //   return GetallwidgetsdataState.success(list);
-  // }
-  final WidgetRepository widgetRepository;
   final MeasurementRepository measurementRepository;
 }

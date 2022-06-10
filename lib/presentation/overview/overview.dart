@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
-import 'package:watcha_body/data/domain/models/measurement_widget.dart';
 import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
@@ -56,12 +55,56 @@ class OverView extends StatelessWidget {
             builder: (context, state) {
               return state.maybeMap(
                 orElse: () {
-                  return const Text('No You Cant See Me');
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Icon(
+                            Icons.error,
+                            color: Theme.of(context).colorScheme.error,
+                            size: 45,
+                          ),
+                        ),
+                        Text(
+                          'No You Cant See Me',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              ?.copyWith(color: Colors.red),
+                        ),
+                      ],
+                    ),
+                  );
                 },
                 success: (list) {
                   if (list.widgets.isEmpty) {
-                    return const Center(
-                      child: Text('Nothing at all'),
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Icon(
+                              Icons.no_encryption,
+                              color: Colors.grey.shade300,
+                              size: 45,
+                            ),
+                          ),
+                          const Text('No Widgets Added'),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Text(
+                            'Add a widget by clicking + at top right \nto get started',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   } else {
                     return Column(
@@ -102,7 +145,7 @@ class _WidgetBox extends StatelessWidget {
           Navigator.pushNamed(
             context,
             MeasurementInDetail.routeName,
-            arguments: MeasurementWidget(data.name, data.tableName),
+            arguments: data.name,
           );
         },
         child: Container(
@@ -124,13 +167,16 @@ class _WidgetBox extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          '${data.name} : ${data.latest.measurement.toString()} ',
+                          '${data.name.name} : ${data.latest.value.toString()} ',
                           style: Theme.of(context).textTheme.headline2,
                           textAlign: TextAlign.center,
                         ),
                         Text(
                           _preferences.lengthUnitString,
-                          style: Theme.of(context).textTheme.headline3,
+                          style:
+                              Theme.of(context).textTheme.headline4!.copyWith(
+                                    fontSize: getProportionateScreenWidth(18),
+                                  ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -179,8 +225,7 @@ class _WidgetBox extends StatelessWidget {
                     context: context,
                     builder: (context) {
                       return AddDataModal.add(
-                        tableName: data.tableName,
-                        measurementName: data.name,
+                        type: data.name,
                       );
                     },
                   );

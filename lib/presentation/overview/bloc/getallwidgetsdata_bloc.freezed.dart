@@ -17,8 +17,10 @@ final _privateConstructorUsedError = UnsupportedError(
 class _$GetallwidgetsdataEventTearOff {
   const _$GetallwidgetsdataEventTearOff();
 
-  _FetchAllData fetchAllData() {
-    return const _FetchAllData();
+  _FetchAllData fetchAllData({required AppPreferences appPreferences}) {
+    return _FetchAllData(
+      appPreferences: appPreferences,
+    );
   }
 }
 
@@ -27,19 +29,21 @@ const $GetallwidgetsdataEvent = _$GetallwidgetsdataEventTearOff();
 
 /// @nodoc
 mixin _$GetallwidgetsdataEvent {
+  AppPreferences get appPreferences => throw _privateConstructorUsedError;
+
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchAllData,
+    required TResult Function(AppPreferences appPreferences) fetchAllData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? fetchAllData,
+    TResult Function(AppPreferences appPreferences)? fetchAllData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchAllData,
+    TResult Function(AppPreferences appPreferences)? fetchAllData,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -59,6 +63,10 @@ mixin _$GetallwidgetsdataEvent {
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $GetallwidgetsdataEventCopyWith<GetallwidgetsdataEvent> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -66,6 +74,7 @@ abstract class $GetallwidgetsdataEventCopyWith<$Res> {
   factory $GetallwidgetsdataEventCopyWith(GetallwidgetsdataEvent value,
           $Res Function(GetallwidgetsdataEvent) then) =
       _$GetallwidgetsdataEventCopyWithImpl<$Res>;
+  $Res call({AppPreferences appPreferences});
 }
 
 /// @nodoc
@@ -76,13 +85,28 @@ class _$GetallwidgetsdataEventCopyWithImpl<$Res>
   final GetallwidgetsdataEvent _value;
   // ignore: unused_field
   final $Res Function(GetallwidgetsdataEvent) _then;
+
+  @override
+  $Res call({
+    Object? appPreferences = freezed,
+  }) {
+    return _then(_value.copyWith(
+      appPreferences: appPreferences == freezed
+          ? _value.appPreferences
+          : appPreferences // ignore: cast_nullable_to_non_nullable
+              as AppPreferences,
+    ));
+  }
 }
 
 /// @nodoc
-abstract class _$FetchAllDataCopyWith<$Res> {
+abstract class _$FetchAllDataCopyWith<$Res>
+    implements $GetallwidgetsdataEventCopyWith<$Res> {
   factory _$FetchAllDataCopyWith(
           _FetchAllData value, $Res Function(_FetchAllData) then) =
       __$FetchAllDataCopyWithImpl<$Res>;
+  @override
+  $Res call({AppPreferences appPreferences});
 }
 
 /// @nodoc
@@ -95,51 +119,75 @@ class __$FetchAllDataCopyWithImpl<$Res>
 
   @override
   _FetchAllData get _value => super._value as _FetchAllData;
+
+  @override
+  $Res call({
+    Object? appPreferences = freezed,
+  }) {
+    return _then(_FetchAllData(
+      appPreferences: appPreferences == freezed
+          ? _value.appPreferences
+          : appPreferences // ignore: cast_nullable_to_non_nullable
+              as AppPreferences,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$_FetchAllData implements _FetchAllData {
-  const _$_FetchAllData();
+  const _$_FetchAllData({required this.appPreferences});
+
+  @override
+  final AppPreferences appPreferences;
 
   @override
   String toString() {
-    return 'GetallwidgetsdataEvent.fetchAllData()';
+    return 'GetallwidgetsdataEvent.fetchAllData(appPreferences: $appPreferences)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _FetchAllData);
+        (other.runtimeType == runtimeType &&
+            other is _FetchAllData &&
+            const DeepCollectionEquality()
+                .equals(other.appPreferences, appPreferences));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(appPreferences));
+
+  @JsonKey(ignore: true)
+  @override
+  _$FetchAllDataCopyWith<_FetchAllData> get copyWith =>
+      __$FetchAllDataCopyWithImpl<_FetchAllData>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchAllData,
+    required TResult Function(AppPreferences appPreferences) fetchAllData,
   }) {
-    return fetchAllData();
+    return fetchAllData(appPreferences);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? fetchAllData,
+    TResult Function(AppPreferences appPreferences)? fetchAllData,
   }) {
-    return fetchAllData?.call();
+    return fetchAllData?.call(appPreferences);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchAllData,
+    TResult Function(AppPreferences appPreferences)? fetchAllData,
     required TResult orElse(),
   }) {
     if (fetchAllData != null) {
-      return fetchAllData();
+      return fetchAllData(appPreferences);
     }
     return orElse();
   }
@@ -174,7 +222,15 @@ class _$_FetchAllData implements _FetchAllData {
 }
 
 abstract class _FetchAllData implements GetallwidgetsdataEvent {
-  const factory _FetchAllData() = _$_FetchAllData;
+  const factory _FetchAllData({required AppPreferences appPreferences}) =
+      _$_FetchAllData;
+
+  @override
+  AppPreferences get appPreferences;
+  @override
+  @JsonKey(ignore: true)
+  _$FetchAllDataCopyWith<_FetchAllData> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc

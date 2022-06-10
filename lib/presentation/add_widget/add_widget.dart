@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:watcha_body/data/domain/models/measurement_widget.dart';
+import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
 
@@ -12,63 +12,71 @@ class AddWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Builder(builder: (context) {
-        return SafeArea(
-          child: Column(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('Cancel'),
+      body: Builder(
+        builder: (context) {
+          return SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Cancel'),
+                    ),
                   ),
                 ),
-              ),
-              BlocBuilder<GetallwidgetsCubit, GetallwidgetsState>(
-                builder: (context, state) {
-                  return state.maybeMap(orElse: () {
-                    return const Text('Never see me');
-                  }, success: (value) {
-                    if (value.widgets.isEmpty) {
-                      return Expanded(
-                        child: Center(
-                          child: Text(
-                            'No widgets remaining',
-                            style: Theme.of(context).textTheme.headline6,
+                BlocBuilder<GetallwidgetsCubit, GetallwidgetsState>(
+                  builder: (context, state) {
+                    return state.maybeMap(
+                      orElse: () {
+                        return const Text('Never see me');
+                      },
+                      success: (value) {
+                        if (value.widgets.isEmpty) {
+                          return Expanded(
+                            child: Center(
+                              child: Text(
+                                'No widgets remaining',
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                            ),
+                          );
+                        }
+                        return Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: ListView.builder(
+                              itemCount: value.widgets.length,
+                              itemBuilder: (context, index) {
+                                return _Boxes(
+                                  type: value.widgets[index],
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Column(
-                          children: [
-                            ...value.widgets
-                                .map((e) => _Boxes(data: e))
-                                .toList(),
-                          ],
-                        ),
-                      ),
+                        );
+                      },
+                      failure: (value) {
+                        return Text('Failed${value.cause}');
+                      },
+                      loading: (_) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
                     );
-                  }, failure: (value) {
-                    return Text('Failed${value.cause}');
-                  }, loading: (_) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  });
-                },
-              ),
-            ],
-          ),
-        );
-      }),
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -76,10 +84,10 @@ class AddWidget extends StatelessWidget {
 class _Boxes extends StatelessWidget {
   const _Boxes({
     Key? key,
-    required this.data,
+    required this.type,
   }) : super(key: key);
 
-  final MeasurementWidget data;
+  final MeasurementType type;
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +97,7 @@ class _Boxes extends StatelessWidget {
           context: context,
           builder: (context) {
             return AddDataModal(
-              tableName: data.tableName,
-              measurementName: data.name,
+              type: type,
             );
           },
         );
@@ -106,7 +113,7 @@ class _Boxes extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              data.name,
+              type.name,
               style: Theme.of(context).textTheme.headline3,
             ),
           ),

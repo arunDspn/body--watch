@@ -6,6 +6,7 @@ import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/display_models/chart_display.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
@@ -20,6 +21,8 @@ class Charts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _appPref = context.read<ApppreferencesBloc>().state;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -55,7 +58,10 @@ class Charts extends StatelessWidget {
                       if (value != null) {
                         context
                             .read<ChartdataBloc>()
-                            .add(ChartdataEvent.fetchData(duration: value));
+                            .add(ChartdataEvent.fetchData(
+                              duration: value,
+                              appPreferences: _appPref,
+                            ));
                       }
                     },
                     items: DurationsEnum.values.map((e) {
@@ -88,7 +94,7 @@ class Charts extends StatelessWidget {
             ),
             success: (value) {
               return _SucessBody(
-                list: value.chartDisplayModel,
+                list: value.chartDisplayModelList,
                 startDate: value.startDate,
               );
             },
@@ -150,6 +156,7 @@ class ChartContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _appPref = context.read<ApppreferencesBloc>().state;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Container(
@@ -178,8 +185,7 @@ class ChartContainer extends StatelessWidget {
                         context: context,
                         builder: (context) {
                           return AddDataModal.add(
-                            tableName: chartDisplayModel.tableName,
-                            measurementName: chartDisplayModel.measurementName,
+                            type: chartDisplayModel.type,
                           );
                         },
                       );
@@ -202,7 +208,10 @@ class ChartContainer extends StatelessWidget {
                             onChanged: (value) {
                               if (value != null) {
                                 context.read<ChartdataBloc>().add(
-                                      ChartdataEvent.fetchData(duration: value),
+                                      ChartdataEvent.fetchData(
+                                        duration: value,
+                                        appPreferences: _appPref,
+                                      ),
                                     );
                               }
                             },
@@ -337,7 +346,7 @@ class TimeSeriesLineAnnotationChart extends StatelessWidget {
               CustomCircleSymbolRenderer.date = date;
               // ignore: avoid_dynamic_calls
               CustomCircleSymbolRenderer.measurement = model
-                  .selectedDatum[0].datum.measurement
+                  .selectedDatum[0].datum.value
                   .toString(); // paints the tapped value
             }
           },
@@ -459,6 +468,8 @@ class ChartContainerForDetailed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _appPref = context.read<ApppreferencesBloc>().state;
+
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -482,8 +493,7 @@ class ChartContainerForDetailed extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return AddDataModal.add(
-                          tableName: chartDisplayModel.tableName,
-                          measurementName: chartDisplayModel.measurementName,
+                          type: chartDisplayModel.type,
                         );
                       },
                     );
@@ -506,7 +516,10 @@ class ChartContainerForDetailed extends StatelessWidget {
                           onChanged: (value) {
                             if (value != null) {
                               context.read<ChartdataBloc>().add(
-                                    ChartdataEvent.fetchData(duration: value),
+                                    ChartdataEvent.fetchData(
+                                      duration: value,
+                                      appPreferences: _appPref,
+                                    ),
                                   );
                             }
                           },

@@ -11,11 +11,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
+import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/data/domain/models/measurement_widget.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
-import 'package:watcha_body/data/repositories/widget_repository.dart';
 import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
@@ -36,9 +36,6 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<WidgetRepository>(
-          create: (context) => WidgetRepository(DatabaseService()),
-        ),
         RepositoryProvider<MeasurementRepository>(
           create: (context) => MeasurementRepository(DatabaseService()),
         ),
@@ -48,23 +45,17 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (context) => AdddataCubit(
               MeasurementRepository(DatabaseService()),
-              //TODO: Reuse
-              WidgetRepository(DatabaseService()),
             ),
           ),
           BlocProvider<GetallwidgetsdataBloc>(
             create: (context) => GetallwidgetsdataBloc(
-              context.read<WidgetRepository>(),
               context.read<MeasurementRepository>(),
-            )..add(const GetallwidgetsdataEvent.fetchAllData()),
+            ),
           ),
           BlocProvider<ChartdataBloc>(
             create: (context) => ChartdataBloc(
-              context.read<WidgetRepository>(),
               context.read<MeasurementRepository>(),
-            )..add(
-                const ChartdataEvent.fetchData(duration: DurationsEnum.month1),
-              ),
+            ),
           ),
           BlocProvider<ApppreferencesBloc>(
             create: (context) => ApppreferencesBloc(),
@@ -77,6 +68,20 @@ class App extends StatelessWidget {
           builder: (context) {
             return BlocBuilder<ApppreferencesBloc, AppPreferences>(
               builder: (context, appPrefState) {
+                // For OverView
+                context.read<GetallwidgetsdataBloc>().add(
+                      GetallwidgetsdataEvent.fetchAllData(
+                        appPreferences: appPrefState,
+                      ),
+                    );
+
+                // For Charts
+                context.read<ChartdataBloc>().add(
+                      ChartdataEvent.fetchData(
+                        duration: DurationsEnum.month1,
+                        appPreferences: appPrefState,
+                      ),
+                    );
                 return BlocBuilder<AppthemeBloc, AppTheme>(
                   builder: (context, stateTheme) {
                     return MaterialApp(
@@ -95,20 +100,21 @@ class App extends StatelessWidget {
                         switch (settings.name) {
                           case '/':
                             return MaterialPageRoute<void>(
-                              builder: (context) => const OverView(),
+                              builder: (context) => const HomeView(),
                             );
                           case MeasurementInDetail.routeName:
                             final _args = settings.arguments;
-                            if (_args is MeasurementWidget) {
+                            if (_args is MeasurementType) {
                               return MaterialPageRoute<void>(
                                 builder: (context) => BlocProvider(
                                   create: (context) => GetallmeasurmentsCubit(
                                     context.read<MeasurementRepository>(),
                                   )..fetchAllData(
-                                      tableName: _args.tableName,
+                                      type: _args.name,
+                                      appPreferences: appPrefState,
                                     ),
                                   child: MeasurementInDetail(
-                                    measurementWidget: _args,
+                                    measurementType: _args,
                                   ),
                                 ),
                               );
@@ -119,7 +125,7 @@ class App extends StatelessWidget {
                               builder: (context) {
                                 return BlocProvider<GetallwidgetsCubit>(
                                   create: (context) => GetallwidgetsCubit(
-                                    context.read<WidgetRepository>(),
+                                    context.read<MeasurementRepository>(),
                                   )..fetch(),
                                   child: const AddWidget(),
                                 );
@@ -136,7 +142,7 @@ class App extends StatelessWidget {
                             );
                         }
                       },
-                      home: const HomeView(),
+                      // home: const HomeView(),
                     );
                   },
                 );
@@ -244,7 +250,7 @@ final darkTheme = ThemeData(
       color: Colors.grey,
     ),
     headline2: TextStyle(
-      fontSize: 30,
+      fontSize: 26,
       fontWeight: FontWeight.bold,
       color: Colors.white,
     ),
