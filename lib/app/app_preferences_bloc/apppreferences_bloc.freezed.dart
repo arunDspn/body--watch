@@ -238,8 +238,14 @@ abstract class _UpdatePreferences implements ApppreferencesEvent {
 class _$ApppreferencesStateTearOff {
   const _$ApppreferencesStateTearOff();
 
-  _Initial initial() {
-    return const _Initial();
+  SavedAndReady savedAndReady({required AppPreferences appPreferences}) {
+    return SavedAndReady(
+      appPreferences: appPreferences,
+    );
+  }
+
+  NotSavedOrReady notSavedOrReady() {
+    return const NotSavedOrReady();
   }
 }
 
@@ -250,33 +256,39 @@ const $ApppreferencesState = _$ApppreferencesStateTearOff();
 mixin _$ApppreferencesState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() initial,
+    required TResult Function(AppPreferences appPreferences) savedAndReady,
+    required TResult Function() notSavedOrReady,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
+    TResult Function(AppPreferences appPreferences)? savedAndReady,
+    TResult Function()? notSavedOrReady,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
+    TResult Function(AppPreferences appPreferences)? savedAndReady,
+    TResult Function()? notSavedOrReady,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
+    required TResult Function(SavedAndReady value) savedAndReady,
+    required TResult Function(NotSavedOrReady value) notSavedOrReady,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
+    TResult Function(SavedAndReady value)? savedAndReady,
+    TResult Function(NotSavedOrReady value)? notSavedOrReady,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
+    TResult Function(SavedAndReady value)? savedAndReady,
+    TResult Function(NotSavedOrReady value)? notSavedOrReady,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -300,36 +312,174 @@ class _$ApppreferencesStateCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$InitialCopyWith<$Res> {
-  factory _$InitialCopyWith(_Initial value, $Res Function(_Initial) then) =
-      __$InitialCopyWithImpl<$Res>;
+abstract class $SavedAndReadyCopyWith<$Res> {
+  factory $SavedAndReadyCopyWith(
+          SavedAndReady value, $Res Function(SavedAndReady) then) =
+      _$SavedAndReadyCopyWithImpl<$Res>;
+  $Res call({AppPreferences appPreferences});
 }
 
 /// @nodoc
-class __$InitialCopyWithImpl<$Res>
+class _$SavedAndReadyCopyWithImpl<$Res>
     extends _$ApppreferencesStateCopyWithImpl<$Res>
-    implements _$InitialCopyWith<$Res> {
-  __$InitialCopyWithImpl(_Initial _value, $Res Function(_Initial) _then)
-      : super(_value, (v) => _then(v as _Initial));
+    implements $SavedAndReadyCopyWith<$Res> {
+  _$SavedAndReadyCopyWithImpl(
+      SavedAndReady _value, $Res Function(SavedAndReady) _then)
+      : super(_value, (v) => _then(v as SavedAndReady));
 
   @override
-  _Initial get _value => super._value as _Initial;
+  SavedAndReady get _value => super._value as SavedAndReady;
+
+  @override
+  $Res call({
+    Object? appPreferences = freezed,
+  }) {
+    return _then(SavedAndReady(
+      appPreferences: appPreferences == freezed
+          ? _value.appPreferences
+          : appPreferences // ignore: cast_nullable_to_non_nullable
+              as AppPreferences,
+    ));
+  }
 }
 
 /// @nodoc
 
-class _$_Initial implements _Initial {
-  const _$_Initial();
+class _$SavedAndReady implements SavedAndReady {
+  const _$SavedAndReady({required this.appPreferences});
+
+  @override
+  final AppPreferences appPreferences;
 
   @override
   String toString() {
-    return 'ApppreferencesState.initial()';
+    return 'ApppreferencesState.savedAndReady(appPreferences: $appPreferences)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType &&
+            other is SavedAndReady &&
+            const DeepCollectionEquality()
+                .equals(other.appPreferences, appPreferences));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(appPreferences));
+
+  @JsonKey(ignore: true)
+  @override
+  $SavedAndReadyCopyWith<SavedAndReady> get copyWith =>
+      _$SavedAndReadyCopyWithImpl<SavedAndReady>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(AppPreferences appPreferences) savedAndReady,
+    required TResult Function() notSavedOrReady,
+  }) {
+    return savedAndReady(appPreferences);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function(AppPreferences appPreferences)? savedAndReady,
+    TResult Function()? notSavedOrReady,
+  }) {
+    return savedAndReady?.call(appPreferences);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(AppPreferences appPreferences)? savedAndReady,
+    TResult Function()? notSavedOrReady,
+    required TResult orElse(),
+  }) {
+    if (savedAndReady != null) {
+      return savedAndReady(appPreferences);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SavedAndReady value) savedAndReady,
+    required TResult Function(NotSavedOrReady value) notSavedOrReady,
+  }) {
+    return savedAndReady(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(SavedAndReady value)? savedAndReady,
+    TResult Function(NotSavedOrReady value)? notSavedOrReady,
+  }) {
+    return savedAndReady?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SavedAndReady value)? savedAndReady,
+    TResult Function(NotSavedOrReady value)? notSavedOrReady,
+    required TResult orElse(),
+  }) {
+    if (savedAndReady != null) {
+      return savedAndReady(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class SavedAndReady implements ApppreferencesState {
+  const factory SavedAndReady({required AppPreferences appPreferences}) =
+      _$SavedAndReady;
+
+  AppPreferences get appPreferences;
+  @JsonKey(ignore: true)
+  $SavedAndReadyCopyWith<SavedAndReady> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $NotSavedOrReadyCopyWith<$Res> {
+  factory $NotSavedOrReadyCopyWith(
+          NotSavedOrReady value, $Res Function(NotSavedOrReady) then) =
+      _$NotSavedOrReadyCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class _$NotSavedOrReadyCopyWithImpl<$Res>
+    extends _$ApppreferencesStateCopyWithImpl<$Res>
+    implements $NotSavedOrReadyCopyWith<$Res> {
+  _$NotSavedOrReadyCopyWithImpl(
+      NotSavedOrReady _value, $Res Function(NotSavedOrReady) _then)
+      : super(_value, (v) => _then(v as NotSavedOrReady));
+
+  @override
+  NotSavedOrReady get _value => super._value as NotSavedOrReady;
+}
+
+/// @nodoc
+
+class _$NotSavedOrReady implements NotSavedOrReady {
+  const _$NotSavedOrReady();
+
+  @override
+  String toString() {
+    return 'ApppreferencesState.notSavedOrReady()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is NotSavedOrReady);
   }
 
   @override
@@ -338,27 +488,30 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() initial,
+    required TResult Function(AppPreferences appPreferences) savedAndReady,
+    required TResult Function() notSavedOrReady,
   }) {
-    return initial();
+    return notSavedOrReady();
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
+    TResult Function(AppPreferences appPreferences)? savedAndReady,
+    TResult Function()? notSavedOrReady,
   }) {
-    return initial?.call();
+    return notSavedOrReady?.call();
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
+    TResult Function(AppPreferences appPreferences)? savedAndReady,
+    TResult Function()? notSavedOrReady,
     required TResult orElse(),
   }) {
-    if (initial != null) {
-      return initial();
+    if (notSavedOrReady != null) {
+      return notSavedOrReady();
     }
     return orElse();
   }
@@ -366,32 +519,35 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
+    required TResult Function(SavedAndReady value) savedAndReady,
+    required TResult Function(NotSavedOrReady value) notSavedOrReady,
   }) {
-    return initial(this);
+    return notSavedOrReady(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
+    TResult Function(SavedAndReady value)? savedAndReady,
+    TResult Function(NotSavedOrReady value)? notSavedOrReady,
   }) {
-    return initial?.call(this);
+    return notSavedOrReady?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
+    TResult Function(SavedAndReady value)? savedAndReady,
+    TResult Function(NotSavedOrReady value)? notSavedOrReady,
     required TResult orElse(),
   }) {
-    if (initial != null) {
-      return initial(this);
+    if (notSavedOrReady != null) {
+      return notSavedOrReady(this);
     }
     return orElse();
   }
 }
 
-abstract class _Initial implements ApppreferencesState {
-  const factory _Initial() = _$_Initial;
+abstract class NotSavedOrReady implements ApppreferencesState {
+  const factory NotSavedOrReady() = _$NotSavedOrReady;
 }

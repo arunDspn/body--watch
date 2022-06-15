@@ -21,7 +21,7 @@ class Charts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _appPref = context.read<ApppreferencesBloc>().state;
+    final _appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
 
     return Scaffold(
       appBar: AppBar(
@@ -56,12 +56,12 @@ class Charts extends StatelessWidget {
                     underline: Container(),
                     onChanged: (value) {
                       if (value != null) {
-                        context
-                            .read<ChartdataBloc>()
-                            .add(ChartdataEvent.fetchData(
-                              duration: value,
-                              appPreferences: _appPref,
-                            ));
+                        context.read<ChartdataBloc>().add(
+                              ChartdataEvent.fetchData(
+                                duration: value,
+                                appPreferences: _appPref.appPreferences,
+                              ),
+                            );
                       }
                     },
                     items: DurationsEnum.values.map((e) {
@@ -90,7 +90,9 @@ class Charts extends StatelessWidget {
               child: CircularProgressIndicator(),
             ),
             loading: (_) => const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Colors.blue,
+              ),
             ),
             success: (value) {
               return _SucessBody(
@@ -100,8 +102,11 @@ class Charts extends StatelessWidget {
             },
             failed: (value) {
               // return _FailedBody();
-              return const Center(
-                child: Text('Failed'),
+              return Center(
+                child: Text(
+                  'Failed',
+                  style: Theme.of(context).textTheme.headline6,
+                ),
               );
             },
           );
@@ -123,15 +128,46 @@ class _SucessBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: list.length,
-      itemBuilder: (context, index) {
-        return ChartContainer(
-          chartDisplayModel: list[index],
-          startDate: startDate,
-        );
-      },
-    );
+    if (list.isEmpty) {
+      return Center(
+        child: Text(
+          'No data has been added yet',
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      );
+    } else {
+      return Column(
+        children: [
+          // Chips
+          Wrap(
+            children: [
+              for (final e in list)
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Chip(
+                    backgroundColor: Colors.deepPurpleAccent,
+                    label: Text(
+                      e.type.name,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                return ChartContainer(
+                  chartDisplayModel: list[index],
+                  startDate: startDate,
+                );
+              },
+            ),
+          ),
+        ],
+      );
+    }
   }
 }
 
@@ -156,7 +192,7 @@ class ChartContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _appPref = context.read<ApppreferencesBloc>().state;
+    final _appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Container(
@@ -210,7 +246,7 @@ class ChartContainer extends StatelessWidget {
                                 context.read<ChartdataBloc>().add(
                                       ChartdataEvent.fetchData(
                                         duration: value,
-                                        appPreferences: _appPref,
+                                        appPreferences: _appPref.appPreferences,
                                       ),
                                     );
                               }
@@ -468,7 +504,7 @@ class ChartContainerForDetailed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _appPref = context.read<ApppreferencesBloc>().state;
+    final _appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -518,7 +554,7 @@ class ChartContainerForDetailed extends StatelessWidget {
                               context.read<ChartdataBloc>().add(
                                     ChartdataEvent.fetchData(
                                       duration: value,
-                                      appPreferences: _appPref,
+                                      appPreferences: _appPref.appPreferences,
                                     ),
                                   );
                             }

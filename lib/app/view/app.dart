@@ -20,6 +20,7 @@ import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
+import 'package:watcha_body/presentation/app_initializer/app_initer.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
 import 'package:watcha_body/presentation/home/charts/charts.dart';
 import 'package:watcha_body/presentation/home/home.dart';
@@ -28,6 +29,7 @@ import 'package:watcha_body/presentation/measurement_in_detail/measurement_detai
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/overview.dart';
 import 'package:watcha_body/presentation/settings/settings_view.dart';
+import 'package:watcha_body/presentation/splash/splash_view.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -66,22 +68,8 @@ class App extends StatelessWidget {
         ],
         child: Builder(
           builder: (context) {
-            return BlocBuilder<ApppreferencesBloc, AppPreferences>(
+            return BlocBuilder<ApppreferencesBloc, ApppreferencesState>(
               builder: (context, appPrefState) {
-                // For OverView
-                context.read<GetallwidgetsdataBloc>().add(
-                      GetallwidgetsdataEvent.fetchAllData(
-                        appPreferences: appPrefState,
-                      ),
-                    );
-
-                // For Charts
-                context.read<ChartdataBloc>().add(
-                      ChartdataEvent.fetchData(
-                        duration: DurationsEnum.month1,
-                        appPreferences: appPrefState,
-                      ),
-                    );
                 return BlocBuilder<AppthemeBloc, AppTheme>(
                   builder: (context, stateTheme) {
                     return MaterialApp(
@@ -95,54 +83,11 @@ class App extends StatelessWidget {
                         AppLocalizations.delegate,
                       ],
                       supportedLocales: AppLocalizations.supportedLocales,
-                      locale: Locale(appPrefState.lang),
-                      onGenerateRoute: (settings) {
-                        switch (settings.name) {
-                          case '/':
-                            return MaterialPageRoute<void>(
-                              builder: (context) => const HomeView(),
-                            );
-                          case MeasurementInDetail.routeName:
-                            final _args = settings.arguments;
-                            if (_args is MeasurementType) {
-                              return MaterialPageRoute<void>(
-                                builder: (context) => BlocProvider(
-                                  create: (context) => GetallmeasurmentsCubit(
-                                    context.read<MeasurementRepository>(),
-                                  )..fetchAllData(
-                                      type: _args.name,
-                                      appPreferences: appPrefState,
-                                    ),
-                                  child: MeasurementInDetail(
-                                    measurementType: _args,
-                                  ),
-                                ),
-                              );
-                            }
-                            break;
-                          case AddWidget.routeName:
-                            return MaterialPageRoute<void>(
-                              builder: (context) {
-                                return BlocProvider<GetallwidgetsCubit>(
-                                  create: (context) => GetallwidgetsCubit(
-                                    context.read<MeasurementRepository>(),
-                                  )..fetch(),
-                                  child: const AddWidget(),
-                                );
-                              },
-                            );
-
-                          case SettingsView.routeName:
-                            return MaterialPageRoute<void>(
-                              builder: (context) => const SettingsView(),
-                            );
-                          default:
-                            return MaterialPageRoute<void>(
-                              builder: (context) => const Charts(),
-                            );
-                        }
-                      },
-                      // home: const HomeView(),
+                      locale: (appPrefState is SavedAndReady)
+                          ? Locale(appPrefState.appPreferences.lang)
+                          : const Locale('en'),
+                      onGenerateRoute: _onGenerateRoutes,
+                      initialRoute: '/',
                     );
                   },
                 );
@@ -152,6 +97,80 @@ class App extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
+  switch (settings.name) {
+    case '/':
+      return MaterialPageRoute<void>(
+        builder: (context) => const SplashView(),
+      );
+    case HomeView.routeName:
+      return MaterialPageRoute<void>(
+        builder: (context) {
+          final appPref =
+              context.read<ApppreferencesBloc>().state as SavedAndReady;
+          // Bloc for overview data
+          context.read<GetallwidgetsdataBloc>().add(
+                GetallwidgetsdataEvent.fetchAllData(
+                  appPreferences: appPref.appPreferences,
+                ),
+              );
+
+          // Bloc for chart data
+          context.read<ChartdataBloc>().add(
+                ChartdataEvent.fetchData(
+                  appPreferences: appPref.appPreferences,
+                  duration: DurationsEnum.month1,
+                ),
+              );
+          return const HomeView();
+        },
+      );
+    case MeasurementInDetail.routeName:
+      final _args = settings.arguments;
+      if (_args is MeasurementType) {
+        return MaterialPageRoute<void>(
+          builder: (context) => BlocProvider(
+            create: (context) => GetallmeasurmentsCubit(
+              context.read<MeasurementRepository>(),
+            )..fetchAllData(
+                type: _args.name,
+                appPreferences: intialappPreferences,
+                // (appPrefWrapperState as SavedAndReady)
+                //     .appPreferences,
+              ),
+            child: MeasurementInDetail(
+              measurementType: _args,
+            ),
+          ),
+        );
+      }
+      break;
+    case AddWidget.routeName:
+      return MaterialPageRoute<void>(
+        builder: (context) {
+          return BlocProvider<GetallwidgetsCubit>(
+            create: (context) => GetallwidgetsCubit(
+              context.read<MeasurementRepository>(),
+            )..fetch(),
+            child: const AddWidget(),
+          );
+        },
+      );
+    case SettingsView.routeName:
+      return MaterialPageRoute<void>(
+        builder: (context) => const SettingsView(),
+      );
+    case AppIniter.routeName:
+      return MaterialPageRoute<void>(
+        builder: (context) => const AppIniter(),
+      );
+    default:
+      return MaterialPageRoute<void>(
+        builder: (context) => const Charts(),
+      );
   }
 }
 

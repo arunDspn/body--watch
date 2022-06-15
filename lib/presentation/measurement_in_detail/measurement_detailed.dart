@@ -24,7 +24,7 @@ class MeasurementInDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appPref = context.read<ApppreferencesBloc>().state;
+    final appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -62,7 +62,7 @@ class MeasurementInDetail extends StatelessWidget {
                   success: (_) {
                     context.read<GetallmeasurmentsCubit>().fetchAllData(
                           type: measurementType.name,
-                          appPreferences: appPref,
+                          appPreferences: appPref.appPreferences,
                         );
                   },
                 );

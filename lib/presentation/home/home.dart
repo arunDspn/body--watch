@@ -7,6 +7,8 @@ import 'package:watcha_body/size_config.dart';
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
 
+  static const routeName = '/home';
+
   @override
   State<HomeView> createState() => _HomeViewState();
 }

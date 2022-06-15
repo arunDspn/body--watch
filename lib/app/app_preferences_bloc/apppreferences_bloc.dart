@@ -8,42 +8,73 @@ part 'apppreferences_state.dart';
 part 'apppreferences_bloc.freezed.dart';
 
 class ApppreferencesBloc
-    extends HydratedBloc<ApppreferencesEvent, AppPreferences> {
-  ApppreferencesBloc() : super(intialappPreferences) {
+    extends HydratedBloc<ApppreferencesEvent, ApppreferencesState> {
+  ApppreferencesBloc() : super(const ApppreferencesState.notSavedOrReady()) {
     on<ApppreferencesEvent>((event, emit) {
       event.map(
         updatePreferences: (e) {
-          emit(e.appPreferences);
+          emit(
+            ApppreferencesState.savedAndReady(appPreferences: e.appPreferences),
+          );
         },
       );
     });
   }
 
   @override
-  AppPreferences? fromJson(Map<String, dynamic> json) {
-    return AppPreferences(
-      EnumToString.fromString<WeightUnit>(
-            WeightUnit.values,
-            json['weightUnit'] as String,
-          ) ??
-          WeightUnit.kg,
-      EnumToString.fromString<LengthUnit>(
-            LengthUnit.values,
-            json['lengthUnit'] as String,
-          ) ??
-          LengthUnit.inch,
-      json['lang'] as String,
+  Map<String, dynamic>? toJson(ApppreferencesState state) {
+    return state.maybeMap(
+      orElse: () => null,
+      savedAndReady: (value) {
+        return <String, dynamic>{
+          'weightUnit':
+              EnumToString.convertToString(value.appPreferences.weightUnit),
+          'lengthUnit':
+              EnumToString.convertToString(value.appPreferences.lengthUnit),
+          'lang': value.appPreferences.lang,
+        };
+      },
+      // notSavedOrReady: (value) {
+      //   return <String, dynamic>{
+      //     'weightUnit': '',
+      //     'lengthUnit': '',
+      //     'lang': '',
+      //   };
+      // },
     );
   }
 
   @override
-  Map<String, dynamic>? toJson(AppPreferences state) {
-    return <String, dynamic>{
-      'weightUnit': EnumToString.convertToString(state.weightUnit),
-      'lengthUnit': EnumToString.convertToString(state.lengthUnit),
-      'lang': state.lang,
-    };
+  ApppreferencesState? fromJson(Map<String, dynamic> json) {
+    if (json['weightUnit'] == null) {
+      return const ApppreferencesState.notSavedOrReady();
+    } else {
+      return ApppreferencesState.savedAndReady(
+        appPreferences: AppPreferences(
+          EnumToString.fromString<WeightUnit>(
+                WeightUnit.values,
+                json['weightUnit'] as String,
+              ) ??
+              WeightUnit.kg,
+          EnumToString.fromString<LengthUnit>(
+                LengthUnit.values,
+                json['lengthUnit'] as String,
+              ) ??
+              LengthUnit.cm,
+          json['lang'] as String,
+        ),
+      );
+    }
   }
+
+  // @override
+  // Map<String, dynamic>? toJson(AppPreferences state) {
+  //   return <String, dynamic>{
+  //     'weightUnit': EnumToString.convertToString(state.weightUnit),
+  //     'lengthUnit': EnumToString.convertToString(state.lengthUnit),
+  //     'lang': state.lang,
+  //   };
+  // }
 }
 
 final AppPreferences intialappPreferences =

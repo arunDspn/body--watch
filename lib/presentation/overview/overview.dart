@@ -137,7 +137,8 @@ class _WidgetBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _preferences = context.watch<ApppreferencesBloc>().state;
+    final _preferences =
+        context.watch<ApppreferencesBloc>().state as SavedAndReady;
     return Padding(
       padding: const EdgeInsets.all(8),
       child: GestureDetector(
@@ -172,7 +173,7 @@ class _WidgetBox extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         Text(
-                          _preferences.lengthUnitString,
+                          _preferences.appPreferences.lengthUnitString,
                           style:
                               Theme.of(context).textTheme.headline4!.copyWith(
                                     fontSize: getProportionateScreenWidth(18),

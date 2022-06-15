@@ -43,19 +43,21 @@ class _AddDataModalState extends State<AddDataModal> {
   final _dateController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final appPrefState =
+        context.read<ApppreferencesBloc>().state as SavedAndReady;
     // Getting current Unit
     if (widget.type is LengthMeasurementType) {
       measurementUnit = EnumToString.convertToString(
-        context.read<ApppreferencesBloc>().state.lengthUnit,
+        appPrefState.appPreferences.lengthUnit,
       );
     } else if (widget.type is WeightMeasurementType) {
       measurementUnit = EnumToString.convertToString(
-        context.read<ApppreferencesBloc>().state.weightUnit,
+        appPrefState.appPreferences.weightUnit,
       );
     } else {
       measurementUnit = '%';
     }
-    final _appPref = context.read<ApppreferencesBloc>().state;
+
     return SafeArea(
       // height: 400,
       child: BlocListener<AdddataCubit, AdddataState>(
@@ -81,7 +83,7 @@ class _AddDataModalState extends State<AddDataModal> {
               // Refreshing Overview data
               context.read<GetallwidgetsdataBloc>().add(
                     GetallwidgetsdataEvent.fetchAllData(
-                      appPreferences: _appPref,
+                      appPreferences: appPrefState.appPreferences,
                     ),
                   );
 
@@ -89,7 +91,7 @@ class _AddDataModalState extends State<AddDataModal> {
               context.read<ChartdataBloc>().add(
                     ChartdataEvent.fetchData(
                       duration: DurationsEnum.month1,
-                      appPreferences: _appPref,
+                      appPreferences: appPrefState.appPreferences,
                     ),
                   );
 

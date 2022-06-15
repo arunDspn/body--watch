@@ -1,110 +1,98 @@
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/l10n/l10n.dart';
-import 'package:watcha_body/size_config.dart';
+import 'package:watcha_body/presentation/home/home.dart';
 
-class SettingsView extends StatelessWidget {
-  const SettingsView({Key? key}) : super(key: key);
+class AppIniter extends StatefulWidget {
+  const AppIniter({Key? key}) : super(key: key);
 
-  static const routeName = '/settings';
+  static const routeName = '/app_initializer';
+
+  @override
+  State<AppIniter> createState() => _AppIniterState();
+}
+
+class _AppIniterState extends State<AppIniter> {
+  WeightUnit? _selectedWeight;
+  LengthUnit? _selectedLength;
+  String? _selectedLanguage;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<ApppreferencesBloc, ApppreferencesState>(
-        builder: (context, state) {
-          return SafeArea(
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: SizeConfig.screenHeight! * 0.08,
-                  child: Stack(
-                    children: [
-                      Align(
-                        child: Text(
-                          AppLocalizations.of(context).settingsTitle,
-                          style: Theme.of(context).textTheme.headline3,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Cancel'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                LanguageSelector(
-                  appPreferences: (state as SavedAndReady).appPreferences,
-                ),
-                WeightChoiceChip(
-                  appPreferences: state.appPreferences,
-                ),
-                LengthChoiceChip(
-                  appPreferences: state.appPreferences,
-                ),
-                ThemeChoiceChip(
-                  appTheme: context.read<AppthemeBloc>().state,
-                ),
-                // HereChoiceChiper<WeightUnit>(
-                //   currentValue: _appPreferences.state.weightUnit,
-                //   items: WeightUnit.values
-                //       .map(
-                //         EnumToString.convertToString,
-                //       )
-                //       .toList(),
-                //   enumItems: WeightUnit.values,
-                //   onChanged: <WeightUnit>(value) {
-                //     if (value is WeightUnit) {
-                //       context.read<ApppreferencesBloc>().add(
-                //             ApppreferencesEvent.updatePreferences(
-                //               appPreferences: AppPreferences(
-                //                 value,
-                //                 _appPreferences.state.lengthUnit,
-                //               ),
-                //             ),
-                //           );
-                //     }
-                //   },
-                // ),
-                // HereChoiceChiper<LengthUnit, LengthUnit>(
-                //   currentValue: _appPreferences.state.lengthUnit,
-                //   items: LengthUnit.values
-                //       .map(
-                //         EnumToString.convertToString,
-                //       )
-                //       .toList(),
-                //   enumItems: LengthUnit.values,
-                //   onChanged: <LengthUnit>(value) {
-                //     if (value is LengthUnit) {
-                //       context.read<ApppreferencesBloc>().add(
-                //             ApppreferencesEvent.updatePreferences(
-                //               appPreferences: AppPreferences(
-                //                 _appPreferences.state.weightUnit,
-                //                 value as LengthUnit,
-                //               ),
-                //             ),
-                //           );
-                //     }
-                //   },
-                // ),
-              ],
+    void _updateAppPreferences() {
+      final appPreferences = AppPreferences(
+        _selectedWeight!,
+        _selectedLength!,
+        'en',
+      );
+      context.read<ApppreferencesBloc>().add(
+            ApppreferencesEvent.updatePreferences(
+              appPreferences: appPreferences,
             ),
           );
-        },
+      Navigator.pushReplacementNamed(context, HomeView.routeName);
+    }
+
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Column(
+            children: [
+              Text(
+                'Choose your Defaults',
+                style: Theme.of(context).textTheme.headline3,
+              ),
+              const SizedBox(height: 20),
+              // const LanguageSelector(),
+              const SizedBox(height: 15),
+              WeightChoiceChip(
+                onSelected: (weightUnit) {
+                  setState(() {
+                    _selectedWeight = weightUnit;
+                  });
+                },
+              ),
+              const SizedBox(height: 15),
+              LengthChoiceChip(
+                onSelected: (lengthUnit) {
+                  setState(() {
+                    _selectedLength = lengthUnit;
+                  });
+                },
+              ),
+              const Spacer(),
+              MaterialButton(
+                onPressed: () {},
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: MaterialButton(
+                    onPressed:
+                        (_selectedLength != null && _selectedWeight != null)
+                            ? _updateAppPreferences
+                            : null,
+                    child: Text(
+                      'Continue',
+                      style: Theme.of(context).textTheme.headline4!.copyWith(
+                            color: (_selectedLength != null &&
+                                    _selectedWeight != null)
+                                ? Colors.green
+                                : Colors.grey,
+                          ),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -113,23 +101,20 @@ class SettingsView extends StatelessWidget {
 class WeightChoiceChip extends StatefulWidget {
   const WeightChoiceChip({
     Key? key,
-    required this.appPreferences,
+    required this.onSelected,
   }) : super(key: key);
-  final AppPreferences appPreferences;
+
+  final void Function(WeightUnit weightUnit) onSelected;
 
   @override
   State<WeightChoiceChip> createState() => _WeightChoiceChipState();
 }
 
 class _WeightChoiceChipState extends State<WeightChoiceChip> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  WeightUnit? _selectedWeightUnit;
 
   @override
   Widget build(BuildContext context) {
-    final currentValue = widget.appPreferences.weightUnit;
     return SettingsChildContainer(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -160,22 +145,17 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
                     selectedColor: Colors.blueAccent,
                     elevation: 0,
                     pressElevation: 0,
-                    selected: currentValue == WeightUnit.values[index],
+                    selected: _selectedWeightUnit == WeightUnit.values[index],
                     labelStyle: TextStyle(
-                      color: currentValue == WeightUnit.values[index]
+                      color: _selectedWeightUnit == WeightUnit.values[index]
                           ? Colors.white
                           : Colors.blueAccent,
                     ),
                     onSelected: (value) {
-                      context.read<ApppreferencesBloc>().add(
-                            ApppreferencesEvent.updatePreferences(
-                              appPreferences: AppPreferences(
-                                WeightUnit.values[index],
-                                widget.appPreferences.lengthUnit,
-                                widget.appPreferences.lang,
-                              ),
-                            ),
-                          );
+                      setState(() {
+                        _selectedWeightUnit = WeightUnit.values[index];
+                        widget.onSelected(_selectedWeightUnit!);
+                      });
                     },
                   );
                 }),
@@ -191,24 +171,17 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
 class ThemeChoiceChip extends StatefulWidget {
   const ThemeChoiceChip({
     Key? key,
-    required this.appTheme,
   }) : super(key: key);
-
-  final AppTheme appTheme;
 
   @override
   State<ThemeChoiceChip> createState() => _ThemeChoiceChipState();
 }
 
 class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  AppTheme? _selectedTheme;
 
   @override
   Widget build(BuildContext context) {
-    final currentValue = widget.appTheme;
     return SettingsChildContainer(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -242,9 +215,9 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
                     selectedColor: Colors.blueAccent,
                     elevation: 0,
                     pressElevation: 0,
-                    selected: currentValue == AppTheme.values[index],
+                    selected: _selectedTheme == AppTheme.values[index],
                     labelStyle: TextStyle(
-                      color: currentValue == AppTheme.values[index]
+                      color: _selectedTheme == AppTheme.values[index]
                           ? Colors.white
                           : Colors.blueAccent,
                     ),
@@ -269,23 +242,20 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
 class LengthChoiceChip extends StatefulWidget {
   const LengthChoiceChip({
     Key? key,
-    required this.appPreferences,
+    required this.onSelected,
   }) : super(key: key);
-  final AppPreferences appPreferences;
+
+  final void Function(LengthUnit weightUnit) onSelected;
 
   @override
   State<LengthChoiceChip> createState() => _LengthChoiceChipState();
 }
 
 class _LengthChoiceChipState extends State<LengthChoiceChip> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  LengthUnit? _selectedLengthUnit;
 
   @override
   Widget build(BuildContext context) {
-    final currentValue = widget.appPreferences.lengthUnit;
     return SettingsChildContainer(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -316,22 +286,17 @@ class _LengthChoiceChipState extends State<LengthChoiceChip> {
                     selectedColor: Colors.blueAccent,
                     elevation: 0,
                     pressElevation: 0,
-                    selected: currentValue == LengthUnit.values[index],
+                    selected: _selectedLengthUnit == LengthUnit.values[index],
                     labelStyle: TextStyle(
-                      color: currentValue == LengthUnit.values[index]
+                      color: _selectedLengthUnit == LengthUnit.values[index]
                           ? Colors.white
                           : Colors.blueAccent,
                     ),
                     onSelected: (value) {
-                      context.read<ApppreferencesBloc>().add(
-                            ApppreferencesEvent.updatePreferences(
-                              appPreferences: AppPreferences(
-                                widget.appPreferences.weightUnit,
-                                LengthUnit.values[index],
-                                widget.appPreferences.lang,
-                              ),
-                            ),
-                          );
+                      setState(() {
+                        _selectedLengthUnit = LengthUnit.values[index];
+                        widget.onSelected(_selectedLengthUnit!);
+                      });
                     },
                   );
                 }),
@@ -426,10 +391,7 @@ class _HereChoiceChiperState<T> extends State<HereChoiceChiper> {
 class LanguageSelector extends StatefulWidget {
   const LanguageSelector({
     Key? key,
-    required this.appPreferences,
   }) : super(key: key);
-
-  final AppPreferences appPreferences;
 
   @override
   State<LanguageSelector> createState() => _LanguageSelectorState();
@@ -438,11 +400,6 @@ class LanguageSelector extends StatefulWidget {
 class _LanguageSelectorState extends State<LanguageSelector> {
   late List<Locale> _list;
   late Locale _currentLocale;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -476,15 +433,6 @@ class _LanguageSelectorState extends State<LanguageSelector> {
               setState(() {
                 _currentLocale = value!;
               });
-              context.read<ApppreferencesBloc>().add(
-                    ApppreferencesEvent.updatePreferences(
-                      appPreferences: AppPreferences(
-                        widget.appPreferences.weightUnit,
-                        widget.appPreferences.lengthUnit,
-                        _currentLocale.toString().split('.').last,
-                      ),
-                    ),
-                  );
             },
           ),
         ],
