@@ -1,13 +1,15 @@
 part of 'getallmeasurments_cubit.dart';
 
 @freezed
-class GetallmeasurmentsState with _$GetallmeasurmentsState {
-  const factory GetallmeasurmentsState.initial() = _Initial;
-  const factory GetallmeasurmentsState.loading() = _Loading;
-  const factory GetallmeasurmentsState.failed({
+class GetSingleMeasurmentsDetailsState with _$GetSingleMeasurmentsDetailsState {
+  const factory GetSingleMeasurmentsDetailsState.initial() = _Initial;
+  const factory GetSingleMeasurmentsDetailsState.loading() = _Loading;
+  const factory GetSingleMeasurmentsDetailsState.failed({
     required String cause,
   }) = _Failed;
-  const factory GetallmeasurmentsState.success({
+  const factory GetSingleMeasurmentsDetailsState.success({
     required List<Measurement> list,
+    required DurationsEnum durationsEnum,
+    required DateTime startDate,
   }) = _Success;
 }

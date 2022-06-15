@@ -13,8 +13,6 @@ import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
-import 'package:watcha_body/data/domain/models/app_preferences.dart';
-import 'package:watcha_body/data/domain/models/measurement_widget.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
@@ -27,7 +25,6 @@ import 'package:watcha_body/presentation/home/home.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
-import 'package:watcha_body/presentation/overview/overview.dart';
 import 'package:watcha_body/presentation/settings/settings_view.dart';
 import 'package:watcha_body/presentation/splash/splash_view.dart';
 
@@ -132,19 +129,25 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
       final _args = settings.arguments;
       if (_args is MeasurementType) {
         return MaterialPageRoute<void>(
-          builder: (context) => BlocProvider(
-            create: (context) => GetallmeasurmentsCubit(
-              context.read<MeasurementRepository>(),
-            )..fetchAllData(
-                type: _args.name,
-                appPreferences: intialappPreferences,
-                // (appPrefWrapperState as SavedAndReady)
-                //     .appPreferences,
+          builder: (context) {
+            final appPref =
+                (context.read<ApppreferencesBloc>().state as SavedAndReady)
+                    .appPreferences;
+            return BlocProvider(
+              create: (context) => GetSingleMeasurmentsDetailsCubit(
+                context.read<MeasurementRepository>(),
+              )..fetchAllData(
+                  type: _args.name,
+                  appPreferences: appPref,
+                  durationsEnum: DurationsEnum.month1,
+                  // (appPrefWrapperState as SavedAndReady)
+                  //     .appPreferences,
+                ),
+              child: MeasurementInDetail(
+                measurementType: _args,
               ),
-            child: MeasurementInDetail(
-              measurementType: _args,
-            ),
-          ),
+            );
+          },
         );
       }
       break;

@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:watcha_body/app/data/helpers.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
@@ -33,7 +34,7 @@ class ChartdataBloc extends Bloc<ChartdataEvent, ChartdataState> {
               value.appPreferences.lengthUnit,
             ),
             endDate: DateTime.now(),
-            startDate: _enumToStartDate(value.duration),
+            startDate: enumToStartDate(value.duration),
           );
 
           _data.fold(
@@ -51,7 +52,7 @@ class ChartdataBloc extends Bloc<ChartdataEvent, ChartdataState> {
                 ChartdataState.success(
                   chartDisplayModelList: _list,
                   durationsEnum: value.duration,
-                  startDate: _enumToStartDate(value.duration),
+                  startDate: enumToStartDate(value.duration),
                 ),
               );
             },
@@ -59,23 +60,6 @@ class ChartdataBloc extends Bloc<ChartdataEvent, ChartdataState> {
         },
       );
     });
-  }
-
-  DateTime _enumToStartDate(DurationsEnum durationsEnum) {
-    switch (durationsEnum) {
-      case DurationsEnum.month1:
-        return DateTime.now().subtract(const Duration(days: 30));
-      case DurationsEnum.month2:
-        return DateTime.now().subtract(const Duration(days: 60));
-      case DurationsEnum.month3:
-        return DateTime.now().subtract(const Duration(days: 90));
-      case DurationsEnum.month4:
-        return DateTime.now().subtract(const Duration(days: 120));
-      case DurationsEnum.month6:
-        return DateTime.now().subtract(const Duration(days: 180));
-      case DurationsEnum.month12:
-        return DateTime.now().subtract(const Duration(days: 365));
-    }
   }
 
   final MeasurementRepository measurementRepository;

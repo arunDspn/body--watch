@@ -14,8 +14,8 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-class _$GetallmeasurmentsStateTearOff {
-  const _$GetallmeasurmentsStateTearOff();
+class _$GetSingleMeasurmentsDetailsStateTearOff {
+  const _$GetSingleMeasurmentsDetailsStateTearOff();
 
   _Initial initial() {
     return const _Initial();
@@ -31,24 +31,32 @@ class _$GetallmeasurmentsStateTearOff {
     );
   }
 
-  _Success success({required List<Measurement> list}) {
+  _Success success(
+      {required List<Measurement> list,
+      required DurationsEnum durationsEnum,
+      required DateTime startDate}) {
     return _Success(
       list: list,
+      durationsEnum: durationsEnum,
+      startDate: startDate,
     );
   }
 }
 
 /// @nodoc
-const $GetallmeasurmentsState = _$GetallmeasurmentsStateTearOff();
+const $GetSingleMeasurmentsDetailsState =
+    _$GetSingleMeasurmentsDetailsStateTearOff();
 
 /// @nodoc
-mixin _$GetallmeasurmentsState {
+mixin _$GetSingleMeasurmentsDetailsState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
+    required TResult Function(List<Measurement> list,
+            DurationsEnum durationsEnum, DateTime startDate)
+        success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -56,7 +64,9 @@ mixin _$GetallmeasurmentsState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(List<Measurement> list, DurationsEnum durationsEnum,
+            DateTime startDate)?
+        success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -64,7 +74,9 @@ mixin _$GetallmeasurmentsState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(List<Measurement> list, DurationsEnum durationsEnum,
+            DateTime startDate)?
+        success,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -96,20 +108,21 @@ mixin _$GetallmeasurmentsState {
 }
 
 /// @nodoc
-abstract class $GetallmeasurmentsStateCopyWith<$Res> {
-  factory $GetallmeasurmentsStateCopyWith(GetallmeasurmentsState value,
-          $Res Function(GetallmeasurmentsState) then) =
-      _$GetallmeasurmentsStateCopyWithImpl<$Res>;
+abstract class $GetSingleMeasurmentsDetailsStateCopyWith<$Res> {
+  factory $GetSingleMeasurmentsDetailsStateCopyWith(
+          GetSingleMeasurmentsDetailsState value,
+          $Res Function(GetSingleMeasurmentsDetailsState) then) =
+      _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$GetallmeasurmentsStateCopyWithImpl<$Res>
-    implements $GetallmeasurmentsStateCopyWith<$Res> {
-  _$GetallmeasurmentsStateCopyWithImpl(this._value, this._then);
+class _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res>
+    implements $GetSingleMeasurmentsDetailsStateCopyWith<$Res> {
+  _$GetSingleMeasurmentsDetailsStateCopyWithImpl(this._value, this._then);
 
-  final GetallmeasurmentsState _value;
+  final GetSingleMeasurmentsDetailsState _value;
   // ignore: unused_field
-  final $Res Function(GetallmeasurmentsState) _then;
+  final $Res Function(GetSingleMeasurmentsDetailsState) _then;
 }
 
 /// @nodoc
@@ -120,7 +133,7 @@ abstract class _$InitialCopyWith<$Res> {
 
 /// @nodoc
 class __$InitialCopyWithImpl<$Res>
-    extends _$GetallmeasurmentsStateCopyWithImpl<$Res>
+    extends _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res>
     implements _$InitialCopyWith<$Res> {
   __$InitialCopyWithImpl(_Initial _value, $Res Function(_Initial) _then)
       : super(_value, (v) => _then(v as _Initial));
@@ -136,7 +149,7 @@ class _$_Initial implements _Initial {
 
   @override
   String toString() {
-    return 'GetallmeasurmentsState.initial()';
+    return 'GetSingleMeasurmentsDetailsState.initial()';
   }
 
   @override
@@ -154,7 +167,9 @@ class _$_Initial implements _Initial {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
+    required TResult Function(List<Measurement> list,
+            DurationsEnum durationsEnum, DateTime startDate)
+        success,
   }) {
     return initial();
   }
@@ -165,7 +180,9 @@ class _$_Initial implements _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(List<Measurement> list, DurationsEnum durationsEnum,
+            DateTime startDate)?
+        success,
   }) {
     return initial?.call();
   }
@@ -176,7 +193,9 @@ class _$_Initial implements _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(List<Measurement> list, DurationsEnum durationsEnum,
+            DateTime startDate)?
+        success,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -223,7 +242,7 @@ class _$_Initial implements _Initial {
   }
 }
 
-abstract class _Initial implements GetallmeasurmentsState {
+abstract class _Initial implements GetSingleMeasurmentsDetailsState {
   const factory _Initial() = _$_Initial;
 }
 
@@ -235,7 +254,7 @@ abstract class _$LoadingCopyWith<$Res> {
 
 /// @nodoc
 class __$LoadingCopyWithImpl<$Res>
-    extends _$GetallmeasurmentsStateCopyWithImpl<$Res>
+    extends _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res>
     implements _$LoadingCopyWith<$Res> {
   __$LoadingCopyWithImpl(_Loading _value, $Res Function(_Loading) _then)
       : super(_value, (v) => _then(v as _Loading));
@@ -251,7 +270,7 @@ class _$_Loading implements _Loading {
 
   @override
   String toString() {
-    return 'GetallmeasurmentsState.loading()';
+    return 'GetSingleMeasurmentsDetailsState.loading()';
   }
 
   @override
@@ -269,7 +288,9 @@ class _$_Loading implements _Loading {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
+    required TResult Function(List<Measurement> list,
+            DurationsEnum durationsEnum, DateTime startDate)
+        success,
   }) {
     return loading();
   }
@@ -280,7 +301,9 @@ class _$_Loading implements _Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(List<Measurement> list, DurationsEnum durationsEnum,
+            DateTime startDate)?
+        success,
   }) {
     return loading?.call();
   }
@@ -291,7 +314,9 @@ class _$_Loading implements _Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(List<Measurement> list, DurationsEnum durationsEnum,
+            DateTime startDate)?
+        success,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -338,7 +363,7 @@ class _$_Loading implements _Loading {
   }
 }
 
-abstract class _Loading implements GetallmeasurmentsState {
+abstract class _Loading implements GetSingleMeasurmentsDetailsState {
   const factory _Loading() = _$_Loading;
 }
 
@@ -351,7 +376,7 @@ abstract class _$FailedCopyWith<$Res> {
 
 /// @nodoc
 class __$FailedCopyWithImpl<$Res>
-    extends _$GetallmeasurmentsStateCopyWithImpl<$Res>
+    extends _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res>
     implements _$FailedCopyWith<$Res> {
   __$FailedCopyWithImpl(_Failed _value, $Res Function(_Failed) _then)
       : super(_value, (v) => _then(v as _Failed));
@@ -382,7 +407,7 @@ class _$_Failed implements _Failed {
 
   @override
   String toString() {
-    return 'GetallmeasurmentsState.failed(cause: $cause)';
+    return 'GetSingleMeasurmentsDetailsState.failed(cause: $cause)';
   }
 
   @override
@@ -408,7 +433,9 @@ class _$_Failed implements _Failed {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
+    required TResult Function(List<Measurement> list,
+            DurationsEnum durationsEnum, DateTime startDate)
+        success,
   }) {
     return failed(cause);
   }
@@ -419,7 +446,9 @@ class _$_Failed implements _Failed {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(List<Measurement> list, DurationsEnum durationsEnum,
+            DateTime startDate)?
+        success,
   }) {
     return failed?.call(cause);
   }
@@ -430,7 +459,9 @@ class _$_Failed implements _Failed {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(List<Measurement> list, DurationsEnum durationsEnum,
+            DateTime startDate)?
+        success,
     required TResult orElse(),
   }) {
     if (failed != null) {
@@ -477,7 +508,7 @@ class _$_Failed implements _Failed {
   }
 }
 
-abstract class _Failed implements GetallmeasurmentsState {
+abstract class _Failed implements GetSingleMeasurmentsDetailsState {
   const factory _Failed({required String cause}) = _$_Failed;
 
   String get cause;
@@ -489,12 +520,15 @@ abstract class _Failed implements GetallmeasurmentsState {
 abstract class _$SuccessCopyWith<$Res> {
   factory _$SuccessCopyWith(_Success value, $Res Function(_Success) then) =
       __$SuccessCopyWithImpl<$Res>;
-  $Res call({List<Measurement> list});
+  $Res call(
+      {List<Measurement> list,
+      DurationsEnum durationsEnum,
+      DateTime startDate});
 }
 
 /// @nodoc
 class __$SuccessCopyWithImpl<$Res>
-    extends _$GetallmeasurmentsStateCopyWithImpl<$Res>
+    extends _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res>
     implements _$SuccessCopyWith<$Res> {
   __$SuccessCopyWithImpl(_Success _value, $Res Function(_Success) _then)
       : super(_value, (v) => _then(v as _Success));
@@ -505,12 +539,22 @@ class __$SuccessCopyWithImpl<$Res>
   @override
   $Res call({
     Object? list = freezed,
+    Object? durationsEnum = freezed,
+    Object? startDate = freezed,
   }) {
     return _then(_Success(
       list: list == freezed
           ? _value.list
           : list // ignore: cast_nullable_to_non_nullable
               as List<Measurement>,
+      durationsEnum: durationsEnum == freezed
+          ? _value.durationsEnum
+          : durationsEnum // ignore: cast_nullable_to_non_nullable
+              as DurationsEnum,
+      startDate: startDate == freezed
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
@@ -518,14 +562,21 @@ class __$SuccessCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_Success implements _Success {
-  const _$_Success({required this.list});
+  const _$_Success(
+      {required this.list,
+      required this.durationsEnum,
+      required this.startDate});
 
   @override
   final List<Measurement> list;
+  @override
+  final DurationsEnum durationsEnum;
+  @override
+  final DateTime startDate;
 
   @override
   String toString() {
-    return 'GetallmeasurmentsState.success(list: $list)';
+    return 'GetSingleMeasurmentsDetailsState.success(list: $list, durationsEnum: $durationsEnum, startDate: $startDate)';
   }
 
   @override
@@ -533,12 +584,18 @@ class _$_Success implements _Success {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Success &&
-            const DeepCollectionEquality().equals(other.list, list));
+            const DeepCollectionEquality().equals(other.list, list) &&
+            const DeepCollectionEquality()
+                .equals(other.durationsEnum, durationsEnum) &&
+            const DeepCollectionEquality().equals(other.startDate, startDate));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(list));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(list),
+      const DeepCollectionEquality().hash(durationsEnum),
+      const DeepCollectionEquality().hash(startDate));
 
   @JsonKey(ignore: true)
   @override
@@ -551,9 +608,11 @@ class _$_Success implements _Success {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
+    required TResult Function(List<Measurement> list,
+            DurationsEnum durationsEnum, DateTime startDate)
+        success,
   }) {
-    return success(list);
+    return success(list, durationsEnum, startDate);
   }
 
   @override
@@ -562,9 +621,11 @@ class _$_Success implements _Success {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(List<Measurement> list, DurationsEnum durationsEnum,
+            DateTime startDate)?
+        success,
   }) {
-    return success?.call(list);
+    return success?.call(list, durationsEnum, startDate);
   }
 
   @override
@@ -573,11 +634,13 @@ class _$_Success implements _Success {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(List<Measurement> list, DurationsEnum durationsEnum,
+            DateTime startDate)?
+        success,
     required TResult orElse(),
   }) {
     if (success != null) {
-      return success(list);
+      return success(list, durationsEnum, startDate);
     }
     return orElse();
   }
@@ -620,10 +683,15 @@ class _$_Success implements _Success {
   }
 }
 
-abstract class _Success implements GetallmeasurmentsState {
-  const factory _Success({required List<Measurement> list}) = _$_Success;
+abstract class _Success implements GetSingleMeasurmentsDetailsState {
+  const factory _Success(
+      {required List<Measurement> list,
+      required DurationsEnum durationsEnum,
+      required DateTime startDate}) = _$_Success;
 
   List<Measurement> get list;
+  DurationsEnum get durationsEnum;
+  DateTime get startDate;
   @JsonKey(ignore: true)
   _$SuccessCopyWith<_Success> get copyWith =>
       throw _privateConstructorUsedError;

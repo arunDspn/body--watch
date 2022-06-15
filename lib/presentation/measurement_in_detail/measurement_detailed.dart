@@ -1,13 +1,14 @@
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/display_models/chart_display.dart';
+import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
 import 'package:watcha_body/presentation/home/charts/charts.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/size_config.dart';
@@ -27,76 +28,118 @@ class MeasurementInDetail extends StatelessWidget {
     final appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              height: SizeConfig.screenHeight! * 0.08,
-              child: Stack(
-                children: [
-                  Align(
-                    child: Text(
-                      measurementType.name,
-                      style: Theme.of(context).textTheme.headline3,
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Cancel'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            BlocListener<AdddataCubit, AdddataState>(
-              listener: (context, state) {
-                state.maybeMap(
-                  orElse: () {},
-                  success: (_) {
-                    context.read<GetallmeasurmentsCubit>().fetchAllData(
-                          type: measurementType.name,
-                          appPreferences: appPref.appPreferences,
-                        );
-                  },
+        child: BlocBuilder<GetSingleMeasurmentsDetailsCubit,
+            GetSingleMeasurmentsDetailsState>(
+          builder: (context, state) {
+            return state.maybeMap(
+              orElse: () {
+                return const Text('No You Cant See Me');
+              },
+              loading: (_) {
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
               },
-              child:
-                  BlocBuilder<GetallmeasurmentsCubit, GetallmeasurmentsState>(
-                builder: (context, state) {
-                  return state.maybeMap(
-                    orElse: () {
-                      return const Text('No You Cant See Me');
-                    },
-                    loading: (_) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                    failed: (value) {
-                      return Text(value.cause);
-                    },
-                    success: (value) {
-                      return Expanded(
+              failed: (value) {
+                return Text(value.cause);
+              },
+              success: (value) {
+                return BlocListener<AdddataCubit, AdddataState>(
+                  listener: (context, state) {
+                    state.maybeMap(
+                      orElse: () {},
+                      success: (_) {
+                        context
+                            .read<GetSingleMeasurmentsDetailsCubit>()
+                            .fetchAllData(
+                              type: measurementType.name,
+                              appPreferences: appPref.appPreferences,
+                              durationsEnum: value.durationsEnum,
+                            );
+                      },
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        height: SizeConfig.screenHeight! * 0.08,
+                        child: Stack(
+                          children: [
+                            Align(
+                              child: Text(
+                                measurementType.name,
+                                style: Theme.of(context).textTheme.headline3,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: DropdownButton<DurationsEnum>(
+                                //TODO: Better universal
+                                borderRadius: BorderRadius.circular(20),
+                                value: value.durationsEnum,
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                                underline: Container(),
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    context
+                                        .read<
+                                            GetSingleMeasurmentsDetailsCubit>()
+                                        .fetchAllData(
+                                          type: measurementType.name,
+                                          appPreferences:
+                                              appPref.appPreferences,
+                                          durationsEnum: value,
+                                        );
+                                  }
+                                },
+                                items: DurationsEnum.values.map((e) {
+                                  return DropdownMenuItem(
+                                    value: e,
+                                    child: Text(
+                                      EnumToString.convertToString(
+                                        e,
+                                        camelCase: true,
+                                      ),
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Expanded(
                         child: _MeasurementList(
                           measurementList: value.list,
                           measurementType: measurementType,
-                          startDate:
-                              DateTime.now().subtract(const Duration(days: 30)),
+                          startDate: value.startDate,
                         ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
     );
@@ -104,7 +147,7 @@ class MeasurementInDetail extends StatelessWidget {
 }
 
 class _MeasurementList extends StatelessWidget {
-  const _MeasurementList({
+  _MeasurementList({
     Key? key,
     required this.measurementList,
     required this.measurementType,
@@ -115,10 +158,35 @@ class _MeasurementList extends StatelessWidget {
   final MeasurementType measurementType;
   final DateTime startDate;
 
+  late String unit;
+
   @override
   Widget build(BuildContext context) {
+    final appPre = (context.read<ApppreferencesBloc>().state as SavedAndReady)
+        .appPreferences;
+    if (measurementType is LengthMeasurementType) {
+      unit = EnumToString.convertToString(
+        appPre.lengthUnit,
+      );
+    } else if (measurementType is WeightMeasurementType) {
+      unit = EnumToString.convertToString(
+        appPre.lengthUnit,
+      );
+    } else {
+      unit = '%';
+    }
     return Column(
       children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Text(
+              'Current Measurement · ${measurementList.first.value} $unit',
+              style: Theme.of(context).textTheme.headline6,
+            ),
+          ),
+        ),
         ChartContainerForDetailed(
           startDate: startDate,
           chartDisplayModel: ChartDisplayModel.fromMeasurementList(

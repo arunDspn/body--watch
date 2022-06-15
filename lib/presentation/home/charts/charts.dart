@@ -515,68 +515,6 @@ class ChartContainerForDetailed extends StatelessWidget {
       height: SizeConfig.screenHeight! * 0.3,
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${chartDisplayModel.measurementName} ${chartDisplayModel.lastMeasurement}',
-                style: Theme.of(context).textTheme.headline3,
-              ),
-              if (!withLimiter)
-                TextButton(
-                  onPressed: () {
-                    showModalBottomSheet<void>(
-                      context: context,
-                      builder: (context) {
-                        return AddDataModal.add(
-                          type: chartDisplayModel.type,
-                        );
-                      },
-                    );
-                  },
-                  child: const Text('Add'),
-                )
-              else
-                BlocBuilder<ChartdataBloc, ChartdataState>(
-                  builder: (context, state) {
-                    return state.maybeMap(
-                      orElse: SizedBox.shrink,
-                      success: (state) {
-                        return DropdownButton<DurationsEnum>(
-                          value: state.durationsEnum,
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                          underline: Container(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              context.read<ChartdataBloc>().add(
-                                    ChartdataEvent.fetchData(
-                                      duration: value,
-                                      appPreferences: _appPref.appPreferences,
-                                    ),
-                                  );
-                            }
-                          },
-                          items: DurationsEnum.values.map((e) {
-                            return DropdownMenuItem(
-                              value: e,
-                              child: Text(
-                                EnumToString.convertToString(
-                                  e,
-                                  camelCase: true,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        );
-                      },
-                    );
-                  },
-                ),
-            ],
-          ),
           Expanded(
             child: TimeSeriesLineAnnotationChart(
               chartDisplayModel.measurementList,
