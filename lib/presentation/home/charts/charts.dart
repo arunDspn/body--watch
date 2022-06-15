@@ -10,9 +10,11 @@ import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/display_models/chart_display.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
+import 'package:watcha_body/presentation/home/charts/bloc/filter_chart_bloc/filterchart_bloc.dart';
 import 'package:watcha_body/size_config.dart';
 import 'package:charts_flutter/src/text_style.dart' as style;
 import 'package:charts_flutter/src/text_element.dart' as charts_text;
+import 'package:flutter/src/painting/basic_types.dart' as basic_types;
 
 class Charts extends StatelessWidget {
   const Charts({Key? key}) : super(key: key);
@@ -40,11 +42,32 @@ class Charts extends StatelessWidget {
           },
         ),
         actions: [
-          BlocBuilder<ChartdataBloc, ChartdataState>(
+          BlocConsumer<ChartdataBloc, ChartdataState>(
+            listener: (context, state) {
+              state.maybeMap(
+                orElse: () {},
+                success: (state) {
+                  context.read<FilterchartBloc>().add(
+                        FilterchartEvent.initialData(
+                          chartDisplayModelList: state.chartDisplayModelList,
+                          durationsEnum: state.durationsEnum,
+                          startDate: state.startDate,
+                        ),
+                      );
+                },
+              );
+            },
             builder: (context, state) {
               return state.maybeMap(
                 orElse: SizedBox.shrink,
                 success: (state) {
+                  context.read<FilterchartBloc>().add(
+                        FilterchartEvent.initialData(
+                          chartDisplayModelList: state.chartDisplayModelList,
+                          durationsEnum: state.durationsEnum,
+                          startDate: state.startDate,
+                        ),
+                      );
                   return DropdownButton<DurationsEnum>(
                     //TODO: Better universal
                     borderRadius: BorderRadius.circular(20),
@@ -136,36 +159,87 @@ class _SucessBody extends StatelessWidget {
         ),
       );
     } else {
-      return Column(
-        children: [
-          // Chips
-          Wrap(
-            children: [
-              for (final e in list)
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Chip(
-                    backgroundColor: Colors.deepPurpleAccent,
-                    label: Text(
-                      e.type.name,
-                      style: Theme.of(context).textTheme.bodyText1,
+      return BlocBuilder<FilterchartBloc, FilterchartState>(
+        builder: (context, state) {
+          return state.maybeMap(
+            orElse: CircularProgressIndicator.new,
+            data: (filterState) {
+              final filteredList = list
+                  .where(
+                    (element) => !filterState.filteredTypes
+                        .contains(element.measurementName),
+                  )
+                  .toList();
+              return Column(
+                children: [
+                  // Chips
+                  SizedBox(
+                    height: SizeConfig.screenHeight! * .1,
+                    child: ListView(
+                      scrollDirection: basic_types.Axis.horizontal,
+                      children: [
+                        for (final e in list)
+                          Padding(
+                            padding: const EdgeInsets.all(3),
+                            child: FilterChip(
+                              selected: !filterState.filteredTypes
+                                  .contains(e.type.name),
+                              selectedColor: Colors.deepPurpleAccent,
+                              backgroundColor: Colors.grey.withOpacity(0.5),
+                              label: Text(
+                                e.type.name,
+                                style: Theme.of(context).textTheme.bodyText1,
+                              ),
+                              onSelected: (selev) {
+                                var list = [...filterState.filteredTypes];
+                                if (selev) {
+                                  list = list
+                                      .where((ele) => ele != e.type.name)
+                                      .toList();
+                                  context.read<FilterchartBloc>().add(
+                                        FilterchartEvent.filtering(
+                                          chartDisplayModelList:
+                                              filterState.chartDisplayModelList,
+                                          durationsEnum:
+                                              filterState.durationsEnum,
+                                          startDate: filterState.startDate,
+                                          filterString: list,
+                                        ),
+                                      );
+                                } else {
+                                  context.read<FilterchartBloc>().add(
+                                        FilterchartEvent.filtering(
+                                          chartDisplayModelList:
+                                              filterState.chartDisplayModelList,
+                                          durationsEnum:
+                                              filterState.durationsEnum,
+                                          startDate: filterState.startDate,
+                                          filterString: list..add(e.type.name),
+                                        ),
+                                      );
+                                }
+                              },
+                            ),
+                          ),
+                      ],
                     ),
                   ),
-                ),
-            ],
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: list.length,
-              itemBuilder: (context, index) {
-                return ChartContainer(
-                  chartDisplayModel: list[index],
-                  startDate: startDate,
-                );
-              },
-            ),
-          ),
-        ],
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: filteredList.length,
+                      itemBuilder: (context, index) {
+                        return ChartContainer(
+                          chartDisplayModel: filteredList[index],
+                          startDate: startDate,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
       );
     }
   }

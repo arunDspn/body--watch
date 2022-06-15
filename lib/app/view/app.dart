@@ -20,6 +20,7 @@ import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
 import 'package:watcha_body/presentation/app_initializer/app_initer.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
+import 'package:watcha_body/presentation/home/charts/bloc/filter_chart_bloc/filterchart_bloc.dart';
 import 'package:watcha_body/presentation/home/charts/charts.dart';
 import 'package:watcha_body/presentation/home/home.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
@@ -61,6 +62,9 @@ class App extends StatelessWidget {
           ),
           BlocProvider<AppthemeBloc>(
             create: (context) => AppthemeBloc(),
+          ),
+          BlocProvider<FilterchartBloc>(
+            create: (context) => FilterchartBloc(),
           ),
         ],
         child: Builder(
