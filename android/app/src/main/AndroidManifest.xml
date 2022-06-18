@@ -2,7 +2,9 @@
     package="com.example.verygoodcore.watcha_body">
    <application
         android:label="${appName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:fullBackupOnly="false">
         <activity
             android:name=".MainActivity"
             android:exported="true"

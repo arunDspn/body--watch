@@ -10,8 +10,8 @@ class MeasurementRepository extends IMeasurementsFacade {
 
   static const latestDetailsQuery = '''
     WITH ranked AS
-    (SELECT id, value, date, type, unit,
-    row_number() OVER (PARTITION BY type ORDER BY date DESC) AS rn
+    (SELECT id, value, date, type, unit,row_number() 
+    OVER (PARTITION BY type ORDER BY date DESC) AS rn
     FROM measurements)
     SELECT id, value, date, type, unit
     FROM ranked

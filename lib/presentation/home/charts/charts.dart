@@ -184,11 +184,9 @@ class _SucessBody extends StatelessWidget {
                             child: FilterChip(
                               selected: !filterState.filteredTypes
                                   .contains(e.type.name),
-                              selectedColor: Colors.deepPurpleAccent,
-                              backgroundColor: Colors.grey.withOpacity(0.5),
                               label: Text(
                                 e.type.name,
-                                style: Theme.of(context).textTheme.bodyText1,
+                                // style: Theme.of(context).textTheme.bodyText1,
                               ),
                               onSelected: (selev) {
                                 var list = [...filterState.filteredTypes];
@@ -386,19 +384,31 @@ class TimeSeriesLineAnnotationChart extends StatelessWidget {
 
       // this is how we can add annotations
       // Date
-      domainAxis: const charts.DateTimeAxisSpec(
+      domainAxis: charts.DateTimeAxisSpec(
         renderSpec: charts.GridlineRendererSpec(
           labelStyle: charts.TextStyleSpec(
-            color: charts.MaterialPalette.white,
+            // color: charts.MaterialPalette.white,
+            color: charts.ColorUtil.fromDartColor(
+              Theme.of(context).textTheme.bodyText1!.color!,
+            ),
           ),
           // 2 vertical lines
+          // Remove this
+
+          // use grey color for gridlines in white by using seconfry font color
           lineStyle: charts.LineStyleSpec(
-            color: charts.MaterialPalette.black,
+            // color: charts.MaterialPalette.black,
+            color: charts.ColorUtil.fromDartColor(
+              Theme.of(context).textTheme.bodyText2!.color!,
+            ),
             thickness: 0,
           ),
           // dont know what it si
           axisLineStyle: charts.LineStyleSpec(
-            color: charts.MaterialPalette.white,
+            // color: charts.MaterialPalette.white,
+            color: charts.ColorUtil.fromDartColor(
+              Theme.of(context).textTheme.bodyText2!.color!,
+            ),
           ),
           tickLengthPx: 0,
           labelCollisionRotation: 2,
@@ -414,24 +424,38 @@ class TimeSeriesLineAnnotationChart extends StatelessWidget {
         // ),
       ),
       // Measurements
-      primaryMeasureAxis: const charts.NumericAxisSpec(
+      primaryMeasureAxis: charts.NumericAxisSpec(
         renderSpec: charts.GridlineRendererSpec(
           axisLineStyle: charts.LineStyleSpec(
-            color: charts.MaterialPalette.black,
+            // color: charts.MaterialPalette.black,
+            // color: charts.ColorUtil.fromDartColor(
+            //   Theme.of(context).textTheme.bodyText1!.color!,
+            // ),
+            color: charts.ColorUtil.fromDartColor(
+              Colors.red,
+            ),
           ),
           labelStyle: charts.TextStyleSpec(
             fontSize: 10,
-            color: charts.MaterialPalette.white,
+            // color: charts.MaterialPalette.white,
+            color: charts.ColorUtil.fromDartColor(
+              Theme.of(context).textTheme.bodyText1!.color!,
+            ),
           ), //chnage white color as per your requirement.
           tickLengthPx: 0,
+          // Horizontal lines
           lineStyle: charts.LineStyleSpec(
-            color: charts.MaterialPalette.black,
+            color: charts.ColorUtil.fromDartColor(
+              Theme.of(context).textTheme.bodyText2!.color!,
+            ),
+            // color: charts.ColorUtil.fromDartColor(Colors.red),
             thickness: 0,
+            dashPattern: const [10, 10],
           ),
         ),
         showAxisLine: false,
         // those divisons 2 4 6 8 9 22
-        tickProviderSpec: charts.BasicNumericTickProviderSpec(
+        tickProviderSpec: const charts.BasicNumericTickProviderSpec(
           zeroBound: false,
           dataIsInWholeNumbers: true,
           desiredTickCount: 5,
@@ -471,26 +495,42 @@ class TimeSeriesLineAnnotationChart extends StatelessWidget {
               endLabel: '${startDate.day}-${startDate.month}',
               labelPosition: charts.AnnotationLabelPosition.outside,
               labelAnchor: charts.AnnotationLabelAnchor.middle,
-              labelStyleSpec: const charts.TextStyleSpec(
+              // Start Small Label for end or last date
+              labelStyleSpec: charts.TextStyleSpec(
                 fontSize: 8,
-                color: charts.MaterialPalette.white,
+                // color: charts.MaterialPalette.white,
+                color: charts.ColorUtil.fromDartColor(
+                  Theme.of(context).textTheme.bodyText1!.color!,
+                ),
               ),
               // TODO(me): add end date
-              color: charts.ColorUtil.fromDartColor(Colors.grey.shade900),
+              // color: charts.ColorUtil.fromDartColor(Colors.grey.shade900),
+              // color: charts.ColorUtil.fromDartColor(
+              //   Theme.of(context).textTheme.bodyText2!.color!,
+              // ),
+              color: charts.ColorUtil.fromDartColor(Colors.transparent),
 
               // labelAnchor: charts.AnnotationLabelAnchor.end,
             ),
             charts.LineAnnotationSegment(
               DateTime.now(), charts.RangeAnnotationAxisType.domain,
               startLabel: '${DateTime.now().day}-${DateTime.now().month}',
-              labelStyleSpec: const charts.TextStyleSpec(
+              // End Date SMall
+              labelStyleSpec: charts.TextStyleSpec(
                 fontSize: 8,
-                color: charts.MaterialPalette.white,
+                color: charts.ColorUtil.fromDartColor(
+                  Theme.of(context).textTheme.bodyText1!.color!,
+                ),
               ),
               labelPosition: charts.AnnotationLabelPosition.outside,
               labelAnchor: charts.AnnotationLabelAnchor.middle,
               //TODO: Use custom
-              color: charts.ColorUtil.fromDartColor(Colors.grey.shade900),
+              // color: charts.ColorUtil.fromDartColor(Colors.red.shade900),
+              // End Line
+              // color: charts.ColorUtil.fromDartColor(
+              //   Theme.of(context).textTheme.bodyText2!.color!,
+              // ),
+              color: charts.ColorUtil.fromDartColor(Colors.transparent),
               // labelPosition: AnnotationLabelPosition.margin,
             ),
           ],

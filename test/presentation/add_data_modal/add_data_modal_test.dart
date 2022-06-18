@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/size_config.dart';
 
@@ -15,7 +16,7 @@ void main() {
             builder: (context) {
               SizeConfig().init(context);
               return const AddDataModal(
-                type: tableName,
+                type: MeasurementType(name: "mas"),
               );
             },
           ),

@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
+import 'package:watcha_body/constants/theme.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/l10n/l10n.dart';
@@ -214,7 +215,7 @@ final lightTheme = ThemeData(
       color: Colors.grey,
     ),
     headline2: TextStyle(
-      fontSize: 30,
+      fontSize: 26,
       fontWeight: FontWeight.bold,
       color: Colors.black,
     ),
@@ -237,6 +238,22 @@ final lightTheme = ThemeData(
       fontWeight: FontWeight.bold,
     ),
   ),
+  chipTheme: const ChipThemeData(
+    checkmarkColor: Colors.white,
+    backgroundColor: Colors.grey,
+    selectedColor: kPrimaryColorInLight,
+    deleteIconColor: Colors.white,
+    labelPadding: EdgeInsets.symmetric(horizontal: 8),
+    labelStyle: TextStyle(
+      fontWeight: FontWeight.w600,
+      color: Colors.white,
+    ),
+    secondarySelectedColor: Colors.red,
+    secondaryLabelStyle: TextStyle(
+      fontWeight: FontWeight.w600,
+      color: Colors.red,
+    ),
+  ),
 );
 
 final darkTheme = ThemeData(
@@ -251,7 +268,8 @@ final darkTheme = ThemeData(
     // used icons
     secondary: Colors.grey.shade400,
     secondaryContainer: Colors.grey.shade900,
-    onPrimaryContainer: const Color.fromARGB(255, 53, 53, 53),
+    // onPrimaryContainer: const Color.fromARGB(255, 53, 53, 53),
+    onPrimaryContainer: Colors.grey.shade900,
   ),
   fontFamily: GoogleFonts.inter(
     textStyle: const TextStyle(
@@ -308,4 +326,15 @@ final darkTheme = ThemeData(
     ),
   ),
   canvasColor: Colors.black87,
+  chipTheme: const ChipThemeData(
+    checkmarkColor: Colors.white,
+    backgroundColor: Colors.black26,
+    selectedColor: kPrimaryColorInDark,
+    deleteIconColor: Colors.white,
+    labelPadding: EdgeInsets.symmetric(horizontal: 8),
+    labelStyle: TextStyle(
+      fontWeight: FontWeight.w600,
+      color: Colors.white,
+    ),
+  ),
 );
