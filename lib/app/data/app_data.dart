@@ -18,6 +18,12 @@ class WeightMeasurementType extends MeasurementType {
   }) : super(name: name);
 }
 
+class PercentageMeasurementType extends MeasurementType {
+  const PercentageMeasurementType({
+    required String name,
+  }) : super(name: name);
+}
+
 const LengthMeasurementType chest = LengthMeasurementType(name: 'Chest');
 const LengthMeasurementType waist = LengthMeasurementType(name: 'Waist');
 const LengthMeasurementType hips = LengthMeasurementType(name: 'Hips');
@@ -43,6 +49,9 @@ const LengthMeasurementType wristLeft =
 const LengthMeasurementType wristRight =
     LengthMeasurementType(name: 'Wrist · Right');
 const LengthMeasurementType shoulder = LengthMeasurementType(name: 'Shoulder');
+const WeightMeasurementType weight = WeightMeasurementType(name: 'Weight');
+const PercentageMeasurementType bodyFat =
+    PercentageMeasurementType(name: 'Body · Fat');
 
 const List<MeasurementType> allWidgets = [
   chest,
@@ -60,6 +69,8 @@ const List<MeasurementType> allWidgets = [
   wristLeft,
   wristRight,
   shoulder,
+  weight,
+  bodyFat,
 ];
 
 MeasurementType? measurementTypeFromString(String name) {

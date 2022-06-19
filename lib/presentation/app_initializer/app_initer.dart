@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
+import 'package:watcha_body/constants/theme.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/home/home.dart';
+import 'package:watcha_body/size_config.dart';
 
 class AppIniter extends StatefulWidget {
   const AppIniter({Key? key}) : super(key: key);
@@ -23,6 +25,7 @@ class _AppIniterState extends State<AppIniter> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     void _updateAppPreferences() {
       final appPreferences = AppPreferences(
         _selectedWeight!,
@@ -65,28 +68,26 @@ class _AppIniterState extends State<AppIniter> {
                   });
                 },
               ),
+              const SizedBox(height: 15),
+              const ThemeChoiceChip(),
               const Spacer(),
               MaterialButton(
-                onPressed: () {},
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(25),
                 ),
+                minWidth: SizeConfig.screenWidth! * 0.7,
+                color: kPrimaryColorInLight,
+                disabledColor: Colors.grey,
+                onPressed: (_selectedLength != null && _selectedWeight != null)
+                    ? _updateAppPreferences
+                    : null,
                 child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: MaterialButton(
-                    onPressed:
-                        (_selectedLength != null && _selectedWeight != null)
-                            ? _updateAppPreferences
-                            : null,
-                    child: Text(
-                      'Continue',
-                      style: Theme.of(context).textTheme.headline4!.copyWith(
-                            color: (_selectedLength != null &&
-                                    _selectedWeight != null)
-                                ? Colors.green
-                                : Colors.grey,
-                          ),
-                    ),
+                  padding: const EdgeInsets.all(12),
+                  child: Text(
+                    'Continue',
+                    style: Theme.of(context).textTheme.headline4!.copyWith(
+                          color: Colors.white,
+                        ),
                   ),
                 ),
               )
@@ -178,7 +179,7 @@ class ThemeChoiceChip extends StatefulWidget {
 }
 
 class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
-  AppTheme? _selectedTheme;
+  AppTheme _selectedTheme = AppTheme.lightTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -196,13 +197,13 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
               padding: const EdgeInsets.all(8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(AppTheme.values.length, (index) {
+                children: AppTheme.values.map((e) {
                   return ChoiceChip(
                     label: Padding(
                       padding: const EdgeInsets.all(4),
                       child: Text(
                         EnumToString.convertToString(
-                          AppTheme.values[index],
+                          e,
                           camelCase: true,
                         ),
                         style: const TextStyle(
@@ -215,21 +216,22 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
                     selectedColor: Colors.blueAccent,
                     elevation: 0,
                     pressElevation: 0,
-                    selected: _selectedTheme == AppTheme.values[index],
+                    selected: _selectedTheme == e,
                     labelStyle: TextStyle(
-                      color: _selectedTheme == AppTheme.values[index]
+                      color: _selectedTheme == e
                           ? Colors.white
                           : Colors.blueAccent,
                     ),
                     onSelected: (value) {
+                      _selectedTheme = e;
                       context.read<AppthemeBloc>().add(
                             AppthemeEvent.changeTheme(
-                              appTheme: AppTheme.values[index],
+                              appTheme: e,
                             ),
                           );
                     },
                   );
-                }),
+                }).toList(),
               ),
             ),
           ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
+import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
@@ -87,7 +88,7 @@ class OverView extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(20),
                             child: Icon(
-                              Icons.no_encryption,
+                              Icons.sentiment_dissatisfied,
                               color: Colors.grey.shade300,
                               size: 45,
                             ),
@@ -107,10 +108,16 @@ class OverView extends StatelessWidget {
                       ),
                     );
                   } else {
-                    return Column(
-                      children:
-                          list.widgets.map((e) => _WidgetBox(data: e)).toList(),
+                    return ListView.builder(
+                      itemCount: list.widgets.length,
+                      itemBuilder: (context, index) {
+                        return _WidgetBox(data: list.widgets[index]);
+                      },
                     );
+                    // return Column(
+                    //   children:
+                    //       list.widgets.map((e) => _WidgetBox(data: e)).toList(),
+                    // );
                   }
                 },
                 failure: (cause) {
@@ -135,10 +142,22 @@ class _WidgetBox extends StatelessWidget {
 
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
 
+  late String _unit;
+
   @override
   Widget build(BuildContext context) {
     final _preferences =
-        context.watch<ApppreferencesBloc>().state as SavedAndReady;
+        (context.watch<ApppreferencesBloc>().state as SavedAndReady)
+            .appPreferences;
+
+    if (data.name is LengthMeasurementType) {
+      _unit = _preferences.lengthUnitString;
+    } else if (data.name is WeightMeasurementType) {
+      _unit = _preferences.weightUnitString;
+    } else {
+      _unit = '%';
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: GestureDetector(
@@ -173,7 +192,7 @@ class _WidgetBox extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         Text(
-                          _preferences.appPreferences.lengthUnitString,
+                          _unit,
                           style:
                               Theme.of(context).textTheme.headline4!.copyWith(
                                     fontSize: getProportionateScreenWidth(18),
