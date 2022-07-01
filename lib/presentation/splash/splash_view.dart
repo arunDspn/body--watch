@@ -11,7 +11,7 @@ class SplashView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance!.addPostFrameCallback(
+    WidgetsBinding.instance.addPostFrameCallback(
       (_) {
         context.read<ApppreferencesBloc>().state.maybeMap(
           orElse: () {

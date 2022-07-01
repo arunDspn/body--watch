@@ -66,10 +66,10 @@ class MeasurementRepository extends IMeasurementsFacade {
     }
   }
 
-  double _convertInchToCm(double inch) => (inch * 2.54).ceilToDouble();
-  double _convertCmToInch(double cm) => (cm / 2.54).ceilToDouble();
-  double _convertPoundToKg(double pound) => (pound / 2.20462262).ceilToDouble();
-  double _convertKgToPound(double kg) => (kg * 2.20462262).ceilToDouble();
+  double _convertInchToCm(double inch) => (inch * 2.54).toFixedOfTwo();
+  double _convertCmToInch(double cm) => (cm / 2.54).toFixedOfTwo();
+  double _convertPoundToKg(double pound) => (pound / 2.20462262).toFixedOfTwo();
+  double _convertKgToPound(double kg) => (kg * 2.20462262).toFixedOfTwo();
 
   @override
   Future<Either<String, List<Measurement>>> getLatestDetails({
@@ -144,4 +144,8 @@ class MeasurementRepository extends IMeasurementsFacade {
       return Left(e.toString());
     }
   }
+}
+
+extension on double {
+  double toFixedOfTwo() => num.parse(toStringAsFixed(2)) as double;
 }
