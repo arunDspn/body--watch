@@ -203,7 +203,7 @@ final lightTheme = ThemeData(
     color: Colors.amber,
   ).fontFamily,
   inputDecorationTheme: const InputDecorationTheme(
-    border: InputBorder.none,
+    border: UnderlineInputBorder(),
   ),
   textTheme: const TextTheme(
     bodyText1: TextStyle(
@@ -279,7 +279,8 @@ final darkTheme = ThemeData(
     color: Colors.amber,
   ).fontFamily,
   inputDecorationTheme: const InputDecorationTheme(
-    border: InputBorder.none,
+    border: UnderlineInputBorder(),
+    enabledBorder: UnderlineInputBorder(),
     labelStyle: TextStyle(
       color: Colors.white,
     ),
