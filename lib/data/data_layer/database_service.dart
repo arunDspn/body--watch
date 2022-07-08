@@ -76,9 +76,24 @@ class DatabaseService {
     }
   }
 
-  void delete({
-    required int id,
-  }) {}
+  Future<void> delete({
+    String? id,
+  }) async {
+    try {
+      final _db = await database;
+      if (id != null) {
+        await _db.delete(
+          tableName,
+          where: 'id = ?',
+          whereArgs: [id],
+        );
+      } else {
+        await _db.delete(tableName);
+      }
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 
   Future<List<Map<String, dynamic>>> getData({
     DateTime? startDate,
@@ -125,6 +140,19 @@ class DatabaseService {
     try {
       final _db = await database;
       await _db.execute(query);
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<void> restoreData({required dynamic datas}) async {
+    try {
+      final _db = await database;
+      final _batch = _db.batch();
+      for (final data in datas) {
+        _batch.insert(tableName, data as Map<String, Object?>);
+      }
+      await _batch.commit();
     } catch (e) {
       return Future.error(e);
     }

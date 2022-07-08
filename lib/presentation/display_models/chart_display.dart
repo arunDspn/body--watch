@@ -2,7 +2,6 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ChartDisplayModel {
   ChartDisplayModel({

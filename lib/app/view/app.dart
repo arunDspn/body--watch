@@ -27,6 +27,8 @@ import 'package:watcha_body/presentation/home/home.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
+import 'package:watcha_body/presentation/settings/cubits/backup_restore_cubit/backup_data_cubit.dart';
+import 'package:watcha_body/presentation/settings/cubits/delete_all_data_cubit/delete_all_data_cubit.dart';
 import 'package:watcha_body/presentation/settings/settings_view.dart';
 import 'package:watcha_body/presentation/splash/splash_view.dart';
 
@@ -66,6 +68,16 @@ class App extends StatelessWidget {
           ),
           BlocProvider<FilterchartBloc>(
             create: (context) => FilterchartBloc(),
+          ),
+          BlocProvider<BackupRestoreDataCubit>(
+            create: (context) => BackupRestoreDataCubit(
+              context.read<MeasurementRepository>(),
+            ),
+          ),
+          BlocProvider<DeleteAllDataCubit>(
+            create: (context) => DeleteAllDataCubit(
+              context.read<MeasurementRepository>(),
+            ),
           ),
         ],
         child: Builder(
@@ -203,7 +215,16 @@ final lightTheme = ThemeData(
     color: Colors.amber,
   ).fontFamily,
   inputDecorationTheme: const InputDecorationTheme(
-    border: UnderlineInputBorder(),
+    border: UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: Color.fromARGB(59, 176, 176, 176),
+      ),
+    ),
+    enabledBorder: UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: Color.fromARGB(59, 176, 176, 176),
+      ),
+    ),
   ),
   textTheme: const TextTheme(
     bodyText1: TextStyle(
@@ -254,6 +275,23 @@ final lightTheme = ThemeData(
       color: Colors.red,
     ),
   ),
+  dialogTheme: DialogTheme(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15),
+    ),
+    backgroundColor: Colors.grey.shade100,
+  ),
+  snackBarTheme: SnackBarThemeData(
+    contentTextStyle: const TextStyle(
+      fontSize: 16,
+      color: Colors.white,
+    ),
+    backgroundColor: Colors.grey.shade700,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+    behavior: SnackBarBehavior.floating,
+  ),
 );
 
 final darkTheme = ThemeData(
@@ -279,8 +317,16 @@ final darkTheme = ThemeData(
     color: Colors.amber,
   ).fontFamily,
   inputDecorationTheme: const InputDecorationTheme(
-    border: UnderlineInputBorder(),
-    enabledBorder: UnderlineInputBorder(),
+    border: UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: Color.fromARGB(60, 170, 167, 167),
+      ),
+    ),
+    enabledBorder: UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: Color.fromARGB(60, 170, 167, 167),
+      ),
+    ),
     labelStyle: TextStyle(
       color: Colors.white,
     ),
@@ -337,5 +383,22 @@ final darkTheme = ThemeData(
       fontWeight: FontWeight.w600,
       color: Colors.white,
     ),
+  ),
+  dialogTheme: DialogTheme(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15),
+    ),
+    backgroundColor: Colors.grey.shade900,
+  ),
+  snackBarTheme: SnackBarThemeData(
+    contentTextStyle: const TextStyle(
+      fontSize: 16,
+      color: Colors.white,
+    ),
+    backgroundColor: Colors.grey.shade900,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+    behavior: SnackBarBehavior.floating,
   ),
 );

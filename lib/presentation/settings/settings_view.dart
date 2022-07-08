@@ -1,11 +1,17 @@
+import 'dart:ui';
+
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/l10n/l10n.dart';
+import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
+import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
+import 'package:watcha_body/presentation/settings/cubits/backup_restore_cubit/backup_data_cubit.dart';
+import 'package:watcha_body/presentation/settings/cubits/delete_all_data_cubit/delete_all_data_cubit.dart';
 import 'package:watcha_body/size_config.dart';
 
 class SettingsView extends StatelessWidget {
@@ -15,96 +21,356 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<ApppreferencesBloc, ApppreferencesState>(
-        builder: (context, state) {
-          return SafeArea(
-            child: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: SizeConfig.screenHeight! * 0.08,
-                  child: Stack(
-                    children: [
-                      Align(
-                        child: Text(
-                          AppLocalizations.of(context).settingsTitle,
-                          style: Theme.of(context).textTheme.headline3,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Cancel'),
-                        ),
-                      ),
-                    ],
+    Future<void> _showDeleteAllDataConfirmation() async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+            child: AlertDialog(
+              title: Text(
+                'Do you want delete previous data?',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text(
+                    'Confirm',
+                    style: TextStyle(color: Colors.red),
                   ),
+                  onPressed: () {
+                    context.read<DeleteAllDataCubit>().deleteAllData();
+                    Navigator.of(context).pop();
+                  },
                 ),
-                const SizedBox(
-                  height: 20,
+                TextButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
-                LanguageSelector(
-                  appPreferences: (state as SavedAndReady).appPreferences,
-                ),
-                WeightChoiceChip(
-                  appPreferences: state.appPreferences,
-                ),
-                LengthChoiceChip(
-                  appPreferences: state.appPreferences,
-                ),
-                ThemeChoiceChip(
-                  appTheme: context.read<AppthemeBloc>().state,
-                ),
-                // HereChoiceChiper<WeightUnit>(
-                //   currentValue: _appPreferences.state.weightUnit,
-                //   items: WeightUnit.values
-                //       .map(
-                //         EnumToString.convertToString,
-                //       )
-                //       .toList(),
-                //   enumItems: WeightUnit.values,
-                //   onChanged: <WeightUnit>(value) {
-                //     if (value is WeightUnit) {
-                //       context.read<ApppreferencesBloc>().add(
-                //             ApppreferencesEvent.updatePreferences(
-                //               appPreferences: AppPreferences(
-                //                 value,
-                //                 _appPreferences.state.lengthUnit,
-                //               ),
-                //             ),
-                //           );
-                //     }
-                //   },
-                // ),
-                // HereChoiceChiper<LengthUnit, LengthUnit>(
-                //   currentValue: _appPreferences.state.lengthUnit,
-                //   items: LengthUnit.values
-                //       .map(
-                //         EnumToString.convertToString,
-                //       )
-                //       .toList(),
-                //   enumItems: LengthUnit.values,
-                //   onChanged: <LengthUnit>(value) {
-                //     if (value is LengthUnit) {
-                //       context.read<ApppreferencesBloc>().add(
-                //             ApppreferencesEvent.updatePreferences(
-                //               appPreferences: AppPreferences(
-                //                 _appPreferences.state.weightUnit,
-                //                 value as LengthUnit,
-                //               ),
-                //             ),
-                //           );
-                //     }
-                //   },
-                // ),
               ],
             ),
           );
         },
+      );
+    }
+
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: BlocBuilder<ApppreferencesBloc, ApppreferencesState>(
+          builder: (context, state) {
+            return MultiBlocListener(
+              listeners: [
+                BlocListener<BackupRestoreDataCubit, BackupRestoreDataState>(
+                  listener: (context, listnerState) {
+                    listnerState.maybeMap(
+                      orElse: () => null,
+                      success: (_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Success'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+
+                        // Update Chart and Overview
+                        context.read<GetallwidgetsdataBloc>().add(
+                              GetallwidgetsdataEvent.fetchAllData(
+                                appPreferences:
+                                    (state as SavedAndReady).appPreferences,
+                              ),
+                            );
+
+                        context.read<ChartdataBloc>().add(
+                              ChartdataEvent.fetchData(
+                                appPreferences: state.appPreferences,
+                                duration: DurationsEnum.month1,
+                              ),
+                            );
+                      },
+                      failed: (s) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(s.msg),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+                BlocListener<DeleteAllDataCubit, DeleteAllDataState>(
+                  listener: (context, deleteEventstate) {
+                    deleteEventstate.maybeMap(
+                      orElse: () => null,
+                      success: (_) {
+                        // Update Chart and Overview
+                        context.read<GetallwidgetsdataBloc>().add(
+                              GetallwidgetsdataEvent.fetchAllData(
+                                appPreferences:
+                                    (state as SavedAndReady).appPreferences,
+                              ),
+                            );
+
+                        context.read<ChartdataBloc>().add(
+                              ChartdataEvent.fetchData(
+                                appPreferences: state.appPreferences,
+                                duration: DurationsEnum.month1,
+                              ),
+                            );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Success'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      },
+                      failed: (s) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              s.msg,
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: SizeConfig.screenHeight! * 0.08,
+                      child: Stack(
+                        children: [
+                          Align(
+                            child: Text(
+                              AppLocalizations.of(context).settingsTitle,
+                              style: Theme.of(context).textTheme.headline3,
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    LanguageSelector(
+                      appPreferences: (state as SavedAndReady).appPreferences,
+                    ),
+                    WeightChoiceChip(
+                      appPreferences: state.appPreferences,
+                    ),
+                    LengthChoiceChip(
+                      appPreferences: state.appPreferences,
+                    ),
+                    ThemeChoiceChip(
+                      appTheme: context.read<AppthemeBloc>().state,
+                    ),
+                    const RestoreOrBackup(),
+                    SettingsChildContainer(
+                      child: TextButton(
+                        onPressed: _showDeleteAllDataConfirmation,
+                        child: const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Text(
+                            'Delete all data',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // HereChoiceChiper<WeightUnit>(
+                    //   currentValue: _appPreferences.state.weightUnit,
+                    //   items: WeightUnit.values
+                    //       .map(
+                    //         EnumToString.convertToString,
+                    //       )
+                    //       .toList(),
+                    //   enumItems: WeightUnit.values,
+                    //   onChanged: <WeightUnit>(value) {
+                    //     if (value is WeightUnit) {
+                    //       context.read<ApppreferencesBloc>().add(
+                    //             ApppreferencesEvent.updatePreferences(
+                    //               appPreferences: AppPreferences(
+                    //                 value,
+                    //                 _appPreferences.state.lengthUnit,
+                    //               ),
+                    //             ),
+                    //           );
+                    //     }
+                    //   },
+                    // ),
+                    // HereChoiceChiper<LengthUnit, LengthUnit>(
+                    //   currentValue: _appPreferences.state.lengthUnit,
+                    //   items: LengthUnit.values
+                    //       .map(
+                    //         EnumToString.convertToString,
+                    //       )
+                    //       .toList(),
+                    //   enumItems: LengthUnit.values,
+                    //   onChanged: <LengthUnit>(value) {
+                    //     if (value is LengthUnit) {
+                    //       context.read<ApppreferencesBloc>().add(
+                    //             ApppreferencesEvent.updatePreferences(
+                    //               appPreferences: AppPreferences(
+                    //                 _appPreferences.state.weightUnit,
+                    //                 value as LengthUnit,
+                    //               ),
+                    //             ),
+                    //           );
+                    //     }
+                    //   },
+                    // ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class RestoreOrBackup extends StatefulWidget {
+  const RestoreOrBackup({Key? key}) : super(key: key);
+
+  @override
+  State<RestoreOrBackup> createState() => _RestoreOrBackupState();
+}
+
+class _RestoreOrBackupState extends State<RestoreOrBackup> {
+  @override
+  Widget build(BuildContext context) {
+    // Popup Dialog
+    Future<void> _showRestoreOptions(String path) async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+            child: AlertDialog(
+              title: Text(
+                'Do you want delete previous data?',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Yes'),
+                  onPressed: () {
+                    context.read<BackupRestoreDataCubit>().restoreData(
+                          merge: false,
+                          path: path,
+                        );
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('No'),
+                  onPressed: () {
+                    context.read<BackupRestoreDataCubit>().restoreData(
+                          path: path,
+                        );
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+
+    return SettingsChildContainer(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Backup or Restore',
+              style: Theme.of(context).textTheme.headline6,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  MaterialButton(
+                    elevation: 0,
+                    onPressed: () {
+                      context.read<BackupRestoreDataCubit>().backupData();
+                    },
+                    color: Colors.blueAccent,
+                    textColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    child: const Text(
+                      'Backup',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  MaterialButton(
+                    elevation: 0,
+                    onPressed: () async {
+                      final result = await FilePicker.platform.pickFiles(
+                        type: FileType.custom,
+                        allowedExtensions: ['json'],
+                      );
+
+                      if (result != null) {
+                        await _showRestoreOptions(result.files.first.path!);
+                      }
+                    },
+                    color: Colors.blueAccent,
+                    textColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    child: const Text(
+                      'Restore',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

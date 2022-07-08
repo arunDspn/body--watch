@@ -97,4 +97,19 @@ class MockMeasurementRepository extends _i1.Mock
               returnValue: Future<_i3.Either<String, List<String>>>.value(
                   _FakeEither_1<String, List<String>>()))
           as _i5.Future<_i3.Either<String, List<String>>>);
+  @override
+  _i5.Future<_i3.Either<String, String>> backupDatabase() =>
+      (super.noSuchMethod(Invocation.method(#backupDatabase, []),
+              returnValue: Future<_i3.Either<String, String>>.value(
+                  _FakeEither_1<String, String>()))
+          as _i5.Future<_i3.Either<String, String>>);
+  @override
+  _i5.Future<_i3.Either<String, _i3.Unit>> restoreDatabase(
+          {bool? merge = false, String? stringifiedDatas}) =>
+      (super.noSuchMethod(
+              Invocation.method(#restoreDatabase, [],
+                  {#merge: merge, #stringifiedDatas: stringifiedDatas}),
+              returnValue: Future<_i3.Either<String, _i3.Unit>>.value(
+                  _FakeEither_1<String, _i3.Unit>()))
+          as _i5.Future<_i3.Either<String, _i3.Unit>>);
 }

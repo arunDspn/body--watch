@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -244,8 +246,11 @@ class _WidgetBox extends StatelessWidget {
                   showModalBottomSheet<void>(
                     context: context,
                     builder: (context) {
-                      return AddDataModal.add(
-                        type: data.name,
+                      return BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                        child: AddDataModal.add(
+                          type: data.name,
+                        ),
                       );
                     },
                   );

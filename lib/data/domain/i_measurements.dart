@@ -35,11 +35,18 @@ abstract class IMeasurementsFacade {
   /// Deletes a [Measurement]
   /// Based on [Measurement.id]
   Future<Either<String, Unit>> deleteMeasurement({
-    required String id,
+    String? id,
   });
 
   /// Returns List of Types added in table as String
   /// Use this filter it with All Types available from App Binary
   /// To get remaining types
   Future<Either<String, List<String>>> getAddedTypes();
+
+  Future<Either<String, String>> backupDatabase();
+
+  Future<Either<String, Unit>> restoreDatabase({
+    bool merge = false,
+    required String stringifiedDatas,
+  });
 }

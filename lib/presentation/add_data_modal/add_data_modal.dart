@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
@@ -173,7 +172,7 @@ class _AddDataModalState extends State<AddDataModal> {
                             const Text('Measurement'),
                             const Spacer(),
                             SizedBox(
-                              width: SizeConfig.screenWidth! * 0.1,
+                              width: SizeConfig.screenWidth! * 0.3,
                               child: TextFormField(
                                 // maxLength: 5,
                                 inputFormatters: [
@@ -211,6 +210,9 @@ class _AddDataModalState extends State<AddDataModal> {
                                   ),
                                 ),
                               ),
+                            ),
+                            SizedBox(
+                              width: getProportionateScreenWidth(20),
                             )
                           ],
                         ),

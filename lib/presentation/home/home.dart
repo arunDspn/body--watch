@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:watcha_body/presentation/home/charts/charts.dart';
 import 'package:watcha_body/presentation/overview/overview.dart';
-import 'package:watcha_body/presentation/settings/settings_view.dart';
 import 'package:watcha_body/size_config.dart';
 
 class HomeView extends StatefulWidget {

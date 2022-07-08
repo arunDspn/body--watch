@@ -8,10 +8,10 @@ environment:
 
 dependencies:
   bloc: ^8.0.3
-  charts_flutter: ^0.12.0
   d_chart: ^0.0.4
   dartz: ^0.10.1
   enum_to_string: ^2.0.1
+  file_picker: ^3.0.4
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.1
@@ -22,8 +22,9 @@ dependencies:
   hydrated_bloc: ^8.1.0
   intl: ^0.17.0
   path: ^1.8.0
+  path_provider: ^2.0.11
+  permission_handler: ^10.0.0
   sqflite: ^2.0.2
-  syncfusion_flutter_charts: ^20.1.48
 
 dev_dependencies:
   bloc_test: ^9.0.3

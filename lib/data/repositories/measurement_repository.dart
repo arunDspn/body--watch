@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/domain/i_measurements.dart';
@@ -34,10 +36,16 @@ class MeasurementRepository extends IMeasurementsFacade {
 
   @override
   Future<Either<String, Unit>> deleteMeasurement({
-    required String id,
-  }) {
-    // TODO: implement deleteMeasurement
-    throw UnimplementedError();
+    String? id,
+  }) async {
+    try {
+      await databaseService.delete(
+        id: id,
+      );
+      return const Right(unit);
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 
   @override
@@ -140,6 +148,39 @@ class MeasurementRepository extends IMeasurementsFacade {
 
       final _dData = _data.map((e) => e['type'] as String).toList();
       return Right(_dData);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, String>> backupDatabase() async {
+    try {
+      final _data = await databaseService.getData();
+      final _jsonData = const JsonEncoder().convert(_data);
+      return Right(_jsonData);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, Unit>> restoreDatabase({
+    bool merge = false,
+    required String stringifiedDatas,
+  }) async {
+    try {
+      //
+      final dynamic _datas = const JsonDecoder().convert(stringifiedDatas);
+      // as List<Map<String, dynamic>>;
+      // Merge or delete all data and insert new data
+      if (!merge) {
+        await databaseService.delete();
+      }
+      await databaseService.restoreData(
+        datas: _datas,
+      );
+      return const Right(unit);
     } catch (e) {
       return Left(e.toString());
     }
