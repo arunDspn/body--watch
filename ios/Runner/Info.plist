@@ -50,5 +50,7 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>kTCCServiceMediaLibrary</key>
+    <string>media</string>
 </dict>
 </plist>

@@ -1,0 +1,16 @@
+[
+    {"id":1,"value":25.0,"date":"2022-06-10T00:00:00.000","type":"Chest","unit":"cm"},
+    {"id":2,"value":40.0,"date":"2022-06-09T00:00:00.000","type":"Chest","unit":"cm"},
+    {"id":3,"value":30.0,"date":"2022-06-08T00:00:00.000","type":"Chest","unit":"cm"},
+    {"id":4,"value":40.0,"date":"2022-06-07T00:00:00.000","type":"Chest","unit":"cm"},
+    {"id":5,"value":10.0,"date":"2022-06-06T00:00:00.000","type":"Chest","unit":"cm"},
+    {"id":6,"value":5.0,"date":"2022-06-05T00:00:00.000","type":"Chest","unit":"cm"},
+    {"id":7,"value":10.0,"date":"2022-06-04T00:00:00.000","type":"Chest","unit":"cm"},
+    {"id":8,"value":35.0,"date":"2022-06-03T00:00:00.000","type":"Calf · Left","unit":"cm"},
+    {"id":9,"value":31.2,"date":"2022-06-02T00:00:00.000","type":"Chest","unit":"cm"},
+    {"id":11,"value":25.0,"date":"2022-05-31T00:00:00.000","type":"Calf · Right","unit":"cm"},
+    {"id":12,"value":10.0,"date":"2022-05-30T00:00:00.000","type":"Chest","unit":"cm"},
+    {"id":13,"value":5.0,"date":"2022-05-29T00:00:00.000","type":"Forearm · Right","unit":"cm"},
+    {"id":14,"value":10.0,"date":"2022-05-28T00:00:00.000","type":"Chest","unit":"cm"},
+
+]

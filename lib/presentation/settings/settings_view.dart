@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:enum_to_string/enum_to_string.dart';
@@ -262,7 +263,7 @@ class RestoreOrBackup extends StatefulWidget {
 class _RestoreOrBackupState extends State<RestoreOrBackup> {
   @override
   Widget build(BuildContext context) {
-    // Popup Dialog
+    // Restore Options Dialog
     Future<void> _showRestoreOptions(String path) async {
       return showDialog<void>(
         context: context,
@@ -323,10 +324,31 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  if (Platform.operatingSystem == 'android')
+                    MaterialButton(
+                      elevation: 0,
+                      onPressed: () {
+                        context.read<BackupRestoreDataCubit>().backupData();
+                      },
+                      color: Colors.blueAccent,
+                      textColor: Colors.white,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      child: const Text(
+                        'Backup',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  else
+                    const SizedBox.shrink(),
                   MaterialButton(
                     elevation: 0,
                     onPressed: () {
-                      context.read<BackupRestoreDataCubit>().backupData();
+                      context.read<BackupRestoreDataCubit>().shareDatabase();
                     },
                     color: Colors.blueAccent,
                     textColor: Colors.white,
@@ -334,9 +356,9 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     child: const Text(
-                      'Backup',
+                      'Share Backup',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -361,7 +383,7 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
                     child: const Text(
                       'Restore',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

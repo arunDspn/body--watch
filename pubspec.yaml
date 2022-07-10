@@ -11,6 +11,7 @@ dependencies:
   d_chart: ^0.0.4
   dartz: ^0.10.1
   enum_to_string: ^2.0.1
+  external_path: ^1.0.1
   file_picker: ^3.0.4
   flutter:
     sdk: flutter
@@ -21,9 +22,11 @@ dependencies:
   google_fonts: ^2.3.2
   hydrated_bloc: ^8.1.0
   intl: ^0.17.0
+  media_scanner: ^2.1.0
   path: ^1.8.0
   path_provider: ^2.0.11
   permission_handler: ^10.0.0
+  share_plus: ^4.0.10
   sqflite: ^2.0.2
 
 dev_dependencies:

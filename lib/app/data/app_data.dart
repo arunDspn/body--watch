@@ -77,5 +77,6 @@ MeasurementType? measurementTypeFromString(String name) {
   for (final element in allWidgets) {
     if (element.name == name) return element;
   }
-  return null;
+  // return null;
+  return MeasurementType(name: name + "🥶");
 }
