@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:charts_flutter/flutter.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,9 +10,6 @@ import 'package:watcha_body/presentation/display_models/chart_display.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/filter_chart_bloc/filterchart_bloc.dart';
 import 'package:watcha_body/size_config.dart';
-import 'package:charts_flutter/src/text_style.dart' as style;
-import 'package:charts_flutter/src/text_element.dart' as charts_text;
-import 'package:flutter/src/painting/basic_types.dart' as basic_types;
 
 class Charts extends StatelessWidget {
   const Charts({Key? key}) : super(key: key);
@@ -176,7 +171,7 @@ class _SucessBody extends StatelessWidget {
                   SizedBox(
                     height: SizeConfig.screenHeight! * .1,
                     child: ListView(
-                      scrollDirection: basic_types.Axis.horizontal,
+                      scrollDirection: Axis.horizontal,
                       children: [
                         for (final e in list)
                           Padding(
@@ -341,13 +336,13 @@ class ChartContainer extends StatelessWidget {
                   ),
               ],
             ),
-            Expanded(
-              child: TimeSeriesLineAnnotationChart(
-                chartDisplayModel.measurementList,
-                animate: true,
-                startDate: startDate,
-              ),
-            ),
+            // Expanded(
+            //   child: TimeSeriesLineAnnotationChart(
+            //     chartDisplayModel.measurementList,
+            //     animate: true,
+            //     startDate: startDate,
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -364,280 +359,280 @@ class ChartContainer extends StatelessWidget {
 /// Additional annotations may be added simply by adding additional
 /// [Charts.RangeAnnotationSegment] items to the list.
 
-class TimeSeriesLineAnnotationChart extends StatelessWidget {
-  const TimeSeriesLineAnnotationChart(
-    this.seriesList, {
-    required this.animate,
-    required this.startDate,
-    Key? key,
-  }) : super(key: key);
+// class TimeSeriesLineAnnotationChart extends StatelessWidget {
+//   const TimeSeriesLineAnnotationChart(
+//     this.seriesList, {
+//     required this.animate,
+//     required this.startDate,
+//     Key? key,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    // State
-    // Now we have almost
-    // but those grids and end date start date at end of graph
-    // final _endDate = DateTime.now().subtract(const Duration(days: 60));
-    return charts.TimeSeriesChart(
-      seriesList,
-      animate: animate,
+//   @override
+//   Widget build(BuildContext context) {
+//     // State
+//     // Now we have almost
+//     // but those grids and end date start date at end of graph
+//     // final _endDate = DateTime.now().subtract(const Duration(days: 60));
+//     return charts.TimeSeriesChart(
+//       seriesList,
+//       animate: animate,
 
-      // this is how we can add annotations
-      // Date
-      domainAxis: charts.DateTimeAxisSpec(
-        renderSpec: charts.GridlineRendererSpec(
-          labelStyle: charts.TextStyleSpec(
-            // color: charts.MaterialPalette.white,
-            color: charts.ColorUtil.fromDartColor(
-              Theme.of(context).textTheme.bodyText1!.color!,
-            ),
-          ),
-          // 2 vertical lines
-          // Remove this
+//       // this is how we can add annotations
+//       // Date
+//       domainAxis: charts.DateTimeAxisSpec(
+//         renderSpec: charts.GridlineRendererSpec(
+//           labelStyle: charts.TextStyleSpec(
+//             // color: charts.MaterialPalette.white,
+//             color: charts.ColorUtil.fromDartColor(
+//               Theme.of(context).textTheme.bodyText1!.color!,
+//             ),
+//           ),
+//           // 2 vertical lines
+//           // Remove this
 
-          // use grey color for gridlines in white by using seconfry font color
-          lineStyle: charts.LineStyleSpec(
-            // color: charts.MaterialPalette.black,
-            color: charts.ColorUtil.fromDartColor(
-              Theme.of(context).textTheme.bodyText2!.color!,
-            ),
-            thickness: 0,
-          ),
-          // dont know what it si
-          axisLineStyle: charts.LineStyleSpec(
-            // color: charts.MaterialPalette.white,
-            color: charts.ColorUtil.fromDartColor(
-              Theme.of(context).textTheme.bodyText2!.color!,
-            ),
-          ),
-          tickLengthPx: 0,
-          labelCollisionRotation: 2,
-        ),
-        showAxisLine: false,
-        // How Months show at down
-        // recurrent
-        // tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
-        //   month: charts.TimeFormatterSpec(
-        //     format: 'M',
-        //     transitionFormat: 'mm',
-        //   ),
-        // ),
-      ),
-      // Measurements
-      primaryMeasureAxis: charts.NumericAxisSpec(
-        renderSpec: charts.GridlineRendererSpec(
-          axisLineStyle: charts.LineStyleSpec(
-            // color: charts.MaterialPalette.black,
-            // color: charts.ColorUtil.fromDartColor(
-            //   Theme.of(context).textTheme.bodyText1!.color!,
-            // ),
-            color: charts.ColorUtil.fromDartColor(
-              Colors.red,
-            ),
-          ),
-          labelStyle: charts.TextStyleSpec(
-            fontSize: 10,
-            // color: charts.MaterialPalette.white,
-            color: charts.ColorUtil.fromDartColor(
-              Theme.of(context).textTheme.bodyText1!.color!,
-            ),
-          ), //chnage white color as per your requirement.
-          tickLengthPx: 0,
-          // Horizontal lines
-          lineStyle: charts.LineStyleSpec(
-            color: charts.ColorUtil.fromDartColor(
-              Theme.of(context).textTheme.bodyText2!.color!,
-            ),
-            // color: charts.ColorUtil.fromDartColor(Colors.red),
-            thickness: 0,
-            dashPattern: const [10, 10],
-          ),
-        ),
-        showAxisLine: false,
-        // those divisons 2 4 6 8 9 22
-        tickProviderSpec: const charts.BasicNumericTickProviderSpec(
-          zeroBound: false,
-          dataIsInWholeNumbers: true,
-          desiredTickCount: 5,
-        ),
-      ),
-      defaultRenderer: charts.LineRendererConfig(
-        includeArea: false,
-        includePoints: true,
-        includeLine: true,
-        stacked: false,
-        roundEndCaps: false,
-      ),
-      selectionModels: [
-        SelectionModelConfig(
-          changedListener: (SelectionModel model) {
-            if (model.hasDatumSelection) {
-              final formatter = DateFormat('yyyy-MM-dd');
-              final date = formatter
-                  // ignore: avoid_dynamic_calls
-                  .format(model.selectedDatum[0].datum.date as DateTime);
+//           // use grey color for gridlines in white by using seconfry font color
+//           lineStyle: charts.LineStyleSpec(
+//             // color: charts.MaterialPalette.black,
+//             color: charts.ColorUtil.fromDartColor(
+//               Theme.of(context).textTheme.bodyText2!.color!,
+//             ),
+//             thickness: 0,
+//           ),
+//           // dont know what it si
+//           axisLineStyle: charts.LineStyleSpec(
+//             // color: charts.MaterialPalette.white,
+//             color: charts.ColorUtil.fromDartColor(
+//               Theme.of(context).textTheme.bodyText2!.color!,
+//             ),
+//           ),
+//           tickLengthPx: 0,
+//           labelCollisionRotation: 2,
+//         ),
+//         showAxisLine: false,
+//         // How Months show at down
+//         // recurrent
+//         // tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
+//         //   month: charts.TimeFormatterSpec(
+//         //     format: 'M',
+//         //     transitionFormat: 'mm',
+//         //   ),
+//         // ),
+//       ),
+//       // Measurements
+//       primaryMeasureAxis: charts.NumericAxisSpec(
+//         renderSpec: charts.GridlineRendererSpec(
+//           axisLineStyle: charts.LineStyleSpec(
+//             // color: charts.MaterialPalette.black,
+//             // color: charts.ColorUtil.fromDartColor(
+//             //   Theme.of(context).textTheme.bodyText1!.color!,
+//             // ),
+//             color: charts.ColorUtil.fromDartColor(
+//               Colors.red,
+//             ),
+//           ),
+//           labelStyle: charts.TextStyleSpec(
+//             fontSize: 10,
+//             // color: charts.MaterialPalette.white,
+//             color: charts.ColorUtil.fromDartColor(
+//               Theme.of(context).textTheme.bodyText1!.color!,
+//             ),
+//           ), //chnage white color as per your requirement.
+//           tickLengthPx: 0,
+//           // Horizontal lines
+//           lineStyle: charts.LineStyleSpec(
+//             color: charts.ColorUtil.fromDartColor(
+//               Theme.of(context).textTheme.bodyText2!.color!,
+//             ),
+//             // color: charts.ColorUtil.fromDartColor(Colors.red),
+//             thickness: 0,
+//             dashPattern: const [10, 10],
+//           ),
+//         ),
+//         showAxisLine: false,
+//         // those divisons 2 4 6 8 9 22
+//         tickProviderSpec: const charts.BasicNumericTickProviderSpec(
+//           zeroBound: false,
+//           dataIsInWholeNumbers: true,
+//           desiredTickCount: 5,
+//         ),
+//       ),
+//       defaultRenderer: charts.LineRendererConfig(
+//         includeArea: false,
+//         includePoints: true,
+//         includeLine: true,
+//         stacked: false,
+//         roundEndCaps: false,
+//       ),
+//       selectionModels: [
+//         SelectionModelConfig(
+//           changedListener: (SelectionModel model) {
+//             if (model.hasDatumSelection) {
+//               final formatter = DateFormat('yyyy-MM-dd');
+//               final date = formatter
+//                   // ignore: avoid_dynamic_calls
+//                   .format(model.selectedDatum[0].datum.date as DateTime);
 
-              CustomCircleSymbolRenderer.date = date;
-              // ignore: avoid_dynamic_calls
-              CustomCircleSymbolRenderer.measurement = model
-                  .selectedDatum[0].datum.value
-                  .toString(); // paints the tapped value
-            }
-          },
-        ),
-      ],
-      behaviors: [
-        charts.RangeAnnotation(
-          [
-            charts.LineAnnotationSegment(
-              startDate,
-              charts.RangeAnnotationAxisType.domain,
-              endLabel: '${startDate.day}-${startDate.month}',
-              labelPosition: charts.AnnotationLabelPosition.outside,
-              labelAnchor: charts.AnnotationLabelAnchor.middle,
-              // Start Small Label for end or last date
-              labelStyleSpec: charts.TextStyleSpec(
-                fontSize: 8,
-                // color: charts.MaterialPalette.white,
-                color: charts.ColorUtil.fromDartColor(
-                  Theme.of(context).textTheme.bodyText1!.color!,
-                ),
-              ),
-              // TODO(me): add end date
-              // color: charts.ColorUtil.fromDartColor(Colors.grey.shade900),
-              // color: charts.ColorUtil.fromDartColor(
-              //   Theme.of(context).textTheme.bodyText2!.color!,
-              // ),
-              color: charts.ColorUtil.fromDartColor(Colors.transparent),
+//               CustomCircleSymbolRenderer.date = date;
+//               // ignore: avoid_dynamic_calls
+//               CustomCircleSymbolRenderer.measurement = model
+//                   .selectedDatum[0].datum.value
+//                   .toString(); // paints the tapped value
+//             }
+//           },
+//         ),
+//       ],
+//       behaviors: [
+//         charts.RangeAnnotation(
+//           [
+//             charts.LineAnnotationSegment(
+//               startDate,
+//               charts.RangeAnnotationAxisType.domain,
+//               endLabel: '${startDate.day}-${startDate.month}',
+//               labelPosition: charts.AnnotationLabelPosition.outside,
+//               labelAnchor: charts.AnnotationLabelAnchor.middle,
+//               // Start Small Label for end or last date
+//               labelStyleSpec: charts.TextStyleSpec(
+//                 fontSize: 8,
+//                 // color: charts.MaterialPalette.white,
+//                 color: charts.ColorUtil.fromDartColor(
+//                   Theme.of(context).textTheme.bodyText1!.color!,
+//                 ),
+//               ),
+//               // TODO(me): add end date
+//               // color: charts.ColorUtil.fromDartColor(Colors.grey.shade900),
+//               // color: charts.ColorUtil.fromDartColor(
+//               //   Theme.of(context).textTheme.bodyText2!.color!,
+//               // ),
+//               color: charts.ColorUtil.fromDartColor(Colors.transparent),
 
-              // labelAnchor: charts.AnnotationLabelAnchor.end,
-            ),
-            charts.LineAnnotationSegment(
-              DateTime.now(), charts.RangeAnnotationAxisType.domain,
-              startLabel: '${DateTime.now().day}-${DateTime.now().month}',
-              // End Date SMall
-              labelStyleSpec: charts.TextStyleSpec(
-                fontSize: 8,
-                color: charts.ColorUtil.fromDartColor(
-                  Theme.of(context).textTheme.bodyText1!.color!,
-                ),
-              ),
-              labelPosition: charts.AnnotationLabelPosition.outside,
-              labelAnchor: charts.AnnotationLabelAnchor.middle,
-              //TODO: Use custom
-              // color: charts.ColorUtil.fromDartColor(Colors.red.shade900),
-              // End Line
-              // color: charts.ColorUtil.fromDartColor(
-              //   Theme.of(context).textTheme.bodyText2!.color!,
-              // ),
-              color: charts.ColorUtil.fromDartColor(Colors.transparent),
-              // labelPosition: AnnotationLabelPosition.margin,
-            ),
-          ],
-        ),
-        LinePointHighlighter(
-          symbolRenderer: CustomCircleSymbolRenderer(),
-        )
-      ],
-    );
-  }
+//               // labelAnchor: charts.AnnotationLabelAnchor.end,
+//             ),
+//             charts.LineAnnotationSegment(
+//               DateTime.now(), charts.RangeAnnotationAxisType.domain,
+//               startLabel: '${DateTime.now().day}-${DateTime.now().month}',
+//               // End Date SMall
+//               labelStyleSpec: charts.TextStyleSpec(
+//                 fontSize: 8,
+//                 color: charts.ColorUtil.fromDartColor(
+//                   Theme.of(context).textTheme.bodyText1!.color!,
+//                 ),
+//               ),
+//               labelPosition: charts.AnnotationLabelPosition.outside,
+//               labelAnchor: charts.AnnotationLabelAnchor.middle,
+//               //TODO: Use custom
+//               // color: charts.ColorUtil.fromDartColor(Colors.red.shade900),
+//               // End Line
+//               // color: charts.ColorUtil.fromDartColor(
+//               //   Theme.of(context).textTheme.bodyText2!.color!,
+//               // ),
+//               color: charts.ColorUtil.fromDartColor(Colors.transparent),
+//               // labelPosition: AnnotationLabelPosition.margin,
+//             ),
+//           ],
+//         ),
+//         LinePointHighlighter(
+//           symbolRenderer: CustomCircleSymbolRenderer(),
+//         )
+//       ],
+//     );
+//   }
 
-  final List<charts.Series<dynamic, DateTime>> seriesList;
-  final bool animate;
-  final DateTime startDate;
-}
+//   final List<charts.Series<dynamic, DateTime>> seriesList;
+//   final bool animate;
+//   final DateTime startDate;
+// }
 
-class CustomCircleSymbolRenderer extends CircleSymbolRenderer {
-  static String date = '';
-  static String measurement = '';
-  @override
-  void paint(
-    ChartCanvas canvas,
-    Rectangle<num> bounds, {
-    List<int>? dashPattern,
-    Color? fillColor,
-    FillPatternType? fillPattern,
-    Color? strokeColor,
-    double? strokeWidthPx,
-  }) {
-    super.paint(
-      canvas,
-      bounds,
-      dashPattern: dashPattern,
-      fillColor: fillColor,
-      strokeColor: strokeColor,
-      strokeWidthPx: strokeWidthPx,
-    );
-    canvas.drawRect(
-      Rectangle(
-        bounds.left - 5,
-        bounds.top - 30,
-        bounds.width + 80,
-        bounds.height + 40,
-      ),
-      fill: Color.fromHex(code: '#424545'),
-    );
+// class CustomCircleSymbolRenderer extends CircleSymbolRenderer {
+//   static String date = '';
+//   static String measurement = '';
+//   @override
+//   void paint(
+//     ChartCanvas canvas,
+//     Rectangle<num> bounds, {
+//     List<int>? dashPattern,
+//     Color? fillColor,
+//     FillPatternType? fillPattern,
+//     Color? strokeColor,
+//     double? strokeWidthPx,
+//   }) {
+//     super.paint(
+//       canvas,
+//       bounds,
+//       dashPattern: dashPattern,
+//       fillColor: fillColor,
+//       strokeColor: strokeColor,
+//       strokeWidthPx: strokeWidthPx,
+//     );
+//     canvas.drawRect(
+//       Rectangle(
+//         bounds.left - 5,
+//         bounds.top - 30,
+//         bounds.width + 80,
+//         bounds.height + 40,
+//       ),
+//       fill: Color.fromHex(code: '#424545'),
+//     );
 
-    final textStyle = style.TextStyle()
-      ..color = Color.white
-      ..fontSize = 14;
+//     final textStyle = style.TextStyle()
+//       ..color = Color.white
+//       ..fontSize = 14;
 
-    canvas
-      // Date
-      ..drawText(
-        charts_text.TextElement(
-          date,
-          style: textStyle,
-        ),
-        (bounds.left).round(),
-        (bounds.top - 28).round(),
-      )
-      // Measurement
-      ..drawText(
-        charts_text.TextElement(
-          measurement,
-          style: textStyle,
-        ),
-        (bounds.left).round(),
-        (bounds.top - 10).round(),
-      );
-  }
-}
+//     canvas
+//       // Date
+//       ..drawText(
+//         charts_text.TextElement(
+//           date,
+//           style: textStyle,
+//         ),
+//         (bounds.left).round(),
+//         (bounds.top - 28).round(),
+//       )
+//       // Measurement
+//       ..drawText(
+//         charts_text.TextElement(
+//           measurement,
+//           style: textStyle,
+//         ),
+//         (bounds.left).round(),
+//         (bounds.top - 10).round(),
+//       );
+//   }
+// }
 
-class ChartContainerForDetailed extends StatelessWidget {
-  const ChartContainerForDetailed({
-    Key? key,
-    required this.chartDisplayModel,
-    required this.startDate,
-    this.withLimiter = false,
-  }) : super(key: key);
+// class ChartContainerForDetailed extends StatelessWidget {
+//   const ChartContainerForDetailed({
+//     Key? key,
+//     required this.chartDisplayModel,
+//     required this.startDate,
+//     this.withLimiter = false,
+//   }) : super(key: key);
 
-  final ChartDisplayModel chartDisplayModel;
-  final DateTime startDate;
-  final bool withLimiter;
+//   final ChartDisplayModel chartDisplayModel;
+//   final DateTime startDate;
+//   final bool withLimiter;
 
-  @override
-  Widget build(BuildContext context) {
-    final _appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
+//   @override
+//   Widget build(BuildContext context) {
+//     final _appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
 
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Theme.of(context).colorScheme.secondaryContainer,
-      ),
-      height: SizeConfig.screenHeight! * 0.3,
-      child: Column(
-        children: [
-          Expanded(
-            child: TimeSeriesLineAnnotationChart(
-              chartDisplayModel.measurementList,
-              animate: true,
-              startDate: startDate,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//     return Container(
+//       padding: const EdgeInsets.all(10),
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(10),
+//         color: Theme.of(context).colorScheme.secondaryContainer,
+//       ),
+//       height: SizeConfig.screenHeight! * 0.3,
+//       child: Column(
+//         children: [
+//           Expanded(
+//             child: TimeSeriesLineAnnotationChart(
+//               chartDisplayModel.measurementList,
+//               animate: true,
+//               startDate: startDate,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

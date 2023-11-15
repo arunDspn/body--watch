@@ -187,13 +187,13 @@ class _MeasurementList extends StatelessWidget {
             ),
           ),
         ),
-        ChartContainerForDetailed(
-          startDate: startDate,
-          chartDisplayModel: ChartDisplayModel.fromMeasurementList(
-            measurement: measurementList,
-            name: measurementType.name,
-          ),
-        ),
+        // ChartContainerForDetailed(
+        //   startDate: startDate,
+        //   chartDisplayModel: ChartDisplayModel.fromMeasurementList(
+        //     measurement: measurementList,
+        //     name: measurementType.name,
+        //   ),
+        // ),
         SizedBox(
           width: SizeConfig.screenWidth! * 0.85,
           child: Row(
