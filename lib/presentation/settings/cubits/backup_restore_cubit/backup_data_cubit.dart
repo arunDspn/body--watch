@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:bloc/bloc.dart';
 import 'package:external_path/external_path.dart';
-import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -152,7 +150,7 @@ class BackupRestoreDataCubit extends Cubit<BackupRestoreDataState> {
 
       final formatter = DateFormat('dd_mm_yyyy_hh_mm_ss');
 
-      Directory('${_saveDir.path}/watchbody').exists().then((exists) {
+      await Directory('${_saveDir.path}/watchbody').exists().then((exists) {
         if (exists) {
           Directory('${_saveDir.path}/watchbody').delete(recursive: true);
         }

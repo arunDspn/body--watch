@@ -134,7 +134,7 @@ class _AddDataModalState extends State<AddDataModal> {
                   ),
                   Text(
                     widget.type.name,
-                    style: Theme.of(context).textTheme.headline3,
+                    style: Theme.of(context).textTheme.displaySmall,
                   ),
                   TextButton(
                     onPressed: () {
@@ -182,13 +182,13 @@ class _AddDataModalState extends State<AddDataModal> {
                                 ],
                                 controller: _measurementController,
                                 keyboardType: TextInputType.number,
-                                style: Theme.of(context).textTheme.bodyText1,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                             ),
                             Text(
                               measurementUnit,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            )
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
                           ],
                         ),
                         const Divider(),
@@ -205,7 +205,7 @@ class _AddDataModalState extends State<AddDataModal> {
                                 child: AbsorbPointer(
                                   child: TextFormField(
                                     style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                        Theme.of(context).textTheme.bodyLarge,
                                     controller: _dateController,
                                   ),
                                 ),
@@ -213,7 +213,7 @@ class _AddDataModalState extends State<AddDataModal> {
                             ),
                             SizedBox(
                               width: getProportionateScreenWidth(20),
-                            )
+                            ),
                           ],
                         ),
                       ],

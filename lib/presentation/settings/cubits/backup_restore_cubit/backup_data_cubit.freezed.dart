@@ -11,7 +11,7 @@ part of 'backup_data_cubit.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods',);
 
 /// @nodoc
 class _$BackupRestoreDataStateTearOff {
@@ -96,7 +96,7 @@ mixin _$BackupRestoreDataState {
 /// @nodoc
 abstract class $BackupRestoreDataStateCopyWith<$Res> {
   factory $BackupRestoreDataStateCopyWith(BackupRestoreDataState value,
-          $Res Function(BackupRestoreDataState) then) =
+          $Res Function(BackupRestoreDataState) then,) =
       _$BackupRestoreDataStateCopyWithImpl<$Res>;
 }
 
@@ -481,7 +481,7 @@ class __$FailedCopyWithImpl<$Res>
           ? _value.msg
           : msg // ignore: cast_nullable_to_non_nullable
               as String,
-    ));
+    ),);
   }
 }
 

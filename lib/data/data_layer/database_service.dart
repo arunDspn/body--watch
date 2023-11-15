@@ -110,7 +110,7 @@ class DatabaseService {
           whereArgs: [
             startDate.toIso8601String(),
             endDate.toIso8601String(),
-            type
+            type,
           ],
           orderBy: 'date DESC',
         );

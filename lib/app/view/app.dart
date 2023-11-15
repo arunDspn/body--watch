@@ -192,6 +192,7 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
         builder: (context) => const Charts(),
       );
   }
+  return null;
 }
 
 final lightTheme = ThemeData(
@@ -227,34 +228,34 @@ final lightTheme = ThemeData(
     ),
   ),
   textTheme: const TextTheme(
-    bodyText1: TextStyle(
+    bodyLarge: TextStyle(
       fontSize: 16,
       color: Colors.black,
     ),
-    bodyText2: TextStyle(
+    bodyMedium: TextStyle(
       fontSize: 16,
       color: Colors.grey,
     ),
-    headline2: TextStyle(
+    displayMedium: TextStyle(
       fontSize: 26,
       fontWeight: FontWeight.bold,
       color: Colors.black,
     ),
-    headline3: TextStyle(
+    displaySmall: TextStyle(
       fontSize: 24,
       fontWeight: FontWeight.bold,
       color: Colors.black,
     ),
-    headline4: TextStyle(
+    headlineMedium: TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.bold,
       letterSpacing: 1.5,
       color: Colors.black54,
     ),
-    headline5: TextStyle(
+    headlineSmall: TextStyle(
       fontSize: 16,
     ),
-    headline6: TextStyle(
+    titleLarge: TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.bold,
     ),
@@ -332,35 +333,35 @@ final darkTheme = ThemeData(
     ),
   ),
   textTheme: const TextTheme(
-    bodyText1: TextStyle(
+    bodyLarge: TextStyle(
       fontSize: 16,
       color: Colors.white,
     ),
-    bodyText2: TextStyle(
+    bodyMedium: TextStyle(
       fontSize: 16,
       color: Colors.grey,
     ),
-    headline2: TextStyle(
+    displayMedium: TextStyle(
       fontSize: 26,
       fontWeight: FontWeight.bold,
       color: Colors.white,
     ),
-    headline3: TextStyle(
+    displaySmall: TextStyle(
       fontSize: 24,
       fontWeight: FontWeight.bold,
       color: Colors.white,
     ),
-    headline4: TextStyle(
+    headlineMedium: TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.bold,
       letterSpacing: 1.5,
       color: Colors.white60,
     ),
-    headline5: TextStyle(
+    headlineSmall: TextStyle(
       fontSize: 16,
       color: Colors.white60,
     ),
-    headline6: TextStyle(
+    titleLarge: TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.bold,
       color: Colors.white,

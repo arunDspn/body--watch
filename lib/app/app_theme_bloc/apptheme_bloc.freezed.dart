@@ -11,7 +11,7 @@ part of 'apptheme_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods',);
 
 /// @nodoc
 class _$AppthemeEventTearOff {
@@ -72,7 +72,7 @@ mixin _$AppthemeEvent {
 /// @nodoc
 abstract class $AppthemeEventCopyWith<$Res> {
   factory $AppthemeEventCopyWith(
-          AppthemeEvent value, $Res Function(AppthemeEvent) then) =
+          AppthemeEvent value, $Res Function(AppthemeEvent) then,) =
       _$AppthemeEventCopyWithImpl<$Res>;
   $Res call({AppTheme appTheme});
 }
@@ -95,7 +95,7 @@ class _$AppthemeEventCopyWithImpl<$Res>
           ? _value.appTheme
           : appTheme // ignore: cast_nullable_to_non_nullable
               as AppTheme,
-    ));
+    ),);
   }
 }
 
@@ -103,7 +103,7 @@ class _$AppthemeEventCopyWithImpl<$Res>
 abstract class _$ChangeThemeCopyWith<$Res>
     implements $AppthemeEventCopyWith<$Res> {
   factory _$ChangeThemeCopyWith(
-          _ChangeTheme value, $Res Function(_ChangeTheme) then) =
+          _ChangeTheme value, $Res Function(_ChangeTheme) then,) =
       __$ChangeThemeCopyWithImpl<$Res>;
   @override
   $Res call({AppTheme appTheme});
@@ -113,7 +113,7 @@ abstract class _$ChangeThemeCopyWith<$Res>
 class __$ChangeThemeCopyWithImpl<$Res> extends _$AppthemeEventCopyWithImpl<$Res>
     implements _$ChangeThemeCopyWith<$Res> {
   __$ChangeThemeCopyWithImpl(
-      _ChangeTheme _value, $Res Function(_ChangeTheme) _then)
+      _ChangeTheme _value, $Res Function(_ChangeTheme) _then,)
       : super(_value, (v) => _then(v as _ChangeTheme));
 
   @override
@@ -128,7 +128,7 @@ class __$ChangeThemeCopyWithImpl<$Res> extends _$AppthemeEventCopyWithImpl<$Res>
           ? _value.appTheme
           : appTheme // ignore: cast_nullable_to_non_nullable
               as AppTheme,
-    ));
+    ),);
   }
 }
 
@@ -281,7 +281,7 @@ mixin _$AppthemeState {
 /// @nodoc
 abstract class $AppthemeStateCopyWith<$Res> {
   factory $AppthemeStateCopyWith(
-          AppthemeState value, $Res Function(AppthemeState) then) =
+          AppthemeState value, $Res Function(AppthemeState) then,) =
       _$AppthemeStateCopyWithImpl<$Res>;
 }
 

@@ -32,7 +32,7 @@ class SettingsView extends StatelessWidget {
             child: AlertDialog(
               title: Text(
                 'Do you want delete previous data?',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               actions: <Widget>[
                 TextButton(
@@ -153,7 +153,7 @@ class SettingsView extends StatelessWidget {
                           Align(
                             child: Text(
                               AppLocalizations.of(context).settingsTitle,
-                              style: Theme.of(context).textTheme.headline3,
+                              style: Theme.of(context).textTheme.displaySmall,
                             ),
                           ),
                           Align(
@@ -274,7 +274,7 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
             child: AlertDialog(
               title: Text(
                 'Do you want delete previous data?',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               actions: <Widget>[
                 TextButton(
@@ -317,7 +317,7 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
           children: [
             Text(
               'Backup or Restore',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             Padding(
               padding: const EdgeInsets.all(4),
@@ -426,7 +426,7 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
           children: [
             Text(
               'Weigth Unit',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             Padding(
               padding: const EdgeInsets.all(4),
@@ -505,7 +505,7 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
           children: [
             Text(
               'Theme',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             Padding(
               padding: const EdgeInsets.all(8),
@@ -582,7 +582,7 @@ class _LengthChoiceChipState extends State<LengthChoiceChip> {
           children: [
             Text(
               'Length Unit',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             Padding(
               padding: const EdgeInsets.all(4),
@@ -671,7 +671,7 @@ class _HereChoiceChiperState<T> extends State<HereChoiceChiper> {
           children: [
             Text(
               'Time',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -743,13 +743,13 @@ class _LanguageSelectorState extends State<LanguageSelector> {
         children: [
           Text(
             'Language',
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           DropdownButton<Locale>(
             value: _currentLocale,
             borderRadius: BorderRadius.circular(10),
             underline: const SizedBox.shrink(),
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
             items: _list
                 .map(
                   (e) => DropdownMenuItem(

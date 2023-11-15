@@ -13,7 +13,6 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:watcha_body/counter/counter.dart';
 
-import '../../helpers/helpers.dart';
 
 class MockCounterCubit extends MockCubit<int> implements CounterCubit {}
 

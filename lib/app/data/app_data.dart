@@ -78,5 +78,5 @@ MeasurementType? measurementTypeFromString(String name) {
     if (element.name == name) return element;
   }
   // return null;
-  return MeasurementType(name: name + "🥶");
+  return MeasurementType(name: '$name🥶');
 }

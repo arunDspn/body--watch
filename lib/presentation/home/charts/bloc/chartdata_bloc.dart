@@ -40,7 +40,7 @@ class ChartdataBloc extends Bloc<ChartdataEvent, ChartdataState> {
           _data.fold(
             (l) => emit(ChartdataState.failed(cause: l)),
             (r) {
-              var _groupedData = r.groupListsBy((element) => element.type);
+              final _groupedData = r.groupListsBy((element) => element.type);
 
               final _list = _groupedData.values.map((element) {
                 return ChartDisplayModel.fromMeasurementList(

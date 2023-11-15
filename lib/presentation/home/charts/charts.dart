@@ -1,9 +1,7 @@
-import 'dart:math';
 
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/display_models/chart_display.dart';
@@ -25,7 +23,7 @@ class Charts extends StatelessWidget {
         elevation: 0,
         title: Text(
           'Charts',
-          style: Theme.of(context).textTheme.headline3,
+          style: Theme.of(context).textTheme.displaySmall,
         ),
         leading: IconButton(
           icon: Icon(
@@ -90,7 +88,7 @@ class Charts extends StatelessWidget {
                             e,
                             camelCase: true,
                           ),
-                          style: Theme.of(context).textTheme.bodyText1,
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       );
                     }).toList(),
@@ -123,7 +121,7 @@ class Charts extends StatelessWidget {
               return Center(
                 child: Text(
                   'Failed',
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               );
             },
@@ -150,7 +148,7 @@ class _SucessBody extends StatelessWidget {
       return Center(
         child: Text(
           'No data has been added yet',
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
       );
     } else {
@@ -278,7 +276,7 @@ class ChartContainer extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   child: Text(
                     '${chartDisplayModel.measurementName}  ${chartDisplayModel.lastMeasurement}',
-                    style: Theme.of(context).textTheme.headline3,
+                    style: Theme.of(context).textTheme.displaySmall,
                   ),
                 ),
                 if (!withLimiter)

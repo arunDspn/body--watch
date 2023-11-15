@@ -16,7 +16,7 @@ void main() {
             builder: (context) {
               SizeConfig().init(context);
               return const AddDataModal(
-                type: MeasurementType(name: "mas"),
+                type: MeasurementType(name: 'mas'),
               );
             },
           ),

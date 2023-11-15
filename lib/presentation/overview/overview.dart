@@ -27,7 +27,7 @@ class OverView extends StatelessWidget {
         elevation: 0,
         title: Text(
           AppLocalizations.of(context).overViewTitle,
-          style: Theme.of(context).textTheme.headline3,
+          style: Theme.of(context).textTheme.displaySmall,
         ),
         centerTitle: true,
         leading: IconButton(
@@ -74,7 +74,7 @@ class OverView extends StatelessWidget {
                           'No You Cant See Me',
                           style: Theme.of(context)
                               .textTheme
-                              .headline6
+                              .titleLarge
                               ?.copyWith(color: Colors.red),
                         ),
                       ],
@@ -189,14 +189,14 @@ class _WidgetBox extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          '${data.name.name} : ${data.latest.value.toString()} ',
-                          style: Theme.of(context).textTheme.headline2,
+                          '${data.name.name} : ${data.latest.value} ',
+                          style: Theme.of(context).textTheme.displayMedium,
                           textAlign: TextAlign.center,
                         ),
                         Text(
                           _unit,
                           style:
-                              Theme.of(context).textTheme.headline4!.copyWith(
+                              Theme.of(context).textTheme.headlineMedium!.copyWith(
                                     fontSize: getProportionateScreenWidth(18),
                                   ),
                           textAlign: TextAlign.center,
@@ -210,7 +210,7 @@ class _WidgetBox extends StatelessWidget {
                       padding: const EdgeInsets.all(5),
                       child: Text(
                         formatter.format(data.latest.date),
-                        style: Theme.of(context).textTheme.headline4,
+                        style: Theme.of(context).textTheme.headlineMedium,
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -231,7 +231,7 @@ class _WidgetBox extends StatelessWidget {
                           alignment: Alignment.topLeft,
                           child: Text(
                             '${data.delta!.toStringAsFixed(1)} than ${formatter.format(data.previous!)}',
-                            style: Theme.of(context).textTheme.headline5,
+                            style: Theme.of(context).textTheme.headlineSmall,
                             textAlign: TextAlign.left,
                           ),
                         ),
@@ -260,7 +260,7 @@ class _WidgetBox extends StatelessWidget {
                   color: Theme.of(context).colorScheme.primary,
                   size: getProportionateScreenHeight(30),
                 ),
-              )
+              ),
             ],
           ),
         ),

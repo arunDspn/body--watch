@@ -146,7 +146,7 @@ class MeasurementRepository extends IMeasurementsFacade {
       final _data =
           await _db.rawQuery('SELECT DISTINCT(type) from measurements');
 
-      final _dData = _data.map((e) => e['type'] as String).toList();
+      final _dData = _data.map((e) => e['type']! as String).toList();
       return Right(_dData);
     } catch (e) {
       return Left(e.toString());

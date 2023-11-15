@@ -11,7 +11,7 @@ part of 'chartdata_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods',);
 
 /// @nodoc
 class _$ChartdataEventTearOff {
@@ -19,7 +19,7 @@ class _$ChartdataEventTearOff {
 
   _FetchData fetchData(
       {required DurationsEnum duration,
-      required AppPreferences appPreferences}) {
+      required AppPreferences appPreferences,}) {
     return _FetchData(
       duration: duration,
       appPreferences: appPreferences,
@@ -38,7 +38,7 @@ mixin _$ChartdataEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            DurationsEnum duration, AppPreferences appPreferences)
+            DurationsEnum duration, AppPreferences appPreferences,)
         fetchData,
   }) =>
       throw _privateConstructorUsedError;
@@ -80,7 +80,7 @@ mixin _$ChartdataEvent {
 /// @nodoc
 abstract class $ChartdataEventCopyWith<$Res> {
   factory $ChartdataEventCopyWith(
-          ChartdataEvent value, $Res Function(ChartdataEvent) then) =
+          ChartdataEvent value, $Res Function(ChartdataEvent) then,) =
       _$ChartdataEventCopyWithImpl<$Res>;
   $Res call({DurationsEnum duration, AppPreferences appPreferences});
 }
@@ -108,7 +108,7 @@ class _$ChartdataEventCopyWithImpl<$Res>
           ? _value.appPreferences
           : appPreferences // ignore: cast_nullable_to_non_nullable
               as AppPreferences,
-    ));
+    ),);
   }
 }
 
@@ -116,7 +116,7 @@ class _$ChartdataEventCopyWithImpl<$Res>
 abstract class _$FetchDataCopyWith<$Res>
     implements $ChartdataEventCopyWith<$Res> {
   factory _$FetchDataCopyWith(
-          _FetchData value, $Res Function(_FetchData) then) =
+          _FetchData value, $Res Function(_FetchData) then,) =
       __$FetchDataCopyWithImpl<$Res>;
   @override
   $Res call({DurationsEnum duration, AppPreferences appPreferences});
@@ -145,7 +145,7 @@ class __$FetchDataCopyWithImpl<$Res> extends _$ChartdataEventCopyWithImpl<$Res>
           ? _value.appPreferences
           : appPreferences // ignore: cast_nullable_to_non_nullable
               as AppPreferences,
-    ));
+    ),);
   }
 }
 
@@ -178,7 +178,7 @@ class _$_FetchData implements _FetchData {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(duration),
-      const DeepCollectionEquality().hash(appPreferences));
+      const DeepCollectionEquality().hash(appPreferences),);
 
   @JsonKey(ignore: true)
   @override
@@ -189,7 +189,7 @@ class _$_FetchData implements _FetchData {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            DurationsEnum duration, AppPreferences appPreferences)
+            DurationsEnum duration, AppPreferences appPreferences,)
         fetchData,
   }) {
     return fetchData(duration, appPreferences);
@@ -249,7 +249,7 @@ class _$_FetchData implements _FetchData {
 abstract class _FetchData implements ChartdataEvent {
   const factory _FetchData(
       {required DurationsEnum duration,
-      required AppPreferences appPreferences}) = _$_FetchData;
+      required AppPreferences appPreferences,}) = _$_FetchData;
 
   @override
   DurationsEnum get duration;
@@ -276,7 +276,7 @@ class _$ChartdataStateTearOff {
   _Success success(
       {required List<ChartDisplayModel> chartDisplayModelList,
       required DurationsEnum durationsEnum,
-      required DateTime startDate}) {
+      required DateTime startDate,}) {
     return _Success(
       chartDisplayModelList: chartDisplayModelList,
       durationsEnum: durationsEnum,
@@ -301,7 +301,7 @@ mixin _$ChartdataState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)
+            DurationsEnum durationsEnum, DateTime startDate,)
         success,
     required TResult Function(String cause) failed,
   }) =>
@@ -311,7 +311,7 @@ mixin _$ChartdataState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)?
+            DurationsEnum durationsEnum, DateTime startDate,)?
         success,
     TResult Function(String cause)? failed,
   }) =>
@@ -321,7 +321,7 @@ mixin _$ChartdataState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)?
+            DurationsEnum durationsEnum, DateTime startDate,)?
         success,
     TResult Function(String cause)? failed,
     required TResult orElse(),
@@ -357,7 +357,7 @@ mixin _$ChartdataState {
 /// @nodoc
 abstract class $ChartdataStateCopyWith<$Res> {
   factory $ChartdataStateCopyWith(
-          ChartdataState value, $Res Function(ChartdataState) then) =
+          ChartdataState value, $Res Function(ChartdataState) then,) =
       _$ChartdataStateCopyWithImpl<$Res>;
 }
 
@@ -412,7 +412,7 @@ class _$_Initial implements _Initial {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)
+            DurationsEnum durationsEnum, DateTime startDate,)
         success,
     required TResult Function(String cause) failed,
   }) {
@@ -425,7 +425,7 @@ class _$_Initial implements _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)?
+            DurationsEnum durationsEnum, DateTime startDate,)?
         success,
     TResult Function(String cause)? failed,
   }) {
@@ -438,7 +438,7 @@ class _$_Initial implements _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)?
+            DurationsEnum durationsEnum, DateTime startDate,)?
         success,
     TResult Function(String cause)? failed,
     required TResult orElse(),
@@ -532,7 +532,7 @@ class _$_Loading implements _Loading {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)
+            DurationsEnum durationsEnum, DateTime startDate,)
         success,
     required TResult Function(String cause) failed,
   }) {
@@ -545,7 +545,7 @@ class _$_Loading implements _Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)?
+            DurationsEnum durationsEnum, DateTime startDate,)?
         success,
     TResult Function(String cause)? failed,
   }) {
@@ -558,7 +558,7 @@ class _$_Loading implements _Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)?
+            DurationsEnum durationsEnum, DateTime startDate,)?
         success,
     TResult Function(String cause)? failed,
     required TResult orElse(),
@@ -618,7 +618,7 @@ abstract class _$SuccessCopyWith<$Res> {
   $Res call(
       {List<ChartDisplayModel> chartDisplayModelList,
       DurationsEnum durationsEnum,
-      DateTime startDate});
+      DateTime startDate,});
 }
 
 /// @nodoc
@@ -649,7 +649,7 @@ class __$SuccessCopyWithImpl<$Res> extends _$ChartdataStateCopyWithImpl<$Res>
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-    ));
+    ),);
   }
 }
 
@@ -659,7 +659,7 @@ class _$_Success implements _Success {
   const _$_Success(
       {required this.chartDisplayModelList,
       required this.durationsEnum,
-      required this.startDate});
+      required this.startDate,});
 
   @override
   final List<ChartDisplayModel> chartDisplayModelList;
@@ -690,7 +690,7 @@ class _$_Success implements _Success {
       runtimeType,
       const DeepCollectionEquality().hash(chartDisplayModelList),
       const DeepCollectionEquality().hash(durationsEnum),
-      const DeepCollectionEquality().hash(startDate));
+      const DeepCollectionEquality().hash(startDate),);
 
   @JsonKey(ignore: true)
   @override
@@ -703,7 +703,7 @@ class _$_Success implements _Success {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)
+            DurationsEnum durationsEnum, DateTime startDate,)
         success,
     required TResult Function(String cause) failed,
   }) {
@@ -716,7 +716,7 @@ class _$_Success implements _Success {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)?
+            DurationsEnum durationsEnum, DateTime startDate,)?
         success,
     TResult Function(String cause)? failed,
   }) {
@@ -729,7 +729,7 @@ class _$_Success implements _Success {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)?
+            DurationsEnum durationsEnum, DateTime startDate,)?
         success,
     TResult Function(String cause)? failed,
     required TResult orElse(),
@@ -782,7 +782,7 @@ abstract class _Success implements ChartdataState {
   const factory _Success(
       {required List<ChartDisplayModel> chartDisplayModelList,
       required DurationsEnum durationsEnum,
-      required DateTime startDate}) = _$_Success;
+      required DateTime startDate,}) = _$_Success;
 
   List<ChartDisplayModel> get chartDisplayModelList;
   DurationsEnum get durationsEnum;
@@ -817,7 +817,7 @@ class __$FailedCopyWithImpl<$Res> extends _$ChartdataStateCopyWithImpl<$Res>
           ? _value.cause
           : cause // ignore: cast_nullable_to_non_nullable
               as String,
-    ));
+    ),);
   }
 }
 
@@ -857,7 +857,7 @@ class _$_Failed implements _Failed {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)
+            DurationsEnum durationsEnum, DateTime startDate,)
         success,
     required TResult Function(String cause) failed,
   }) {
@@ -870,7 +870,7 @@ class _$_Failed implements _Failed {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)?
+            DurationsEnum durationsEnum, DateTime startDate,)?
         success,
     TResult Function(String cause)? failed,
   }) {
@@ -883,7 +883,7 @@ class _$_Failed implements _Failed {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate)?
+            DurationsEnum durationsEnum, DateTime startDate,)?
         success,
     TResult Function(String cause)? failed,
     required TResult orElse(),

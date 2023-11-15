@@ -48,7 +48,7 @@ class _AppIniterState extends State<AppIniter> {
             children: [
               Text(
                 'Choose your Defaults',
-                style: Theme.of(context).textTheme.headline3,
+                style: Theme.of(context).textTheme.displaySmall,
               ),
               const SizedBox(height: 20),
               // const LanguageSelector(),
@@ -85,12 +85,12 @@ class _AppIniterState extends State<AppIniter> {
                   padding: const EdgeInsets.all(12),
                   child: Text(
                     'Continue',
-                    style: Theme.of(context).textTheme.headline4!.copyWith(
+                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                           color: Colors.white,
                         ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -124,7 +124,7 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
           children: [
             Text(
               'Weigth Unit',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             Padding(
               padding: const EdgeInsets.all(4),
@@ -191,7 +191,7 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
           children: [
             Text(
               'Theme',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             Padding(
               padding: const EdgeInsets.all(8),
@@ -266,7 +266,7 @@ class _LengthChoiceChipState extends State<LengthChoiceChip> {
           children: [
             Text(
               'Length Unit',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             Padding(
               padding: const EdgeInsets.all(4),
@@ -350,7 +350,7 @@ class _HereChoiceChiperState<T> extends State<HereChoiceChiper> {
           children: [
             Text(
               'Time',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -414,13 +414,13 @@ class _LanguageSelectorState extends State<LanguageSelector> {
         children: [
           Text(
             'Language',
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           DropdownButton<Locale>(
             value: _currentLocale,
             borderRadius: BorderRadius.circular(10),
             underline: const SizedBox.shrink(),
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
             items: _list
                 .map(
                   (e) => DropdownMenuItem(

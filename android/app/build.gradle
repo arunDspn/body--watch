@@ -105,7 +105,7 @@ android {
             // signingConfig signingConfigs.release
             signingConfig signingConfigs.debug
             minifyEnabled true
-            useProguard true
+            // useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt')
         }
         debug {

@@ -51,7 +51,7 @@ class AddWidget extends StatelessWidget {
                               child: Center(
                                 child: Text(
                                   'No widgets remaining',
-                                  style: Theme.of(context).textTheme.headline6,
+                                  style: Theme.of(context).textTheme.titleLarge,
                                 ),
                               ),
                             );
@@ -127,7 +127,7 @@ class _Boxes extends StatelessWidget {
           child: Center(
             child: Text(
               type.name,
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.displaySmall,
             ),
           ),
         ),

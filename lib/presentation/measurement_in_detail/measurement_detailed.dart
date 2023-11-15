@@ -7,9 +7,7 @@ import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
-import 'package:watcha_body/presentation/display_models/chart_display.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
-import 'package:watcha_body/presentation/home/charts/charts.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/size_config.dart';
 
@@ -69,7 +67,7 @@ class MeasurementInDetail extends StatelessWidget {
                             Align(
                               child: Text(
                                 measurementType.name,
-                                style: Theme.of(context).textTheme.headline3,
+                                style: Theme.of(context).textTheme.displaySmall,
                               ),
                             ),
                             Align(
@@ -115,7 +113,7 @@ class MeasurementInDetail extends StatelessWidget {
                                         camelCase: true,
                                       ),
                                       style:
-                                          Theme.of(context).textTheme.bodyText1,
+                                          Theme.of(context).textTheme.bodyLarge,
                                     ),
                                   );
                                 }).toList(),
@@ -183,7 +181,7 @@ class _MeasurementList extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             child: Text(
               'Current Measurement · ${measurementList.first.value} $unit',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
         ),
@@ -201,7 +199,7 @@ class _MeasurementList extends StatelessWidget {
             children: [
               Text(
                 'Measurement(${measurementList.length})',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               TextButton(
                 onPressed: () {
@@ -278,11 +276,11 @@ class _TableCell extends StatelessWidget {
         children: [
           Text(
             measurement.toStringAsFixed(2),
-            style: Theme.of(context).textTheme.bodyText1,
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
           Text(
             formatter.format(date),
-            style: Theme.of(context).textTheme.bodyText2,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
       ),
