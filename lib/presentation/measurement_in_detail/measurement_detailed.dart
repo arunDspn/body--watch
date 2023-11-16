@@ -9,6 +9,7 @@ import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
+import 'package:watcha_body/presentation/measurement_in_detail/widget/metrics_line_graph.dart';
 import 'package:watcha_body/size_config.dart';
 
 class MeasurementInDetail extends StatelessWidget {
@@ -59,6 +60,7 @@ class MeasurementInDetail extends StatelessWidget {
                   },
                   child: Column(
                     children: [
+                      // Appbar
                       SizedBox(
                         width: double.infinity,
                         height: SizeConfig.screenHeight! * 0.08,
@@ -144,6 +146,8 @@ class MeasurementInDetail extends StatelessWidget {
   }
 }
 
+enum Calendar { day, week, month, year }
+
 class _MeasurementList extends StatelessWidget {
   _MeasurementList({
     Key? key,
@@ -173,82 +177,170 @@ class _MeasurementList extends StatelessWidget {
     } else {
       unit = '%';
     }
-    return Column(
-      children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(12),
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
             child: Text(
               'Current Measurement · ${measurementList.first.value} $unit',
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
-        ),
-        // ChartContainerForDetailed(
-        //   startDate: startDate,
-        //   chartDisplayModel: ChartDisplayModel.fromMeasurementList(
-        //     measurement: measurementList,
-        //     name: measurementType.name,
-        //   ),
-        // ),
-        SizedBox(
-          width: SizeConfig.screenWidth! * 0.85,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Measurement(${measurementList.length})',
-                style: Theme.of(context).textTheme.titleLarge,
+          const SizedBox(height: 20),
+          // ChartContainerForDetailed(
+          //   startDate: startDate,
+          //   chartDisplayModel: ChartDisplayModel.fromMeasurementList(
+          //     measurement: measurementList,
+          //     name: measurementType.name,
+          //   ),
+          // ),
+          SegmentedMainFilterButtons(),
+
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: SubFilterInputStepper(),
+          ),
+          MetricsLineGraph(measurements: measurementList),
+          // LineChartSample2(),
+
+          // Measure List
+          SizedBox(
+            width: SizeConfig.screenWidth! * 0.85,
+            // Head
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Measurement(${measurementList.length})',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                TextButton(
+                  onPressed: () {
+                    showModalBottomSheet<void>(
+                      context: context,
+                      builder: (context) {
+                        return AddDataModal.add(
+                          type: measurementType,
+                        );
+                      },
+                    );
+                  },
+                  child: const Text(
+                    'Add',
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // List
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: SizeConfig.screenHeight! * 0.4,
               ),
-              TextButton(
-                onPressed: () {
-                  showModalBottomSheet<void>(
-                    context: context,
-                    builder: (context) {
-                      return AddDataModal.add(
-                        type: measurementType,
-                      );
-                    },
-                  );
-                },
-                child: const Text(
-                  'Add',
-                  textAlign: TextAlign.end,
+              // padding: const EdgeInsets.only(top: 8),
+              width: SizeConfig.screenWidth! * 0.85,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
+                  ),
+                  itemCount: measurementList.length,
+                  itemBuilder: (context, index) {
+                    return _TableCell(
+                      date: measurementList[index].date,
+                      measurement: measurementList[index].value,
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SegmentedMainFilterButtons extends StatelessWidget {
+  const SegmentedMainFilterButtons({
+    super.key,
+  });
+
+  final Calendar calendarView = Calendar.day;
+
+  @override
+  Widget build(BuildContext context) {
+    return SegmentedButton<Calendar>(
+      // style: ButtonStyle(
+      //   textStyle: MaterialStatePropertyAll(TextStyle(fontSize: 10)),
+      // ),
+      segments: const <ButtonSegment<Calendar>>[
+        ButtonSegment<Calendar>(
+          value: Calendar.week,
+          label: Text('Week'),
+        ),
+        ButtonSegment<Calendar>(
+          value: Calendar.month,
+          label: Text('Month'),
+        ),
+        ButtonSegment<Calendar>(
+          value: Calendar.month,
+          label: Text('3 Months'),
+        ),
+        ButtonSegment<Calendar>(
+          value: Calendar.year,
+          label: Text('Year'),
+        ),
+      ],
+      selected: <Calendar>{calendarView},
+      onSelectionChanged: (Set<Calendar> newSelection) {},
+    );
+  }
+}
+
+class SubFilterInputStepper extends StatelessWidget {
+  const SubFilterInputStepper({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.chevron_left),
+        ),
+        Expanded(
+          child: Column(
+            children: [
+              Text("Feb 1 - Feb 12"),
+              SizedBox(
+                height: 8,
+              ),
+              Text(
+                "Feb 1 - Feb 12",
+                style: TextStyle(
+                  fontSize: 12,
                 ),
               ),
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Container(
-            constraints: BoxConstraints(
-              maxHeight: SizeConfig.screenHeight! * 0.4,
-            ),
-            // padding: const EdgeInsets.only(top: 8),
-            width: SizeConfig.screenWidth! * 0.85,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics(),
-                ),
-                itemCount: measurementList.length,
-                itemBuilder: (context, index) {
-                  return _TableCell(
-                    date: measurementList[index].date,
-                    measurement: measurementList[index].value,
-                  );
-                },
-              ),
-            ),
-          ),
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.chevron_right),
         ),
       ],
     );
