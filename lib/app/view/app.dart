@@ -8,11 +8,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/constants/theme.dart';
+import 'package:watcha_body/app/theme_data.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/l10n/l10n.dart';
@@ -31,6 +30,7 @@ import 'package:watcha_body/presentation/settings/cubits/backup_restore_cubit/ba
 import 'package:watcha_body/presentation/settings/cubits/delete_all_data_cubit/delete_all_data_cubit.dart';
 import 'package:watcha_body/presentation/settings/settings_view.dart';
 import 'package:watcha_body/presentation/splash/splash_view.dart';
+import 'package:watcha_body/services/time_range_service/service.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -41,6 +41,9 @@ class App extends StatelessWidget {
       providers: [
         RepositoryProvider<MeasurementRepository>(
           create: (context) => MeasurementRepository(DatabaseService()),
+        ),
+        RepositoryProvider<TimeRangeService>(
+          create: (context) => TimeRangeService(),
         ),
       ],
       child: MultiBlocProvider(
@@ -87,8 +90,8 @@ class App extends StatelessWidget {
                 return BlocBuilder<AppthemeBloc, AppTheme>(
                   builder: (context, stateTheme) {
                     return MaterialApp(
-                      theme: lightTheme,
-                      darkTheme: darkTheme,
+                      theme: AppThemeData.lightTheme,
+                      darkTheme: AppThemeData.darkTheme,
                       themeMode: stateTheme == AppTheme.darkTheme
                           ? ThemeMode.dark
                           : ThemeMode.light,
@@ -194,212 +197,3 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
   }
   return null;
 }
-
-final lightTheme = ThemeData(
-  appBarTheme: const AppBarTheme(
-    color: Color.fromARGB(255, 255, 255, 255),
-  ),
-  scaffoldBackgroundColor: Colors.grey.shade100,
-  primaryColor: Colors.blue,
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.red,
-    primary: Colors.blue,
-    onPrimaryContainer: Colors.white,
-    secondaryContainer: Colors.white,
-    secondary: Colors.black54,
-  ),
-  fontFamily: GoogleFonts.inter(
-    textStyle: const TextStyle(
-      fontWeight: FontWeight.w600,
-      color: Colors.red,
-    ),
-    color: Colors.amber,
-  ).fontFamily,
-  inputDecorationTheme: const InputDecorationTheme(
-    border: UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: Color.fromARGB(59, 176, 176, 176),
-      ),
-    ),
-    enabledBorder: UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: Color.fromARGB(59, 176, 176, 176),
-      ),
-    ),
-  ),
-  textTheme: const TextTheme(
-    bodyLarge: TextStyle(
-      fontSize: 16,
-      color: Colors.black,
-    ),
-    bodyMedium: TextStyle(
-      fontSize: 16,
-      color: Colors.grey,
-    ),
-    displayMedium: TextStyle(
-      fontSize: 26,
-      fontWeight: FontWeight.bold,
-      color: Colors.black,
-    ),
-    displaySmall: TextStyle(
-      fontSize: 24,
-      fontWeight: FontWeight.bold,
-      color: Colors.black,
-    ),
-    headlineMedium: TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-      letterSpacing: 1.5,
-      color: Colors.black54,
-    ),
-    headlineSmall: TextStyle(
-      fontSize: 16,
-    ),
-    titleLarge: TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
-    ),
-  ),
-  chipTheme: const ChipThemeData(
-    checkmarkColor: Colors.white,
-    backgroundColor: Colors.grey,
-    selectedColor: kPrimaryColorInLight,
-    deleteIconColor: Colors.white,
-    labelPadding: EdgeInsets.symmetric(horizontal: 8),
-    labelStyle: TextStyle(
-      fontWeight: FontWeight.w600,
-      color: Colors.white,
-    ),
-    secondarySelectedColor: Colors.red,
-    secondaryLabelStyle: TextStyle(
-      fontWeight: FontWeight.w600,
-      color: Colors.red,
-    ),
-  ),
-  dialogTheme: DialogTheme(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(15),
-    ),
-    backgroundColor: Colors.grey.shade100,
-  ),
-  snackBarTheme: SnackBarThemeData(
-    contentTextStyle: const TextStyle(
-      fontSize: 16,
-      color: Colors.white,
-    ),
-    backgroundColor: Colors.grey.shade700,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-    behavior: SnackBarBehavior.floating,
-  ),
-);
-
-final darkTheme = ThemeData(
-  appBarTheme: const AppBarTheme(
-    color: Color.fromARGB(255, 0, 0, 0),
-  ),
-  scaffoldBackgroundColor: Colors.black,
-  primaryColor: Colors.black,
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.red,
-    primary: Colors.blue,
-    // used icons
-    secondary: Colors.grey.shade400,
-    secondaryContainer: Colors.grey.shade900,
-    // onPrimaryContainer: const Color.fromARGB(255, 53, 53, 53),
-    onPrimaryContainer: Colors.grey.shade900,
-  ),
-  fontFamily: GoogleFonts.inter(
-    textStyle: const TextStyle(
-      fontWeight: FontWeight.w600,
-      color: Colors.white,
-    ),
-    color: Colors.amber,
-  ).fontFamily,
-  inputDecorationTheme: const InputDecorationTheme(
-    border: UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: Color.fromARGB(60, 170, 167, 167),
-      ),
-    ),
-    enabledBorder: UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: Color.fromARGB(60, 170, 167, 167),
-      ),
-    ),
-    labelStyle: TextStyle(
-      color: Colors.white,
-    ),
-  ),
-  textTheme: const TextTheme(
-    bodyLarge: TextStyle(
-      fontSize: 16,
-      color: Colors.white,
-    ),
-    bodyMedium: TextStyle(
-      fontSize: 16,
-      color: Colors.grey,
-    ),
-    displayMedium: TextStyle(
-      fontSize: 26,
-      fontWeight: FontWeight.bold,
-      color: Colors.white,
-    ),
-    displaySmall: TextStyle(
-      fontSize: 24,
-      fontWeight: FontWeight.bold,
-      color: Colors.white,
-    ),
-    headlineMedium: TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-      letterSpacing: 1.5,
-      color: Colors.white60,
-    ),
-    headlineSmall: TextStyle(
-      fontSize: 16,
-      color: Colors.white60,
-    ),
-    titleLarge: TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
-      color: Colors.white,
-    ),
-  ),
-  popupMenuTheme: const PopupMenuThemeData(
-    color: Colors.black,
-    textStyle: TextStyle(
-      color: Colors.white,
-    ),
-  ),
-  canvasColor: Colors.black87,
-  chipTheme: const ChipThemeData(
-    checkmarkColor: Colors.white,
-    backgroundColor: Colors.black26,
-    selectedColor: kPrimaryColorInDark,
-    deleteIconColor: Colors.white,
-    labelPadding: EdgeInsets.symmetric(horizontal: 8),
-    labelStyle: TextStyle(
-      fontWeight: FontWeight.w600,
-      color: Colors.white,
-    ),
-  ),
-  dialogTheme: DialogTheme(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(15),
-    ),
-    backgroundColor: Colors.grey.shade900,
-  ),
-  snackBarTheme: SnackBarThemeData(
-    contentTextStyle: const TextStyle(
-      fontSize: 16,
-      color: Colors.white,
-    ),
-    backgroundColor: Colors.grey.shade900,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12),
-    ),
-    behavior: SnackBarBehavior.floating,
-  ),
-);

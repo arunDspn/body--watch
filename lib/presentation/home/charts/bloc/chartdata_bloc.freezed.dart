@@ -1,6 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'chartdata_bloc.dart';
 
@@ -11,40 +12,22 @@ part of 'chartdata_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods',);
-
-/// @nodoc
-class _$ChartdataEventTearOff {
-  const _$ChartdataEventTearOff();
-
-  _FetchData fetchData(
-      {required DurationsEnum duration,
-      required AppPreferences appPreferences,}) {
-    return _FetchData(
-      duration: duration,
-      appPreferences: appPreferences,
-    );
-  }
-}
-
-/// @nodoc
-const $ChartdataEvent = _$ChartdataEventTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$ChartdataEvent {
   DurationsEnum get duration => throw _privateConstructorUsedError;
   AppPreferences get appPreferences => throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            DurationsEnum duration, AppPreferences appPreferences,)
+            DurationsEnum duration, AppPreferences appPreferences)
         fetchData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(DurationsEnum duration, AppPreferences appPreferences)?
+    TResult? Function(DurationsEnum duration, AppPreferences appPreferences)?
         fetchData,
   }) =>
       throw _privateConstructorUsedError;
@@ -62,7 +45,7 @@ mixin _$ChartdataEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_FetchData value)? fetchData,
+    TResult? Function(_FetchData value)? fetchData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -80,79 +63,83 @@ mixin _$ChartdataEvent {
 /// @nodoc
 abstract class $ChartdataEventCopyWith<$Res> {
   factory $ChartdataEventCopyWith(
-          ChartdataEvent value, $Res Function(ChartdataEvent) then,) =
-      _$ChartdataEventCopyWithImpl<$Res>;
+          ChartdataEvent value, $Res Function(ChartdataEvent) then) =
+      _$ChartdataEventCopyWithImpl<$Res, ChartdataEvent>;
+  @useResult
   $Res call({DurationsEnum duration, AppPreferences appPreferences});
 }
 
 /// @nodoc
-class _$ChartdataEventCopyWithImpl<$Res>
+class _$ChartdataEventCopyWithImpl<$Res, $Val extends ChartdataEvent>
     implements $ChartdataEventCopyWith<$Res> {
   _$ChartdataEventCopyWithImpl(this._value, this._then);
 
-  final ChartdataEvent _value;
   // ignore: unused_field
-  final $Res Function(ChartdataEvent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? duration = freezed,
-    Object? appPreferences = freezed,
+    Object? duration = null,
+    Object? appPreferences = null,
   }) {
     return _then(_value.copyWith(
-      duration: duration == freezed
+      duration: null == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as DurationsEnum,
-      appPreferences: appPreferences == freezed
+      appPreferences: null == appPreferences
           ? _value.appPreferences
           : appPreferences // ignore: cast_nullable_to_non_nullable
               as AppPreferences,
-    ),);
+    ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$FetchDataCopyWith<$Res>
+abstract class _$$FetchDataImplCopyWith<$Res>
     implements $ChartdataEventCopyWith<$Res> {
-  factory _$FetchDataCopyWith(
-          _FetchData value, $Res Function(_FetchData) then,) =
-      __$FetchDataCopyWithImpl<$Res>;
+  factory _$$FetchDataImplCopyWith(
+          _$FetchDataImpl value, $Res Function(_$FetchDataImpl) then) =
+      __$$FetchDataImplCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({DurationsEnum duration, AppPreferences appPreferences});
 }
 
 /// @nodoc
-class __$FetchDataCopyWithImpl<$Res> extends _$ChartdataEventCopyWithImpl<$Res>
-    implements _$FetchDataCopyWith<$Res> {
-  __$FetchDataCopyWithImpl(_FetchData _value, $Res Function(_FetchData) _then)
-      : super(_value, (v) => _then(v as _FetchData));
+class __$$FetchDataImplCopyWithImpl<$Res>
+    extends _$ChartdataEventCopyWithImpl<$Res, _$FetchDataImpl>
+    implements _$$FetchDataImplCopyWith<$Res> {
+  __$$FetchDataImplCopyWithImpl(
+      _$FetchDataImpl _value, $Res Function(_$FetchDataImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _FetchData get _value => super._value as _FetchData;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? duration = freezed,
-    Object? appPreferences = freezed,
+    Object? duration = null,
+    Object? appPreferences = null,
   }) {
-    return _then(_FetchData(
-      duration: duration == freezed
+    return _then(_$FetchDataImpl(
+      duration: null == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as DurationsEnum,
-      appPreferences: appPreferences == freezed
+      appPreferences: null == appPreferences
           ? _value.appPreferences
           : appPreferences // ignore: cast_nullable_to_non_nullable
               as AppPreferences,
-    ),);
+    ));
   }
 }
 
 /// @nodoc
 
-class _$_FetchData implements _FetchData {
-  const _$_FetchData({required this.duration, required this.appPreferences});
+class _$FetchDataImpl implements _FetchData {
+  const _$FetchDataImpl({required this.duration, required this.appPreferences});
 
   @override
   final DurationsEnum duration;
@@ -168,28 +155,27 @@ class _$_FetchData implements _FetchData {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _FetchData &&
-            const DeepCollectionEquality().equals(other.duration, duration) &&
-            const DeepCollectionEquality()
-                .equals(other.appPreferences, appPreferences));
+            other is _$FetchDataImpl &&
+            (identical(other.duration, duration) ||
+                other.duration == duration) &&
+            (identical(other.appPreferences, appPreferences) ||
+                other.appPreferences == appPreferences));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(duration),
-      const DeepCollectionEquality().hash(appPreferences),);
+  int get hashCode => Object.hash(runtimeType, duration, appPreferences);
 
   @JsonKey(ignore: true)
   @override
-  _$FetchDataCopyWith<_FetchData> get copyWith =>
-      __$FetchDataCopyWithImpl<_FetchData>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$FetchDataImplCopyWith<_$FetchDataImpl> get copyWith =>
+      __$$FetchDataImplCopyWithImpl<_$FetchDataImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(
-            DurationsEnum duration, AppPreferences appPreferences,)
+            DurationsEnum duration, AppPreferences appPreferences)
         fetchData,
   }) {
     return fetchData(duration, appPreferences);
@@ -198,7 +184,7 @@ class _$_FetchData implements _FetchData {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(DurationsEnum duration, AppPreferences appPreferences)?
+    TResult? Function(DurationsEnum duration, AppPreferences appPreferences)?
         fetchData,
   }) {
     return fetchData?.call(duration, appPreferences);
@@ -228,7 +214,7 @@ class _$_FetchData implements _FetchData {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_FetchData value)? fetchData,
+    TResult? Function(_FetchData value)? fetchData,
   }) {
     return fetchData?.call(this);
   }
@@ -248,8 +234,8 @@ class _$_FetchData implements _FetchData {
 
 abstract class _FetchData implements ChartdataEvent {
   const factory _FetchData(
-      {required DurationsEnum duration,
-      required AppPreferences appPreferences,}) = _$_FetchData;
+      {required final DurationsEnum duration,
+      required final AppPreferences appPreferences}) = _$FetchDataImpl;
 
   @override
   DurationsEnum get duration;
@@ -257,42 +243,9 @@ abstract class _FetchData implements ChartdataEvent {
   AppPreferences get appPreferences;
   @override
   @JsonKey(ignore: true)
-  _$FetchDataCopyWith<_FetchData> get copyWith =>
+  _$$FetchDataImplCopyWith<_$FetchDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
-
-/// @nodoc
-class _$ChartdataStateTearOff {
-  const _$ChartdataStateTearOff();
-
-  _Initial initial() {
-    return const _Initial();
-  }
-
-  _Loading loading() {
-    return const _Loading();
-  }
-
-  _Success success(
-      {required List<ChartDisplayModel> chartDisplayModelList,
-      required DurationsEnum durationsEnum,
-      required DateTime startDate,}) {
-    return _Success(
-      chartDisplayModelList: chartDisplayModelList,
-      durationsEnum: durationsEnum,
-      startDate: startDate,
-    );
-  }
-
-  _Failed failed({required String cause}) {
-    return _Failed(
-      cause: cause,
-    );
-  }
-}
-
-/// @nodoc
-const $ChartdataState = _$ChartdataStateTearOff();
 
 /// @nodoc
 mixin _$ChartdataState {
@@ -301,19 +254,19 @@ mixin _$ChartdataState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)
+            DurationsEnum durationsEnum, DateTime startDate)
         success,
     required TResult Function(String cause) failed,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)?
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<ChartDisplayModel> chartDisplayModelList,
+            DurationsEnum durationsEnum, DateTime startDate)?
         success,
-    TResult Function(String cause)? failed,
+    TResult? Function(String cause)? failed,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -321,7 +274,7 @@ mixin _$ChartdataState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)?
+            DurationsEnum durationsEnum, DateTime startDate)?
         success,
     TResult Function(String cause)? failed,
     required TResult orElse(),
@@ -337,10 +290,10 @@ mixin _$ChartdataState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failed value)? failed,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Success value)? success,
+    TResult? Function(_Failed value)? failed,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -357,40 +310,41 @@ mixin _$ChartdataState {
 /// @nodoc
 abstract class $ChartdataStateCopyWith<$Res> {
   factory $ChartdataStateCopyWith(
-          ChartdataState value, $Res Function(ChartdataState) then,) =
-      _$ChartdataStateCopyWithImpl<$Res>;
+          ChartdataState value, $Res Function(ChartdataState) then) =
+      _$ChartdataStateCopyWithImpl<$Res, ChartdataState>;
 }
 
 /// @nodoc
-class _$ChartdataStateCopyWithImpl<$Res>
+class _$ChartdataStateCopyWithImpl<$Res, $Val extends ChartdataState>
     implements $ChartdataStateCopyWith<$Res> {
   _$ChartdataStateCopyWithImpl(this._value, this._then);
 
-  final ChartdataState _value;
   // ignore: unused_field
-  final $Res Function(ChartdataState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class _$InitialCopyWith<$Res> {
-  factory _$InitialCopyWith(_Initial value, $Res Function(_Initial) then) =
-      __$InitialCopyWithImpl<$Res>;
+abstract class _$$InitialImplCopyWith<$Res> {
+  factory _$$InitialImplCopyWith(
+          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
+      __$$InitialImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$InitialCopyWithImpl<$Res> extends _$ChartdataStateCopyWithImpl<$Res>
-    implements _$InitialCopyWith<$Res> {
-  __$InitialCopyWithImpl(_Initial _value, $Res Function(_Initial) _then)
-      : super(_value, (v) => _then(v as _Initial));
-
-  @override
-  _Initial get _value => super._value as _Initial;
+class __$$InitialImplCopyWithImpl<$Res>
+    extends _$ChartdataStateCopyWithImpl<$Res, _$InitialImpl>
+    implements _$$InitialImplCopyWith<$Res> {
+  __$$InitialImplCopyWithImpl(
+      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_Initial implements _Initial {
-  const _$_Initial();
+class _$InitialImpl implements _Initial {
+  const _$InitialImpl();
 
   @override
   String toString() {
@@ -400,7 +354,7 @@ class _$_Initial implements _Initial {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType && other is _$InitialImpl);
   }
 
   @override
@@ -412,7 +366,7 @@ class _$_Initial implements _Initial {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)
+            DurationsEnum durationsEnum, DateTime startDate)
         success,
     required TResult Function(String cause) failed,
   }) {
@@ -422,12 +376,12 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)?
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<ChartDisplayModel> chartDisplayModelList,
+            DurationsEnum durationsEnum, DateTime startDate)?
         success,
-    TResult Function(String cause)? failed,
+    TResult? Function(String cause)? failed,
   }) {
     return initial?.call();
   }
@@ -438,7 +392,7 @@ class _$_Initial implements _Initial {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)?
+            DurationsEnum durationsEnum, DateTime startDate)?
         success,
     TResult Function(String cause)? failed,
     required TResult orElse(),
@@ -463,10 +417,10 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failed value)? failed,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Success value)? success,
+    TResult? Function(_Failed value)? failed,
   }) {
     return initial?.call(this);
   }
@@ -488,29 +442,29 @@ class _$_Initial implements _Initial {
 }
 
 abstract class _Initial implements ChartdataState {
-  const factory _Initial() = _$_Initial;
+  const factory _Initial() = _$InitialImpl;
 }
 
 /// @nodoc
-abstract class _$LoadingCopyWith<$Res> {
-  factory _$LoadingCopyWith(_Loading value, $Res Function(_Loading) then) =
-      __$LoadingCopyWithImpl<$Res>;
+abstract class _$$LoadingImplCopyWith<$Res> {
+  factory _$$LoadingImplCopyWith(
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$LoadingCopyWithImpl<$Res> extends _$ChartdataStateCopyWithImpl<$Res>
-    implements _$LoadingCopyWith<$Res> {
-  __$LoadingCopyWithImpl(_Loading _value, $Res Function(_Loading) _then)
-      : super(_value, (v) => _then(v as _Loading));
-
-  @override
-  _Loading get _value => super._value as _Loading;
+class __$$LoadingImplCopyWithImpl<$Res>
+    extends _$ChartdataStateCopyWithImpl<$Res, _$LoadingImpl>
+    implements _$$LoadingImplCopyWith<$Res> {
+  __$$LoadingImplCopyWithImpl(
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_Loading implements _Loading {
-  const _$_Loading();
+class _$LoadingImpl implements _Loading {
+  const _$LoadingImpl();
 
   @override
   String toString() {
@@ -520,7 +474,7 @@ class _$_Loading implements _Loading {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType && other is _$LoadingImpl);
   }
 
   @override
@@ -532,7 +486,7 @@ class _$_Loading implements _Loading {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)
+            DurationsEnum durationsEnum, DateTime startDate)
         success,
     required TResult Function(String cause) failed,
   }) {
@@ -542,12 +496,12 @@ class _$_Loading implements _Loading {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)?
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<ChartDisplayModel> chartDisplayModelList,
+            DurationsEnum durationsEnum, DateTime startDate)?
         success,
-    TResult Function(String cause)? failed,
+    TResult? Function(String cause)? failed,
   }) {
     return loading?.call();
   }
@@ -558,7 +512,7 @@ class _$_Loading implements _Loading {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)?
+            DurationsEnum durationsEnum, DateTime startDate)?
         success,
     TResult Function(String cause)? failed,
     required TResult orElse(),
@@ -583,10 +537,10 @@ class _$_Loading implements _Loading {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failed value)? failed,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Success value)? success,
+    TResult? Function(_Failed value)? failed,
   }) {
     return loading?.call(this);
   }
@@ -608,61 +562,71 @@ class _$_Loading implements _Loading {
 }
 
 abstract class _Loading implements ChartdataState {
-  const factory _Loading() = _$_Loading;
+  const factory _Loading() = _$LoadingImpl;
 }
 
 /// @nodoc
-abstract class _$SuccessCopyWith<$Res> {
-  factory _$SuccessCopyWith(_Success value, $Res Function(_Success) then) =
-      __$SuccessCopyWithImpl<$Res>;
+abstract class _$$SuccessImplCopyWith<$Res> {
+  factory _$$SuccessImplCopyWith(
+          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
+      __$$SuccessImplCopyWithImpl<$Res>;
+  @useResult
   $Res call(
       {List<ChartDisplayModel> chartDisplayModelList,
       DurationsEnum durationsEnum,
-      DateTime startDate,});
+      DateTime startDate});
 }
 
 /// @nodoc
-class __$SuccessCopyWithImpl<$Res> extends _$ChartdataStateCopyWithImpl<$Res>
-    implements _$SuccessCopyWith<$Res> {
-  __$SuccessCopyWithImpl(_Success _value, $Res Function(_Success) _then)
-      : super(_value, (v) => _then(v as _Success));
+class __$$SuccessImplCopyWithImpl<$Res>
+    extends _$ChartdataStateCopyWithImpl<$Res, _$SuccessImpl>
+    implements _$$SuccessImplCopyWith<$Res> {
+  __$$SuccessImplCopyWithImpl(
+      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _Success get _value => super._value as _Success;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? chartDisplayModelList = freezed,
-    Object? durationsEnum = freezed,
-    Object? startDate = freezed,
+    Object? chartDisplayModelList = null,
+    Object? durationsEnum = null,
+    Object? startDate = null,
   }) {
-    return _then(_Success(
-      chartDisplayModelList: chartDisplayModelList == freezed
-          ? _value.chartDisplayModelList
+    return _then(_$SuccessImpl(
+      chartDisplayModelList: null == chartDisplayModelList
+          ? _value._chartDisplayModelList
           : chartDisplayModelList // ignore: cast_nullable_to_non_nullable
               as List<ChartDisplayModel>,
-      durationsEnum: durationsEnum == freezed
+      durationsEnum: null == durationsEnum
           ? _value.durationsEnum
           : durationsEnum // ignore: cast_nullable_to_non_nullable
               as DurationsEnum,
-      startDate: startDate == freezed
+      startDate: null == startDate
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-    ),);
+    ));
   }
 }
 
 /// @nodoc
 
-class _$_Success implements _Success {
-  const _$_Success(
-      {required this.chartDisplayModelList,
+class _$SuccessImpl implements _Success {
+  const _$SuccessImpl(
+      {required final List<ChartDisplayModel> chartDisplayModelList,
       required this.durationsEnum,
-      required this.startDate,});
+      required this.startDate})
+      : _chartDisplayModelList = chartDisplayModelList;
 
+  final List<ChartDisplayModel> _chartDisplayModelList;
   @override
-  final List<ChartDisplayModel> chartDisplayModelList;
+  List<ChartDisplayModel> get chartDisplayModelList {
+    if (_chartDisplayModelList is EqualUnmodifiableListView)
+      return _chartDisplayModelList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_chartDisplayModelList);
+  }
+
   @override
   final DurationsEnum durationsEnum;
   @override
@@ -677,25 +641,27 @@ class _$_Success implements _Success {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Success &&
+            other is _$SuccessImpl &&
             const DeepCollectionEquality()
-                .equals(other.chartDisplayModelList, chartDisplayModelList) &&
-            const DeepCollectionEquality()
-                .equals(other.durationsEnum, durationsEnum) &&
-            const DeepCollectionEquality().equals(other.startDate, startDate));
+                .equals(other._chartDisplayModelList, _chartDisplayModelList) &&
+            (identical(other.durationsEnum, durationsEnum) ||
+                other.durationsEnum == durationsEnum) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(chartDisplayModelList),
-      const DeepCollectionEquality().hash(durationsEnum),
-      const DeepCollectionEquality().hash(startDate),);
+      const DeepCollectionEquality().hash(_chartDisplayModelList),
+      durationsEnum,
+      startDate);
 
   @JsonKey(ignore: true)
   @override
-  _$SuccessCopyWith<_Success> get copyWith =>
-      __$SuccessCopyWithImpl<_Success>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
+      __$$SuccessImplCopyWithImpl<_$SuccessImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -703,7 +669,7 @@ class _$_Success implements _Success {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)
+            DurationsEnum durationsEnum, DateTime startDate)
         success,
     required TResult Function(String cause) failed,
   }) {
@@ -713,12 +679,12 @@ class _$_Success implements _Success {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)?
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<ChartDisplayModel> chartDisplayModelList,
+            DurationsEnum durationsEnum, DateTime startDate)?
         success,
-    TResult Function(String cause)? failed,
+    TResult? Function(String cause)? failed,
   }) {
     return success?.call(chartDisplayModelList, durationsEnum, startDate);
   }
@@ -729,7 +695,7 @@ class _$_Success implements _Success {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)?
+            DurationsEnum durationsEnum, DateTime startDate)?
         success,
     TResult Function(String cause)? failed,
     required TResult orElse(),
@@ -754,10 +720,10 @@ class _$_Success implements _Success {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failed value)? failed,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Success value)? success,
+    TResult? Function(_Failed value)? failed,
   }) {
     return success?.call(this);
   }
@@ -780,51 +746,53 @@ class _$_Success implements _Success {
 
 abstract class _Success implements ChartdataState {
   const factory _Success(
-      {required List<ChartDisplayModel> chartDisplayModelList,
-      required DurationsEnum durationsEnum,
-      required DateTime startDate,}) = _$_Success;
+      {required final List<ChartDisplayModel> chartDisplayModelList,
+      required final DurationsEnum durationsEnum,
+      required final DateTime startDate}) = _$SuccessImpl;
 
   List<ChartDisplayModel> get chartDisplayModelList;
   DurationsEnum get durationsEnum;
   DateTime get startDate;
   @JsonKey(ignore: true)
-  _$SuccessCopyWith<_Success> get copyWith =>
+  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$FailedCopyWith<$Res> {
-  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) then) =
-      __$FailedCopyWithImpl<$Res>;
+abstract class _$$FailedImplCopyWith<$Res> {
+  factory _$$FailedImplCopyWith(
+          _$FailedImpl value, $Res Function(_$FailedImpl) then) =
+      __$$FailedImplCopyWithImpl<$Res>;
+  @useResult
   $Res call({String cause});
 }
 
 /// @nodoc
-class __$FailedCopyWithImpl<$Res> extends _$ChartdataStateCopyWithImpl<$Res>
-    implements _$FailedCopyWith<$Res> {
-  __$FailedCopyWithImpl(_Failed _value, $Res Function(_Failed) _then)
-      : super(_value, (v) => _then(v as _Failed));
+class __$$FailedImplCopyWithImpl<$Res>
+    extends _$ChartdataStateCopyWithImpl<$Res, _$FailedImpl>
+    implements _$$FailedImplCopyWith<$Res> {
+  __$$FailedImplCopyWithImpl(
+      _$FailedImpl _value, $Res Function(_$FailedImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _Failed get _value => super._value as _Failed;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? cause = freezed,
+    Object? cause = null,
   }) {
-    return _then(_Failed(
-      cause: cause == freezed
+    return _then(_$FailedImpl(
+      cause: null == cause
           ? _value.cause
           : cause // ignore: cast_nullable_to_non_nullable
               as String,
-    ),);
+    ));
   }
 }
 
 /// @nodoc
 
-class _$_Failed implements _Failed {
-  const _$_Failed({required this.cause});
+class _$FailedImpl implements _Failed {
+  const _$FailedImpl({required this.cause});
 
   @override
   final String cause;
@@ -838,18 +806,18 @@ class _$_Failed implements _Failed {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failed &&
-            const DeepCollectionEquality().equals(other.cause, cause));
+            other is _$FailedImpl &&
+            (identical(other.cause, cause) || other.cause == cause));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(cause));
+  int get hashCode => Object.hash(runtimeType, cause);
 
   @JsonKey(ignore: true)
   @override
-  _$FailedCopyWith<_Failed> get copyWith =>
-      __$FailedCopyWithImpl<_Failed>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$FailedImplCopyWith<_$FailedImpl> get copyWith =>
+      __$$FailedImplCopyWithImpl<_$FailedImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -857,7 +825,7 @@ class _$_Failed implements _Failed {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)
+            DurationsEnum durationsEnum, DateTime startDate)
         success,
     required TResult Function(String cause) failed,
   }) {
@@ -867,12 +835,12 @@ class _$_Failed implements _Failed {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)?
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<ChartDisplayModel> chartDisplayModelList,
+            DurationsEnum durationsEnum, DateTime startDate)?
         success,
-    TResult Function(String cause)? failed,
+    TResult? Function(String cause)? failed,
   }) {
     return failed?.call(cause);
   }
@@ -883,7 +851,7 @@ class _$_Failed implements _Failed {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(List<ChartDisplayModel> chartDisplayModelList,
-            DurationsEnum durationsEnum, DateTime startDate,)?
+            DurationsEnum durationsEnum, DateTime startDate)?
         success,
     TResult Function(String cause)? failed,
     required TResult orElse(),
@@ -908,10 +876,10 @@ class _$_Failed implements _Failed {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Success value)? success,
-    TResult Function(_Failed value)? failed,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Success value)? success,
+    TResult? Function(_Failed value)? failed,
   }) {
     return failed?.call(this);
   }
@@ -933,9 +901,10 @@ class _$_Failed implements _Failed {
 }
 
 abstract class _Failed implements ChartdataState {
-  const factory _Failed({required String cause}) = _$_Failed;
+  const factory _Failed({required final String cause}) = _$FailedImpl;
 
   String get cause;
   @JsonKey(ignore: true)
-  _$FailedCopyWith<_Failed> get copyWith => throw _privateConstructorUsedError;
+  _$$FailedImplCopyWith<_$FailedImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

@@ -1,6 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'filterchart_bloc.dart';
 
@@ -11,39 +12,7 @@ part of 'filterchart_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$FilterchartEventTearOff {
-  const _$FilterchartEventTearOff();
-
-  _IntialData initialData(
-      {required List<ChartDisplayModel> chartDisplayModelList,
-      required DurationsEnum durationsEnum,
-      required DateTime startDate}) {
-    return _IntialData(
-      chartDisplayModelList: chartDisplayModelList,
-      durationsEnum: durationsEnum,
-      startDate: startDate,
-    );
-  }
-
-  _Filtering filtering(
-      {required List<ChartDisplayModel> chartDisplayModelList,
-      required DurationsEnum durationsEnum,
-      required DateTime startDate,
-      required List<String> filterString}) {
-    return _Filtering(
-      chartDisplayModelList: chartDisplayModelList,
-      durationsEnum: durationsEnum,
-      startDate: startDate,
-      filterString: filterString,
-    );
-  }
-}
-
-/// @nodoc
-const $FilterchartEvent = _$FilterchartEventTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$FilterchartEvent {
@@ -51,7 +20,6 @@ mixin _$FilterchartEvent {
       throw _privateConstructorUsedError;
   DurationsEnum get durationsEnum => throw _privateConstructorUsedError;
   DateTime get startDate => throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(List<ChartDisplayModel> chartDisplayModelList,
@@ -67,10 +35,10 @@ mixin _$FilterchartEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(List<ChartDisplayModel> chartDisplayModelList,
+    TResult? Function(List<ChartDisplayModel> chartDisplayModelList,
             DurationsEnum durationsEnum, DateTime startDate)?
         initialData,
-    TResult Function(
+    TResult? Function(
             List<ChartDisplayModel> chartDisplayModelList,
             DurationsEnum durationsEnum,
             DateTime startDate,
@@ -100,8 +68,8 @@ mixin _$FilterchartEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_IntialData value)? initialData,
-    TResult Function(_Filtering value)? filtering,
+    TResult? Function(_IntialData value)? initialData,
+    TResult? Function(_Filtering value)? filtering,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -121,7 +89,8 @@ mixin _$FilterchartEvent {
 abstract class $FilterchartEventCopyWith<$Res> {
   factory $FilterchartEventCopyWith(
           FilterchartEvent value, $Res Function(FilterchartEvent) then) =
-      _$FilterchartEventCopyWithImpl<$Res>;
+      _$FilterchartEventCopyWithImpl<$Res, FilterchartEvent>;
+  @useResult
   $Res call(
       {List<ChartDisplayModel> chartDisplayModelList,
       DurationsEnum durationsEnum,
@@ -129,44 +98,47 @@ abstract class $FilterchartEventCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$FilterchartEventCopyWithImpl<$Res>
+class _$FilterchartEventCopyWithImpl<$Res, $Val extends FilterchartEvent>
     implements $FilterchartEventCopyWith<$Res> {
   _$FilterchartEventCopyWithImpl(this._value, this._then);
 
-  final FilterchartEvent _value;
   // ignore: unused_field
-  final $Res Function(FilterchartEvent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? chartDisplayModelList = freezed,
-    Object? durationsEnum = freezed,
-    Object? startDate = freezed,
+    Object? chartDisplayModelList = null,
+    Object? durationsEnum = null,
+    Object? startDate = null,
   }) {
     return _then(_value.copyWith(
-      chartDisplayModelList: chartDisplayModelList == freezed
+      chartDisplayModelList: null == chartDisplayModelList
           ? _value.chartDisplayModelList
           : chartDisplayModelList // ignore: cast_nullable_to_non_nullable
               as List<ChartDisplayModel>,
-      durationsEnum: durationsEnum == freezed
+      durationsEnum: null == durationsEnum
           ? _value.durationsEnum
           : durationsEnum // ignore: cast_nullable_to_non_nullable
               as DurationsEnum,
-      startDate: startDate == freezed
+      startDate: null == startDate
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-    ));
+    ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$IntialDataCopyWith<$Res>
+abstract class _$$IntialDataImplCopyWith<$Res>
     implements $FilterchartEventCopyWith<$Res> {
-  factory _$IntialDataCopyWith(
-          _IntialData value, $Res Function(_IntialData) then) =
-      __$IntialDataCopyWithImpl<$Res>;
+  factory _$$IntialDataImplCopyWith(
+          _$IntialDataImpl value, $Res Function(_$IntialDataImpl) then) =
+      __$$IntialDataImplCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {List<ChartDisplayModel> chartDisplayModelList,
       DurationsEnum durationsEnum,
@@ -174,32 +146,30 @@ abstract class _$IntialDataCopyWith<$Res>
 }
 
 /// @nodoc
-class __$IntialDataCopyWithImpl<$Res>
-    extends _$FilterchartEventCopyWithImpl<$Res>
-    implements _$IntialDataCopyWith<$Res> {
-  __$IntialDataCopyWithImpl(
-      _IntialData _value, $Res Function(_IntialData) _then)
-      : super(_value, (v) => _then(v as _IntialData));
+class __$$IntialDataImplCopyWithImpl<$Res>
+    extends _$FilterchartEventCopyWithImpl<$Res, _$IntialDataImpl>
+    implements _$$IntialDataImplCopyWith<$Res> {
+  __$$IntialDataImplCopyWithImpl(
+      _$IntialDataImpl _value, $Res Function(_$IntialDataImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _IntialData get _value => super._value as _IntialData;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? chartDisplayModelList = freezed,
-    Object? durationsEnum = freezed,
-    Object? startDate = freezed,
+    Object? chartDisplayModelList = null,
+    Object? durationsEnum = null,
+    Object? startDate = null,
   }) {
-    return _then(_IntialData(
-      chartDisplayModelList: chartDisplayModelList == freezed
-          ? _value.chartDisplayModelList
+    return _then(_$IntialDataImpl(
+      chartDisplayModelList: null == chartDisplayModelList
+          ? _value._chartDisplayModelList
           : chartDisplayModelList // ignore: cast_nullable_to_non_nullable
               as List<ChartDisplayModel>,
-      durationsEnum: durationsEnum == freezed
+      durationsEnum: null == durationsEnum
           ? _value.durationsEnum
           : durationsEnum // ignore: cast_nullable_to_non_nullable
               as DurationsEnum,
-      startDate: startDate == freezed
+      startDate: null == startDate
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
@@ -209,14 +179,22 @@ class __$IntialDataCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_IntialData implements _IntialData {
-  const _$_IntialData(
-      {required this.chartDisplayModelList,
+class _$IntialDataImpl implements _IntialData {
+  const _$IntialDataImpl(
+      {required final List<ChartDisplayModel> chartDisplayModelList,
       required this.durationsEnum,
-      required this.startDate});
+      required this.startDate})
+      : _chartDisplayModelList = chartDisplayModelList;
 
+  final List<ChartDisplayModel> _chartDisplayModelList;
   @override
-  final List<ChartDisplayModel> chartDisplayModelList;
+  List<ChartDisplayModel> get chartDisplayModelList {
+    if (_chartDisplayModelList is EqualUnmodifiableListView)
+      return _chartDisplayModelList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_chartDisplayModelList);
+  }
+
   @override
   final DurationsEnum durationsEnum;
   @override
@@ -231,25 +209,27 @@ class _$_IntialData implements _IntialData {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _IntialData &&
+            other is _$IntialDataImpl &&
             const DeepCollectionEquality()
-                .equals(other.chartDisplayModelList, chartDisplayModelList) &&
-            const DeepCollectionEquality()
-                .equals(other.durationsEnum, durationsEnum) &&
-            const DeepCollectionEquality().equals(other.startDate, startDate));
+                .equals(other._chartDisplayModelList, _chartDisplayModelList) &&
+            (identical(other.durationsEnum, durationsEnum) ||
+                other.durationsEnum == durationsEnum) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(chartDisplayModelList),
-      const DeepCollectionEquality().hash(durationsEnum),
-      const DeepCollectionEquality().hash(startDate));
+      const DeepCollectionEquality().hash(_chartDisplayModelList),
+      durationsEnum,
+      startDate);
 
   @JsonKey(ignore: true)
   @override
-  _$IntialDataCopyWith<_IntialData> get copyWith =>
-      __$IntialDataCopyWithImpl<_IntialData>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$IntialDataImplCopyWith<_$IntialDataImpl> get copyWith =>
+      __$$IntialDataImplCopyWithImpl<_$IntialDataImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -270,10 +250,10 @@ class _$_IntialData implements _IntialData {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(List<ChartDisplayModel> chartDisplayModelList,
+    TResult? Function(List<ChartDisplayModel> chartDisplayModelList,
             DurationsEnum durationsEnum, DateTime startDate)?
         initialData,
-    TResult Function(
+    TResult? Function(
             List<ChartDisplayModel> chartDisplayModelList,
             DurationsEnum durationsEnum,
             DateTime startDate,
@@ -315,8 +295,8 @@ class _$_IntialData implements _IntialData {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_IntialData value)? initialData,
-    TResult Function(_Filtering value)? filtering,
+    TResult? Function(_IntialData value)? initialData,
+    TResult? Function(_Filtering value)? filtering,
   }) {
     return initialData?.call(this);
   }
@@ -337,9 +317,9 @@ class _$_IntialData implements _IntialData {
 
 abstract class _IntialData implements FilterchartEvent {
   const factory _IntialData(
-      {required List<ChartDisplayModel> chartDisplayModelList,
-      required DurationsEnum durationsEnum,
-      required DateTime startDate}) = _$_IntialData;
+      {required final List<ChartDisplayModel> chartDisplayModelList,
+      required final DurationsEnum durationsEnum,
+      required final DateTime startDate}) = _$IntialDataImpl;
 
   @override
   List<ChartDisplayModel> get chartDisplayModelList;
@@ -349,17 +329,18 @@ abstract class _IntialData implements FilterchartEvent {
   DateTime get startDate;
   @override
   @JsonKey(ignore: true)
-  _$IntialDataCopyWith<_IntialData> get copyWith =>
+  _$$IntialDataImplCopyWith<_$IntialDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$FilteringCopyWith<$Res>
+abstract class _$$FilteringImplCopyWith<$Res>
     implements $FilterchartEventCopyWith<$Res> {
-  factory _$FilteringCopyWith(
-          _Filtering value, $Res Function(_Filtering) then) =
-      __$FilteringCopyWithImpl<$Res>;
+  factory _$$FilteringImplCopyWith(
+          _$FilteringImpl value, $Res Function(_$FilteringImpl) then) =
+      __$$FilteringImplCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {List<ChartDisplayModel> chartDisplayModelList,
       DurationsEnum durationsEnum,
@@ -368,37 +349,36 @@ abstract class _$FilteringCopyWith<$Res>
 }
 
 /// @nodoc
-class __$FilteringCopyWithImpl<$Res>
-    extends _$FilterchartEventCopyWithImpl<$Res>
-    implements _$FilteringCopyWith<$Res> {
-  __$FilteringCopyWithImpl(_Filtering _value, $Res Function(_Filtering) _then)
-      : super(_value, (v) => _then(v as _Filtering));
+class __$$FilteringImplCopyWithImpl<$Res>
+    extends _$FilterchartEventCopyWithImpl<$Res, _$FilteringImpl>
+    implements _$$FilteringImplCopyWith<$Res> {
+  __$$FilteringImplCopyWithImpl(
+      _$FilteringImpl _value, $Res Function(_$FilteringImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _Filtering get _value => super._value as _Filtering;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? chartDisplayModelList = freezed,
-    Object? durationsEnum = freezed,
-    Object? startDate = freezed,
-    Object? filterString = freezed,
+    Object? chartDisplayModelList = null,
+    Object? durationsEnum = null,
+    Object? startDate = null,
+    Object? filterString = null,
   }) {
-    return _then(_Filtering(
-      chartDisplayModelList: chartDisplayModelList == freezed
-          ? _value.chartDisplayModelList
+    return _then(_$FilteringImpl(
+      chartDisplayModelList: null == chartDisplayModelList
+          ? _value._chartDisplayModelList
           : chartDisplayModelList // ignore: cast_nullable_to_non_nullable
               as List<ChartDisplayModel>,
-      durationsEnum: durationsEnum == freezed
+      durationsEnum: null == durationsEnum
           ? _value.durationsEnum
           : durationsEnum // ignore: cast_nullable_to_non_nullable
               as DurationsEnum,
-      startDate: startDate == freezed
+      startDate: null == startDate
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      filterString: filterString == freezed
-          ? _value.filterString
+      filterString: null == filterString
+          ? _value._filterString
           : filterString // ignore: cast_nullable_to_non_nullable
               as List<String>,
     ));
@@ -407,21 +387,35 @@ class __$FilteringCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Filtering implements _Filtering {
-  const _$_Filtering(
-      {required this.chartDisplayModelList,
+class _$FilteringImpl implements _Filtering {
+  const _$FilteringImpl(
+      {required final List<ChartDisplayModel> chartDisplayModelList,
       required this.durationsEnum,
       required this.startDate,
-      required this.filterString});
+      required final List<String> filterString})
+      : _chartDisplayModelList = chartDisplayModelList,
+        _filterString = filterString;
 
+  final List<ChartDisplayModel> _chartDisplayModelList;
   @override
-  final List<ChartDisplayModel> chartDisplayModelList;
+  List<ChartDisplayModel> get chartDisplayModelList {
+    if (_chartDisplayModelList is EqualUnmodifiableListView)
+      return _chartDisplayModelList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_chartDisplayModelList);
+  }
+
   @override
   final DurationsEnum durationsEnum;
   @override
   final DateTime startDate;
+  final List<String> _filterString;
   @override
-  final List<String> filterString;
+  List<String> get filterString {
+    if (_filterString is EqualUnmodifiableListView) return _filterString;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_filterString);
+  }
 
   @override
   String toString() {
@@ -432,28 +426,30 @@ class _$_Filtering implements _Filtering {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Filtering &&
+            other is _$FilteringImpl &&
             const DeepCollectionEquality()
-                .equals(other.chartDisplayModelList, chartDisplayModelList) &&
+                .equals(other._chartDisplayModelList, _chartDisplayModelList) &&
+            (identical(other.durationsEnum, durationsEnum) ||
+                other.durationsEnum == durationsEnum) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
             const DeepCollectionEquality()
-                .equals(other.durationsEnum, durationsEnum) &&
-            const DeepCollectionEquality().equals(other.startDate, startDate) &&
-            const DeepCollectionEquality()
-                .equals(other.filterString, filterString));
+                .equals(other._filterString, _filterString));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(chartDisplayModelList),
-      const DeepCollectionEquality().hash(durationsEnum),
-      const DeepCollectionEquality().hash(startDate),
-      const DeepCollectionEquality().hash(filterString));
+      const DeepCollectionEquality().hash(_chartDisplayModelList),
+      durationsEnum,
+      startDate,
+      const DeepCollectionEquality().hash(_filterString));
 
   @JsonKey(ignore: true)
   @override
-  _$FilteringCopyWith<_Filtering> get copyWith =>
-      __$FilteringCopyWithImpl<_Filtering>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$FilteringImplCopyWith<_$FilteringImpl> get copyWith =>
+      __$$FilteringImplCopyWithImpl<_$FilteringImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -475,10 +471,10 @@ class _$_Filtering implements _Filtering {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(List<ChartDisplayModel> chartDisplayModelList,
+    TResult? Function(List<ChartDisplayModel> chartDisplayModelList,
             DurationsEnum durationsEnum, DateTime startDate)?
         initialData,
-    TResult Function(
+    TResult? Function(
             List<ChartDisplayModel> chartDisplayModelList,
             DurationsEnum durationsEnum,
             DateTime startDate,
@@ -522,8 +518,8 @@ class _$_Filtering implements _Filtering {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_IntialData value)? initialData,
-    TResult Function(_Filtering value)? filtering,
+    TResult? Function(_IntialData value)? initialData,
+    TResult? Function(_Filtering value)? filtering,
   }) {
     return filtering?.call(this);
   }
@@ -544,10 +540,10 @@ class _$_Filtering implements _Filtering {
 
 abstract class _Filtering implements FilterchartEvent {
   const factory _Filtering(
-      {required List<ChartDisplayModel> chartDisplayModelList,
-      required DurationsEnum durationsEnum,
-      required DateTime startDate,
-      required List<String> filterString}) = _$_Filtering;
+      {required final List<ChartDisplayModel> chartDisplayModelList,
+      required final DurationsEnum durationsEnum,
+      required final DateTime startDate,
+      required final List<String> filterString}) = _$FilteringImpl;
 
   @override
   List<ChartDisplayModel> get chartDisplayModelList;
@@ -558,34 +554,9 @@ abstract class _Filtering implements FilterchartEvent {
   List<String> get filterString;
   @override
   @JsonKey(ignore: true)
-  _$FilteringCopyWith<_Filtering> get copyWith =>
+  _$$FilteringImplCopyWith<_$FilteringImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
-
-/// @nodoc
-class _$FilterchartStateTearOff {
-  const _$FilterchartStateTearOff();
-
-  _Initial initial() {
-    return const _Initial();
-  }
-
-  _Data data(
-      {required List<ChartDisplayModel> chartDisplayModelList,
-      required DurationsEnum durationsEnum,
-      required DateTime startDate,
-      required List<String> filteredTypes}) {
-    return _Data(
-      chartDisplayModelList: chartDisplayModelList,
-      durationsEnum: durationsEnum,
-      startDate: startDate,
-      filteredTypes: filteredTypes,
-    );
-  }
-}
-
-/// @nodoc
-const $FilterchartState = _$FilterchartStateTearOff();
 
 /// @nodoc
 mixin _$FilterchartState {
@@ -602,8 +573,8 @@ mixin _$FilterchartState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(
+    TResult? Function()? initial,
+    TResult? Function(
             List<ChartDisplayModel> chartDisplayModelList,
             DurationsEnum durationsEnum,
             DateTime startDate,
@@ -631,8 +602,8 @@ mixin _$FilterchartState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Data value)? data,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Data value)? data,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -648,39 +619,40 @@ mixin _$FilterchartState {
 abstract class $FilterchartStateCopyWith<$Res> {
   factory $FilterchartStateCopyWith(
           FilterchartState value, $Res Function(FilterchartState) then) =
-      _$FilterchartStateCopyWithImpl<$Res>;
+      _$FilterchartStateCopyWithImpl<$Res, FilterchartState>;
 }
 
 /// @nodoc
-class _$FilterchartStateCopyWithImpl<$Res>
+class _$FilterchartStateCopyWithImpl<$Res, $Val extends FilterchartState>
     implements $FilterchartStateCopyWith<$Res> {
   _$FilterchartStateCopyWithImpl(this._value, this._then);
 
-  final FilterchartState _value;
   // ignore: unused_field
-  final $Res Function(FilterchartState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class _$InitialCopyWith<$Res> {
-  factory _$InitialCopyWith(_Initial value, $Res Function(_Initial) then) =
-      __$InitialCopyWithImpl<$Res>;
+abstract class _$$InitialImplCopyWith<$Res> {
+  factory _$$InitialImplCopyWith(
+          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
+      __$$InitialImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$InitialCopyWithImpl<$Res> extends _$FilterchartStateCopyWithImpl<$Res>
-    implements _$InitialCopyWith<$Res> {
-  __$InitialCopyWithImpl(_Initial _value, $Res Function(_Initial) _then)
-      : super(_value, (v) => _then(v as _Initial));
-
-  @override
-  _Initial get _value => super._value as _Initial;
+class __$$InitialImplCopyWithImpl<$Res>
+    extends _$FilterchartStateCopyWithImpl<$Res, _$InitialImpl>
+    implements _$$InitialImplCopyWith<$Res> {
+  __$$InitialImplCopyWithImpl(
+      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_Initial implements _Initial {
-  const _$_Initial();
+class _$InitialImpl implements _Initial {
+  const _$InitialImpl();
 
   @override
   String toString() {
@@ -690,7 +662,7 @@ class _$_Initial implements _Initial {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType && other is _$InitialImpl);
   }
 
   @override
@@ -713,8 +685,8 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(
+    TResult? Function()? initial,
+    TResult? Function(
             List<ChartDisplayModel> chartDisplayModelList,
             DurationsEnum durationsEnum,
             DateTime startDate,
@@ -754,8 +726,8 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Data value)? data,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Data value)? data,
   }) {
     return initial?.call(this);
   }
@@ -775,13 +747,15 @@ class _$_Initial implements _Initial {
 }
 
 abstract class _Initial implements FilterchartState {
-  const factory _Initial() = _$_Initial;
+  const factory _Initial() = _$InitialImpl;
 }
 
 /// @nodoc
-abstract class _$DataCopyWith<$Res> {
-  factory _$DataCopyWith(_Data value, $Res Function(_Data) then) =
-      __$DataCopyWithImpl<$Res>;
+abstract class _$$DataImplCopyWith<$Res> {
+  factory _$$DataImplCopyWith(
+          _$DataImpl value, $Res Function(_$DataImpl) then) =
+      __$$DataImplCopyWithImpl<$Res>;
+  @useResult
   $Res call(
       {List<ChartDisplayModel> chartDisplayModelList,
       DurationsEnum durationsEnum,
@@ -790,36 +764,35 @@ abstract class _$DataCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$DataCopyWithImpl<$Res> extends _$FilterchartStateCopyWithImpl<$Res>
-    implements _$DataCopyWith<$Res> {
-  __$DataCopyWithImpl(_Data _value, $Res Function(_Data) _then)
-      : super(_value, (v) => _then(v as _Data));
+class __$$DataImplCopyWithImpl<$Res>
+    extends _$FilterchartStateCopyWithImpl<$Res, _$DataImpl>
+    implements _$$DataImplCopyWith<$Res> {
+  __$$DataImplCopyWithImpl(_$DataImpl _value, $Res Function(_$DataImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _Data get _value => super._value as _Data;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? chartDisplayModelList = freezed,
-    Object? durationsEnum = freezed,
-    Object? startDate = freezed,
-    Object? filteredTypes = freezed,
+    Object? chartDisplayModelList = null,
+    Object? durationsEnum = null,
+    Object? startDate = null,
+    Object? filteredTypes = null,
   }) {
-    return _then(_Data(
-      chartDisplayModelList: chartDisplayModelList == freezed
-          ? _value.chartDisplayModelList
+    return _then(_$DataImpl(
+      chartDisplayModelList: null == chartDisplayModelList
+          ? _value._chartDisplayModelList
           : chartDisplayModelList // ignore: cast_nullable_to_non_nullable
               as List<ChartDisplayModel>,
-      durationsEnum: durationsEnum == freezed
+      durationsEnum: null == durationsEnum
           ? _value.durationsEnum
           : durationsEnum // ignore: cast_nullable_to_non_nullable
               as DurationsEnum,
-      startDate: startDate == freezed
+      startDate: null == startDate
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      filteredTypes: filteredTypes == freezed
-          ? _value.filteredTypes
+      filteredTypes: null == filteredTypes
+          ? _value._filteredTypes
           : filteredTypes // ignore: cast_nullable_to_non_nullable
               as List<String>,
     ));
@@ -828,21 +801,35 @@ class __$DataCopyWithImpl<$Res> extends _$FilterchartStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Data implements _Data {
-  const _$_Data(
-      {required this.chartDisplayModelList,
+class _$DataImpl implements _Data {
+  const _$DataImpl(
+      {required final List<ChartDisplayModel> chartDisplayModelList,
       required this.durationsEnum,
       required this.startDate,
-      required this.filteredTypes});
+      required final List<String> filteredTypes})
+      : _chartDisplayModelList = chartDisplayModelList,
+        _filteredTypes = filteredTypes;
 
+  final List<ChartDisplayModel> _chartDisplayModelList;
   @override
-  final List<ChartDisplayModel> chartDisplayModelList;
+  List<ChartDisplayModel> get chartDisplayModelList {
+    if (_chartDisplayModelList is EqualUnmodifiableListView)
+      return _chartDisplayModelList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_chartDisplayModelList);
+  }
+
   @override
   final DurationsEnum durationsEnum;
   @override
   final DateTime startDate;
+  final List<String> _filteredTypes;
   @override
-  final List<String> filteredTypes;
+  List<String> get filteredTypes {
+    if (_filteredTypes is EqualUnmodifiableListView) return _filteredTypes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_filteredTypes);
+  }
 
   @override
   String toString() {
@@ -853,28 +840,30 @@ class _$_Data implements _Data {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Data &&
+            other is _$DataImpl &&
             const DeepCollectionEquality()
-                .equals(other.chartDisplayModelList, chartDisplayModelList) &&
+                .equals(other._chartDisplayModelList, _chartDisplayModelList) &&
+            (identical(other.durationsEnum, durationsEnum) ||
+                other.durationsEnum == durationsEnum) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
             const DeepCollectionEquality()
-                .equals(other.durationsEnum, durationsEnum) &&
-            const DeepCollectionEquality().equals(other.startDate, startDate) &&
-            const DeepCollectionEquality()
-                .equals(other.filteredTypes, filteredTypes));
+                .equals(other._filteredTypes, _filteredTypes));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(chartDisplayModelList),
-      const DeepCollectionEquality().hash(durationsEnum),
-      const DeepCollectionEquality().hash(startDate),
-      const DeepCollectionEquality().hash(filteredTypes));
+      const DeepCollectionEquality().hash(_chartDisplayModelList),
+      durationsEnum,
+      startDate,
+      const DeepCollectionEquality().hash(_filteredTypes));
 
   @JsonKey(ignore: true)
   @override
-  _$DataCopyWith<_Data> get copyWith =>
-      __$DataCopyWithImpl<_Data>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$DataImplCopyWith<_$DataImpl> get copyWith =>
+      __$$DataImplCopyWithImpl<_$DataImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -893,8 +882,8 @@ class _$_Data implements _Data {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function(
+    TResult? Function()? initial,
+    TResult? Function(
             List<ChartDisplayModel> chartDisplayModelList,
             DurationsEnum durationsEnum,
             DateTime startDate,
@@ -936,8 +925,8 @@ class _$_Data implements _Data {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Data value)? data,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Data value)? data,
   }) {
     return data?.call(this);
   }
@@ -958,15 +947,16 @@ class _$_Data implements _Data {
 
 abstract class _Data implements FilterchartState {
   const factory _Data(
-      {required List<ChartDisplayModel> chartDisplayModelList,
-      required DurationsEnum durationsEnum,
-      required DateTime startDate,
-      required List<String> filteredTypes}) = _$_Data;
+      {required final List<ChartDisplayModel> chartDisplayModelList,
+      required final DurationsEnum durationsEnum,
+      required final DateTime startDate,
+      required final List<String> filteredTypes}) = _$DataImpl;
 
   List<ChartDisplayModel> get chartDisplayModelList;
   DurationsEnum get durationsEnum;
   DateTime get startDate;
   List<String> get filteredTypes;
   @JsonKey(ignore: true)
-  _$DataCopyWith<_Data> get copyWith => throw _privateConstructorUsedError;
+  _$$DataImplCopyWith<_$DataImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

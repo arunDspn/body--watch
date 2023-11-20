@@ -1,6 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'apppreferences_bloc.dart';
 
@@ -11,27 +12,11 @@ part of 'apppreferences_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$ApppreferencesEventTearOff {
-  const _$ApppreferencesEventTearOff();
-
-  _UpdatePreferences updatePreferences(
-      {required AppPreferences appPreferences}) {
-    return _UpdatePreferences(
-      appPreferences: appPreferences,
-    );
-  }
-}
-
-/// @nodoc
-const $ApppreferencesEvent = _$ApppreferencesEventTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$ApppreferencesEvent {
   AppPreferences get appPreferences => throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(AppPreferences appPreferences) updatePreferences,
@@ -39,7 +24,7 @@ mixin _$ApppreferencesEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(AppPreferences appPreferences)? updatePreferences,
+    TResult? Function(AppPreferences appPreferences)? updatePreferences,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -55,7 +40,7 @@ mixin _$ApppreferencesEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_UpdatePreferences value)? updatePreferences,
+    TResult? Function(_UpdatePreferences value)? updatePreferences,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -74,59 +59,61 @@ mixin _$ApppreferencesEvent {
 abstract class $ApppreferencesEventCopyWith<$Res> {
   factory $ApppreferencesEventCopyWith(
           ApppreferencesEvent value, $Res Function(ApppreferencesEvent) then) =
-      _$ApppreferencesEventCopyWithImpl<$Res>;
+      _$ApppreferencesEventCopyWithImpl<$Res, ApppreferencesEvent>;
+  @useResult
   $Res call({AppPreferences appPreferences});
 }
 
 /// @nodoc
-class _$ApppreferencesEventCopyWithImpl<$Res>
+class _$ApppreferencesEventCopyWithImpl<$Res, $Val extends ApppreferencesEvent>
     implements $ApppreferencesEventCopyWith<$Res> {
   _$ApppreferencesEventCopyWithImpl(this._value, this._then);
 
-  final ApppreferencesEvent _value;
   // ignore: unused_field
-  final $Res Function(ApppreferencesEvent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? appPreferences = freezed,
+    Object? appPreferences = null,
   }) {
     return _then(_value.copyWith(
-      appPreferences: appPreferences == freezed
+      appPreferences: null == appPreferences
           ? _value.appPreferences
           : appPreferences // ignore: cast_nullable_to_non_nullable
               as AppPreferences,
-    ));
+    ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$UpdatePreferencesCopyWith<$Res>
+abstract class _$$UpdatePreferencesImplCopyWith<$Res>
     implements $ApppreferencesEventCopyWith<$Res> {
-  factory _$UpdatePreferencesCopyWith(
-          _UpdatePreferences value, $Res Function(_UpdatePreferences) then) =
-      __$UpdatePreferencesCopyWithImpl<$Res>;
+  factory _$$UpdatePreferencesImplCopyWith(_$UpdatePreferencesImpl value,
+          $Res Function(_$UpdatePreferencesImpl) then) =
+      __$$UpdatePreferencesImplCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({AppPreferences appPreferences});
 }
 
 /// @nodoc
-class __$UpdatePreferencesCopyWithImpl<$Res>
-    extends _$ApppreferencesEventCopyWithImpl<$Res>
-    implements _$UpdatePreferencesCopyWith<$Res> {
-  __$UpdatePreferencesCopyWithImpl(
-      _UpdatePreferences _value, $Res Function(_UpdatePreferences) _then)
-      : super(_value, (v) => _then(v as _UpdatePreferences));
+class __$$UpdatePreferencesImplCopyWithImpl<$Res>
+    extends _$ApppreferencesEventCopyWithImpl<$Res, _$UpdatePreferencesImpl>
+    implements _$$UpdatePreferencesImplCopyWith<$Res> {
+  __$$UpdatePreferencesImplCopyWithImpl(_$UpdatePreferencesImpl _value,
+      $Res Function(_$UpdatePreferencesImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _UpdatePreferences get _value => super._value as _UpdatePreferences;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? appPreferences = freezed,
+    Object? appPreferences = null,
   }) {
-    return _then(_UpdatePreferences(
-      appPreferences: appPreferences == freezed
+    return _then(_$UpdatePreferencesImpl(
+      appPreferences: null == appPreferences
           ? _value.appPreferences
           : appPreferences // ignore: cast_nullable_to_non_nullable
               as AppPreferences,
@@ -136,8 +123,8 @@ class __$UpdatePreferencesCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UpdatePreferences implements _UpdatePreferences {
-  const _$_UpdatePreferences({required this.appPreferences});
+class _$UpdatePreferencesImpl implements _UpdatePreferences {
+  const _$UpdatePreferencesImpl({required this.appPreferences});
 
   @override
   final AppPreferences appPreferences;
@@ -151,19 +138,20 @@ class _$_UpdatePreferences implements _UpdatePreferences {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _UpdatePreferences &&
-            const DeepCollectionEquality()
-                .equals(other.appPreferences, appPreferences));
+            other is _$UpdatePreferencesImpl &&
+            (identical(other.appPreferences, appPreferences) ||
+                other.appPreferences == appPreferences));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(appPreferences));
+  int get hashCode => Object.hash(runtimeType, appPreferences);
 
   @JsonKey(ignore: true)
   @override
-  _$UpdatePreferencesCopyWith<_UpdatePreferences> get copyWith =>
-      __$UpdatePreferencesCopyWithImpl<_UpdatePreferences>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$UpdatePreferencesImplCopyWith<_$UpdatePreferencesImpl> get copyWith =>
+      __$$UpdatePreferencesImplCopyWithImpl<_$UpdatePreferencesImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -176,7 +164,7 @@ class _$_UpdatePreferences implements _UpdatePreferences {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(AppPreferences appPreferences)? updatePreferences,
+    TResult? Function(AppPreferences appPreferences)? updatePreferences,
   }) {
     return updatePreferences?.call(appPreferences);
   }
@@ -204,7 +192,7 @@ class _$_UpdatePreferences implements _UpdatePreferences {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_UpdatePreferences value)? updatePreferences,
+    TResult? Function(_UpdatePreferences value)? updatePreferences,
   }) {
     return updatePreferences?.call(this);
   }
@@ -223,34 +211,16 @@ class _$_UpdatePreferences implements _UpdatePreferences {
 }
 
 abstract class _UpdatePreferences implements ApppreferencesEvent {
-  const factory _UpdatePreferences({required AppPreferences appPreferences}) =
-      _$_UpdatePreferences;
+  const factory _UpdatePreferences(
+      {required final AppPreferences appPreferences}) = _$UpdatePreferencesImpl;
 
   @override
   AppPreferences get appPreferences;
   @override
   @JsonKey(ignore: true)
-  _$UpdatePreferencesCopyWith<_UpdatePreferences> get copyWith =>
+  _$$UpdatePreferencesImplCopyWith<_$UpdatePreferencesImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
-
-/// @nodoc
-class _$ApppreferencesStateTearOff {
-  const _$ApppreferencesStateTearOff();
-
-  SavedAndReady savedAndReady({required AppPreferences appPreferences}) {
-    return SavedAndReady(
-      appPreferences: appPreferences,
-    );
-  }
-
-  NotSavedOrReady notSavedOrReady() {
-    return const NotSavedOrReady();
-  }
-}
-
-/// @nodoc
-const $ApppreferencesState = _$ApppreferencesStateTearOff();
 
 /// @nodoc
 mixin _$ApppreferencesState {
@@ -262,8 +232,8 @@ mixin _$ApppreferencesState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(AppPreferences appPreferences)? savedAndReady,
-    TResult Function()? notSavedOrReady,
+    TResult? Function(AppPreferences appPreferences)? savedAndReady,
+    TResult? Function()? notSavedOrReady,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -281,8 +251,8 @@ mixin _$ApppreferencesState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(SavedAndReady value)? savedAndReady,
-    TResult Function(NotSavedOrReady value)? notSavedOrReady,
+    TResult? Function(SavedAndReady value)? savedAndReady,
+    TResult? Function(NotSavedOrReady value)? notSavedOrReady,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -298,44 +268,44 @@ mixin _$ApppreferencesState {
 abstract class $ApppreferencesStateCopyWith<$Res> {
   factory $ApppreferencesStateCopyWith(
           ApppreferencesState value, $Res Function(ApppreferencesState) then) =
-      _$ApppreferencesStateCopyWithImpl<$Res>;
+      _$ApppreferencesStateCopyWithImpl<$Res, ApppreferencesState>;
 }
 
 /// @nodoc
-class _$ApppreferencesStateCopyWithImpl<$Res>
+class _$ApppreferencesStateCopyWithImpl<$Res, $Val extends ApppreferencesState>
     implements $ApppreferencesStateCopyWith<$Res> {
   _$ApppreferencesStateCopyWithImpl(this._value, this._then);
 
-  final ApppreferencesState _value;
   // ignore: unused_field
-  final $Res Function(ApppreferencesState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class $SavedAndReadyCopyWith<$Res> {
-  factory $SavedAndReadyCopyWith(
-          SavedAndReady value, $Res Function(SavedAndReady) then) =
-      _$SavedAndReadyCopyWithImpl<$Res>;
+abstract class _$$SavedAndReadyImplCopyWith<$Res> {
+  factory _$$SavedAndReadyImplCopyWith(
+          _$SavedAndReadyImpl value, $Res Function(_$SavedAndReadyImpl) then) =
+      __$$SavedAndReadyImplCopyWithImpl<$Res>;
+  @useResult
   $Res call({AppPreferences appPreferences});
 }
 
 /// @nodoc
-class _$SavedAndReadyCopyWithImpl<$Res>
-    extends _$ApppreferencesStateCopyWithImpl<$Res>
-    implements $SavedAndReadyCopyWith<$Res> {
-  _$SavedAndReadyCopyWithImpl(
-      SavedAndReady _value, $Res Function(SavedAndReady) _then)
-      : super(_value, (v) => _then(v as SavedAndReady));
+class __$$SavedAndReadyImplCopyWithImpl<$Res>
+    extends _$ApppreferencesStateCopyWithImpl<$Res, _$SavedAndReadyImpl>
+    implements _$$SavedAndReadyImplCopyWith<$Res> {
+  __$$SavedAndReadyImplCopyWithImpl(
+      _$SavedAndReadyImpl _value, $Res Function(_$SavedAndReadyImpl) _then)
+      : super(_value, _then);
 
-  @override
-  SavedAndReady get _value => super._value as SavedAndReady;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? appPreferences = freezed,
+    Object? appPreferences = null,
   }) {
-    return _then(SavedAndReady(
-      appPreferences: appPreferences == freezed
+    return _then(_$SavedAndReadyImpl(
+      appPreferences: null == appPreferences
           ? _value.appPreferences
           : appPreferences // ignore: cast_nullable_to_non_nullable
               as AppPreferences,
@@ -345,8 +315,8 @@ class _$SavedAndReadyCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SavedAndReady implements SavedAndReady {
-  const _$SavedAndReady({required this.appPreferences});
+class _$SavedAndReadyImpl implements SavedAndReady {
+  const _$SavedAndReadyImpl({required this.appPreferences});
 
   @override
   final AppPreferences appPreferences;
@@ -360,19 +330,19 @@ class _$SavedAndReady implements SavedAndReady {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is SavedAndReady &&
-            const DeepCollectionEquality()
-                .equals(other.appPreferences, appPreferences));
+            other is _$SavedAndReadyImpl &&
+            (identical(other.appPreferences, appPreferences) ||
+                other.appPreferences == appPreferences));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(appPreferences));
+  int get hashCode => Object.hash(runtimeType, appPreferences);
 
   @JsonKey(ignore: true)
   @override
-  $SavedAndReadyCopyWith<SavedAndReady> get copyWith =>
-      _$SavedAndReadyCopyWithImpl<SavedAndReady>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$SavedAndReadyImplCopyWith<_$SavedAndReadyImpl> get copyWith =>
+      __$$SavedAndReadyImplCopyWithImpl<_$SavedAndReadyImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -386,8 +356,8 @@ class _$SavedAndReady implements SavedAndReady {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(AppPreferences appPreferences)? savedAndReady,
-    TResult Function()? notSavedOrReady,
+    TResult? Function(AppPreferences appPreferences)? savedAndReady,
+    TResult? Function()? notSavedOrReady,
   }) {
     return savedAndReady?.call(appPreferences);
   }
@@ -417,8 +387,8 @@ class _$SavedAndReady implements SavedAndReady {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(SavedAndReady value)? savedAndReady,
-    TResult Function(NotSavedOrReady value)? notSavedOrReady,
+    TResult? Function(SavedAndReady value)? savedAndReady,
+    TResult? Function(NotSavedOrReady value)? notSavedOrReady,
   }) {
     return savedAndReady?.call(this);
   }
@@ -438,38 +408,35 @@ class _$SavedAndReady implements SavedAndReady {
 }
 
 abstract class SavedAndReady implements ApppreferencesState {
-  const factory SavedAndReady({required AppPreferences appPreferences}) =
-      _$SavedAndReady;
+  const factory SavedAndReady({required final AppPreferences appPreferences}) =
+      _$SavedAndReadyImpl;
 
   AppPreferences get appPreferences;
   @JsonKey(ignore: true)
-  $SavedAndReadyCopyWith<SavedAndReady> get copyWith =>
+  _$$SavedAndReadyImplCopyWith<_$SavedAndReadyImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $NotSavedOrReadyCopyWith<$Res> {
-  factory $NotSavedOrReadyCopyWith(
-          NotSavedOrReady value, $Res Function(NotSavedOrReady) then) =
-      _$NotSavedOrReadyCopyWithImpl<$Res>;
+abstract class _$$NotSavedOrReadyImplCopyWith<$Res> {
+  factory _$$NotSavedOrReadyImplCopyWith(_$NotSavedOrReadyImpl value,
+          $Res Function(_$NotSavedOrReadyImpl) then) =
+      __$$NotSavedOrReadyImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class _$NotSavedOrReadyCopyWithImpl<$Res>
-    extends _$ApppreferencesStateCopyWithImpl<$Res>
-    implements $NotSavedOrReadyCopyWith<$Res> {
-  _$NotSavedOrReadyCopyWithImpl(
-      NotSavedOrReady _value, $Res Function(NotSavedOrReady) _then)
-      : super(_value, (v) => _then(v as NotSavedOrReady));
-
-  @override
-  NotSavedOrReady get _value => super._value as NotSavedOrReady;
+class __$$NotSavedOrReadyImplCopyWithImpl<$Res>
+    extends _$ApppreferencesStateCopyWithImpl<$Res, _$NotSavedOrReadyImpl>
+    implements _$$NotSavedOrReadyImplCopyWith<$Res> {
+  __$$NotSavedOrReadyImplCopyWithImpl(
+      _$NotSavedOrReadyImpl _value, $Res Function(_$NotSavedOrReadyImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$NotSavedOrReady implements NotSavedOrReady {
-  const _$NotSavedOrReady();
+class _$NotSavedOrReadyImpl implements NotSavedOrReady {
+  const _$NotSavedOrReadyImpl();
 
   @override
   String toString() {
@@ -479,7 +446,7 @@ class _$NotSavedOrReady implements NotSavedOrReady {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is NotSavedOrReady);
+        (other.runtimeType == runtimeType && other is _$NotSavedOrReadyImpl);
   }
 
   @override
@@ -497,8 +464,8 @@ class _$NotSavedOrReady implements NotSavedOrReady {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(AppPreferences appPreferences)? savedAndReady,
-    TResult Function()? notSavedOrReady,
+    TResult? Function(AppPreferences appPreferences)? savedAndReady,
+    TResult? Function()? notSavedOrReady,
   }) {
     return notSavedOrReady?.call();
   }
@@ -528,8 +495,8 @@ class _$NotSavedOrReady implements NotSavedOrReady {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(SavedAndReady value)? savedAndReady,
-    TResult Function(NotSavedOrReady value)? notSavedOrReady,
+    TResult? Function(SavedAndReady value)? savedAndReady,
+    TResult? Function(NotSavedOrReady value)? notSavedOrReady,
   }) {
     return notSavedOrReady?.call(this);
   }
@@ -549,5 +516,5 @@ class _$NotSavedOrReady implements NotSavedOrReady {
 }
 
 abstract class NotSavedOrReady implements ApppreferencesState {
-  const factory NotSavedOrReady() = _$NotSavedOrReady;
+  const factory NotSavedOrReady() = _$NotSavedOrReadyImpl;
 }

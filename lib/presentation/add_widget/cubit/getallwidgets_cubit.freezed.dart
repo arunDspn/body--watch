@@ -1,6 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'getallwidgets_cubit.dart';
 
@@ -11,35 +12,7 @@ part of 'getallwidgets_cubit.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$GetallwidgetsStateTearOff {
-  const _$GetallwidgetsStateTearOff();
-
-  _Initial initial() {
-    return const _Initial();
-  }
-
-  _Loading loading() {
-    return const _Loading();
-  }
-
-  _Failure failure(String cause) {
-    return _Failure(
-      cause,
-    );
-  }
-
-  _Success success(List<MeasurementType> widgets) {
-    return _Success(
-      widgets,
-    );
-  }
-}
-
-/// @nodoc
-const $GetallwidgetsState = _$GetallwidgetsStateTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$GetallwidgetsState {
@@ -53,10 +26,10 @@ mixin _$GetallwidgetsState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementType> widgets)? success,
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(String cause)? failure,
+    TResult? Function(List<MeasurementType> widgets)? success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -78,10 +51,10 @@ mixin _$GetallwidgetsState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failure value)? failure,
-    TResult Function(_Success value)? success,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Failure value)? failure,
+    TResult? Function(_Success value)? success,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -99,40 +72,40 @@ mixin _$GetallwidgetsState {
 abstract class $GetallwidgetsStateCopyWith<$Res> {
   factory $GetallwidgetsStateCopyWith(
           GetallwidgetsState value, $Res Function(GetallwidgetsState) then) =
-      _$GetallwidgetsStateCopyWithImpl<$Res>;
+      _$GetallwidgetsStateCopyWithImpl<$Res, GetallwidgetsState>;
 }
 
 /// @nodoc
-class _$GetallwidgetsStateCopyWithImpl<$Res>
+class _$GetallwidgetsStateCopyWithImpl<$Res, $Val extends GetallwidgetsState>
     implements $GetallwidgetsStateCopyWith<$Res> {
   _$GetallwidgetsStateCopyWithImpl(this._value, this._then);
 
-  final GetallwidgetsState _value;
   // ignore: unused_field
-  final $Res Function(GetallwidgetsState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class _$InitialCopyWith<$Res> {
-  factory _$InitialCopyWith(_Initial value, $Res Function(_Initial) then) =
-      __$InitialCopyWithImpl<$Res>;
+abstract class _$$InitialImplCopyWith<$Res> {
+  factory _$$InitialImplCopyWith(
+          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
+      __$$InitialImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$InitialCopyWithImpl<$Res>
-    extends _$GetallwidgetsStateCopyWithImpl<$Res>
-    implements _$InitialCopyWith<$Res> {
-  __$InitialCopyWithImpl(_Initial _value, $Res Function(_Initial) _then)
-      : super(_value, (v) => _then(v as _Initial));
-
-  @override
-  _Initial get _value => super._value as _Initial;
+class __$$InitialImplCopyWithImpl<$Res>
+    extends _$GetallwidgetsStateCopyWithImpl<$Res, _$InitialImpl>
+    implements _$$InitialImplCopyWith<$Res> {
+  __$$InitialImplCopyWithImpl(
+      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_Initial implements _Initial {
-  const _$_Initial();
+class _$InitialImpl implements _Initial {
+  const _$InitialImpl();
 
   @override
   String toString() {
@@ -142,7 +115,7 @@ class _$_Initial implements _Initial {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType && other is _$InitialImpl);
   }
 
   @override
@@ -162,10 +135,10 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementType> widgets)? success,
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(String cause)? failure,
+    TResult? Function(List<MeasurementType> widgets)? success,
   }) {
     return initial?.call();
   }
@@ -199,10 +172,10 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failure value)? failure,
-    TResult Function(_Success value)? success,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Failure value)? failure,
+    TResult? Function(_Success value)? success,
   }) {
     return initial?.call(this);
   }
@@ -224,30 +197,29 @@ class _$_Initial implements _Initial {
 }
 
 abstract class _Initial implements GetallwidgetsState {
-  const factory _Initial() = _$_Initial;
+  const factory _Initial() = _$InitialImpl;
 }
 
 /// @nodoc
-abstract class _$LoadingCopyWith<$Res> {
-  factory _$LoadingCopyWith(_Loading value, $Res Function(_Loading) then) =
-      __$LoadingCopyWithImpl<$Res>;
+abstract class _$$LoadingImplCopyWith<$Res> {
+  factory _$$LoadingImplCopyWith(
+          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
+      __$$LoadingImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$LoadingCopyWithImpl<$Res>
-    extends _$GetallwidgetsStateCopyWithImpl<$Res>
-    implements _$LoadingCopyWith<$Res> {
-  __$LoadingCopyWithImpl(_Loading _value, $Res Function(_Loading) _then)
-      : super(_value, (v) => _then(v as _Loading));
-
-  @override
-  _Loading get _value => super._value as _Loading;
+class __$$LoadingImplCopyWithImpl<$Res>
+    extends _$GetallwidgetsStateCopyWithImpl<$Res, _$LoadingImpl>
+    implements _$$LoadingImplCopyWith<$Res> {
+  __$$LoadingImplCopyWithImpl(
+      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_Loading implements _Loading {
-  const _$_Loading();
+class _$LoadingImpl implements _Loading {
+  const _$LoadingImpl();
 
   @override
   String toString() {
@@ -257,7 +229,7 @@ class _$_Loading implements _Loading {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType && other is _$LoadingImpl);
   }
 
   @override
@@ -277,10 +249,10 @@ class _$_Loading implements _Loading {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementType> widgets)? success,
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(String cause)? failure,
+    TResult? Function(List<MeasurementType> widgets)? success,
   }) {
     return loading?.call();
   }
@@ -314,10 +286,10 @@ class _$_Loading implements _Loading {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failure value)? failure,
-    TResult Function(_Success value)? success,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Failure value)? failure,
+    TResult? Function(_Success value)? success,
   }) {
     return loading?.call(this);
   }
@@ -339,32 +311,33 @@ class _$_Loading implements _Loading {
 }
 
 abstract class _Loading implements GetallwidgetsState {
-  const factory _Loading() = _$_Loading;
+  const factory _Loading() = _$LoadingImpl;
 }
 
 /// @nodoc
-abstract class _$FailureCopyWith<$Res> {
-  factory _$FailureCopyWith(_Failure value, $Res Function(_Failure) then) =
-      __$FailureCopyWithImpl<$Res>;
+abstract class _$$FailureImplCopyWith<$Res> {
+  factory _$$FailureImplCopyWith(
+          _$FailureImpl value, $Res Function(_$FailureImpl) then) =
+      __$$FailureImplCopyWithImpl<$Res>;
+  @useResult
   $Res call({String cause});
 }
 
 /// @nodoc
-class __$FailureCopyWithImpl<$Res>
-    extends _$GetallwidgetsStateCopyWithImpl<$Res>
-    implements _$FailureCopyWith<$Res> {
-  __$FailureCopyWithImpl(_Failure _value, $Res Function(_Failure) _then)
-      : super(_value, (v) => _then(v as _Failure));
+class __$$FailureImplCopyWithImpl<$Res>
+    extends _$GetallwidgetsStateCopyWithImpl<$Res, _$FailureImpl>
+    implements _$$FailureImplCopyWith<$Res> {
+  __$$FailureImplCopyWithImpl(
+      _$FailureImpl _value, $Res Function(_$FailureImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _Failure get _value => super._value as _Failure;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? cause = freezed,
+    Object? cause = null,
   }) {
-    return _then(_Failure(
-      cause == freezed
+    return _then(_$FailureImpl(
+      null == cause
           ? _value.cause
           : cause // ignore: cast_nullable_to_non_nullable
               as String,
@@ -374,8 +347,8 @@ class __$FailureCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Failure implements _Failure {
-  const _$_Failure(this.cause);
+class _$FailureImpl implements _Failure {
+  const _$FailureImpl(this.cause);
 
   @override
   final String cause;
@@ -389,18 +362,18 @@ class _$_Failure implements _Failure {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failure &&
-            const DeepCollectionEquality().equals(other.cause, cause));
+            other is _$FailureImpl &&
+            (identical(other.cause, cause) || other.cause == cause));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(cause));
+  int get hashCode => Object.hash(runtimeType, cause);
 
   @JsonKey(ignore: true)
   @override
-  _$FailureCopyWith<_Failure> get copyWith =>
-      __$FailureCopyWithImpl<_Failure>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$FailureImplCopyWith<_$FailureImpl> get copyWith =>
+      __$$FailureImplCopyWithImpl<_$FailureImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -416,10 +389,10 @@ class _$_Failure implements _Failure {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementType> widgets)? success,
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(String cause)? failure,
+    TResult? Function(List<MeasurementType> widgets)? success,
   }) {
     return failure?.call(cause);
   }
@@ -453,10 +426,10 @@ class _$_Failure implements _Failure {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failure value)? failure,
-    TResult Function(_Success value)? success,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Failure value)? failure,
+    TResult? Function(_Success value)? success,
   }) {
     return failure?.call(this);
   }
@@ -478,38 +451,39 @@ class _$_Failure implements _Failure {
 }
 
 abstract class _Failure implements GetallwidgetsState {
-  const factory _Failure(String cause) = _$_Failure;
+  const factory _Failure(final String cause) = _$FailureImpl;
 
   String get cause;
   @JsonKey(ignore: true)
-  _$FailureCopyWith<_Failure> get copyWith =>
+  _$$FailureImplCopyWith<_$FailureImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$SuccessCopyWith<$Res> {
-  factory _$SuccessCopyWith(_Success value, $Res Function(_Success) then) =
-      __$SuccessCopyWithImpl<$Res>;
+abstract class _$$SuccessImplCopyWith<$Res> {
+  factory _$$SuccessImplCopyWith(
+          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
+      __$$SuccessImplCopyWithImpl<$Res>;
+  @useResult
   $Res call({List<MeasurementType> widgets});
 }
 
 /// @nodoc
-class __$SuccessCopyWithImpl<$Res>
-    extends _$GetallwidgetsStateCopyWithImpl<$Res>
-    implements _$SuccessCopyWith<$Res> {
-  __$SuccessCopyWithImpl(_Success _value, $Res Function(_Success) _then)
-      : super(_value, (v) => _then(v as _Success));
+class __$$SuccessImplCopyWithImpl<$Res>
+    extends _$GetallwidgetsStateCopyWithImpl<$Res, _$SuccessImpl>
+    implements _$$SuccessImplCopyWith<$Res> {
+  __$$SuccessImplCopyWithImpl(
+      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _Success get _value => super._value as _Success;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? widgets = freezed,
+    Object? widgets = null,
   }) {
-    return _then(_Success(
-      widgets == freezed
-          ? _value.widgets
+    return _then(_$SuccessImpl(
+      null == widgets
+          ? _value._widgets
           : widgets // ignore: cast_nullable_to_non_nullable
               as List<MeasurementType>,
     ));
@@ -518,11 +492,16 @@ class __$SuccessCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Success implements _Success {
-  const _$_Success(this.widgets);
+class _$SuccessImpl implements _Success {
+  const _$SuccessImpl(final List<MeasurementType> widgets) : _widgets = widgets;
 
+  final List<MeasurementType> _widgets;
   @override
-  final List<MeasurementType> widgets;
+  List<MeasurementType> get widgets {
+    if (_widgets is EqualUnmodifiableListView) return _widgets;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_widgets);
+  }
 
   @override
   String toString() {
@@ -533,18 +512,19 @@ class _$_Success implements _Success {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Success &&
-            const DeepCollectionEquality().equals(other.widgets, widgets));
+            other is _$SuccessImpl &&
+            const DeepCollectionEquality().equals(other._widgets, _widgets));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(widgets));
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_widgets));
 
   @JsonKey(ignore: true)
   @override
-  _$SuccessCopyWith<_Success> get copyWith =>
-      __$SuccessCopyWithImpl<_Success>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
+      __$$SuccessImplCopyWithImpl<_$SuccessImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -560,10 +540,10 @@ class _$_Success implements _Success {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(String cause)? failure,
-    TResult Function(List<MeasurementType> widgets)? success,
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(String cause)? failure,
+    TResult? Function(List<MeasurementType> widgets)? success,
   }) {
     return success?.call(widgets);
   }
@@ -597,10 +577,10 @@ class _$_Success implements _Success {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failure value)? failure,
-    TResult Function(_Success value)? success,
+    TResult? Function(_Initial value)? initial,
+    TResult? Function(_Loading value)? loading,
+    TResult? Function(_Failure value)? failure,
+    TResult? Function(_Success value)? success,
   }) {
     return success?.call(this);
   }
@@ -622,10 +602,10 @@ class _$_Success implements _Success {
 }
 
 abstract class _Success implements GetallwidgetsState {
-  const factory _Success(List<MeasurementType> widgets) = _$_Success;
+  const factory _Success(final List<MeasurementType> widgets) = _$SuccessImpl;
 
   List<MeasurementType> get widgets;
   @JsonKey(ignore: true)
-  _$SuccessCopyWith<_Success> get copyWith =>
+  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

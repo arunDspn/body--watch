@@ -1,6 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'apptheme_bloc.dart';
 
@@ -11,26 +12,11 @@ part of 'apptheme_bloc.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods',);
-
-/// @nodoc
-class _$AppthemeEventTearOff {
-  const _$AppthemeEventTearOff();
-
-  _ChangeTheme changeTheme({required AppTheme appTheme}) {
-    return _ChangeTheme(
-      appTheme: appTheme,
-    );
-  }
-}
-
-/// @nodoc
-const $AppthemeEvent = _$AppthemeEventTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$AppthemeEvent {
   AppTheme get appTheme => throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(AppTheme appTheme) changeTheme,
@@ -38,7 +24,7 @@ mixin _$AppthemeEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(AppTheme appTheme)? changeTheme,
+    TResult? Function(AppTheme appTheme)? changeTheme,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -54,7 +40,7 @@ mixin _$AppthemeEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_ChangeTheme value)? changeTheme,
+    TResult? Function(_ChangeTheme value)? changeTheme,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -72,70 +58,73 @@ mixin _$AppthemeEvent {
 /// @nodoc
 abstract class $AppthemeEventCopyWith<$Res> {
   factory $AppthemeEventCopyWith(
-          AppthemeEvent value, $Res Function(AppthemeEvent) then,) =
-      _$AppthemeEventCopyWithImpl<$Res>;
+          AppthemeEvent value, $Res Function(AppthemeEvent) then) =
+      _$AppthemeEventCopyWithImpl<$Res, AppthemeEvent>;
+  @useResult
   $Res call({AppTheme appTheme});
 }
 
 /// @nodoc
-class _$AppthemeEventCopyWithImpl<$Res>
+class _$AppthemeEventCopyWithImpl<$Res, $Val extends AppthemeEvent>
     implements $AppthemeEventCopyWith<$Res> {
   _$AppthemeEventCopyWithImpl(this._value, this._then);
 
-  final AppthemeEvent _value;
   // ignore: unused_field
-  final $Res Function(AppthemeEvent) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? appTheme = freezed,
+    Object? appTheme = null,
   }) {
     return _then(_value.copyWith(
-      appTheme: appTheme == freezed
+      appTheme: null == appTheme
           ? _value.appTheme
           : appTheme // ignore: cast_nullable_to_non_nullable
               as AppTheme,
-    ),);
+    ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$ChangeThemeCopyWith<$Res>
+abstract class _$$ChangeThemeImplCopyWith<$Res>
     implements $AppthemeEventCopyWith<$Res> {
-  factory _$ChangeThemeCopyWith(
-          _ChangeTheme value, $Res Function(_ChangeTheme) then,) =
-      __$ChangeThemeCopyWithImpl<$Res>;
+  factory _$$ChangeThemeImplCopyWith(
+          _$ChangeThemeImpl value, $Res Function(_$ChangeThemeImpl) then) =
+      __$$ChangeThemeImplCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({AppTheme appTheme});
 }
 
 /// @nodoc
-class __$ChangeThemeCopyWithImpl<$Res> extends _$AppthemeEventCopyWithImpl<$Res>
-    implements _$ChangeThemeCopyWith<$Res> {
-  __$ChangeThemeCopyWithImpl(
-      _ChangeTheme _value, $Res Function(_ChangeTheme) _then,)
-      : super(_value, (v) => _then(v as _ChangeTheme));
+class __$$ChangeThemeImplCopyWithImpl<$Res>
+    extends _$AppthemeEventCopyWithImpl<$Res, _$ChangeThemeImpl>
+    implements _$$ChangeThemeImplCopyWith<$Res> {
+  __$$ChangeThemeImplCopyWithImpl(
+      _$ChangeThemeImpl _value, $Res Function(_$ChangeThemeImpl) _then)
+      : super(_value, _then);
 
-  @override
-  _ChangeTheme get _value => super._value as _ChangeTheme;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? appTheme = freezed,
+    Object? appTheme = null,
   }) {
-    return _then(_ChangeTheme(
-      appTheme: appTheme == freezed
+    return _then(_$ChangeThemeImpl(
+      appTheme: null == appTheme
           ? _value.appTheme
           : appTheme // ignore: cast_nullable_to_non_nullable
               as AppTheme,
-    ),);
+    ));
   }
 }
 
 /// @nodoc
 
-class _$_ChangeTheme implements _ChangeTheme {
-  const _$_ChangeTheme({required this.appTheme});
+class _$ChangeThemeImpl implements _ChangeTheme {
+  const _$ChangeThemeImpl({required this.appTheme});
 
   @override
   final AppTheme appTheme;
@@ -149,18 +138,19 @@ class _$_ChangeTheme implements _ChangeTheme {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _ChangeTheme &&
-            const DeepCollectionEquality().equals(other.appTheme, appTheme));
+            other is _$ChangeThemeImpl &&
+            (identical(other.appTheme, appTheme) ||
+                other.appTheme == appTheme));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(appTheme));
+  int get hashCode => Object.hash(runtimeType, appTheme);
 
   @JsonKey(ignore: true)
   @override
-  _$ChangeThemeCopyWith<_ChangeTheme> get copyWith =>
-      __$ChangeThemeCopyWithImpl<_ChangeTheme>(this, _$identity);
+  @pragma('vm:prefer-inline')
+  _$$ChangeThemeImplCopyWith<_$ChangeThemeImpl> get copyWith =>
+      __$$ChangeThemeImplCopyWithImpl<_$ChangeThemeImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -173,7 +163,7 @@ class _$_ChangeTheme implements _ChangeTheme {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function(AppTheme appTheme)? changeTheme,
+    TResult? Function(AppTheme appTheme)? changeTheme,
   }) {
     return changeTheme?.call(appTheme);
   }
@@ -201,7 +191,7 @@ class _$_ChangeTheme implements _ChangeTheme {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_ChangeTheme value)? changeTheme,
+    TResult? Function(_ChangeTheme value)? changeTheme,
   }) {
     return changeTheme?.call(this);
   }
@@ -220,27 +210,16 @@ class _$_ChangeTheme implements _ChangeTheme {
 }
 
 abstract class _ChangeTheme implements AppthemeEvent {
-  const factory _ChangeTheme({required AppTheme appTheme}) = _$_ChangeTheme;
+  const factory _ChangeTheme({required final AppTheme appTheme}) =
+      _$ChangeThemeImpl;
 
   @override
   AppTheme get appTheme;
   @override
   @JsonKey(ignore: true)
-  _$ChangeThemeCopyWith<_ChangeTheme> get copyWith =>
+  _$$ChangeThemeImplCopyWith<_$ChangeThemeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
-
-/// @nodoc
-class _$AppthemeStateTearOff {
-  const _$AppthemeStateTearOff();
-
-  _Initial initial() {
-    return const _Initial();
-  }
-}
-
-/// @nodoc
-const $AppthemeState = _$AppthemeStateTearOff();
 
 /// @nodoc
 mixin _$AppthemeState {
@@ -251,7 +230,7 @@ mixin _$AppthemeState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
+    TResult? Function()? initial,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -267,7 +246,7 @@ mixin _$AppthemeState {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
+    TResult? Function(_Initial value)? initial,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -281,40 +260,41 @@ mixin _$AppthemeState {
 /// @nodoc
 abstract class $AppthemeStateCopyWith<$Res> {
   factory $AppthemeStateCopyWith(
-          AppthemeState value, $Res Function(AppthemeState) then,) =
-      _$AppthemeStateCopyWithImpl<$Res>;
+          AppthemeState value, $Res Function(AppthemeState) then) =
+      _$AppthemeStateCopyWithImpl<$Res, AppthemeState>;
 }
 
 /// @nodoc
-class _$AppthemeStateCopyWithImpl<$Res>
+class _$AppthemeStateCopyWithImpl<$Res, $Val extends AppthemeState>
     implements $AppthemeStateCopyWith<$Res> {
   _$AppthemeStateCopyWithImpl(this._value, this._then);
 
-  final AppthemeState _value;
   // ignore: unused_field
-  final $Res Function(AppthemeState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 }
 
 /// @nodoc
-abstract class _$InitialCopyWith<$Res> {
-  factory _$InitialCopyWith(_Initial value, $Res Function(_Initial) then) =
-      __$InitialCopyWithImpl<$Res>;
+abstract class _$$InitialImplCopyWith<$Res> {
+  factory _$$InitialImplCopyWith(
+          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
+      __$$InitialImplCopyWithImpl<$Res>;
 }
 
 /// @nodoc
-class __$InitialCopyWithImpl<$Res> extends _$AppthemeStateCopyWithImpl<$Res>
-    implements _$InitialCopyWith<$Res> {
-  __$InitialCopyWithImpl(_Initial _value, $Res Function(_Initial) _then)
-      : super(_value, (v) => _then(v as _Initial));
-
-  @override
-  _Initial get _value => super._value as _Initial;
+class __$$InitialImplCopyWithImpl<$Res>
+    extends _$AppthemeStateCopyWithImpl<$Res, _$InitialImpl>
+    implements _$$InitialImplCopyWith<$Res> {
+  __$$InitialImplCopyWithImpl(
+      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
+      : super(_value, _then);
 }
 
 /// @nodoc
 
-class _$_Initial implements _Initial {
-  const _$_Initial();
+class _$InitialImpl implements _Initial {
+  const _$InitialImpl();
 
   @override
   String toString() {
@@ -324,7 +304,7 @@ class _$_Initial implements _Initial {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType && other is _$InitialImpl);
   }
 
   @override
@@ -341,7 +321,7 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? initial,
+    TResult? Function()? initial,
   }) {
     return initial?.call();
   }
@@ -369,7 +349,7 @@ class _$_Initial implements _Initial {
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
+    TResult? Function(_Initial value)? initial,
   }) {
     return initial?.call(this);
   }
@@ -388,5 +368,5 @@ class _$_Initial implements _Initial {
 }
 
 abstract class _Initial implements AppthemeState {
-  const factory _Initial() = _$_Initial;
+  const factory _Initial() = _$InitialImpl;
 }
