@@ -79,4 +79,41 @@ class TimeRangeService {
       endDate: monthEndDate,
     );
   }
+
+  List<TimeRange> getWeeksInMonth(DateTime month) {
+    final weeks = <TimeRange>[];
+
+    // Get the first day of the month
+    final firstDayOfMonth = DateTime(month.year, month.month);
+
+    // Determine the weekday of the first day
+    final weekday = firstDayOfMonth.weekday;
+
+    // Calculate the number of days in the previous month to include in the first week
+    final daysInPreviousMonth = (weekday - 1 + 7) % 7;
+
+    // Calculate the last day of the current month
+    final lastDayOfMonth = DateTime(month.year, month.month + 1, 0);
+
+    // Initialize the current day to the first day of the month
+    var currentDay =
+        firstDayOfMonth.subtract(Duration(days: daysInPreviousMonth));
+
+    // Loop through the weeks in the month
+    while (currentDay.isBefore(lastDayOfMonth)) {
+      final weekStartDate = currentDay;
+      var weekEndDate = currentDay.add(const Duration(days: 6));
+
+      // Adjust the end date if it goes beyond the last day of the month
+      if (weekEndDate.isAfter(lastDayOfMonth)) {
+        weekEndDate = lastDayOfMonth;
+      }
+
+      weeks.add(TimeRange(startDate: weekStartDate, endDate: weekEndDate));
+
+      currentDay = weekEndDate.add(const Duration(days: 1));
+    }
+
+    return weeks;
+  }
 }

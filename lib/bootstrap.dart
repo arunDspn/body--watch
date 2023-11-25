@@ -27,17 +27,17 @@ class AppBlocObserver extends BlocObserver {
 }
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
-  FlutterError.onError = (details) {
-    log(details.exceptionAsString(), stackTrace: details.stack);
-  };
-  WidgetsFlutterBinding.ensureInitialized();
-  HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: await getApplicationDocumentsDirectory(),
-  );
-  Bloc.observer = AppBlocObserver();
-
   await runZonedGuarded(
     () async {
+      WidgetsFlutterBinding.ensureInitialized();
+
+      FlutterError.onError = (details) {
+        log(details.exceptionAsString(), stackTrace: details.stack);
+      };
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: await getApplicationDocumentsDirectory(),
+      );
+      Bloc.observer = AppBlocObserver();
       runApp(await builder());
     },
     (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),

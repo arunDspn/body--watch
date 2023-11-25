@@ -9,11 +9,13 @@ import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
+import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
+import 'package:watcha_body/presentation/measurement_in_detail/widget/metrics_line_graph.dart';
+import 'package:watcha_body/presentation/measurement_in_detail/widget/sampleman.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_range_filter/bloc/time_range_filter_bloc.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_range_filter/time_range_filter.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/timeunit_segemented_filter_view.dart';
-import 'package:watcha_body/presentation/measurement_in_detail/widget/metrics_line_graph.dart';
 import 'package:watcha_body/services/time_range_service/service.dart';
 import 'package:watcha_body/size_config.dart';
 
@@ -31,6 +33,19 @@ class MeasurementInDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute<void>(
+                  builder: (context) {
+                    return SamplerMan();
+                  },
+                ));
+              },
+              icon: Icon(Icons.read_more)),
+        ],
+      ),
       body: SafeArea(
         child: BlocBuilder<GetSingleMeasurmentsDetailsCubit,
             GetSingleMeasurmentsDetailsState>(
@@ -213,6 +228,7 @@ class _MeasurementList extends StatelessWidget {
                 return IndexedStack(
                   index: TimeUnit.values.indexOf(state.timeUnit),
                   children: TimeUnit.values.map((e) {
+                    // children: [TimeUnit.week].map((e) {
                     return DataView(
                       measurementList: measurementList,
                       measurementType: measurementType,
@@ -243,85 +259,130 @@ class DataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(18),
-          child: BlocProvider(
-            create: (context) => TimeRangeFilterBloc(
-              timeUnit,
-              context.read<TimeRangeService>(),
-            )..add(
-                const TimeRangeFilterEvent.currentRange(),
-              ),
-            child: const TimeRangeFilterInputStepper(),
-          ),
+    return BlocProvider(
+      create: (context) => TimeRangeFilterBloc(
+        timeUnit,
+        context.read<TimeRangeService>(),
+      )..add(
+          const TimeRangeFilterEvent.currentRange(),
         ),
-        MetricsLineGraph(measurements: measurementList),
-        // LineChartSample2(),
-
-        // Measure List
-        SizedBox(
-          width: SizeConfig.screenWidth! * 0.85,
-          // Head
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Builder(
+        builder: (context) {
+          return Column(
             children: [
-              Text(
-                'Measurement(${measurementList.length})',
-                style: Theme.of(context).textTheme.titleLarge,
+              const Padding(
+                padding: EdgeInsets.all(18),
+                child: TimeRangeFilterInputStepper(),
               ),
-              TextButton(
-                onPressed: () {
-                  showModalBottomSheet<void>(
-                    context: context,
-                    builder: (context) {
-                      return AddDataModal.add(
-                        type: measurementType,
+              // todo add bloc here
+
+              BlocBuilder<TimeRangeFilterBloc, TimeRangeFilterState>(
+                builder: (context, state) {
+                  // Filter
+                  return state.map(
+                    state: (value) {
+                      final filteredMeasurements = measurementList
+                          .where(
+                            (element) =>
+                                element.date.isAfter(value.startDate) &&
+                                element.date.isBefore(value.endDate),
+                          )
+                          .toList();
+                      return Column(
+                        children: [
+                          MetricsLineGraph(
+                            filteredMeasurements: filteredMeasurements,
+                            endDate: value.endDate,
+                            startDate: value.startDate,
+                            dayToText: DayToText(timeUnit: timeUnit),
+                          ),
+                          // LineChartSample2(),
+
+                          // Measure List
+                          SizedBox(
+                            width: SizeConfig.screenWidth! * 0.85,
+                            // Head
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Measurement(${filteredMeasurements.length})',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    showModalBottomSheet<void>(
+                                      context: context,
+                                      builder: (context) {
+                                        return AddDataModal.add(
+                                          type: measurementType,
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Add',
+                                    textAlign: TextAlign.end,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // List
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxHeight: SizeConfig.screenHeight! * 0.4,
+                              ),
+                              // padding: const EdgeInsets.only(top: 8),
+                              width: SizeConfig.screenWidth! * 0.85,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: filteredMeasurements.isNotEmpty
+                                    ? ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: const BouncingScrollPhysics(
+                                          parent:
+                                              AlwaysScrollableScrollPhysics(),
+                                        ),
+                                        itemCount: filteredMeasurements.length,
+                                        itemBuilder: (context, index) {
+                                          return _TableCell(
+                                            date: filteredMeasurements[index]
+                                                .date,
+                                            measurement:
+                                                filteredMeasurements[index]
+                                                    .value,
+                                          );
+                                        },
+                                      )
+                                    : const Text(
+                                        'No Data',
+                                        textAlign: TextAlign.center,
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ],
                       );
+                    },
+                    loading: (value) {
+                      return const CircularProgressIndicator();
                     },
                   );
                 },
-                child: const Text(
-                  'Add',
-                  textAlign: TextAlign.end,
-                ),
               ),
             ],
-          ),
-        ),
-        // List
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: Container(
-            constraints: BoxConstraints(
-              maxHeight: SizeConfig.screenHeight! * 0.4,
-            ),
-            // padding: const EdgeInsets.only(top: 8),
-            width: SizeConfig.screenWidth! * 0.85,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: const BouncingScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics(),
-                ),
-                itemCount: measurementList.length,
-                itemBuilder: (context, index) {
-                  return _TableCell(
-                    date: measurementList[index].date,
-                    measurement: measurementList[index].value,
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-      ],
+          );
+        },
+      ),
     );
   }
 }
