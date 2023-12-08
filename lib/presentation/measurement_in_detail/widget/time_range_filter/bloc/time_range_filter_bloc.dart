@@ -20,19 +20,34 @@ class TimeRangeFilterBloc
               timeUnit,
               (state as _State).endDate.add(const Duration(days: 1)),
             );
+
+            /// oct nov dec
+            ///
             emit(
               TimeRangeFilterState.state(
                 startDate: range.startDate,
                 endDate: range.endDate,
                 measurements: [],
                 timeUnit: timeUnit,
+                nextable: isNextable(range.endDate),
               ),
             );
           },
           previousRange: (value) {
+            // print(state as _State);
+            late DateTime date;
+            final currentState = state as _State;
+            if (timeUnit == TimeUnit.threeMonth) {
+              date = DateTime(
+                currentState.startDate.year,
+                currentState.startDate.month - 3,
+              );
+            } else {
+              date = currentState.startDate.subtract(const Duration(days: 1));
+            }
             final range = rangeCalculator(
               timeUnit,
-              (state as _State).startDate.subtract(const Duration(days: 1)),
+              date,
             );
             emit(
               TimeRangeFilterState.state(
@@ -40,13 +55,22 @@ class TimeRangeFilterBloc
                 endDate: range.endDate,
                 measurements: [],
                 timeUnit: timeUnit,
+                nextable: true,
               ),
             );
           },
           currentRange: (value) {
+            late DateTime date;
+
+            final current = DateTime.now();
+            if (timeUnit == TimeUnit.threeMonth) {
+              date = DateTime(current.year, current.month - 2);
+            } else {
+              date = current;
+            }
             final range = rangeCalculator(
               timeUnit,
-              DateTime.now(),
+              date,
             );
             emit(
               TimeRangeFilterState.state(
@@ -54,6 +78,7 @@ class TimeRangeFilterBloc
                 endDate: range.endDate,
                 measurements: [],
                 timeUnit: timeUnit,
+                nextable: false,
               ),
             );
           },
@@ -67,6 +92,19 @@ class TimeRangeFilterBloc
   }
   final TimeUnit timeUnit;
   final TimeRangeService timeRangeService;
+
+  bool isNextable(DateTime startDate) {
+    final range =
+        rangeCalculator(timeUnit, startDate.add(const Duration(days: 1)));
+    if (range.startDate.isBefore(DateTime.now())) {
+      return true;
+    } else {
+      return false;
+    }
+
+    // 29
+    // 4 is before 29
+  }
 
   TimeRange rangeCalculator(
     TimeUnit timeUnit,

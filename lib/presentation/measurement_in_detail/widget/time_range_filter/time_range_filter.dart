@@ -59,11 +59,15 @@ class TimeRangeFilterInputStepper extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {
-                    context.read<TimeRangeFilterBloc>().add(
-                          const TimeRangeFilterEvent.nextRange(),
-                        );
-                  },
+                  ///  today 29-11
+                  ///
+                  onPressed: value.nextable
+                      ? () {
+                          context.read<TimeRangeFilterBloc>().add(
+                                const TimeRangeFilterEvent.nextRange(),
+                              );
+                        }
+                      : null,
                   icon: const Icon(Icons.chevron_right),
                 ),
               ],

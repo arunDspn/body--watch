@@ -58,8 +58,8 @@ class MeasurementRepository extends IMeasurementsFacade {
   }) async {
     try {
       final _data = await databaseService.getData(
-        startDate: startDate,
-        endDate: endDate,
+        // startDate: startDate,
+        // endDate: endDate,
         type: type,
       );
       final _dData = _data.map(Measurement.fromMap).toList();

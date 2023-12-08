@@ -410,7 +410,7 @@ mixin _$TimeRangeFilterState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit)
+            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)
         state,
     required TResult Function() loading,
   }) =>
@@ -418,7 +418,7 @@ mixin _$TimeRangeFilterState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit)?
+            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)?
         state,
     TResult? Function()? loading,
   }) =>
@@ -426,7 +426,7 @@ mixin _$TimeRangeFilterState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit)?
+            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)?
         state,
     TResult Function()? loading,
     required TResult orElse(),
@@ -482,7 +482,8 @@ abstract class _$$StateImplCopyWith<$Res> {
       {DateTime startDate,
       DateTime endDate,
       List<Measurement> measurements,
-      TimeUnit timeUnit});
+      TimeUnit timeUnit,
+      bool nextable});
 }
 
 /// @nodoc
@@ -500,6 +501,7 @@ class __$$StateImplCopyWithImpl<$Res>
     Object? endDate = null,
     Object? measurements = null,
     Object? timeUnit = null,
+    Object? nextable = null,
   }) {
     return _then(_$StateImpl(
       startDate: null == startDate
@@ -518,6 +520,10 @@ class __$$StateImplCopyWithImpl<$Res>
           ? _value.timeUnit
           : timeUnit // ignore: cast_nullable_to_non_nullable
               as TimeUnit,
+      nextable: null == nextable
+          ? _value.nextable
+          : nextable // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -529,7 +535,8 @@ class _$StateImpl implements _State {
       {required this.startDate,
       required this.endDate,
       required final List<Measurement> measurements,
-      required this.timeUnit})
+      required this.timeUnit,
+      required this.nextable})
       : _measurements = measurements;
 
   @override
@@ -546,10 +553,12 @@ class _$StateImpl implements _State {
 
   @override
   final TimeUnit timeUnit;
+  @override
+  final bool nextable;
 
   @override
   String toString() {
-    return 'TimeRangeFilterState.state(startDate: $startDate, endDate: $endDate, measurements: $measurements, timeUnit: $timeUnit)';
+    return 'TimeRangeFilterState.state(startDate: $startDate, endDate: $endDate, measurements: $measurements, timeUnit: $timeUnit, nextable: $nextable)';
   }
 
   @override
@@ -563,12 +572,14 @@ class _$StateImpl implements _State {
             const DeepCollectionEquality()
                 .equals(other._measurements, _measurements) &&
             (identical(other.timeUnit, timeUnit) ||
-                other.timeUnit == timeUnit));
+                other.timeUnit == timeUnit) &&
+            (identical(other.nextable, nextable) ||
+                other.nextable == nextable));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, startDate, endDate,
-      const DeepCollectionEquality().hash(_measurements), timeUnit);
+      const DeepCollectionEquality().hash(_measurements), timeUnit, nextable);
 
   @JsonKey(ignore: true)
   @override
@@ -580,35 +591,35 @@ class _$StateImpl implements _State {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit)
+            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)
         state,
     required TResult Function() loading,
   }) {
-    return state(startDate, endDate, measurements, timeUnit);
+    return state(startDate, endDate, measurements, timeUnit, nextable);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit)?
+            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)?
         state,
     TResult? Function()? loading,
   }) {
-    return state?.call(startDate, endDate, measurements, timeUnit);
+    return state?.call(startDate, endDate, measurements, timeUnit, nextable);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit)?
+            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)?
         state,
     TResult Function()? loading,
     required TResult orElse(),
   }) {
     if (state != null) {
-      return state(startDate, endDate, measurements, timeUnit);
+      return state(startDate, endDate, measurements, timeUnit, nextable);
     }
     return orElse();
   }
@@ -650,12 +661,14 @@ abstract class _State implements TimeRangeFilterState {
       {required final DateTime startDate,
       required final DateTime endDate,
       required final List<Measurement> measurements,
-      required final TimeUnit timeUnit}) = _$StateImpl;
+      required final TimeUnit timeUnit,
+      required final bool nextable}) = _$StateImpl;
 
   DateTime get startDate;
   DateTime get endDate;
   List<Measurement> get measurements;
   TimeUnit get timeUnit;
+  bool get nextable;
   @JsonKey(ignore: true)
   _$$StateImplCopyWith<_$StateImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -700,7 +713,7 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit)
+            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)
         state,
     required TResult Function() loading,
   }) {
@@ -711,7 +724,7 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit)?
+            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)?
         state,
     TResult? Function()? loading,
   }) {
@@ -722,7 +735,7 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit)?
+            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)?
         state,
     TResult Function()? loading,
     required TResult orElse(),

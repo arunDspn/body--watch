@@ -7,6 +7,7 @@ class TimeRangeFilterState with _$TimeRangeFilterState {
     required DateTime endDate,
     required List<Measurement> measurements,
     required TimeUnit timeUnit,
+    required bool nextable,
   }) = _State;
   const factory TimeRangeFilterState.loading() = _Loading;
 }

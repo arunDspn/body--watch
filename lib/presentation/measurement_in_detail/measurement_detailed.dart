@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +12,6 @@ import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/metrics_line_graph.dart';
-import 'package:watcha_body/presentation/measurement_in_detail/widget/sampleman.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_range_filter/bloc/time_range_filter_bloc.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_range_filter/time_range_filter.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
@@ -33,19 +33,19 @@ class MeasurementInDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute<void>(
-                  builder: (context) {
-                    return SamplerMan();
-                  },
-                ));
-              },
-              icon: Icon(Icons.read_more)),
-        ],
-      ),
+      // appBar: AppBar(
+      //   actions: const [
+      //     // IconButton(
+      //     //     onPressed: () {
+      //     //       Navigator.push(context, MaterialPageRoute<void>(
+      //     //         builder: (context) {
+      //     //           return SamplerMan();
+      //     //         },
+      //     //       ));
+      //     //     },
+      //     //     icon: Icon(Icons.read_more)),
+      //   ],
+      // ),
       body: SafeArea(
         child: BlocBuilder<GetSingleMeasurmentsDetailsCubit,
             GetSingleMeasurmentsDetailsState>(
@@ -220,7 +220,6 @@ class _MeasurementList extends StatelessWidget {
             const SegmentedMainFilterButtons(),
 
             BlocBuilder<TimeUnitFilterCubit, TimeUnitFilterState>(
-              buildWhen: (previous, current) => true,
               builder: (context, state) {
                 print(
                   TimeUnit.values.indexOf(state.timeUnit),
@@ -237,7 +236,7 @@ class _MeasurementList extends StatelessWidget {
                   }).toList(),
                 );
               },
-            )
+            ),
           ],
         ),
       ),
@@ -245,6 +244,7 @@ class _MeasurementList extends StatelessWidget {
   }
 }
 
+// Generic Data View
 class DataView extends StatelessWidget {
   const DataView({
     super.key,
@@ -274,8 +274,6 @@ class DataView extends StatelessWidget {
                 padding: EdgeInsets.all(18),
                 child: TimeRangeFilterInputStepper(),
               ),
-              // todo add bloc here
-
               BlocBuilder<TimeRangeFilterBloc, TimeRangeFilterState>(
                 builder: (context, state) {
                   // Filter
@@ -284,17 +282,62 @@ class DataView extends StatelessWidget {
                       final filteredMeasurements = measurementList
                           .where(
                             (element) =>
-                                element.date.isAfter(value.startDate) &&
-                                element.date.isBefore(value.endDate),
+                                (element.date.isAfter(value.startDate) &&
+                                    element.date.isBefore(value.endDate)) ||
+                                element.date
+                                    .isAtSameMomentAs(value.startDate) ||
+                                element.date.isAtSameMomentAs(value.endDate),
                           )
                           .toList();
+
+                      if (timeUnit == TimeUnit.month) {
+                        print(filteredMeasurements.length);
+                      }
+
+                      // int previousIndex;
+                      // int nextIndex;
+                      Measurement? previousMeasurement;
+                      Measurement? nextMeasurement;
+
+                      previousMeasurement = measurementList.lastWhereOrNull(
+                        (element) => element.date.isBefore(value.startDate),
+                      );
+                      nextMeasurement = measurementList.firstWhereOrNull(
+                        (element) => element.date.isAfter(value.endDate),
+                      );
+                      // if (filteredMeasurements.isNotEmpty) {
+                      //   //
+                      //   previousIndex = measurementList
+                      //           .indexOf(filteredMeasurements.first) -
+                      //       1;
+
+                      //   if (previousIndex >= 0) {
+                      //     previousMeasurement = measurementList[previousIndex];
+                      //   }
+
+                      //   //
+                      //   nextIndex =
+                      //       measurementList.indexOf(filteredMeasurements.last) +
+                      //           1;
+                      //   if (nextIndex <= measurementList.length - 1) {
+                      //     nextMeasurement = measurementList[nextIndex];
+                      //   }
+                      // }
+
                       return Column(
                         children: [
+                          // Chart
                           MetricsLineGraph(
                             filteredMeasurements: filteredMeasurements,
                             endDate: value.endDate,
                             startDate: value.startDate,
-                            dayToText: DayToText(timeUnit: timeUnit),
+                            previousMeasurement: previousMeasurement,
+                            nextMeasurement: nextMeasurement,
+                            dayToText: DayToText(
+                              timeUnit: timeUnit,
+                              endDate: value.endDate,
+                              startDate: value.startDate,
+                            ),
                           ),
                           // LineChartSample2(),
 

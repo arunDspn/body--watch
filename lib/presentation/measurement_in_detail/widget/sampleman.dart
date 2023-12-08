@@ -38,7 +38,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             ),
             child: LineChart(
               // showAvg ? avgData() : mainData(),
-              mainData(),
+              mainData2(),
               // avgData(),
             ),
           ),
@@ -125,6 +125,99 @@ class _LineChartSample2State extends State<LineChartSample2> {
     }
 
     return Text(text, style: style, textAlign: TextAlign.left);
+  }
+
+  LineChartData mainData2() {
+    return LineChartData(
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: false,
+        drawHorizontalLine: false,
+        horizontalInterval: 1,
+        verticalInterval: 1,
+        getDrawingHorizontalLine: (value) {
+          return const FlLine(
+            color: Colors.red,
+          );
+        },
+        getDrawingVerticalLine: (value) {
+          return const FlLine(
+            color: Colors.blue,
+            strokeWidth: 0,
+          );
+        },
+      ),
+      titlesData: FlTitlesData(
+        rightTitles: const AxisTitles(),
+        topTitles: const AxisTitles(),
+        bottomTitles: AxisTitles(
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 25,
+            interval: 1,
+            getTitlesWidget: (value, meta) {
+              print(value);
+              return SideTitleWidget(
+                  child: Text(
+                    value.toString(),
+                    style: TextStyle(fontSize: 6),
+                  ),
+                  axisSide: meta.axisSide);
+            },
+          ),
+        ),
+        // leftTitles: AxisTitles(
+        //   sideTitles: SideTitles(
+        //     showTitles: true,
+        //     interval: 1,
+        //     getTitlesWidget: leftTitleWidgets,
+        //     reservedSize: 42,
+        //   ),
+        // ),
+      ),
+      // borderData: FlBorderData(
+      //   show: true,
+      //   border: Border.all(color: const Color(0xff37434d)),
+      // ),
+      // minX: 0,
+      maxX: 365,
+      // minY: 3,
+      // maxY: 30,
+      lineBarsData: [
+        LineChartBarData(
+          spots: const [
+            FlSpot(0, 0),
+            // FlSpot.nullSpot,
+            FlSpot(1, 5),
+            // FlSpot(1, 6),
+            // FlSpot(1, 6.1),
+            // FlSpot(1, 6.3),
+            // FlSpot(1, 6.7),
+            // FlSpot(1, 6.9),
+            // FlSpot(3, 3.1),
+            // FlSpot(6, 6.1),
+            // FlSpot(6, 9),
+
+            // FlSpot(8, 4),
+
+            // FlSpot(9.5, 3),
+            // FlSpot(11, 4),
+
+            // FlSpot.nullSpot,
+          ],
+          preventCurveOverShooting: true,
+          isCurved: true,
+          barWidth: 1,
+          isStrokeCapRound: true,
+          dotData: const FlDotData(
+            show: false,
+          ),
+          // belowBarData: BarAreaData(
+          //   show: true,
+          // ),
+        ),
+      ],
+    );
   }
 
   LineChartData mainData() {

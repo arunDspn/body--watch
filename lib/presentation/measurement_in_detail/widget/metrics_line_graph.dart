@@ -1,14 +1,11 @@
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watcha_body/constants/theme.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/helper/day_indexer.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
-import 'package:watcha_body/services/time_range_service/service.dart';
 
 class MetricsLineGraph extends StatelessWidget {
   const MetricsLineGraph({
@@ -17,17 +14,21 @@ class MetricsLineGraph extends StatelessWidget {
     required this.startDate,
     required this.endDate,
     required this.dayToText,
+    required this.previousMeasurement,
+    this.nextMeasurement,
   });
 
   final List<Measurement> filteredMeasurements;
   final DateTime startDate;
   final DateTime endDate;
   final DayToText dayToText;
+  final Measurement? previousMeasurement;
+  final Measurement? nextMeasurement;
 
   @override
   Widget build(BuildContext context) {
-    print("00 ------------- exe");
-    // Convert data to FlSpot
+    // print("00 ------------- exe");
+    // Convert data to F§lSpot
 
     // final minY = measurements.reduce(
     //   (value, element) => value.value < element.value ? value : element,
@@ -63,11 +64,17 @@ class MetricsLineGraph extends StatelessWidget {
     //   print("$measure  \n");
     // }
 
+    final reversedList = filteredMeasurements.reversed.toList();
+
     return FutureBuilder<List<FlSpot>>(
       future: genDataConcurrently(
-        list: filteredMeasurements,
+        list: reversedList,
         startDate: startDate,
         endDate: endDate,
+        timeUnit: dayToText.timeUnit,
+        previousMeasurement: previousMeasurement,
+        nextMeasurement: nextMeasurement,
+        dayToText: dayToText,
       ),
       // genData(
       //   startDate: startDate,
@@ -77,7 +84,7 @@ class MetricsLineGraph extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
-          print("------ ${snapshot.data!.length}");
+          // print("------ ${snapshot.data!.length}");
           // for (var i = 0; i < snapshot.data!.length; i++) {
           //   print("${snapshot.data![i].x} --- ${(snapshot.data![i].y)} ");
           // }
@@ -121,9 +128,24 @@ class MetricsLineGraph extends StatelessWidget {
                         // print(
                         //     '${DayIndex().getDateStringFromDayIndex(touchedSpots.first.y.toInt())}');
                         // final date = dayToText.
+                        final dateString = switch (dayToText.timeUnit) {
+                          // TODO: Handle this case.
+                          TimeUnit.week => dayToText.denormalizeWeekday(
+                              touchedSpots.first.x,
+                            ),
+                          // TODO: Handle this case.
+                          TimeUnit.month => '',
+                          TimeUnit.threeMonth =>
+                            dayToText.derangeifyThreeMonthsToString(
+                              touchedSpots.first.x,
+                            ),
+                          TimeUnit.year => dayToText
+                              .derangeifyMonthsInYear(touchedSpots.first.x),
+                        };
+
                         return [
                           LineTooltipItem(
-                            '${touchedSpots.first.y} on ${DayIndex().getDateStringFromDayIndex(touchedSpots.first.x.toInt())}',
+                            '${touchedSpots.first.y} on $dateString',
                             // '${DayIndex().getDateStringFromDayIndex(touchedSpots.first.x.toInt())}',
                             // "Good is God \n Max asdasd addsaaaaaaaaaa",
                             const TextStyle(
@@ -144,15 +166,31 @@ class MetricsLineGraph extends StatelessWidget {
                       sideTitles: SideTitles(
                         showTitles: true,
                         reservedSize: 40,
-                        // interval: 7,
+                        interval: 1,
                         // getTitlesWidget: bottomTitleWidgets,
                         getTitlesWidget: (value, meta) {
+                          if (dayToText.timeUnit == TimeUnit.month) {
+                            print(
+                                " -- $value ${meta.axisSide.index} --- ${dayToText.timeUnit}");
+                          }
+                          // print(
+                          //     " -- $value ${meta.axisSide.index} --- ${dayToText.timeUnit}");
+                          // return SideTitleWidget(
+                          //     child: Text(value.toString()),
+                          //     axisSide: meta.axisSide);
                           return SideTitleWidget(
                             axisSide: meta.axisSide,
                             // child: Text((value + 1).toInt().toString()),
                             child: Text(
-                              dayToText.getRelevantText(
-                                DayIndex().getDateFromDayIndex(value.toInt()),
+                              dayToText.getRelevantTextByNumber(
+                                value,
+                                // DayIndex().getDateFromDayIndex(
+                                //   value.toInt(),
+                                // filteredMeasurements[value.toInt()].date,
+                                // ),
+                              ),
+                              style: const TextStyle(
+                                fontSize: 10,
                               ),
                             ),
                           );
@@ -198,12 +236,21 @@ class MetricsLineGraph extends StatelessWidget {
                         },
                       ),
                     ),
-                    leftTitles: const AxisTitles(
+                    leftTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
-                        interval: 15,
+                        // interval: 15,
                         // getTitlesWidget: leftTitleWidgets,
                         reservedSize: 32,
+                        getTitlesWidget: (value, meta) => SideTitleWidget(
+                          axisSide: meta.axisSide,
+                          child: Text(
+                            meta.formattedValue,
+                            style: const TextStyle(
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -215,11 +262,15 @@ class MetricsLineGraph extends StatelessWidget {
                   // maxX: 14,
                   // minY: minY.value,
                   // maxY: maxY.value,
-                  // minX: 6,
+                  minX: 0.9,
+                  maxY: setMaxY(snapshot.data!),
+                  minY: setMinY(snapshot.data!),
                   // maxX: 60,
+                  // minX: setMaxX(dayToText.timeUnit),
+                  maxX: setMaxX(dayToText.timeUnit, startDate),
                   lineBarsData: [
                     LineChartBarData(
-                      spots: snapshot.data ?? [],
+                      spots: snapshot.data!.reversed.toList(),
                       // spots: const [
                       //   FlSpot(0, 3),
                       //   FlSpot(2.6, 2),
@@ -232,12 +283,33 @@ class MetricsLineGraph extends StatelessWidget {
                       isCurved: true,
                       // barWidth: 2,
                       aboveBarData: BarAreaData(),
-                      curveSmoothness: .1,
+                      curveSmoothness: .2,
                       preventCurveOverShooting: true,
                       // isStrokeCapRound: true,
                       color: kPrimaryColorInDark,
                       dotData: FlDotData(
                         checkToShowDot: (spot, barData) => spot.y != 0,
+                        getDotPainter: (p0, p1, p2, p3) {
+                          if (p0.x == 0.9) {
+                            // todo: fix?
+                            return FlDotCirclePainter(
+                              color: Colors.transparent,
+                              strokeWidth: 0,
+                            );
+                          }
+                          // else if (p0.x == p2.spots.first.x) {
+                          //   // todo: fix?
+                          //   return FlDotCirclePainter(
+                          //     color: Colors.transparent,
+                          //     strokeWidth: 0,
+                          //   );
+                          // }
+                          return FlDotCirclePainter(
+                            color: kPrimaryColorInDark,
+                            radius: 3,
+                            strokeWidth: 0,
+                          );
+                        },
                       ),
                       belowBarData: BarAreaData(
                           // gradient: LinearGradient(
@@ -260,16 +332,129 @@ class MetricsLineGraph extends StatelessWidget {
   }
 }
 
+double setMaxY(List<FlSpot> lists) {
+  final item =
+      lists.reduce((value, element) => value.y > element.y ? value : element);
+  return item.y + 2;
+}
+
+double setMinY(List<FlSpot> lists) {
+  final item =
+      lists.reduce((value, element) => value.y < element.y ? value : element);
+  return item.y - 2;
+}
+
+double setMaxX(TimeUnit timeUnit, DateTime dateTime) {
+  return switch (timeUnit) {
+    TimeUnit.week => 8,
+    // TODO: Handle this case.
+    TimeUnit.month => calculateTotalWeeksInCurrentMonth(dateTime),
+    // TODO: Handle this case.
+    TimeUnit.threeMonth => 4,
+    // TODO: Handle this case.
+    TimeUnit.year => 13,
+  };
+}
+
+double calculateTotalWeeksInCurrentMonth(DateTime date) {
+  // Find the first day of the month
+  DateTime firstDayOfMonth = DateTime(date.year, date.month, 1);
+
+  // Find the last day of the month
+  DateTime lastDayOfMonth = DateTime(date.year, date.month + 1, 0);
+
+  // Calculate the difference in days between the first and last day of the month
+  int differenceInDays = lastDayOfMonth.difference(firstDayOfMonth).inDays;
+
+  // Calculate the total weeks
+  int totalWeeks = ((differenceInDays + firstDayOfMonth.weekday) / 7).ceil();
+
+  return totalWeeks.toDouble();
+}
+
+double getWeekOfMonth(DateTime date) {
+  int firstDayOfMonth = DateTime(date.year, date.month, 1).weekday;
+  int dayOfMonth = date.day;
+
+  // Calculate the week of the month
+  int weekOfMonth = ((dayOfMonth + firstDayOfMonth - 2) / 7).ceil();
+
+  return weekOfMonth.toDouble();
+}
+
 Future<List<FlSpot>> genDataConcurrently({
   required DateTime startDate,
   required DateTime endDate,
   required List<Measurement> list,
+  required TimeUnit timeUnit,
+  required Measurement? previousMeasurement,
+  required Measurement? nextMeasurement,
+  required DayToText dayToText,
 }) async {
-  return compute(genDataCompute, {
-    'startDate': startDate,
-    'endDate': endDate,
-    'list': list,
-  });
+  // return compute(genDataCompute, {
+  //   'startDate': startDate,
+  //   'endDate': endDate,
+  //   'list': list,
+  // });
+
+  // const firstItem = FlSpot(0.9, 55);
+
+  final flspots = switch (timeUnit) {
+    TimeUnit.week => list
+        .map((e) => FlSpot(dayToText.normalizeWeekday(e.date), e.value))
+        .toList(),
+    TimeUnit.month =>
+      list.map((e) => FlSpot(getWeekOfMonth(e.date), e.value)).toList(),
+    TimeUnit.threeMonth => list
+        .map(
+          (e) => FlSpot(dayToText.rangeifyThreeMonths(e.date), e.value),
+        )
+        .toList(),
+    TimeUnit.year => list
+        .map((e) => FlSpot(dayToText.rangeifyMonthsInYear(e.date), e.value))
+        .toList(),
+  };
+
+  FlSpot? lastSpot;
+  FlSpot? firstSpot;
+
+  if (timeUnit == TimeUnit.threeMonth) {
+    print('Yio');
+  }
+
+  if (previousMeasurement != null) {
+    firstSpot = FlSpot(0.9, previousMeasurement.value);
+  }
+  if (nextMeasurement != null) {
+    final lastSpotX = setMaxX(timeUnit, startDate);
+    lastSpot = FlSpot(lastSpotX + .09, nextMeasurement.value);
+  }
+
+  // return [
+  //   if (firstSpot != null) ...[firstSpot] else ...[],
+  //   ...flspots,
+  //   if (lastSpot != null) ...[lastSpot] else ...[],
+  // ];
+
+  if (timeUnit == TimeUnit.threeMonth) {
+    print('Yio');
+  }
+
+  final fd = <FlSpot>[
+    if (firstSpot != null) ...[firstSpot] else ...[],
+    ...flspots,
+    if (lastSpot != null) ...[lastSpot] else ...[],
+  ]..sort((a, b) => a.x.compareTo(b.x));
+  return fd;
+
+  // final flspots = <FlSpot>[];
+
+  // for (var i = 0; i < list.length; i++) {
+  //   // flspots.add(FlSpot(i.toDouble(), list[i].value));
+  //   flspots.add();
+  // }
+  // // return list.map((e) => FlSpot(e.date.weekday.toDouble(), e.value)).toList();
+  // return flspots;
 }
 
 List<FlSpot> genDataCompute(Map<String, dynamic> data) {
@@ -291,13 +476,13 @@ List<FlSpot> genDataCompute(Map<String, dynamic> data) {
       orElse: () => sample.copyWith(date: date, value: 0),
     );
 
-    flSpots.add(
-      FlSpot(
-        DayIndex().calculateDaysSinceReference(date).toDouble(),
-        // measure.value != 0 ? measure.value : double.nan,
-        measure.value,
-      ),
-    );
+    // flSpots.add(
+    //   FlSpot(
+    //     DayIndex().calculateDaysSinceReference(date).toDouble(),
+    //     // measure.value != 0 ? measure.value : double.nan,
+    //     measure.value,
+    //   ),
+    // );
     // index++;
     // flSpots.add(
     //   measure.value == 0
@@ -307,6 +492,10 @@ List<FlSpot> genDataCompute(Map<String, dynamic> data) {
     //           measure.value,
     //         ),
     // );
+    flSpots.add(FlSpot(
+      DayIndex().calculateDaysSinceReference(date).toDouble(),
+      measure.value,
+    ));
   }
 
   // print(
@@ -351,288 +540,6 @@ List<FlSpot> genDataCompute(Map<String, dynamic> data) {
 //     TimeUnit.year => yearBottomTitleWidget(),
 //   };
 // }
-
-Widget bottomTitleWidgets(double value, TitleMeta meta) {
-  const style = TextStyle(
-    fontWeight: FontWeight.bold,
-    fontSize: 16,
-  );
-  Widget text;
-  switch (value.toInt()) {
-    case 2:
-      text = const Text('MAR', style: style);
-      break;
-    case 5:
-      text = const Text('JUN', style: style);
-      break;
-    case 8:
-      text = const Text('SEP', style: style);
-      break;
-    default:
-      text = const Text('', style: style);
-      break;
-  }
-
-  return SideTitleWidget(
-    axisSide: meta.axisSide,
-    child: text,
-  );
-}
-
-Widget leftTitleWidgets(double value, TitleMeta meta) {
-  const style = TextStyle(
-    fontWeight: FontWeight.bold,
-    fontSize: 15,
-  );
-  String text;
-  switch (value.toInt()) {
-    case 1:
-      text = '10K';
-      break;
-    case 3:
-      text = '30k';
-      break;
-    case 5:
-      text = '50k';
-      break;
-    default:
-      return Container();
-  }
-
-  return Text(text, style: style, textAlign: TextAlign.left);
-}
-
-class LineChartSample2 extends StatefulWidget {
-  const LineChartSample2({super.key});
-
-  @override
-  State<LineChartSample2> createState() => _LineChartSample2State();
-}
-
-class _LineChartSample2State extends State<LineChartSample2> {
-  bool showAvg = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        AspectRatio(
-          aspectRatio: 1.70,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              right: 18,
-              left: 12,
-              top: 24,
-              bottom: 12,
-            ),
-            child: LineChart(
-              // showAvg ? avgData() : mainData(),
-              // avgData(),
-              mainData(),
-            ),
-          ),
-        ),
-        // SizedBox(
-        //   width: 60,
-        //   height: 34,
-        //   child: TextButton(
-        //     onPressed: () {
-        //       setState(() {
-        //         showAvg = !showAvg;
-        //       });
-        //     },
-        //     child: Text(
-        //       'avg',
-        //       style: TextStyle(
-        //         fontSize: 12,
-        //         color: showAvg ? Colors.white.withOpacity(0.5) : Colors.white,
-        //       ),
-        //     ),
-        //   ),
-        // ),
-      ],
-    );
-  }
-
-  LineChartData mainData() {
-    return LineChartData(
-      gridData: FlGridData(
-        horizontalInterval: 1,
-        verticalInterval: 1,
-        getDrawingHorizontalLine: (value) {
-          return FlLine(
-            // color: kPrimaryLightFont,
-            color: Colors.grey.shade50,
-            strokeWidth: 1,
-            dashArray: [5, 5],
-          );
-        },
-        getDrawingVerticalLine: (value) {
-          return FlLine(
-            // color: kPrimaryLightFont,
-
-            color: Colors.grey.shade50,
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: const FlTitlesData(
-        rightTitles: AxisTitles(),
-        topTitles: AxisTitles(),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            interval: 1,
-            getTitlesWidget: bottomTitleWidgets,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            interval: 1,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
-          ),
-        ),
-      ),
-      // borderData: FlBorderData(
-      //   show: true,
-      //   // border: Border.all(color: Colors.grey),
-      //   border: Border.all(color: const Color.fromARGB(255, 177, 31, 31)),
-      // ),
-      // minX: 7,
-      // maxX: 7,
-      // minY: 0,
-      // maxY: 6,
-      lineBarsData: [
-        LineChartBarData(
-          spots: const [
-            FlSpot(0, 3),
-            FlSpot(2.6, 2),
-            FlSpot(4.9, 5),
-            FlSpot(6.8, 3.1),
-            FlSpot(8, 4),
-            FlSpot(9.5, 3),
-            FlSpot(11, 4),
-          ],
-          isCurved: true,
-          barWidth: 2,
-          isStrokeCapRound: true,
-          color: kPrimaryColorInDark,
-          dotData: FlDotData(
-            show: false,
-            checkToShowDot: (spot, _) {
-              return spot.y != 0;
-            },
-          ),
-          belowBarData: BarAreaData(
-            show: true,
-            // gradient: LinearGradient(
-            //   colors: gradientColors
-            //       .map((color) => color.withOpacity(0.3))
-            //       .toList(),
-            // ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  LineChartData avgData() {
-    return LineChartData(
-      lineTouchData: const LineTouchData(
-        enabled: false,
-      ),
-      gridData: FlGridData(
-        show: false,
-        drawHorizontalLine: false,
-        verticalInterval: 1,
-        horizontalInterval: 1,
-        drawVerticalLine: false,
-        getDrawingVerticalLine: (value) {
-          return const FlLine(
-            color: Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-        getDrawingHorizontalLine: (value) {
-          return const FlLine(
-            color: Color(0xff37434d),
-            strokeWidth: 1,
-          );
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 30,
-            getTitlesWidget: bottomTitleWidgets,
-            interval: 1,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: leftTitleWidgets,
-            reservedSize: 42,
-            interval: 1,
-          ),
-        ),
-        topTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        rightTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(color: const Color(0xff37434d)),
-      ),
-      minX: 0,
-      maxX: 11,
-      minY: 0,
-      maxY: 6,
-      lineBarsData: [
-        LineChartBarData(
-          spots: const [
-            FlSpot(0, 3.44),
-            FlSpot(2.6, 3.44),
-            FlSpot(4.9, 3.44),
-            FlSpot(6.8, 3.44),
-            FlSpot(8, 3.44),
-            FlSpot(9.5, 3.44),
-            FlSpot(11, 3.44),
-          ],
-          isCurved: true,
-          barWidth: 1,
-          isStrokeCapRound: true,
-          // color: Colors.red,
-          // dashArray: [5, 10],
-          dotData: const FlDotData(
-            show: true,
-          ),
-          belowBarData: BarAreaData(
-            show: true, color: Colors.amber,
-            // gradient: LinearGradient(
-            //   colors: [
-            //     ColorTween(begin: gradientColors[0], end: gradientColors[1])
-            //         .lerp(0.2)!
-            //         .withOpacity(0.1),
-            //     ColorTween(begin: gradientColors[0], end: gradientColors[1])
-            //         .lerp(0.2)!
-            //         .withOpacity(0.1),
-            //   ],
-            // ),
-          ),
-        ),
-      ],
-    );
-  }
-}
 
 // List<FlSpot> genDataCompute(Map<String, dynamic> data) {
 //   final startDate = data['startDate'] as DateTime;
@@ -701,3 +608,10 @@ class TemplateBenchmark extends BenchmarkBase {
 void main() {
   TemplateBenchmark.main();
 }
+
+
+
+
+// Save Stuff
+
+

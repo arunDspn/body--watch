@@ -10,6 +10,7 @@ import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/display_models/measurement_display.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
+import 'package:watcha_body/presentation/measurement_in_detail/widget/sampleman.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/size_config.dart';
 
@@ -49,6 +50,19 @@ class OverView extends StatelessWidget {
               Navigator.pushNamed(context, AddWidget.routeName);
             },
           ),
+          // IconButton(
+          //   icon: Icon(
+          //     Icons.add,
+          //     color: Theme.of(context).colorScheme.secondary,
+          //   ),
+          //   onPressed: () {
+          //     Navigator.push<void>(context, MaterialPageRoute(
+          //       builder: (context) {
+          //         return SamplerMan();
+          //       },
+          //     ));
+          //   },
+          // ),
         ],
       ),
       body: SafeArea(
@@ -195,10 +209,12 @@ class _WidgetBox extends StatelessWidget {
                         ),
                         Text(
                           _unit,
-                          style:
-                              Theme.of(context).textTheme.headlineMedium!.copyWith(
-                                    fontSize: getProportionateScreenWidth(18),
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium!
+                              .copyWith(
+                                fontSize: getProportionateScreenWidth(18),
+                              ),
                           textAlign: TextAlign.center,
                         ),
                       ],

@@ -119,6 +119,7 @@ class DatabaseService {
           tableName,
           where: 'type = ?',
           whereArgs: [type],
+          // orderBy: 'date DESC',
           orderBy: 'date DESC',
         );
       } else {
