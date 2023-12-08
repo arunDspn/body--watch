@@ -33,19 +33,6 @@ class MeasurementInDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
     return Scaffold(
-      // appBar: AppBar(
-      //   actions: const [
-      //     // IconButton(
-      //     //     onPressed: () {
-      //     //       Navigator.push(context, MaterialPageRoute<void>(
-      //     //         builder: (context) {
-      //     //           return SamplerMan();
-      //     //         },
-      //     //       ));
-      //     //     },
-      //     //     icon: Icon(Icons.read_more)),
-      //   ],
-      // ),
       body: SafeArea(
         child: BlocBuilder<GetSingleMeasurmentsDetailsCubit,
             GetSingleMeasurmentsDetailsState>(
@@ -210,15 +197,7 @@ class _MeasurementList extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            // ChartContainerForDetailed(
-            //   startDate: startDate,
-            //   chartDisplayModel: ChartDisplayModel.fromMeasurementList(
-            //     measurement: measurementList,
-            //     name: measurementType.name,
-            //   ),
-            // ),
             const SegmentedMainFilterButtons(),
-
             BlocBuilder<TimeUnitFilterCubit, TimeUnitFilterState>(
               builder: (context, state) {
                 print(
@@ -290,12 +269,6 @@ class DataView extends StatelessWidget {
                           )
                           .toList();
 
-                      if (timeUnit == TimeUnit.month) {
-                        print(filteredMeasurements.length);
-                      }
-
-                      // int previousIndex;
-                      // int nextIndex;
                       Measurement? previousMeasurement;
                       Measurement? nextMeasurement;
 
@@ -305,24 +278,6 @@ class DataView extends StatelessWidget {
                       nextMeasurement = measurementList.firstWhereOrNull(
                         (element) => element.date.isAfter(value.endDate),
                       );
-                      // if (filteredMeasurements.isNotEmpty) {
-                      //   //
-                      //   previousIndex = measurementList
-                      //           .indexOf(filteredMeasurements.first) -
-                      //       1;
-
-                      //   if (previousIndex >= 0) {
-                      //     previousMeasurement = measurementList[previousIndex];
-                      //   }
-
-                      //   //
-                      //   nextIndex =
-                      //       measurementList.indexOf(filteredMeasurements.last) +
-                      //           1;
-                      //   if (nextIndex <= measurementList.length - 1) {
-                      //     nextMeasurement = measurementList[nextIndex];
-                      //   }
-                      // }
 
                       return Column(
                         children: [
@@ -339,7 +294,6 @@ class DataView extends StatelessWidget {
                               startDate: value.startDate,
                             ),
                           ),
-                          // LineChartSample2(),
 
                           // Measure List
                           SizedBox(
