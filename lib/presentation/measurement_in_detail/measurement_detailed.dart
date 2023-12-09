@@ -88,46 +88,46 @@ class MeasurementInDetail extends StatelessWidget {
                                 child: const Text('Cancel'),
                               ),
                             ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: DropdownButton<DurationsEnum>(
-                                //TODO: Better universal
-                                borderRadius: BorderRadius.circular(20),
-                                value: value.durationsEnum,
-                                icon: Icon(
-                                  Icons.arrow_drop_down,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                                underline: Container(),
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    context
-                                        .read<
-                                            GetSingleMeasurmentsDetailsCubit>()
-                                        .fetchAllData(
-                                          type: measurementType.name,
-                                          appPreferences:
-                                              appPref.appPreferences,
-                                          durationsEnum: value,
-                                        );
-                                  }
-                                },
-                                items: DurationsEnum.values.map((e) {
-                                  return DropdownMenuItem(
-                                    value: e,
-                                    child: Text(
-                                      EnumToString.convertToString(
-                                        e,
-                                        camelCase: true,
-                                      ),
-                                      style:
-                                          Theme.of(context).textTheme.bodyLarge,
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
+                            // Align(
+                            //   alignment: Alignment.centerRight,
+                            //   child: DropdownButton<DurationsEnum>(
+                            //     //TODO: Better universal
+                            //     borderRadius: BorderRadius.circular(20),
+                            //     value: value.durationsEnum,
+                            //     icon: Icon(
+                            //       Icons.arrow_drop_down,
+                            //       color:
+                            //           Theme.of(context).colorScheme.secondary,
+                            //     ),
+                            //     underline: Container(),
+                            //     onChanged: (value) {
+                            //       if (value != null) {
+                            //         context
+                            //             .read<
+                            //                 GetSingleMeasurmentsDetailsCubit>()
+                            //             .fetchAllData(
+                            //               type: measurementType.name,
+                            //               appPreferences:
+                            //                   appPref.appPreferences,
+                            //               durationsEnum: value,
+                            //             );
+                            //       }
+                            //     },
+                            //     items: DurationsEnum.values.map((e) {
+                            //       return DropdownMenuItem(
+                            //         value: e,
+                            //         child: Text(
+                            //           EnumToString.convertToString(
+                            //             e,
+                            //             camelCase: true,
+                            //           ),
+                            //           style:
+                            //               Theme.of(context).textTheme.bodyLarge,
+                            //         ),
+                            //       );
+                            //     }).toList(),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -184,6 +184,15 @@ class _MeasurementList extends StatelessWidget {
     } else {
       unit = '%';
     }
+
+    final timeBasedViewsList = TimeUnit.values.map((e) {
+      return DataView(
+        key: Key(e.toString()),
+        measurementList: measurementList,
+        measurementType: measurementType,
+        timeUnit: e,
+      );
+    }).toList();
     return Padding(
       padding: const EdgeInsets.all(12),
       child: SingleChildScrollView(
@@ -198,23 +207,8 @@ class _MeasurementList extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const SegmentedMainFilterButtons(),
-            BlocBuilder<TimeUnitFilterCubit, TimeUnitFilterState>(
-              builder: (context, state) {
-                print(
-                  TimeUnit.values.indexOf(state.timeUnit),
-                );
-                return IndexedStack(
-                  index: TimeUnit.values.indexOf(state.timeUnit),
-                  children: TimeUnit.values.map((e) {
-                    // children: [TimeUnit.week].map((e) {
-                    return DataView(
-                      measurementList: measurementList,
-                      measurementType: measurementType,
-                      timeUnit: e,
-                    );
-                  }).toList(),
-                );
-              },
+            _ViewPresenter(
+              timeBasedViewsList: timeBasedViewsList,
             ),
           ],
         ),
@@ -223,8 +217,34 @@ class _MeasurementList extends StatelessWidget {
   }
 }
 
+class _ViewPresenter extends StatelessWidget {
+  const _ViewPresenter({
+    required this.timeBasedViewsList,
+  });
+
+  final List<DataView> timeBasedViewsList;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<TimeUnitFilterCubit, TimeUnitFilterState>(
+      builder: (context, state) {
+        return Column(
+          children: timeBasedViewsList
+              .map(
+                (e) => Offstage(
+                  offstage: e.timeUnit != state.timeUnit,
+                  child: e,
+                ),
+              )
+              .toList(),
+        );
+      },
+    );
+  }
+}
+
 // Generic Data View
-class DataView extends StatelessWidget {
+class DataView extends StatefulWidget {
   const DataView({
     super.key,
     required this.measurementList,
@@ -237,10 +257,17 @@ class DataView extends StatelessWidget {
   final TimeUnit timeUnit;
 
   @override
+  State<DataView> createState() => _DataViewState();
+}
+
+class _DataViewState extends State<DataView> {
+  @override
   Widget build(BuildContext context) {
+    print(widget.timeUnit);
     return BlocProvider(
+      lazy: false,
       create: (context) => TimeRangeFilterBloc(
-        timeUnit,
+        widget.timeUnit,
         context.read<TimeRangeService>(),
       )..add(
           const TimeRangeFilterEvent.currentRange(),
@@ -258,7 +285,7 @@ class DataView extends StatelessWidget {
                   // Filter
                   return state.map(
                     state: (value) {
-                      final filteredMeasurements = measurementList
+                      final filteredMeasurements = widget.measurementList
                           .where(
                             (element) =>
                                 (element.date.isAfter(value.startDate) &&
@@ -272,10 +299,11 @@ class DataView extends StatelessWidget {
                       Measurement? previousMeasurement;
                       Measurement? nextMeasurement;
 
-                      previousMeasurement = measurementList.lastWhereOrNull(
+                      previousMeasurement =
+                          widget.measurementList.lastWhereOrNull(
                         (element) => element.date.isBefore(value.startDate),
                       );
-                      nextMeasurement = measurementList.firstWhereOrNull(
+                      nextMeasurement = widget.measurementList.firstWhereOrNull(
                         (element) => element.date.isAfter(value.endDate),
                       );
 
@@ -289,7 +317,7 @@ class DataView extends StatelessWidget {
                             previousMeasurement: previousMeasurement,
                             nextMeasurement: nextMeasurement,
                             dayToText: DayToText(
-                              timeUnit: timeUnit,
+                              timeUnit: widget.timeUnit,
                               endDate: value.endDate,
                               startDate: value.startDate,
                             ),
@@ -312,7 +340,7 @@ class DataView extends StatelessWidget {
                                       context: context,
                                       builder: (context) {
                                         return AddDataModal.add(
-                                          type: measurementType,
+                                          type: widget.measurementType,
                                         );
                                       },
                                     );
