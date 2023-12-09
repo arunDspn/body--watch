@@ -20,6 +20,7 @@ class TimeRangeFilterInputStepper extends StatelessWidget {
               final startMonthName = monthFormat.format(value.startDate);
               final endMonthName = monthFormat.format(value.endDate);
               final timeUnit = value.timeUnit;
+
               return switch (timeUnit) {
                 TimeUnit.week =>
                   '$startMonthName ${value.startDate.day} - $endMonthName ${value.endDate.day}',
@@ -28,6 +29,23 @@ class TimeRangeFilterInputStepper extends StatelessWidget {
                   '$startMonthName - $endMonthName ${value.startDate.year}',
                 TimeUnit.year => value.startDate.year.toString(),
               };
+            }
+
+            // Measurement
+            var max = '';
+            var min = '';
+            if (value.measurements.isNotEmpty) {
+              max = value.measurements
+                  .reduce((value, element) =>
+                      value.value > element.value ? value : element)
+                  .value
+                  .toString();
+
+              min = value.measurements
+                  .reduce((value, element) =>
+                      value.value < element.value ? value : element)
+                  .value
+                  .toString();
             }
 
             return Row(
@@ -49,12 +67,12 @@ class TimeRangeFilterInputStepper extends StatelessWidget {
                       const SizedBox(
                         height: 8,
                       ),
-                      // Text(
-                      //   "${value.}",
-                      //   style: TextStyle(
-                      //     fontSize: 12,
-                      //   ),
-                      // ),
+                      Text(
+                        min != '' ? '$max - $min' : '',
+                        style: const TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
                     ],
                   ),
                 ),
