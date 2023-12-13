@@ -12,6 +12,7 @@ dependencies:
   collection: ^1.17.2
   d_chart: ^2.6.2
   dartz: ^0.10.1
+  dynamic_color: ^1.6.8
   enum_to_string: ^2.0.1
   external_path: ^1.0.1
   file_picker: ^6.0.0

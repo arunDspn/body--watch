@@ -116,7 +116,7 @@ class _AddDataModalState extends State<AddDataModal> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Theme.of(context).colorScheme.secondaryContainer,
+            // color: Theme.of(context).colorScheme.primaryContainer,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -134,7 +134,7 @@ class _AddDataModalState extends State<AddDataModal> {
                   ),
                   Text(
                     widget.type.name,
-                    style: Theme.of(context).textTheme.displaySmall,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   TextButton(
                     onPressed: () {
@@ -159,7 +159,7 @@ class _AddDataModalState extends State<AddDataModal> {
                   width: MediaQuery.of(context).size.width * 0.94,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    color: Theme.of(context).colorScheme.secondaryContainer,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(14),

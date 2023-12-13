@@ -63,16 +63,18 @@ class TimeRangeFilterInputStepper extends StatelessWidget {
                     children: [
                       Text(
                         title(),
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                       const SizedBox(
                         height: 8,
                       ),
-                      Text(
-                        min != '' ? '$max - $min' : '',
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ),
-                      ),
+                      if (min != '')
+                        Text(
+                          '$max - $min',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        )
+                      else
+                        const SizedBox.shrink(),
                     ],
                   ),
                 ),

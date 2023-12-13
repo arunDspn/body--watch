@@ -68,68 +68,72 @@ class MeasurementInDetail extends StatelessWidget {
                   child: Column(
                     children: [
                       // Appbar
-                      SizedBox(
-                        width: double.infinity,
-                        height: SizeConfig.screenHeight! * 0.08,
-                        child: Stack(
-                          children: [
-                            Align(
-                              child: Text(
-                                measurementType.name,
-                                style: Theme.of(context).textTheme.displaySmall,
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Cancel'),
-                              ),
-                            ),
-                            // Align(
-                            //   alignment: Alignment.centerRight,
-                            //   child: DropdownButton<DurationsEnum>(
-                            //     //TODO: Better universal
-                            //     borderRadius: BorderRadius.circular(20),
-                            //     value: value.durationsEnum,
-                            //     icon: Icon(
-                            //       Icons.arrow_drop_down,
-                            //       color:
-                            //           Theme.of(context).colorScheme.secondary,
-                            //     ),
-                            //     underline: Container(),
-                            //     onChanged: (value) {
-                            //       if (value != null) {
-                            //         context
-                            //             .read<
-                            //                 GetSingleMeasurmentsDetailsCubit>()
-                            //             .fetchAllData(
-                            //               type: measurementType.name,
-                            //               appPreferences:
-                            //                   appPref.appPreferences,
-                            //               durationsEnum: value,
-                            //             );
-                            //       }
-                            //     },
-                            //     items: DurationsEnum.values.map((e) {
-                            //       return DropdownMenuItem(
-                            //         value: e,
-                            //         child: Text(
-                            //           EnumToString.convertToString(
-                            //             e,
-                            //             camelCase: true,
-                            //           ),
-                            //           style:
-                            //               Theme.of(context).textTheme.bodyLarge,
-                            //         ),
-                            //       );
-                            //     }).toList(),
-                            //   ),
-                            // ),
-                          ],
-                        ),
+                      // SizedBox(
+                      //   width: double.infinity,
+                      //   height: SizeConfig.screenHeight! * 0.08,
+                      //   child: Stack(
+                      //     children: [
+                      //       Align(
+                      //         child: Text(
+                      //           measurementType.name,
+                      //           // style: Theme.of(context).textTheme.displaySmall,
+                      //         ),
+                      //       ),
+                      //       Align(
+                      //         alignment: Alignment.centerLeft,
+                      //         child: TextButton(
+                      //           onPressed: () {
+                      //             Navigator.pop(context);
+                      //           },
+                      //           child: const Text('Cancel'),
+                      //         ),
+                      //       ),
+                      //       // Align(
+                      //       //   alignment: Alignment.centerRight,
+                      //       //   child: DropdownButton<DurationsEnum>(
+                      //       //     //TODO: Better universal
+                      //       //     borderRadius: BorderRadius.circular(20),
+                      //       //     value: value.durationsEnum,
+                      //       //     icon: Icon(
+                      //       //       Icons.arrow_drop_down,
+                      //       //       color:
+                      //       //           Theme.of(context).colorScheme.secondary,
+                      //       //     ),
+                      //       //     underline: Container(),
+                      //       //     onChanged: (value) {
+                      //       //       if (value != null) {
+                      //       //         context
+                      //       //             .read<
+                      //       //                 GetSingleMeasurmentsDetailsCubit>()
+                      //       //             .fetchAllData(
+                      //       //               type: measurementType.name,
+                      //       //               appPreferences:
+                      //       //                   appPref.appPreferences,
+                      //       //               durationsEnum: value,
+                      //       //             );
+                      //       //       }
+                      //       //     },
+                      //       //     items: DurationsEnum.values.map((e) {
+                      //       //       return DropdownMenuItem(
+                      //       //         value: e,
+                      //       //         child: Text(
+                      //       //           EnumToString.convertToString(
+                      //       //             e,
+                      //       //             camelCase: true,
+                      //       //           ),
+                      //       //           style:
+                      //       //               Theme.of(context).textTheme.bodyLarge,
+                      //       //         ),
+                      //       //       );
+                      //       //     }).toList(),
+                      //       //   ),
+                      //       // ),
+                      //     ],
+                      //   ),
+                      // ),
+                      AppBar(
+                        title: Text(measurementType.name),
+                        centerTitle: true,
                       ),
                       const SizedBox(
                         height: 10,
@@ -201,8 +205,11 @@ class _MeasurementList extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Current Measurement · ${measurementList.first.value} $unit',
-                style: Theme.of(context).textTheme.titleLarge,
+                'Last Measurement · ${measurementList.first.value} $unit',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
             const SizedBox(height: 20),
@@ -331,8 +338,11 @@ class _DataViewState extends State<DataView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Measurement(${filteredMeasurements.length})',
-                                  style: Theme.of(context).textTheme.titleLarge,
+                                  'Measurement(s) ${filteredMeasurements.length}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(fontWeight: FontWeight.w600),
                                 ),
                                 TextButton(
                                   onPressed: () {
@@ -357,36 +367,44 @@ class _DataViewState extends State<DataView> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 12),
                             child: Container(
-                              constraints: BoxConstraints(
-                                maxHeight: SizeConfig.screenHeight! * 0.4,
-                              ),
+                              // constraints: BoxConstraints(
+                              //   maxHeight: SizeConfig.screenHeight! * 0.4,
+                              // ),
                               // padding: const EdgeInsets.only(top: 8),
                               width: SizeConfig.screenWidth! * 0.85,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: Theme.of(context)
                                     .colorScheme
-                                    .onPrimaryContainer,
+                                    .primaryContainer,
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(12),
                                 child: filteredMeasurements.isNotEmpty
-                                    ? ListView.builder(
-                                        shrinkWrap: true,
-                                        physics: const BouncingScrollPhysics(
-                                          parent:
-                                              AlwaysScrollableScrollPhysics(),
-                                        ),
-                                        itemCount: filteredMeasurements.length,
-                                        itemBuilder: (context, index) {
+                                    // ? ListView.builder(
+                                    //     shrinkWrap: true,
+                                    //     physics: const BouncingScrollPhysics(
+                                    //       parent:
+                                    //           AlwaysScrollableScrollPhysics(),
+                                    //     ),
+                                    //     itemCount: filteredMeasurements.length,
+                                    //     itemBuilder: (context, index) {
+                                    //       return _TableCell(
+                                    //         date: filteredMeasurements[index]
+                                    //             .date,
+                                    //         measurement:
+                                    //             filteredMeasurements[index]
+                                    //                 .value,
+                                    //       );
+                                    //     },
+                                    //   )
+                                    ? Column(
+                                        children: filteredMeasurements.map((e) {
                                           return _TableCell(
-                                            date: filteredMeasurements[index]
-                                                .date,
-                                            measurement:
-                                                filteredMeasurements[index]
-                                                    .value,
+                                            date: e.date,
+                                            measurement: e.value,
                                           );
-                                        },
+                                        }).toList(),
                                       )
                                     : const Text(
                                         'No Data',

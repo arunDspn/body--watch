@@ -14,15 +14,15 @@ class SegmentedMainFilterButtons extends StatelessWidget {
     return BlocBuilder<TimeUnitFilterCubit, TimeUnitFilterState>(
       builder: (context, state) {
         return SegmentedButton<TimeUnit>(
-          style: ButtonStyle(
-            overlayColor: MaterialStateProperty.resolveWith((states) {
-              if (states.contains(MaterialState.selected)) {
-                return Colors.amber;
-              } else {
-                return Colors.lightGreen;
-              }
-            }),
-          ),
+          // style: ButtonStyle(
+          //   overlayColor: MaterialStateProperty.resolveWith((states) {
+          //     if (states.contains(MaterialState.selected)) {
+          //       return Colors.amber;
+          //     } else {
+          //       return Colors.lightGreen;
+          //     }
+          //   }),
+          // ),
           showSelectedIcon: false,
           segments: TimeUnit.values.map((e) {
             return ButtonSegment<TimeUnit>(

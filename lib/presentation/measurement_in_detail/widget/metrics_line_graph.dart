@@ -1,6 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:watcha_body/constants/theme.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
@@ -45,14 +44,17 @@ class MetricsLineGraph extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: 1.50,
               child: LineChart(
+                curve: Curves.decelerate,
+                duration: const Duration(seconds: 3),
                 LineChartData(
                   gridData: FlGridData(
-                    checkToShowHorizontalLine: (value) => true,
-                    checkToShowVerticalLine: (value) => false,
+                    checkToShowHorizontalLine: (_) => true,
+                    checkToShowVerticalLine: (_) => false,
                   ),
                   lineTouchData: LineTouchData(
                     touchTooltipData: LineTouchTooltipData(
-                      tooltipBgColor: kPrimaryLightBackground,
+                      tooltipBgColor:
+                          Theme.of(context).colorScheme.secondaryContainer,
                       getTooltipItems: (touchedSpots) {
                         final dateString = switch (dayToText.timeUnit) {
                           TimeUnit.week => dayToText.denormalizeWeekday(
@@ -71,8 +73,10 @@ class MetricsLineGraph extends StatelessWidget {
                         return [
                           LineTooltipItem(
                             '${touchedSpots.first.y} on $dateString',
-                            const TextStyle(
-                              color: kPrimaryColorInLight,
+                            TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
                               fontSize: 10,
                             ),
                           ),
@@ -139,7 +143,7 @@ class MetricsLineGraph extends StatelessWidget {
                       aboveBarData: BarAreaData(),
                       curveSmoothness: .2,
                       preventCurveOverShooting: true,
-                      color: kPrimaryColorInDark,
+                      color: Theme.of(context).colorScheme.primary,
                       dotData: FlDotData(
                         checkToShowDot: (spot, barData) => spot.y != 0,
                         getDotPainter: (p0, p1, p2, p3) {
@@ -158,13 +162,13 @@ class MetricsLineGraph extends StatelessWidget {
                           //   );
                           // }
                           return FlDotCirclePainter(
-                            color: kPrimaryColorInDark,
+                            color: Theme.of(context).colorScheme.primary,
                             radius: 3,
                             strokeWidth: 0,
                           );
                         },
                       ),
-                      belowBarData: BarAreaData(),
+                      // belowBarData: BarAreaData(),
                     ),
                   ],
                 ),
@@ -182,13 +186,13 @@ class MetricsLineGraph extends StatelessWidget {
 double setMaxY(List<FlSpot> lists) {
   final item =
       lists.reduce((value, element) => value.y > element.y ? value : element);
-  return item.y + 2;
+  return (item.y + 2).roundToDouble();
 }
 
 double setMinY(List<FlSpot> lists) {
   final item =
       lists.reduce((value, element) => value.y < element.y ? value : element);
-  return item.y - 2;
+  return (item.y - 2).roundToDouble();
 }
 
 double setMaxX(TimeUnit timeUnit, DateTime dateTime) {

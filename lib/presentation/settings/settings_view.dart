@@ -59,6 +59,12 @@ class SettingsView extends StatelessWidget {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          AppLocalizations.of(context).settingsTitle,
+        ),
+      ),
       body: SingleChildScrollView(
         child: BlocBuilder<ApppreferencesBloc, ApppreferencesState>(
           builder: (context, state) {
@@ -145,29 +151,29 @@ class SettingsView extends StatelessWidget {
               child: SafeArea(
                 child: Column(
                   children: [
-                    SizedBox(
-                      width: double.infinity,
-                      height: SizeConfig.screenHeight! * 0.08,
-                      child: Stack(
-                        children: [
-                          Align(
-                            child: Text(
-                              AppLocalizations.of(context).settingsTitle,
-                              style: Theme.of(context).textTheme.displaySmall,
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Cancel'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // SizedBox(
+                    //   width: double.infinity,
+                    //   height: SizeConfig.screenHeight! * 0.08,
+                    //   child: Stack(
+                    //     children: [
+                    //       Align(
+                    //         child: Text(
+                    //           AppLocalizations.of(context).settingsTitle,
+                    //           style: Theme.of(context).textTheme.displaySmall,
+                    //         ),
+                    //       ),
+                    //       Align(
+                    //         alignment: Alignment.centerRight,
+                    //         child: TextButton(
+                    //           onPressed: () {
+                    //             Navigator.pop(context);
+                    //           },
+                    //           child: const Text('Cancel'),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -180,9 +186,9 @@ class SettingsView extends StatelessWidget {
                     LengthChoiceChip(
                       appPreferences: state.appPreferences,
                     ),
-                    ThemeChoiceChip(
-                      appTheme: context.read<AppthemeBloc>().state,
-                    ),
+                    // ThemeChoiceChip(
+                    //   appTheme: context.read<AppthemeBloc>().state,
+                    // ),
                     const RestoreOrBackup(),
                     SettingsChildContainer(
                       child: TextButton(
@@ -582,47 +588,81 @@ class _LengthChoiceChipState extends State<LengthChoiceChip> {
           children: [
             Text(
               'Length Unit',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
             Padding(
               padding: const EdgeInsets.all(4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(LengthUnit.values.length, (index) {
-                  return ChoiceChip(
-                    label: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Text(
-                        EnumToString.convertToString(LengthUnit.values[index]),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+              // child: Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //   children: List.generate(LengthUnit.values.length, (index) {
+              //     return ChoiceChip(
+              //       label: Padding(
+              //         padding: const EdgeInsets.all(4),
+              //         child: Text(
+              //           EnumToString.convertToString(LengthUnit.values[index]),
+              //           style: const TextStyle(
+              //             // fontSize: 14,
+              //             fontWeight: FontWeight.bold,
+              //           ),
+              //         ),
+              //       ),
+              //       // backgroundColor: Colors.red.shade100,
+              //       // selectedColor: Colors.blueAccent,
+              //       selectedColor:
+              //           Theme.of(context).colorScheme.secondaryContainer,
+              //       // backgroundColor:
+              //       //     Theme.of(context).colorScheme.onInverseSurface,
+              //       elevation: 0,
+              //       pressElevation: 0,
+              //       selected: currentValue == LengthUnit.values[index],
+              //       // labelStyle: TextStyle(
+              //       //   color: currentValue == LengthUnit.values[index]
+              //       //       ? Colors.white
+              //       //       : Colors.blueAccent,
+              //       // ),
+              //       labelStyle: TextStyle(
+              //         color: currentValue == LengthUnit.values[index]
+              //             ? Theme.of(context).colorScheme.onSecondaryContainer
+              //             : Theme.of(context).colorScheme.primary,
+              //       ),
+              //       onSelected: (value) {
+              //         context.read<ApppreferencesBloc>().add(
+              //               ApppreferencesEvent.updatePreferences(
+              //                 appPreferences: AppPreferences(
+              //                   widget.appPreferences.weightUnit,
+              //                   LengthUnit.values[index],
+              //                   widget.appPreferences.lang,
+              //                 ),
+              //               ),
+              //             );
+              //       },
+              //     );
+              //   }),
+              // ),
+
+              child: Center(
+                child: SegmentedButton<LengthUnit>(
+                  segments: LengthUnit.values
+                      .map(
+                        (e) => ButtonSegment(
+                          value: e,
+                          label: Text(e.name),
                         ),
-                      ),
-                    ),
-                    backgroundColor: Colors.grey.shade100,
-                    selectedColor: Colors.blueAccent,
-                    elevation: 0,
-                    pressElevation: 0,
-                    selected: currentValue == LengthUnit.values[index],
-                    labelStyle: TextStyle(
-                      color: currentValue == LengthUnit.values[index]
-                          ? Colors.white
-                          : Colors.blueAccent,
-                    ),
-                    onSelected: (value) {
-                      context.read<ApppreferencesBloc>().add(
-                            ApppreferencesEvent.updatePreferences(
-                              appPreferences: AppPreferences(
-                                widget.appPreferences.weightUnit,
-                                LengthUnit.values[index],
-                                widget.appPreferences.lang,
-                              ),
+                      )
+                      .toList(),
+                  selected: {currentValue},
+                  onSelectionChanged: (p0) {
+                    context.read<ApppreferencesBloc>().add(
+                          ApppreferencesEvent.updatePreferences(
+                            appPreferences: AppPreferences(
+                              widget.appPreferences.weightUnit,
+                              p0.first,
+                              widget.appPreferences.lang,
                             ),
-                          );
-                    },
-                  );
-                }),
+                          ),
+                        );
+                  },
+                ),
               ),
             ),
           ],
@@ -671,15 +711,15 @@ class _HereChoiceChiperState<T> extends State<HereChoiceChiper> {
           children: [
             Text(
               'Time',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: List.generate(widget.items.length, (index) {
                 return ChoiceChip(
                   label: Text(widget.items[index]),
-                  backgroundColor: Colors.grey.shade100,
-                  selectedColor: Colors.blueAccent,
+                  // backgroundColor: Colors.grey.shade100,
+                  // selectedColor: Colors.blueAccent,
                   elevation: 0,
                   pressElevation: 0,
                   selected: _internalValueKeeper == widget.items[index],
@@ -743,13 +783,13 @@ class _LanguageSelectorState extends State<LanguageSelector> {
         children: [
           Text(
             'Language',
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
           DropdownButton<Locale>(
             value: _currentLocale,
             borderRadius: BorderRadius.circular(10),
             underline: const SizedBox.shrink(),
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.bodyLarge,
             items: _list
                 .map(
                   (e) => DropdownMenuItem(
@@ -796,7 +836,8 @@ class SettingsChildContainer extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
+          color:
+              Theme.of(context).colorScheme.tertiaryContainer.withOpacity(.3),
         ),
         width: double.infinity,
         child: child,

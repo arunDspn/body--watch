@@ -122,12 +122,15 @@ class _Boxes extends StatelessWidget {
           height: 80,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            color: Theme.of(context).colorScheme.primaryContainer,
           ),
           child: Center(
             child: Text(
               type.name,
-              style: Theme.of(context).textTheme.displaySmall,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge
+                  ?.copyWith(fontWeight: FontWeight.w600),
             ),
           ),
         ),

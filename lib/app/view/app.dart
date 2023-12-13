@@ -5,9 +5,11 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
@@ -89,22 +91,35 @@ class App extends StatelessWidget {
               builder: (context, appPrefState) {
                 return BlocBuilder<AppthemeBloc, AppTheme>(
                   builder: (context, stateTheme) {
-                    return MaterialApp(
-                      theme: AppThemeData.lightTheme,
-                      darkTheme: AppThemeData.darkTheme,
-                      themeMode: stateTheme == AppTheme.darkTheme
-                          ? ThemeMode.dark
-                          : ThemeMode.light,
-                      localizationsDelegates: const [
-                        GlobalMaterialLocalizations.delegate,
-                        AppLocalizations.delegate,
-                      ],
-                      supportedLocales: AppLocalizations.supportedLocales,
-                      locale: (appPrefState is SavedAndReady)
-                          ? Locale(appPrefState.appPreferences.lang)
-                          : const Locale('en'),
-                      onGenerateRoute: _onGenerateRoutes,
-                      initialRoute: '/',
+                    return DynamicColorBuilder(
+                      builder: (lightDynamic, darkDynamic) => MaterialApp(
+                        // theme: AppThemeData.lightTheme,
+                        // darkTheme: AppThemeData.darkTheme,
+                        // themeMode: stateTheme == AppTheme.darkTheme
+                        //     ? ThemeMode.dark
+                        //     : ThemeMode.light,
+                        // themeMode: ThemeMode.system,
+                        theme: ThemeData(
+                          colorScheme: lightDynamic,
+                          textTheme: GoogleFonts.poppinsTextTheme(),
+                          useMaterial3: true,
+                        ),
+                        // darkTheme: ThemeData(
+                        //   colorScheme: darkDynamic,
+                        //   textTheme: GoogleFonts.poppinsTextTheme(),
+                        //   useMaterial3: true,
+                        // ),
+                        localizationsDelegates: const [
+                          GlobalMaterialLocalizations.delegate,
+                          AppLocalizations.delegate,
+                        ],
+                        supportedLocales: AppLocalizations.supportedLocales,
+                        locale: (appPrefState is SavedAndReady)
+                            ? Locale(appPrefState.appPreferences.lang)
+                            : const Locale('en'),
+                        onGenerateRoute: _onGenerateRoutes,
+                        initialRoute: '/',
+                      ),
                     );
                   },
                 );

@@ -28,13 +28,13 @@ class OverView extends StatelessWidget {
         elevation: 0,
         title: Text(
           AppLocalizations.of(context).overViewTitle,
-          style: Theme.of(context).textTheme.displaySmall,
+          // style: Theme.of(context).textTheme.displaySmall,
         ),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(
             Icons.settings,
-            color: Theme.of(context).colorScheme.secondary,
+            color: Theme.of(context).colorScheme.tertiary,
           ),
           onPressed: () {
             Navigator.pushNamed(context, '/settings');
@@ -44,7 +44,7 @@ class OverView extends StatelessWidget {
           IconButton(
             icon: Icon(
               Icons.add,
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.tertiary,
             ),
             onPressed: () {
               Navigator.pushNamed(context, AddWidget.routeName);
@@ -157,11 +157,27 @@ class _WidgetBox extends StatelessWidget {
   final LatestMeasurementDisplayModel data;
 
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
+  final DateFormat lastMeasurementDayFormatter = DateFormat('d MMM');
 
-  late String _unit;
+  String formatDate(DateTime date) {
+    final today = DateTime.now();
+    final differenceInDays = today.difference(date).inDays;
+
+    if (differenceInDays == 0) {
+      return 'Today';
+    } else if (differenceInDays == 1) {
+      return 'Yesterday';
+    } else if (differenceInDays >= 2 && differenceInDays <= 12) {
+      return '$differenceInDays days ago';
+    } else {
+      final formatter = DateFormat('d MMM yyyy');
+      return formatter.format(date);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    late String _unit;
     final _preferences =
         (context.watch<ApppreferencesBloc>().state as SavedAndReady)
             .appPreferences;
@@ -188,7 +204,7 @@ class _WidgetBox extends StatelessWidget {
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(12)),
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
+            color: Theme.of(context).colorScheme.primaryContainer,
           ),
           width: double.infinity,
           child: Row(
@@ -197,36 +213,68 @@ class _WidgetBox extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                  RichText(
+                    text: TextSpan(
                       children: [
-                        Text(
-                          '${data.name.name} : ${data.latest.value} ',
-                          style: Theme.of(context).textTheme.displayMedium,
-                          textAlign: TextAlign.center,
+                        TextSpan(
+                          text: '${data.name.name} · ',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
-                        Text(
-                          _unit,
+                        TextSpan(
+                          text: '${data.latest.value} ',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.w600),
+                        ),
+                        TextSpan(
+                          text: _unit,
                           style: Theme.of(context)
                               .textTheme
                               .headlineMedium!
                               .copyWith(
                                 fontSize: getProportionateScreenWidth(18),
                               ),
-                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
                   ),
+                  // Align(
+                  //   alignment: Alignment.topLeft,
+                  //   child: Row(
+                  //     crossAxisAlignment: CrossAxisAlignment.end,
+                  //     children: [
+                  //       Text(
+                  //         '${data.name.name} : ${data.latest.value} ',
+                  //         style: Theme.of(context)
+                  //             .textTheme
+                  //             .headlineSmall
+                  //             ?.copyWith(fontWeight: FontWeight.w600),
+                  //         textAlign: TextAlign.center,
+                  //       ),
+                  //       Text(
+                  //         _unit,
+                  //         style: Theme.of(context)
+                  //             .textTheme
+                  //             .headlineMedium!
+                  //             .copyWith(
+                  //               fontSize: getProportionateScreenWidth(18),
+                  //             ),
+                  //         textAlign: TextAlign.center,
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
                       padding: const EdgeInsets.all(5),
                       child: Text(
-                        formatter.format(data.latest.date),
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        lastMeasurementDayFormatter.format(data.latest.date),
+                        style: Theme.of(context).textTheme.titleLarge,
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -246,8 +294,8 @@ class _WidgetBox extends StatelessWidget {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            '${data.delta!.toStringAsFixed(1)} than ${formatter.format(data.previous!)}',
-                            style: Theme.of(context).textTheme.headlineSmall,
+                            '${data.delta!.toStringAsFixed(1)} than ${formatDate(data.previous!)}',
+                            style: Theme.of(context).textTheme.titleMedium,
                             textAlign: TextAlign.left,
                           ),
                         ),
