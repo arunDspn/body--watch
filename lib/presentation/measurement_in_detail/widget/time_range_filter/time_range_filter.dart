@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
+import 'package:watcha_body/data/domain/models/app_preferences.dart';
+import 'package:watcha_body/data/domain/models/failures/app_preferences_failures.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_range_filter/bloc/time_range_filter_bloc.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
 
@@ -11,6 +14,7 @@ class TimeRangeFilterInputStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
     return BlocBuilder<TimeRangeFilterBloc, TimeRangeFilterState>(
       builder: (context, state) {
         return state.map(
@@ -34,18 +38,27 @@ class TimeRangeFilterInputStepper extends StatelessWidget {
             // Measurement
             var max = '';
             var min = '';
-            if (value.measurements.isNotEmpty) {
-              max = value.measurements
-                  .reduce((value, element) =>
-                      value.value > element.value ? value : element)
+            if (value.filteredMeasurements.isNotEmpty) {
+              max = value.filteredMeasurements
+                  .reduce(
+                    (value, element) =>
+                        value.value > element.value ? value : element,
+                  )
                   .value
-                  .toString();
+                  .toStringAsFixed(0);
 
-              min = value.measurements
-                  .reduce((value, element) =>
-                      value.value < element.value ? value : element)
+              min = value.filteredMeasurements
+                  .reduce(
+                    (value, element) =>
+                        value.value < element.value ? value : element,
+                  )
                   .value
-                  .toString();
+                  .toStringAsFixed(0);
+
+              final unit = value.filteredMeasurements.first.unit;
+
+              // min = min + unit;
+              min = '$min $unit';
             }
 
             return Row(

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
@@ -10,8 +11,11 @@ part 'time_range_filter_bloc.freezed.dart';
 
 class TimeRangeFilterBloc
     extends Bloc<TimeRangeFilterEvent, TimeRangeFilterState> {
-  TimeRangeFilterBloc(this.timeUnit, this.timeRangeService)
-      : super(const _Loading()) {
+  TimeRangeFilterBloc(
+    this.timeUnit,
+    this.timeRangeService,
+    this.allMeasurements,
+  ) : super(const _Loading()) {
     on<TimeRangeFilterEvent>(
       (event, emit) {
         event.map(
@@ -21,20 +25,32 @@ class TimeRangeFilterBloc
               (state as _State).endDate.add(const Duration(days: 1)),
             );
 
-            /// oct nov dec
-            ///
+            final (
+              Measurement? nextMeasurement,
+              Measurement? previousMeasurement
+            ) = getPreviousAndNextMeasurements(
+              startDate: range.startDate,
+              endDate: range.endDate,
+            );
+
+            final filteredList = filterMeasurements(
+              startDate: range.startDate,
+              endDate: range.endDate,
+            );
+
             emit(
               TimeRangeFilterState.state(
                 startDate: range.startDate,
                 endDate: range.endDate,
-                measurements: [],
+                filteredMeasurements: filteredList,
                 timeUnit: timeUnit,
                 nextable: isNextable(range.endDate),
+                nextMeasurement: nextMeasurement,
+                previousMeasurement: previousMeasurement,
               ),
             );
           },
           previousRange: (value) {
-            // print(state as _State);
             late DateTime date;
             final currentState = state as _State;
             if (timeUnit == TimeUnit.threeMonth) {
@@ -49,13 +65,27 @@ class TimeRangeFilterBloc
               timeUnit,
               date,
             );
+            final (
+              Measurement? nextMeasurement,
+              Measurement? previousMeasurement
+            ) = getPreviousAndNextMeasurements(
+              startDate: range.startDate,
+              endDate: range.endDate,
+            );
+
+            final filteredList = filterMeasurements(
+              startDate: range.startDate,
+              endDate: range.endDate,
+            );
             emit(
               TimeRangeFilterState.state(
                 startDate: range.startDate,
                 endDate: range.endDate,
-                measurements: [],
+                filteredMeasurements: filteredList,
                 timeUnit: timeUnit,
                 nextable: true,
+                nextMeasurement: nextMeasurement,
+                previousMeasurement: previousMeasurement,
               ),
             );
           },
@@ -72,26 +102,69 @@ class TimeRangeFilterBloc
               timeUnit,
               date,
             );
+            final (
+              Measurement? nextMeasurement,
+              Measurement? previousMeasurement
+            ) = getPreviousAndNextMeasurements(
+              startDate: range.startDate,
+              endDate: range.endDate,
+            );
+
+            final filteredList = filterMeasurements(
+              startDate: range.startDate,
+              endDate: range.endDate,
+            );
             emit(
               TimeRangeFilterState.state(
                 startDate: range.startDate,
                 endDate: range.endDate,
-                measurements: [],
+                filteredMeasurements: filteredList,
                 timeUnit: timeUnit,
                 nextable: false,
+                nextMeasurement: nextMeasurement,
+                previousMeasurement: previousMeasurement,
               ),
             );
           },
         );
       },
     );
-
-    // _State getk(){
-
-    // }
   }
   final TimeUnit timeUnit;
   final TimeRangeService timeRangeService;
+  final List<Measurement> allMeasurements;
+
+  List<Measurement> filterMeasurements({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    return allMeasurements
+        .where(
+          (element) =>
+              (element.date.isAfter(startDate) &&
+                  element.date.isBefore(endDate)) ||
+              element.date.isAtSameMomentAs(startDate) ||
+              element.date.isAtSameMomentAs(endDate),
+        )
+        .toList();
+  }
+
+  (Measurement?, Measurement?) getPreviousAndNextMeasurements({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    Measurement? previousMeasurement;
+    Measurement? nextMeasurement;
+
+    previousMeasurement = allMeasurements.lastWhereOrNull(
+      (element) => element.date.isBefore(startDate),
+    );
+    nextMeasurement = allMeasurements.firstWhereOrNull(
+      (element) => element.date.isAfter(endDate),
+    );
+
+    return (nextMeasurement, previousMeasurement);
+  }
 
   bool isNextable(DateTime startDate) {
     final range =
@@ -101,9 +174,6 @@ class TimeRangeFilterBloc
     } else {
       return false;
     }
-
-    // 29
-    // 4 is before 29
   }
 
   TimeRange rangeCalculator(

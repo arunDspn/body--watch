@@ -251,7 +251,7 @@ class _ViewPresenter extends StatelessWidget {
 }
 
 // Generic Data View
-class DataView extends StatefulWidget {
+class DataView extends StatelessWidget {
   const DataView({
     super.key,
     required this.measurementList,
@@ -264,18 +264,14 @@ class DataView extends StatefulWidget {
   final TimeUnit timeUnit;
 
   @override
-  State<DataView> createState() => _DataViewState();
-}
-
-class _DataViewState extends State<DataView> {
-  @override
   Widget build(BuildContext context) {
-    print(widget.timeUnit);
+    print(timeUnit);
     return BlocProvider(
       lazy: false,
       create: (context) => TimeRangeFilterBloc(
-        widget.timeUnit,
+        timeUnit,
         context.read<TimeRangeService>(),
+        measurementList,
       )..add(
           const TimeRangeFilterEvent.currentRange(),
         ),
@@ -292,39 +288,38 @@ class _DataViewState extends State<DataView> {
                   // Filter
                   return state.map(
                     state: (value) {
-                      final filteredMeasurements = widget.measurementList
-                          .where(
-                            (element) =>
-                                (element.date.isAfter(value.startDate) &&
-                                    element.date.isBefore(value.endDate)) ||
-                                element.date
-                                    .isAtSameMomentAs(value.startDate) ||
-                                element.date.isAtSameMomentAs(value.endDate),
-                          )
-                          .toList();
+                      // final filteredMeasurements = measurementList
+                      //     .where(
+                      //       (element) =>
+                      //           (element.date.isAfter(value.startDate) &&
+                      //               element.date.isBefore(value.endDate)) ||
+                      //           element.date
+                      //               .isAtSameMomentAs(value.startDate) ||
+                      //           element.date.isAtSameMomentAs(value.endDate),
+                      //     )
+                      //     .toList();
 
-                      Measurement? previousMeasurement;
-                      Measurement? nextMeasurement;
+                      // Measurement? previousMeasurement;
+                      // Measurement? nextMeasurement;
 
-                      previousMeasurement =
-                          widget.measurementList.lastWhereOrNull(
-                        (element) => element.date.isBefore(value.startDate),
-                      );
-                      nextMeasurement = widget.measurementList.firstWhereOrNull(
-                        (element) => element.date.isAfter(value.endDate),
-                      );
+                      // previousMeasurement = measurementList.lastWhereOrNull(
+                      //   (element) => element.date.isBefore(value.startDate),
+                      // );
+                      // nextMeasurement = measurementList.firstWhereOrNull(
+                      //   (element) => element.date.isAfter(value.endDate),
+                      // );
 
                       return Column(
                         children: [
                           // Chart
                           MetricsLineGraph(
-                            filteredMeasurements: filteredMeasurements,
+                            filteredMeasurements: value.filteredMeasurements,
                             endDate: value.endDate,
                             startDate: value.startDate,
-                            previousMeasurement: previousMeasurement,
-                            nextMeasurement: nextMeasurement,
+                            previousMeasurement: value.previousMeasurement,
+                            nextMeasurement: value.nextMeasurement,
                             dayToText: DayToText(
-                              timeUnit: widget.timeUnit,
+                              timeUnit: timeUnit,
                               endDate: value.endDate,
                               startDate: value.startDate,
                             ),
@@ -338,7 +333,7 @@ class _DataViewState extends State<DataView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Measurement(s) ${filteredMeasurements.length}',
+                                  'Measurement(s) ${value.filteredMeasurements.length}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium
@@ -350,7 +345,7 @@ class _DataViewState extends State<DataView> {
                                       context: context,
                                       builder: (context) {
                                         return AddDataModal.add(
-                                          type: widget.measurementType,
+                                          type: measurementType,
                                         );
                                       },
                                     );
@@ -380,7 +375,7 @@ class _DataViewState extends State<DataView> {
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(12),
-                                child: filteredMeasurements.isNotEmpty
+                                child: value.filteredMeasurements.isNotEmpty
                                     // ? ListView.builder(
                                     //     shrinkWrap: true,
                                     //     physics: const BouncingScrollPhysics(
@@ -399,7 +394,8 @@ class _DataViewState extends State<DataView> {
                                     //     },
                                     //   )
                                     ? Column(
-                                        children: filteredMeasurements.map((e) {
+                                        children:
+                                            value.filteredMeasurements.map((e) {
                                           return _TableCell(
                                             date: e.date,
                                             measurement: e.value,

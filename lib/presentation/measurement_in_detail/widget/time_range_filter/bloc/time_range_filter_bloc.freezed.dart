@@ -409,24 +409,42 @@ abstract class _CurrentRange implements TimeRangeFilterEvent {
 mixin _$TimeRangeFilterState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)
+    required TResult Function(
+            DateTime startDate,
+            DateTime endDate,
+            List<Measurement> filteredMeasurements,
+            TimeUnit timeUnit,
+            bool nextable,
+            Measurement? previousMeasurement,
+            Measurement? nextMeasurement)
         state,
     required TResult Function() loading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)?
+    TResult? Function(
+            DateTime startDate,
+            DateTime endDate,
+            List<Measurement> filteredMeasurements,
+            TimeUnit timeUnit,
+            bool nextable,
+            Measurement? previousMeasurement,
+            Measurement? nextMeasurement)?
         state,
     TResult? Function()? loading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)?
+    TResult Function(
+            DateTime startDate,
+            DateTime endDate,
+            List<Measurement> filteredMeasurements,
+            TimeUnit timeUnit,
+            bool nextable,
+            Measurement? previousMeasurement,
+            Measurement? nextMeasurement)?
         state,
     TResult Function()? loading,
     required TResult orElse(),
@@ -481,9 +499,11 @@ abstract class _$$StateImplCopyWith<$Res> {
   $Res call(
       {DateTime startDate,
       DateTime endDate,
-      List<Measurement> measurements,
+      List<Measurement> filteredMeasurements,
       TimeUnit timeUnit,
-      bool nextable});
+      bool nextable,
+      Measurement? previousMeasurement,
+      Measurement? nextMeasurement});
 }
 
 /// @nodoc
@@ -499,9 +519,11 @@ class __$$StateImplCopyWithImpl<$Res>
   $Res call({
     Object? startDate = null,
     Object? endDate = null,
-    Object? measurements = null,
+    Object? filteredMeasurements = null,
     Object? timeUnit = null,
     Object? nextable = null,
+    Object? previousMeasurement = freezed,
+    Object? nextMeasurement = freezed,
   }) {
     return _then(_$StateImpl(
       startDate: null == startDate
@@ -512,9 +534,9 @@ class __$$StateImplCopyWithImpl<$Res>
           ? _value.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      measurements: null == measurements
-          ? _value._measurements
-          : measurements // ignore: cast_nullable_to_non_nullable
+      filteredMeasurements: null == filteredMeasurements
+          ? _value._filteredMeasurements
+          : filteredMeasurements // ignore: cast_nullable_to_non_nullable
               as List<Measurement>,
       timeUnit: null == timeUnit
           ? _value.timeUnit
@@ -524,6 +546,14 @@ class __$$StateImplCopyWithImpl<$Res>
           ? _value.nextable
           : nextable // ignore: cast_nullable_to_non_nullable
               as bool,
+      previousMeasurement: freezed == previousMeasurement
+          ? _value.previousMeasurement
+          : previousMeasurement // ignore: cast_nullable_to_non_nullable
+              as Measurement?,
+      nextMeasurement: freezed == nextMeasurement
+          ? _value.nextMeasurement
+          : nextMeasurement // ignore: cast_nullable_to_non_nullable
+              as Measurement?,
     ));
   }
 }
@@ -534,31 +564,38 @@ class _$StateImpl implements _State {
   const _$StateImpl(
       {required this.startDate,
       required this.endDate,
-      required final List<Measurement> measurements,
+      required final List<Measurement> filteredMeasurements,
       required this.timeUnit,
-      required this.nextable})
-      : _measurements = measurements;
+      required this.nextable,
+      required this.previousMeasurement,
+      required this.nextMeasurement})
+      : _filteredMeasurements = filteredMeasurements;
 
   @override
   final DateTime startDate;
   @override
   final DateTime endDate;
-  final List<Measurement> _measurements;
+  final List<Measurement> _filteredMeasurements;
   @override
-  List<Measurement> get measurements {
-    if (_measurements is EqualUnmodifiableListView) return _measurements;
+  List<Measurement> get filteredMeasurements {
+    if (_filteredMeasurements is EqualUnmodifiableListView)
+      return _filteredMeasurements;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_measurements);
+    return EqualUnmodifiableListView(_filteredMeasurements);
   }
 
   @override
   final TimeUnit timeUnit;
   @override
   final bool nextable;
+  @override
+  final Measurement? previousMeasurement;
+  @override
+  final Measurement? nextMeasurement;
 
   @override
   String toString() {
-    return 'TimeRangeFilterState.state(startDate: $startDate, endDate: $endDate, measurements: $measurements, timeUnit: $timeUnit, nextable: $nextable)';
+    return 'TimeRangeFilterState.state(startDate: $startDate, endDate: $endDate, filteredMeasurements: $filteredMeasurements, timeUnit: $timeUnit, nextable: $nextable, previousMeasurement: $previousMeasurement, nextMeasurement: $nextMeasurement)';
   }
 
   @override
@@ -570,16 +607,27 @@ class _$StateImpl implements _State {
                 other.startDate == startDate) &&
             (identical(other.endDate, endDate) || other.endDate == endDate) &&
             const DeepCollectionEquality()
-                .equals(other._measurements, _measurements) &&
+                .equals(other._filteredMeasurements, _filteredMeasurements) &&
             (identical(other.timeUnit, timeUnit) ||
                 other.timeUnit == timeUnit) &&
             (identical(other.nextable, nextable) ||
-                other.nextable == nextable));
+                other.nextable == nextable) &&
+            (identical(other.previousMeasurement, previousMeasurement) ||
+                other.previousMeasurement == previousMeasurement) &&
+            (identical(other.nextMeasurement, nextMeasurement) ||
+                other.nextMeasurement == nextMeasurement));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, startDate, endDate,
-      const DeepCollectionEquality().hash(_measurements), timeUnit, nextable);
+  int get hashCode => Object.hash(
+      runtimeType,
+      startDate,
+      endDate,
+      const DeepCollectionEquality().hash(_filteredMeasurements),
+      timeUnit,
+      nextable,
+      previousMeasurement,
+      nextMeasurement);
 
   @JsonKey(ignore: true)
   @override
@@ -590,36 +638,57 @@ class _$StateImpl implements _State {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)
+    required TResult Function(
+            DateTime startDate,
+            DateTime endDate,
+            List<Measurement> filteredMeasurements,
+            TimeUnit timeUnit,
+            bool nextable,
+            Measurement? previousMeasurement,
+            Measurement? nextMeasurement)
         state,
     required TResult Function() loading,
   }) {
-    return state(startDate, endDate, measurements, timeUnit, nextable);
+    return state(startDate, endDate, filteredMeasurements, timeUnit, nextable,
+        previousMeasurement, nextMeasurement);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)?
+    TResult? Function(
+            DateTime startDate,
+            DateTime endDate,
+            List<Measurement> filteredMeasurements,
+            TimeUnit timeUnit,
+            bool nextable,
+            Measurement? previousMeasurement,
+            Measurement? nextMeasurement)?
         state,
     TResult? Function()? loading,
   }) {
-    return state?.call(startDate, endDate, measurements, timeUnit, nextable);
+    return state?.call(startDate, endDate, filteredMeasurements, timeUnit,
+        nextable, previousMeasurement, nextMeasurement);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)?
+    TResult Function(
+            DateTime startDate,
+            DateTime endDate,
+            List<Measurement> filteredMeasurements,
+            TimeUnit timeUnit,
+            bool nextable,
+            Measurement? previousMeasurement,
+            Measurement? nextMeasurement)?
         state,
     TResult Function()? loading,
     required TResult orElse(),
   }) {
     if (state != null) {
-      return state(startDate, endDate, measurements, timeUnit, nextable);
+      return state(startDate, endDate, filteredMeasurements, timeUnit, nextable,
+          previousMeasurement, nextMeasurement);
     }
     return orElse();
   }
@@ -660,15 +729,19 @@ abstract class _State implements TimeRangeFilterState {
   const factory _State(
       {required final DateTime startDate,
       required final DateTime endDate,
-      required final List<Measurement> measurements,
+      required final List<Measurement> filteredMeasurements,
       required final TimeUnit timeUnit,
-      required final bool nextable}) = _$StateImpl;
+      required final bool nextable,
+      required final Measurement? previousMeasurement,
+      required final Measurement? nextMeasurement}) = _$StateImpl;
 
   DateTime get startDate;
   DateTime get endDate;
-  List<Measurement> get measurements;
+  List<Measurement> get filteredMeasurements;
   TimeUnit get timeUnit;
   bool get nextable;
+  Measurement? get previousMeasurement;
+  Measurement? get nextMeasurement;
   @JsonKey(ignore: true)
   _$$StateImplCopyWith<_$StateImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -712,8 +785,14 @@ class _$LoadingImpl implements _Loading {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)
+    required TResult Function(
+            DateTime startDate,
+            DateTime endDate,
+            List<Measurement> filteredMeasurements,
+            TimeUnit timeUnit,
+            bool nextable,
+            Measurement? previousMeasurement,
+            Measurement? nextMeasurement)
         state,
     required TResult Function() loading,
   }) {
@@ -723,8 +802,14 @@ class _$LoadingImpl implements _Loading {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)?
+    TResult? Function(
+            DateTime startDate,
+            DateTime endDate,
+            List<Measurement> filteredMeasurements,
+            TimeUnit timeUnit,
+            bool nextable,
+            Measurement? previousMeasurement,
+            Measurement? nextMeasurement)?
         state,
     TResult? Function()? loading,
   }) {
@@ -734,8 +819,14 @@ class _$LoadingImpl implements _Loading {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(DateTime startDate, DateTime endDate,
-            List<Measurement> measurements, TimeUnit timeUnit, bool nextable)?
+    TResult Function(
+            DateTime startDate,
+            DateTime endDate,
+            List<Measurement> filteredMeasurements,
+            TimeUnit timeUnit,
+            bool nextable,
+            Measurement? previousMeasurement,
+            Measurement? nextMeasurement)?
         state,
     TResult Function()? loading,
     required TResult orElse(),
