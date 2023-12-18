@@ -20,6 +20,19 @@ class MeasurementRepository extends IMeasurementsFacade {
     WHERE rn <= 2
     ORDER BY type, date DESC;
     ''';
+
+  final lastestQueryBard1 = '''
+SELECT id, value, date, type, unit
+FROM (
+  SELECT id, value, date, type, unit,
+    DENSE_RANK() OVER (PARTITION BY type ORDER BY date DESC) AS rank
+  FROM measurements
+) AS ranked
+WHERE rank <= 2
+ORDER BY type, date DESC;
+
+
+''';
   @override
   Future<Either<String, Unit>> createMeasurement({
     required Measurement measurement,
@@ -58,8 +71,8 @@ class MeasurementRepository extends IMeasurementsFacade {
   }) async {
     try {
       final _data = await databaseService.getData(
-        // startDate: startDate,
-        // endDate: endDate,
+        startDate: startDate,
+        endDate: endDate,
         type: type,
       );
       final _dData = _data.map(Measurement.fromMap).toList();
@@ -86,7 +99,7 @@ class MeasurementRepository extends IMeasurementsFacade {
   }) async {
     try {
       final _db = await databaseService.database;
-      final _data = await _db.rawQuery(latestDetailsQuery);
+      final _data = await _db.rawQuery(lastestQueryBard1);
       final _dData = _data.map(Measurement.fromMap).toList();
       final _fixedData = _convertToPreferredUnits(
         _dData,

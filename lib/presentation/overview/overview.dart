@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -9,9 +10,12 @@ import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/display_models/measurement_display.dart';
+import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/sampleman.dart';
+import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
+import 'package:watcha_body/presentation/overview/widgets/overview_chart.dart';
 import 'package:watcha_body/size_config.dart';
 
 class OverView extends StatelessWidget {
@@ -95,6 +99,8 @@ class OverView extends StatelessWidget {
                     ),
                   );
                 },
+                loading: (value) =>
+                    const Center(child: CircularProgressIndicator()),
                 success: (list) {
                   if (list.widgets.isEmpty) {
                     return Center(
@@ -190,6 +196,14 @@ class _WidgetBox extends StatelessWidget {
       _unit = '%';
     }
 
+    final minValue = data.lastThreeMonths.reduce(
+      (value, element) => value.value < element.value ? value : element,
+    );
+
+    final maxValue = data.lastThreeMonths.reduce(
+      (value, element) => value.value > element.value ? value : element,
+    );
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: GestureDetector(
@@ -201,129 +215,196 @@ class _WidgetBox extends StatelessWidget {
           );
         },
         child: Container(
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
           decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(12),
+            ),
             color: Theme.of(context).colorScheme.primaryContainer,
           ),
           width: double.infinity,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '${data.name.name} · ',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(fontWeight: FontWeight.w600),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '${data.name.name} · ',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                            TextSpan(
+                              text: '${data.latest.value} ',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                            TextSpan(
+                              text: _unit,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium!
+                                  .copyWith(
+                                    fontSize: getProportionateScreenWidth(18),
+                                  ),
+                            ),
+                          ],
                         ),
-                        TextSpan(
-                          text: '${data.latest.value} ',
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(fontWeight: FontWeight.w600),
-                        ),
-                        TextSpan(
-                          text: _unit,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium!
-                              .copyWith(
-                                fontSize: getProportionateScreenWidth(18),
-                              ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Align(
-                  //   alignment: Alignment.topLeft,
-                  //   child: Row(
-                  //     crossAxisAlignment: CrossAxisAlignment.end,
-                  //     children: [
-                  //       Text(
-                  //         '${data.name.name} : ${data.latest.value} ',
-                  //         style: Theme.of(context)
-                  //             .textTheme
-                  //             .headlineSmall
-                  //             ?.copyWith(fontWeight: FontWeight.w600),
-                  //         textAlign: TextAlign.center,
-                  //       ),
-                  //       Text(
-                  //         _unit,
-                  //         style: Theme.of(context)
-                  //             .textTheme
-                  //             .headlineMedium!
-                  //             .copyWith(
-                  //               fontSize: getProportionateScreenWidth(18),
-                  //             ),
-                  //         textAlign: TextAlign.center,
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Text(
-                        lastMeasurementDayFormatter.format(data.latest.date),
-                        style: Theme.of(context).textTheme.titleLarge,
-                        textAlign: TextAlign.left,
                       ),
-                    ),
-                  ),
-                  if (data.delta != null)
-                    Row(
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Icon(
-                            data.delta! < 0
-                                ? Icons.arrow_drop_down
-                                : Icons.arrow_drop_up,
-                            color: data.delta! < 0 ? Colors.red : Colors.green,
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
+                      // Align(
+                      //   alignment: Alignment.topLeft,
+                      //   child: Row(
+                      //     crossAxisAlignment: CrossAxisAlignment.end,
+                      //     children: [
+                      //       Text(
+                      //         '${data.name.name} : ${data.latest.value} ',
+                      //         style: Theme.of(context)
+                      //             .textTheme
+                      //             .headlineSmall
+                      //             ?.copyWith(fontWeight: FontWeight.w600),
+                      //         textAlign: TextAlign.center,
+                      //       ),
+                      //       Text(
+                      //         _unit,
+                      //         style: Theme.of(context)
+                      //             .textTheme
+                      //             .headlineMedium!
+                      //             .copyWith(
+                      //               fontSize: getProportionateScreenWidth(18),
+                      //             ),
+                      //         textAlign: TextAlign.center,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(5),
                           child: Text(
-                            '${data.delta!.toStringAsFixed(1)} than ${formatDate(data.previous!)}',
+                            lastMeasurementDayFormatter
+                                .format(data.latest.date),
                             style: Theme.of(context).textTheme.titleMedium,
                             textAlign: TextAlign.left,
                           ),
                         ),
-                      ],
-                    )
-                  else
-                    const Text('No previous data'),
-                ],
-              ),
-              IconButton(
-                onPressed: () {
-                  showModalBottomSheet<void>(
-                    context: context,
-                    builder: (context) {
-                      return BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                        child: AddDataModal.add(
-                          type: data.name,
-                        ),
+                      ),
+                      if (data.delta != null)
+                        Row(
+                          children: [
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Icon(
+                                data.delta! < 0
+                                    ? Icons.arrow_drop_down
+                                    : Icons.arrow_drop_up,
+                                color:
+                                    data.delta! < 0 ? Colors.red : Colors.green,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                '${data.delta!.toStringAsFixed(1)} than ${formatDate(data.previous!)}',
+                                style: Theme.of(context).textTheme.titleSmall,
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ],
+                        )
+                      else
+                        const Text('No previous data'),
+                    ],
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showModalBottomSheet<void>(
+                        context: context,
+                        builder: (context) {
+                          return BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                            child: AddDataModal.add(
+                              type: data.name,
+                            ),
+                          );
+                        },
                       );
                     },
-                  );
-                },
-                icon: Icon(
-                  Icons.add,
-                  color: Theme.of(context).colorScheme.primary,
-                  size: getProportionateScreenHeight(30),
-                ),
+                    icon: Icon(
+                      Icons.add,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: getProportionateScreenHeight(30),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: getProportionateScreenHeight(16),
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text:
+                                '${lastMeasurementDayFormatter.format(data.startDate)} - ${lastMeasurementDayFormatter.format(data.endDate)}\n',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                          // TextSpan(
+                          //   text:
+                          //       '${lastMeasurementDayFormatter.format(data.endDate)}\n',
+                          //   style: Theme.of(context)
+                          //       .textTheme
+                          //       .labelMedium
+                          //       ?.copyWith(fontWeight: FontWeight.w600),
+                          // ),
+                          TextSpan(
+                            text:
+                                '${minValue.value} - ${maxValue.value} $_unit',
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: VerticalDivider(
+                      color: Theme.of(context).colorScheme.primary,
+                      thickness: 1,
+                      width: 1,
+                    ),
+                  ),
+                  Expanded(
+                    child: OverviewMetricsLineGraph(
+                      filteredMeasurements: data.lastThreeMonths,
+                      startDate: data.startDate,
+                      endDate: data.endDate,
+                      previousMeasurement: null,
+                      dayToText: DayToText(
+                        startDate: data.endDate,
+                        endDate: data.startDate,
+                        timeUnit: TimeUnit.threeMonth,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

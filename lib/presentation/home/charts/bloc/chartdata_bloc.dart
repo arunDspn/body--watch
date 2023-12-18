@@ -26,37 +26,37 @@ class ChartdataBloc extends Bloc<ChartdataEvent, ChartdataState> {
       await event.map(
         fetchData: (value) async {
           emit(const ChartdataState.loading());
-          final _data = await measurementRepository.getDetailsByDate(
-            preferredWeightUnit: EnumToString.convertToString(
-              value.appPreferences.weightUnit,
-            ),
-            preferredLengthUnit: EnumToString.convertToString(
-              value.appPreferences.lengthUnit,
-            ),
-            endDate: DateTime.now(),
-            startDate: enumToStartDate(value.duration),
-          );
+          // final _data = await measurementRepository.getDetailsByDate(
+          //   preferredWeightUnit: EnumToString.convertToString(
+          //     value.appPreferences.weightUnit,
+          //   ),
+          //   preferredLengthUnit: EnumToString.convertToString(
+          //     value.appPreferences.lengthUnit,
+          //   ),
+          //   endDate: DateTime.now(),
+          //   startDate: enumToStartDate(value.duration),
+          // );
 
-          _data.fold(
-            (l) => emit(ChartdataState.failed(cause: l)),
-            (r) {
-              final _groupedData = r.groupListsBy((element) => element.type);
+          // _data.fold(
+          //   (l) => emit(ChartdataState.failed(cause: l)),
+          //   (r) {
+          //     final _groupedData = r.groupListsBy((element) => element.type);
 
-              final _list = _groupedData.values.map((element) {
-                return ChartDisplayModel.fromMeasurementList(
-                  measurement: element,
-                  name: element.first.type,
-                );
-              }).toList();
-              emit(
-                ChartdataState.success(
-                  chartDisplayModelList: _list,
-                  durationsEnum: value.duration,
-                  startDate: enumToStartDate(value.duration),
-                ),
-              );
-            },
-          );
+          //     final _list = _groupedData.values.map((element) {
+          //       return ChartDisplayModel.fromMeasurementList(
+          //         measurement: element,
+          //         name: element.first.type,
+          //       );
+          //     }).toList();
+          //     emit(
+          //       ChartdataState.success(
+          //         chartDisplayModelList: _list,
+          //         durationsEnum: value.duration,
+          //         startDate: enumToStartDate(value.duration),
+          //       ),
+          //     );
+          //   },
+          // );
         },
       );
     });

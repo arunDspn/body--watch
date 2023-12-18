@@ -114,6 +114,27 @@ class DatabaseService {
           ],
           orderBy: 'date DESC',
         );
+        print("object");
+      } else if (startDate != null && endDate != null && type == null) {
+        // _data = await _db.query(
+        //   tableName,
+        //   where: 'date BETWEEN ? AND ?',
+        //   whereArgs: [
+        //     startDate.toIso8601String(),
+        //     endDate.toIso8601String(),
+        //   ],
+        //   orderBy: 'date DESC',
+        // );
+        _data = await _db.query(
+          tableName,
+          where: '"date" BETWEEN ? AND ?',
+          whereArgs: [
+            endDate.toIso8601String(),
+            startDate.toIso8601String(),
+          ],
+          orderBy: 'date DESC',
+        );
+        print("object");
       } else if (type != null) {
         _data = await _db.query(
           tableName,

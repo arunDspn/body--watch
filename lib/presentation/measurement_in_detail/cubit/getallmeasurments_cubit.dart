@@ -34,7 +34,7 @@ class GetSingleMeasurmentsDetailsCubit
       preferredLengthUnit: EnumToString.convertToString(
         appPreferences.lengthUnit,
       ),
-      startDate: enumToStartDate(durationsEnum),
+      // startDate: enumToStartDate(durationsEnum),
     );
 
     _result.fold(

@@ -60,7 +60,7 @@ class _HomeViewState extends State<HomeView> {
         },
       ),
       body: SafeArea(
-        child: index == 0 ? const OverView() : const Charts(),
+        child: index == 0 ? const OverView() : Container(),
       ),
     );
   }

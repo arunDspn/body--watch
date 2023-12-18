@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -26,14 +28,22 @@ class GetallwidgetsdataBloc
               emit(GetallwidgetsdataState.failure(l));
             },
             (addedWidgets) async {
+              final currentDate = DateTime.now();
+              final endDate = DateTime(
+                currentDate.year,
+                currentDate.month - 2,
+              );
+
               final _allDetailsresult =
-                  await measurementRepository.getLatestDetails(
+                  await measurementRepository.getDetailsByDate(
                 preferredWeightUnit: EnumToString.convertToString(
                   value.appPreferences.weightUnit,
                 ),
                 preferredLengthUnit: EnumToString.convertToString(
                   value.appPreferences.lengthUnit,
                 ),
+                startDate: currentDate,
+                endDate: endDate,
               );
 
               //TODO: I think we can directly groupby the widget type
@@ -48,6 +58,8 @@ class GetallwidgetsdataBloc
                     final _measurementDisplay =
                         LatestMeasurementDisplayModel.fromMeasurementList(
                       measurement: _measurement,
+                      startDate: currentDate,
+                      endDate: endDate,
                     );
                     _allDetails.add(_measurementDisplay);
                   }
