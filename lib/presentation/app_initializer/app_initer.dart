@@ -7,6 +7,7 @@ import 'package:watcha_body/constants/theme.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/home/home.dart';
+import 'package:watcha_body/presentation/settings/settings_view.dart';
 import 'package:watcha_body/size_config.dart';
 
 class AppIniter extends StatefulWidget {
@@ -41,58 +42,57 @@ class _AppIniterState extends State<AppIniter> {
     }
 
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(5),
-          child: Column(
-            children: [
-              Text(
-                'Choose your Defaults',
-                style: Theme.of(context).textTheme.displaySmall,
-              ),
-              const SizedBox(height: 20),
-              // const LanguageSelector(),
-              const SizedBox(height: 15),
-              WeightChoiceChip(
-                onSelected: (weightUnit) {
-                  setState(() {
-                    _selectedWeight = weightUnit;
-                  });
-                },
-              ),
-              const SizedBox(height: 15),
-              LengthChoiceChip(
-                onSelected: (lengthUnit) {
-                  setState(() {
-                    _selectedLength = lengthUnit;
-                  });
-                },
-              ),
-              const SizedBox(height: 15),
-              const ThemeChoiceChip(),
-              const Spacer(),
-              MaterialButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                minWidth: SizeConfig.screenWidth! * 0.7,
-                color: kPrimaryColorInLight,
-                disabledColor: Colors.grey,
+      appBar: AppBar(
+        title: const Text('Choose your Defaults'),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(5),
+        child: Column(
+          children: [
+            // Text(
+            //   'Choose your Defaults',
+            //   style: Theme.of(context).textTheme.displaySmall,
+            // ),
+            // const SizedBox(height: 20),
+            // const LanguageSelector(),
+            // const SizedBox(height: 15),
+            WeightChoiceChip(
+              onSelected: (weightUnit) {
+                setState(() {
+                  _selectedWeight = weightUnit;
+                });
+              },
+            ),
+            const SizedBox(height: 15),
+            LengthChoiceChip(
+              onSelected: (lengthUnit) {
+                setState(() {
+                  _selectedLength = lengthUnit;
+                });
+              },
+            ),
+            const SizedBox(height: 15),
+            // const ThemeChoiceChip(),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: FilledButton(
+                // shape: RoundedRectangleBorder(
+                //   borderRadius: BorderRadius.circular(25),
+                // ),
+                // minWidth: SizeConfig.screenWidth! * 0.7,
+                // color: kPrimaryColorInLight,
+                // disabledColor: Colors.grey,
                 onPressed: (_selectedLength != null && _selectedWeight != null)
                     ? _updateAppPreferences
                     : null,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(
-                    'Continue',
-                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                          color: Colors.white,
-                        ),
-                  ),
+                child: const Text(
+                  'Continue',
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -124,44 +124,66 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
           children: [
             Text(
               'Weigth Unit',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(WeightUnit.values.length, (index) {
-                  return ChoiceChip(
-                    label: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Text(
-                        EnumToString.convertToString(WeightUnit.values[index]),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+
+            Center(
+              child: SegmentedButton<WeightUnit?>(
+                segments: WeightUnit.values
+                    .map(
+                      (e) => ButtonSegment(
+                        value: e,
+                        label: Text(e.name),
                       ),
-                    ),
-                    backgroundColor: Colors.grey.shade100,
-                    selectedColor: Colors.blueAccent,
-                    elevation: 0,
-                    pressElevation: 0,
-                    selected: _selectedWeightUnit == WeightUnit.values[index],
-                    labelStyle: TextStyle(
-                      color: _selectedWeightUnit == WeightUnit.values[index]
-                          ? Colors.white
-                          : Colors.blueAccent,
-                    ),
-                    onSelected: (value) {
-                      setState(() {
-                        _selectedWeightUnit = WeightUnit.values[index];
-                        widget.onSelected(_selectedWeightUnit!);
-                      });
-                    },
-                  );
-                }),
+                    )
+                    .toList(),
+                selected: {_selectedWeightUnit},
+                onSelectionChanged: (p0) {
+                  if (p0.first != null) {
+                    _selectedWeightUnit = p0.first;
+                    widget.onSelected(_selectedWeightUnit!);
+                  }
+                },
               ),
-            ),
+            )
+            // Padding(
+            //   padding: const EdgeInsets.all(4),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //     children: List.generate(WeightUnit.values.length, (index) {
+            //       return ChoiceChip(
+            //         label: Padding(
+            //           padding: const EdgeInsets.all(4),
+            //           child: Text(
+            //             EnumToString.convertToString(WeightUnit.values[index]),
+            //             style: const TextStyle(
+            //               fontSize: 16,
+            //               fontWeight: FontWeight.bold,
+            //             ),
+            //           ),
+            //         ),
+            //         backgroundColor: Colors.grey.shade100,
+            //         selectedColor: Colors.blueAccent,
+            //         elevation: 0,
+            //         pressElevation: 0,
+            //         selected: _selectedWeightUnit == WeightUnit.values[index],
+            //         labelStyle: TextStyle(
+            //           color: _selectedWeightUnit == WeightUnit.values[index]
+            //               ? Colors.white
+            //               : Colors.blueAccent,
+            //         ),
+            //         onSelected: (value) {
+            //           setState(() {
+            //             _selectedWeightUnit = WeightUnit.values[index];
+            //             widget.onSelected(_selectedWeightUnit!);
+            //           });
+            //         },
+            //       );
+            //     }),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -266,44 +288,65 @@ class _LengthChoiceChipState extends State<LengthChoiceChip> {
           children: [
             Text(
               'Length Unit',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(LengthUnit.values.length, (index) {
-                  return ChoiceChip(
-                    label: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Text(
-                        EnumToString.convertToString(LengthUnit.values[index]),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+            // Padding(
+            //   padding: const EdgeInsets.all(4),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //     children: List.generate(LengthUnit.values.length, (index) {
+            //       return ChoiceChip(
+            //         label: Padding(
+            //           padding: const EdgeInsets.all(4),
+            //           child: Text(
+            //             EnumToString.convertToString(LengthUnit.values[index]),
+            //             style: const TextStyle(
+            //               fontSize: 16,
+            //               fontWeight: FontWeight.bold,
+            //             ),
+            //           ),
+            //         ),
+            //         backgroundColor: Colors.grey.shade100,
+            //         selectedColor: Colors.blueAccent,
+            //         elevation: 0,
+            //         pressElevation: 0,
+            //         selected: _selectedLengthUnit == LengthUnit.values[index],
+            //         labelStyle: TextStyle(
+            //           color: _selectedLengthUnit == LengthUnit.values[index]
+            //               ? Colors.white
+            //               : Colors.blueAccent,
+            //         ),
+            //         onSelected: (value) {
+            //           setState(() {
+            //             _selectedLengthUnit = LengthUnit.values[index];
+            //             widget.onSelected(_selectedLengthUnit!);
+            //           });
+            //         },
+            //       );
+            //     }),
+            //   ),
+            // ),
+            Center(
+              child: SegmentedButton<LengthUnit?>(
+                segments: LengthUnit.values
+                    .map(
+                      (e) => ButtonSegment(
+                        value: e,
+                        label: Text(e.name),
                       ),
-                    ),
-                    backgroundColor: Colors.grey.shade100,
-                    selectedColor: Colors.blueAccent,
-                    elevation: 0,
-                    pressElevation: 0,
-                    selected: _selectedLengthUnit == LengthUnit.values[index],
-                    labelStyle: TextStyle(
-                      color: _selectedLengthUnit == LengthUnit.values[index]
-                          ? Colors.white
-                          : Colors.blueAccent,
-                    ),
-                    onSelected: (value) {
-                      setState(() {
-                        _selectedLengthUnit = LengthUnit.values[index];
-                        widget.onSelected(_selectedLengthUnit!);
-                      });
-                    },
-                  );
-                }),
+                    )
+                    .toList(),
+                selected: {_selectedLengthUnit},
+                onSelectionChanged: (p0) {
+                  if (p0.first != null) {
+                    _selectedLengthUnit = p0.first;
+                    widget.onSelected(_selectedLengthUnit!);
+                  }
+                },
               ),
-            ),
+            )
           ],
         ),
       ),
@@ -443,26 +486,26 @@ class _LanguageSelectorState extends State<LanguageSelector> {
   }
 }
 
-class SettingsChildContainer extends StatelessWidget {
-  const SettingsChildContainer({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
+// class SettingsChildContainer extends StatelessWidget {
+//   const SettingsChildContainer({
+//     Key? key,
+//     required this.child,
+//   }) : super(key: key);
 
-  final Widget child;
+//   final Widget child;
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
-        ),
-        width: double.infinity,
-        child: child,
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(8),
+//       child: Container(
+//         decoration: BoxDecoration(
+//           borderRadius: BorderRadius.circular(20),
+//           color: Theme.of(context).colorScheme.onPrimaryContainer,
+//         ),
+//         width: double.infinity,
+//         child: child,
+//       ),
+//     );
+//   }
+// }

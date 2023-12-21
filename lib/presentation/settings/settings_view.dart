@@ -323,78 +323,141 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
           children: [
             Text(
               'Backup or Restore',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(fontWeight: FontWeight.w600),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.all(4),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //     children: [
+            //       if (Platform.operatingSystem == 'android')
+            //         MaterialButton(
+            //           elevation: 0,
+            //           onPressed: () {
+            //             context.read<BackupRestoreDataCubit>().backupData();
+            //           },
+            //           color: Colors.blueAccent,
+            //           textColor: Colors.white,
+            //           shape: const RoundedRectangleBorder(
+            //             borderRadius: BorderRadius.all(Radius.circular(20)),
+            //           ),
+            //           child: const Text(
+            //             'Backup',
+            //             style: TextStyle(
+            //               fontSize: 14,
+            //               fontWeight: FontWeight.bold,
+            //             ),
+            //           ),
+            //         )
+            //       else
+            //         const SizedBox.shrink(),
+            //       MaterialButton(
+            //         elevation: 0,
+            //         onPressed: () {
+            //           context.read<BackupRestoreDataCubit>().shareDatabase();
+            //         },
+            //         color: Colors.blueAccent,
+            //         textColor: Colors.white,
+            //         shape: const RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.all(Radius.circular(20)),
+            //         ),
+            //         child: const Text(
+            //           'Share Backup',
+            //           style: TextStyle(
+            //             fontSize: 14,
+            //             fontWeight: FontWeight.bold,
+            //           ),
+            //         ),
+            //       ),
+            //       MaterialButton(
+            //         elevation: 0,
+            //         onPressed: () async {
+            //           final result = await FilePicker.platform.pickFiles(
+            //             type: FileType.custom,
+            //             allowedExtensions: ['json'],
+            //           );
+
+            //           if (result != null) {
+            //             await _showRestoreOptions(result.files.first.path!);
+            //           }
+            //         },
+            //         color: Colors.blueAccent,
+            //         textColor: Colors.white,
+            //         shape: const RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.all(Radius.circular(20)),
+            //         ),
+            //         child: const Text(
+            //           'Restore',
+            //           style: TextStyle(
+            //             fontSize: 14,
+            //             fontWeight: FontWeight.bold,
+            //           ),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+
             Padding(
               padding: const EdgeInsets.all(4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  if (Platform.operatingSystem == 'android')
-                    MaterialButton(
-                      elevation: 0,
-                      onPressed: () {
-                        context.read<BackupRestoreDataCubit>().backupData();
-                      },
-                      color: Colors.blueAccent,
-                      textColor: Colors.white,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    if (Platform.operatingSystem == 'android') ...[
+                      FilledButton(
+                        onPressed: () {
+                          context.read<BackupRestoreDataCubit>().backupData();
+                        },
+                        child: const Text(
+                          'Backup',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
+                      const SizedBox(width: 6),
+                    ] else
+                      const SizedBox.shrink(),
+                    FilledButton(
+                      onPressed: () {
+                        context.read<BackupRestoreDataCubit>().shareDatabase();
+                      },
                       child: const Text(
-                        'Backup',
+                        'Share Backup',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    )
-                  else
-                    const SizedBox.shrink(),
-                  MaterialButton(
-                    elevation: 0,
-                    onPressed: () {
-                      context.read<BackupRestoreDataCubit>().shareDatabase();
-                    },
-                    color: Colors.blueAccent,
-                    textColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
-                    child: const Text(
-                      'Share Backup',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  MaterialButton(
-                    elevation: 0,
-                    onPressed: () async {
-                      final result = await FilePicker.platform.pickFiles(
-                        type: FileType.custom,
-                        allowedExtensions: ['json'],
-                      );
+                    const SizedBox(width: 6),
+                    FilledButton(
+                      onPressed: () async {
+                        final result = await FilePicker.platform.pickFiles(
+                          type: FileType.custom,
+                          allowedExtensions: ['json'],
+                        );
 
-                      if (result != null) {
-                        await _showRestoreOptions(result.files.first.path!);
-                      }
-                    },
-                    color: Colors.blueAccent,
-                    textColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    ),
-                    child: const Text(
-                      'Restore',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
+                        if (result != null) {
+                          await _showRestoreOptions(result.files.first.path!);
+                        }
+                      },
+                      child: const Text(
+                        'Restore',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
@@ -432,47 +495,74 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
           children: [
             Text(
               'Weigth Unit',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(WeightUnit.values.length, (index) {
-                  return ChoiceChip(
-                    label: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Text(
-                        EnumToString.convertToString(WeightUnit.values[index]),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+            // Padding(
+            //   padding: const EdgeInsets.all(4),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //     children: List.generate(WeightUnit.values.length, (index) {
+            //       return ChoiceChip(
+            //         label: Padding(
+            //           padding: const EdgeInsets.all(4),
+            //           child: Text(
+            //             EnumToString.convertToString(WeightUnit.values[index]),
+            //             style: const TextStyle(
+            //               fontSize: 16,
+            //               fontWeight: FontWeight.bold,
+            //             ),
+            //           ),
+            //         ),
+            //         backgroundColor: Colors.grey.shade100,
+            //         selectedColor: Colors.blueAccent,
+            //         elevation: 0,
+            //         pressElevation: 0,
+            //         selected: currentValue == WeightUnit.values[index],
+            //         labelStyle: TextStyle(
+            //           color: currentValue == WeightUnit.values[index]
+            //               ? Colors.white
+            //               : Colors.blueAccent,
+            //         ),
+            //         onSelected: (value) {
+            //           context.read<ApppreferencesBloc>().add(
+            //                 ApppreferencesEvent.updatePreferences(
+            //                   appPreferences: AppPreferences(
+            //                     WeightUnit.values[index],
+            //                     widget.appPreferences.lengthUnit,
+            //                     widget.appPreferences.lang,
+            //                   ),
+            //                 ),
+            //               );
+            //         },
+            //       );
+            //     }),
+            //   ),
+            // ),
+
+            Center(
+              child: SegmentedButton<WeightUnit>(
+                segments: WeightUnit.values
+                    .map(
+                      (e) => ButtonSegment(
+                        value: e,
+                        label: Text(e.name),
                       ),
-                    ),
-                    backgroundColor: Colors.grey.shade100,
-                    selectedColor: Colors.blueAccent,
-                    elevation: 0,
-                    pressElevation: 0,
-                    selected: currentValue == WeightUnit.values[index],
-                    labelStyle: TextStyle(
-                      color: currentValue == WeightUnit.values[index]
-                          ? Colors.white
-                          : Colors.blueAccent,
-                    ),
-                    onSelected: (value) {
-                      context.read<ApppreferencesBloc>().add(
-                            ApppreferencesEvent.updatePreferences(
-                              appPreferences: AppPreferences(
-                                WeightUnit.values[index],
-                                widget.appPreferences.lengthUnit,
-                                widget.appPreferences.lang,
-                              ),
-                            ),
-                          );
-                    },
-                  );
-                }),
+                    )
+                    .toList(),
+                selected: {currentValue},
+                onSelectionChanged: (p0) {
+                  context.read<ApppreferencesBloc>().add(
+                        ApppreferencesEvent.updatePreferences(
+                          appPreferences: AppPreferences(
+                            p0.first,
+                            widget.appPreferences.lengthUnit,
+                            widget.appPreferences.lang,
+                          ),
+                        ),
+                      );
+                },
               ),
             ),
           ],
@@ -588,7 +678,9 @@ class _LengthChoiceChipState extends State<LengthChoiceChip> {
           children: [
             Text(
               'Length Unit',
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
             Padding(
               padding: const EdgeInsets.all(4),
@@ -783,7 +875,9 @@ class _LanguageSelectorState extends State<LanguageSelector> {
         children: [
           Text(
             'Language',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
           ),
           DropdownButton<Locale>(
             value: _currentLocale,

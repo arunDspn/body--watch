@@ -1,11 +1,13 @@
 import 'dart:ui';
 
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
+import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
@@ -154,7 +156,7 @@ class OverView extends StatelessWidget {
   }
 }
 
-class _WidgetBox extends StatelessWidget {
+class _WidgetBox extends StatefulWidget {
   _WidgetBox({
     Key? key,
     required this.data,
@@ -162,8 +164,16 @@ class _WidgetBox extends StatelessWidget {
 
   final LatestMeasurementDisplayModel data;
 
+  @override
+  State<_WidgetBox> createState() => _WidgetBoxState();
+}
+
+class _WidgetBoxState extends State<_WidgetBox> {
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
+
   final DateFormat lastMeasurementDayFormatter = DateFormat('d MMM');
+
+  bool isExpanded = false;
 
   String formatDate(DateTime date) {
     final today = DateTime.now();
@@ -188,19 +198,19 @@ class _WidgetBox extends StatelessWidget {
         (context.watch<ApppreferencesBloc>().state as SavedAndReady)
             .appPreferences;
 
-    if (data.name is LengthMeasurementType) {
+    if (widget.data.name is LengthMeasurementType) {
       _unit = _preferences.lengthUnitString;
-    } else if (data.name is WeightMeasurementType) {
+    } else if (widget.data.name is WeightMeasurementType) {
       _unit = _preferences.weightUnitString;
     } else {
       _unit = '%';
     }
 
-    final minValue = data.lastThreeMonths.reduce(
+    final minValue = widget.data.lastThreeMonths.reduce(
       (value, element) => value.value < element.value ? value : element,
     );
 
-    final maxValue = data.lastThreeMonths.reduce(
+    final maxValue = widget.data.lastThreeMonths.reduce(
       (value, element) => value.value > element.value ? value : element,
     );
 
@@ -211,10 +221,11 @@ class _WidgetBox extends StatelessWidget {
           Navigator.pushNamed(
             context,
             MeasurementInDetail.routeName,
-            arguments: data.name,
+            arguments: widget.data.name,
           );
         },
-        child: Container(
+        child: AnimatedContainer(
+          duration: const Duration(seconds: 2),
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(
@@ -235,7 +246,7 @@ class _WidgetBox extends StatelessWidget {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: '${data.name.name} · ',
+                              text: '${widget.data.name.name} · ',
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall
@@ -244,7 +255,7 @@ class _WidgetBox extends StatelessWidget {
                                   ),
                             ),
                             TextSpan(
-                              text: '${data.latest.value} ',
+                              text: '${widget.data.latest.value} ',
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall
@@ -294,29 +305,30 @@ class _WidgetBox extends StatelessWidget {
                           padding: const EdgeInsets.all(5),
                           child: Text(
                             lastMeasurementDayFormatter
-                                .format(data.latest.date),
+                                .format(widget.data.latest.date),
                             style: Theme.of(context).textTheme.titleMedium,
                             textAlign: TextAlign.left,
                           ),
                         ),
                       ),
-                      if (data.delta != null)
+                      if (widget.data.delta != null)
                         Row(
                           children: [
                             Align(
                               alignment: Alignment.topLeft,
                               child: Icon(
-                                data.delta! < 0
+                                widget.data.delta! < 0
                                     ? Icons.arrow_drop_down
                                     : Icons.arrow_drop_up,
-                                color:
-                                    data.delta! < 0 ? Colors.red : Colors.green,
+                                color: widget.data.delta! < 0
+                                    ? Colors.red
+                                    : Colors.green,
                               ),
                             ),
                             Align(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                '${data.delta!.toStringAsFixed(1)} than ${formatDate(data.previous!)}',
+                                '${widget.data.delta!.toStringAsFixed(1)} than ${formatDate(widget.data.previous!)}',
                                 style: Theme.of(context).textTheme.titleSmall,
                                 textAlign: TextAlign.left,
                               ),
@@ -327,89 +339,150 @@ class _WidgetBox extends StatelessWidget {
                         const Text('No previous data'),
                     ],
                   ),
-                  IconButton(
-                    onPressed: () {
-                      showModalBottomSheet<void>(
-                        context: context,
-                        builder: (context) {
-                          return BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                            child: AddDataModal.add(
-                              type: data.name,
-                            ),
+                  Column(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          showModalBottomSheet<void>(
+                            context: context,
+                            builder: (context) {
+                              return BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                                child: AddDataModal.add(
+                                  type: widget.data.name,
+                                ),
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                    icon: Icon(
-                      Icons.add,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: getProportionateScreenHeight(30),
-                    ),
+                        icon: Icon(
+                          Icons.add,
+                          color: Theme.of(context).colorScheme.primary,
+                          size: getProportionateScreenHeight(30),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isExpanded = !isExpanded;
+                          });
+                        },
+                        icon: Icon(
+                          !isExpanded
+                              ? Icons.expand_more_outlined
+                              : Icons.expand_less_outlined,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              SizedBox(
-                height: getProportionateScreenHeight(16),
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text:
-                                '${lastMeasurementDayFormatter.format(data.startDate)} - ${lastMeasurementDayFormatter.format(data.endDate)}\n',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium
-                                ?.copyWith(fontWeight: FontWeight.w600),
-                          ),
-                          // TextSpan(
-                          //   text:
-                          //       '${lastMeasurementDayFormatter.format(data.endDate)}\n',
-                          //   style: Theme.of(context)
-                          //       .textTheme
-                          //       .labelMedium
-                          //       ?.copyWith(fontWeight: FontWeight.w600),
-                          // ),
-                          TextSpan(
-                            text:
-                                '${minValue.value} - ${maxValue.value} $_unit',
-                            style: Theme.of(context).textTheme.labelSmall,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: VerticalDivider(
-                      color: Theme.of(context).colorScheme.primary,
-                      thickness: 1,
-                      width: 1,
-                    ),
-                  ),
-                  Expanded(
-                    child: OverviewMetricsLineGraph(
-                      filteredMeasurements: data.lastThreeMonths,
-                      startDate: data.startDate,
-                      endDate: data.endDate,
-                      previousMeasurement: null,
-                      dayToText: DayToText(
-                        startDate: data.endDate,
-                        endDate: data.startDate,
-                        timeUnit: TimeUnit.threeMonth,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     const Spacer(),
+              //     IconButton(
+              //       onPressed: () {
+              //         setState(() {
+              //           isExpanded = !isExpanded;
+              //         });
+              //       },
+              //       icon: const Icon(Icons.expand_circle_down),
+              //     ),
+              //   ],
+              // ),
+              if (isExpanded)
+                _ExtraDetails(
+                  lastMeasurementDayFormatter: lastMeasurementDayFormatter,
+                  data: widget.data,
+                  minValue: minValue,
+                  maxValue: maxValue,
+                  unit: _unit,
+                ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ExtraDetails extends StatelessWidget {
+  const _ExtraDetails({
+    super.key,
+    required this.lastMeasurementDayFormatter,
+    required this.data,
+    required this.minValue,
+    required this.maxValue,
+    required String unit,
+  }) : _unit = unit;
+
+  final DateFormat lastMeasurementDayFormatter;
+  final LatestMeasurementDisplayModel data;
+  final Measurement minValue;
+  final Measurement maxValue;
+  final String _unit;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: getProportionateScreenHeight(16),
+        ),
+        Row(
+          children: [
+            SizedBox(
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text:
+                          '${lastMeasurementDayFormatter.format(data.startDate)} - ${lastMeasurementDayFormatter.format(data.endDate)}\n',
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelMedium
+                          ?.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    // TextSpan(
+                    //   text:
+                    //       '${lastMeasurementDayFormatter.format(data.endDate)}\n',
+                    //   style: Theme.of(context)
+                    //       .textTheme
+                    //       .labelMedium
+                    //       ?.copyWith(fontWeight: FontWeight.w600),
+                    // ),
+                    TextSpan(
+                      text: '${minValue.value} - ${maxValue.value} $_unit',
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const VerticalDivider(
+              indent: 6,
+              color: Colors.red,
+              thickness: 6,
+              endIndent: 5,
+              width: 22,
+              // width: 6,
+            ),
+            Expanded(
+              child: OverviewMetricsLineGraph(
+                filteredMeasurements: data.lastThreeMonths,
+                startDate: data.startDate,
+                endDate: data.endDate,
+                previousMeasurement: null,
+                dayToText: DayToText(
+                  startDate: data.endDate,
+                  endDate: data.startDate,
+                  timeUnit: TimeUnit.threeMonth,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
