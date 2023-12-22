@@ -21,6 +21,7 @@ mixin _$TimeRangeFilterEvent {
     required TResult Function() nextRange,
     required TResult Function() previousRange,
     required TResult Function() currentRange,
+    required TResult Function(List<Measurement> newMeasurementList) updateData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -28,6 +29,7 @@ mixin _$TimeRangeFilterEvent {
     TResult? Function()? nextRange,
     TResult? Function()? previousRange,
     TResult? Function()? currentRange,
+    TResult? Function(List<Measurement> newMeasurementList)? updateData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -35,6 +37,7 @@ mixin _$TimeRangeFilterEvent {
     TResult Function()? nextRange,
     TResult Function()? previousRange,
     TResult Function()? currentRange,
+    TResult Function(List<Measurement> newMeasurementList)? updateData,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -43,6 +46,7 @@ mixin _$TimeRangeFilterEvent {
     required TResult Function(_NextRange value) nextRange,
     required TResult Function(_PreviousRange value) previousRange,
     required TResult Function(_CurrentRange value) currentRange,
+    required TResult Function(_UpdateData value) updateData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -50,6 +54,7 @@ mixin _$TimeRangeFilterEvent {
     TResult? Function(_NextRange value)? nextRange,
     TResult? Function(_PreviousRange value)? previousRange,
     TResult? Function(_CurrentRange value)? currentRange,
+    TResult? Function(_UpdateData value)? updateData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -57,6 +62,7 @@ mixin _$TimeRangeFilterEvent {
     TResult Function(_NextRange value)? nextRange,
     TResult Function(_PreviousRange value)? previousRange,
     TResult Function(_CurrentRange value)? currentRange,
+    TResult Function(_UpdateData value)? updateData,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -122,6 +128,7 @@ class _$NextRangeImpl implements _NextRange {
     required TResult Function() nextRange,
     required TResult Function() previousRange,
     required TResult Function() currentRange,
+    required TResult Function(List<Measurement> newMeasurementList) updateData,
   }) {
     return nextRange();
   }
@@ -132,6 +139,7 @@ class _$NextRangeImpl implements _NextRange {
     TResult? Function()? nextRange,
     TResult? Function()? previousRange,
     TResult? Function()? currentRange,
+    TResult? Function(List<Measurement> newMeasurementList)? updateData,
   }) {
     return nextRange?.call();
   }
@@ -142,6 +150,7 @@ class _$NextRangeImpl implements _NextRange {
     TResult Function()? nextRange,
     TResult Function()? previousRange,
     TResult Function()? currentRange,
+    TResult Function(List<Measurement> newMeasurementList)? updateData,
     required TResult orElse(),
   }) {
     if (nextRange != null) {
@@ -156,6 +165,7 @@ class _$NextRangeImpl implements _NextRange {
     required TResult Function(_NextRange value) nextRange,
     required TResult Function(_PreviousRange value) previousRange,
     required TResult Function(_CurrentRange value) currentRange,
+    required TResult Function(_UpdateData value) updateData,
   }) {
     return nextRange(this);
   }
@@ -166,6 +176,7 @@ class _$NextRangeImpl implements _NextRange {
     TResult? Function(_NextRange value)? nextRange,
     TResult? Function(_PreviousRange value)? previousRange,
     TResult? Function(_CurrentRange value)? currentRange,
+    TResult? Function(_UpdateData value)? updateData,
   }) {
     return nextRange?.call(this);
   }
@@ -176,6 +187,7 @@ class _$NextRangeImpl implements _NextRange {
     TResult Function(_NextRange value)? nextRange,
     TResult Function(_PreviousRange value)? previousRange,
     TResult Function(_CurrentRange value)? currentRange,
+    TResult Function(_UpdateData value)? updateData,
     required TResult orElse(),
   }) {
     if (nextRange != null) {
@@ -230,6 +242,7 @@ class _$PreviousRangeImpl implements _PreviousRange {
     required TResult Function() nextRange,
     required TResult Function() previousRange,
     required TResult Function() currentRange,
+    required TResult Function(List<Measurement> newMeasurementList) updateData,
   }) {
     return previousRange();
   }
@@ -240,6 +253,7 @@ class _$PreviousRangeImpl implements _PreviousRange {
     TResult? Function()? nextRange,
     TResult? Function()? previousRange,
     TResult? Function()? currentRange,
+    TResult? Function(List<Measurement> newMeasurementList)? updateData,
   }) {
     return previousRange?.call();
   }
@@ -250,6 +264,7 @@ class _$PreviousRangeImpl implements _PreviousRange {
     TResult Function()? nextRange,
     TResult Function()? previousRange,
     TResult Function()? currentRange,
+    TResult Function(List<Measurement> newMeasurementList)? updateData,
     required TResult orElse(),
   }) {
     if (previousRange != null) {
@@ -264,6 +279,7 @@ class _$PreviousRangeImpl implements _PreviousRange {
     required TResult Function(_NextRange value) nextRange,
     required TResult Function(_PreviousRange value) previousRange,
     required TResult Function(_CurrentRange value) currentRange,
+    required TResult Function(_UpdateData value) updateData,
   }) {
     return previousRange(this);
   }
@@ -274,6 +290,7 @@ class _$PreviousRangeImpl implements _PreviousRange {
     TResult? Function(_NextRange value)? nextRange,
     TResult? Function(_PreviousRange value)? previousRange,
     TResult? Function(_CurrentRange value)? currentRange,
+    TResult? Function(_UpdateData value)? updateData,
   }) {
     return previousRange?.call(this);
   }
@@ -284,6 +301,7 @@ class _$PreviousRangeImpl implements _PreviousRange {
     TResult Function(_NextRange value)? nextRange,
     TResult Function(_PreviousRange value)? previousRange,
     TResult Function(_CurrentRange value)? currentRange,
+    TResult Function(_UpdateData value)? updateData,
     required TResult orElse(),
   }) {
     if (previousRange != null) {
@@ -338,6 +356,7 @@ class _$CurrentRangeImpl implements _CurrentRange {
     required TResult Function() nextRange,
     required TResult Function() previousRange,
     required TResult Function() currentRange,
+    required TResult Function(List<Measurement> newMeasurementList) updateData,
   }) {
     return currentRange();
   }
@@ -348,6 +367,7 @@ class _$CurrentRangeImpl implements _CurrentRange {
     TResult? Function()? nextRange,
     TResult? Function()? previousRange,
     TResult? Function()? currentRange,
+    TResult? Function(List<Measurement> newMeasurementList)? updateData,
   }) {
     return currentRange?.call();
   }
@@ -358,6 +378,7 @@ class _$CurrentRangeImpl implements _CurrentRange {
     TResult Function()? nextRange,
     TResult Function()? previousRange,
     TResult Function()? currentRange,
+    TResult Function(List<Measurement> newMeasurementList)? updateData,
     required TResult orElse(),
   }) {
     if (currentRange != null) {
@@ -372,6 +393,7 @@ class _$CurrentRangeImpl implements _CurrentRange {
     required TResult Function(_NextRange value) nextRange,
     required TResult Function(_PreviousRange value) previousRange,
     required TResult Function(_CurrentRange value) currentRange,
+    required TResult Function(_UpdateData value) updateData,
   }) {
     return currentRange(this);
   }
@@ -382,6 +404,7 @@ class _$CurrentRangeImpl implements _CurrentRange {
     TResult? Function(_NextRange value)? nextRange,
     TResult? Function(_PreviousRange value)? previousRange,
     TResult? Function(_CurrentRange value)? currentRange,
+    TResult? Function(_UpdateData value)? updateData,
   }) {
     return currentRange?.call(this);
   }
@@ -392,6 +415,7 @@ class _$CurrentRangeImpl implements _CurrentRange {
     TResult Function(_NextRange value)? nextRange,
     TResult Function(_PreviousRange value)? previousRange,
     TResult Function(_CurrentRange value)? currentRange,
+    TResult Function(_UpdateData value)? updateData,
     required TResult orElse(),
   }) {
     if (currentRange != null) {
@@ -403,6 +427,161 @@ class _$CurrentRangeImpl implements _CurrentRange {
 
 abstract class _CurrentRange implements TimeRangeFilterEvent {
   const factory _CurrentRange() = _$CurrentRangeImpl;
+}
+
+/// @nodoc
+abstract class _$$UpdateDataImplCopyWith<$Res> {
+  factory _$$UpdateDataImplCopyWith(
+          _$UpdateDataImpl value, $Res Function(_$UpdateDataImpl) then) =
+      __$$UpdateDataImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({List<Measurement> newMeasurementList});
+}
+
+/// @nodoc
+class __$$UpdateDataImplCopyWithImpl<$Res>
+    extends _$TimeRangeFilterEventCopyWithImpl<$Res, _$UpdateDataImpl>
+    implements _$$UpdateDataImplCopyWith<$Res> {
+  __$$UpdateDataImplCopyWithImpl(
+      _$UpdateDataImpl _value, $Res Function(_$UpdateDataImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? newMeasurementList = null,
+  }) {
+    return _then(_$UpdateDataImpl(
+      newMeasurementList: null == newMeasurementList
+          ? _value._newMeasurementList
+          : newMeasurementList // ignore: cast_nullable_to_non_nullable
+              as List<Measurement>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$UpdateDataImpl implements _UpdateData {
+  const _$UpdateDataImpl({required final List<Measurement> newMeasurementList})
+      : _newMeasurementList = newMeasurementList;
+
+  final List<Measurement> _newMeasurementList;
+  @override
+  List<Measurement> get newMeasurementList {
+    if (_newMeasurementList is EqualUnmodifiableListView)
+      return _newMeasurementList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_newMeasurementList);
+  }
+
+  @override
+  String toString() {
+    return 'TimeRangeFilterEvent.updateData(newMeasurementList: $newMeasurementList)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateDataImpl &&
+            const DeepCollectionEquality()
+                .equals(other._newMeasurementList, _newMeasurementList));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_newMeasurementList));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateDataImplCopyWith<_$UpdateDataImpl> get copyWith =>
+      __$$UpdateDataImplCopyWithImpl<_$UpdateDataImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() nextRange,
+    required TResult Function() previousRange,
+    required TResult Function() currentRange,
+    required TResult Function(List<Measurement> newMeasurementList) updateData,
+  }) {
+    return updateData(newMeasurementList);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? nextRange,
+    TResult? Function()? previousRange,
+    TResult? Function()? currentRange,
+    TResult? Function(List<Measurement> newMeasurementList)? updateData,
+  }) {
+    return updateData?.call(newMeasurementList);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? nextRange,
+    TResult Function()? previousRange,
+    TResult Function()? currentRange,
+    TResult Function(List<Measurement> newMeasurementList)? updateData,
+    required TResult orElse(),
+  }) {
+    if (updateData != null) {
+      return updateData(newMeasurementList);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_NextRange value) nextRange,
+    required TResult Function(_PreviousRange value) previousRange,
+    required TResult Function(_CurrentRange value) currentRange,
+    required TResult Function(_UpdateData value) updateData,
+  }) {
+    return updateData(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_NextRange value)? nextRange,
+    TResult? Function(_PreviousRange value)? previousRange,
+    TResult? Function(_CurrentRange value)? currentRange,
+    TResult? Function(_UpdateData value)? updateData,
+  }) {
+    return updateData?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_NextRange value)? nextRange,
+    TResult Function(_PreviousRange value)? previousRange,
+    TResult Function(_CurrentRange value)? currentRange,
+    TResult Function(_UpdateData value)? updateData,
+    required TResult orElse(),
+  }) {
+    if (updateData != null) {
+      return updateData(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _UpdateData implements TimeRangeFilterEvent {
+  const factory _UpdateData(
+      {required final List<Measurement> newMeasurementList}) = _$UpdateDataImpl;
+
+  List<Measurement> get newMeasurementList;
+  @JsonKey(ignore: true)
+  _$$UpdateDataImplCopyWith<_$UpdateDataImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc

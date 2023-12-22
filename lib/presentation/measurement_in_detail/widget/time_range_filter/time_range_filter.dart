@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
-import 'package:watcha_body/data/domain/models/app_preferences.dart';
-import 'package:watcha_body/data/domain/models/failures/app_preferences_failures.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_range_filter/bloc/time_range_filter_bloc.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
 
@@ -14,7 +11,7 @@ class TimeRangeFilterInputStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
+    // final appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
     return BlocBuilder<TimeRangeFilterBloc, TimeRangeFilterState>(
       builder: (context, state) {
         return state.map(

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'getallmeasurments_cubit.dart';
+part of 'delete_measurement_cubit.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,29 +15,29 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$GetSingleMeasurmentsDetailsState {
+mixin _$DeleteMeasurementState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
+    required TResult Function(String id) deleted,
+    required TResult Function(String message) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String cause)? failed,
-    TResult? Function(List<Measurement> list)? success,
+    TResult? Function(String id)? deleted,
+    TResult? Function(String message)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(String id)? deleted,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -45,43 +45,41 @@ mixin _$GetSingleMeasurmentsDetailsState {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(AllMeasurementsLoaded value) success,
+    required TResult Function(_Deleted value) deleted,
+    required TResult Function(_Error value) error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(AllMeasurementsLoaded value)? success,
+    TResult? Function(_Deleted value)? deleted,
+    TResult? Function(_Error value)? error,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(AllMeasurementsLoaded value)? success,
+    TResult Function(_Deleted value)? deleted,
+    TResult Function(_Error value)? error,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $GetSingleMeasurmentsDetailsStateCopyWith<$Res> {
-  factory $GetSingleMeasurmentsDetailsStateCopyWith(
-          GetSingleMeasurmentsDetailsState value,
-          $Res Function(GetSingleMeasurmentsDetailsState) then) =
-      _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res,
-          GetSingleMeasurmentsDetailsState>;
+abstract class $DeleteMeasurementStateCopyWith<$Res> {
+  factory $DeleteMeasurementStateCopyWith(DeleteMeasurementState value,
+          $Res Function(DeleteMeasurementState) then) =
+      _$DeleteMeasurementStateCopyWithImpl<$Res, DeleteMeasurementState>;
 }
 
 /// @nodoc
-class _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res,
-        $Val extends GetSingleMeasurmentsDetailsState>
-    implements $GetSingleMeasurmentsDetailsStateCopyWith<$Res> {
-  _$GetSingleMeasurmentsDetailsStateCopyWithImpl(this._value, this._then);
+class _$DeleteMeasurementStateCopyWithImpl<$Res,
+        $Val extends DeleteMeasurementState>
+    implements $DeleteMeasurementStateCopyWith<$Res> {
+  _$DeleteMeasurementStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -98,7 +96,7 @@ abstract class _$$InitialImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$InitialImplCopyWithImpl<$Res>
-    extends _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res, _$InitialImpl>
+    extends _$DeleteMeasurementStateCopyWithImpl<$Res, _$InitialImpl>
     implements _$$InitialImplCopyWith<$Res> {
   __$$InitialImplCopyWithImpl(
       _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
@@ -112,7 +110,7 @@ class _$InitialImpl implements _Initial {
 
   @override
   String toString() {
-    return 'GetSingleMeasurmentsDetailsState.initial()';
+    return 'DeleteMeasurementState.initial()';
   }
 
   @override
@@ -129,8 +127,8 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
+    required TResult Function(String id) deleted,
+    required TResult Function(String message) error,
   }) {
     return initial();
   }
@@ -140,8 +138,8 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String cause)? failed,
-    TResult? Function(List<Measurement> list)? success,
+    TResult? Function(String id)? deleted,
+    TResult? Function(String message)? error,
   }) {
     return initial?.call();
   }
@@ -151,8 +149,8 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(String id)? deleted,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -166,8 +164,8 @@ class _$InitialImpl implements _Initial {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(AllMeasurementsLoaded value) success,
+    required TResult Function(_Deleted value) deleted,
+    required TResult Function(_Error value) error,
   }) {
     return initial(this);
   }
@@ -177,8 +175,8 @@ class _$InitialImpl implements _Initial {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(AllMeasurementsLoaded value)? success,
+    TResult? Function(_Deleted value)? deleted,
+    TResult? Function(_Error value)? error,
   }) {
     return initial?.call(this);
   }
@@ -188,8 +186,8 @@ class _$InitialImpl implements _Initial {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(AllMeasurementsLoaded value)? success,
+    TResult Function(_Deleted value)? deleted,
+    TResult Function(_Error value)? error,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -199,7 +197,7 @@ class _$InitialImpl implements _Initial {
   }
 }
 
-abstract class _Initial implements GetSingleMeasurmentsDetailsState {
+abstract class _Initial implements DeleteMeasurementState {
   const factory _Initial() = _$InitialImpl;
 }
 
@@ -212,7 +210,7 @@ abstract class _$$LoadingImplCopyWith<$Res> {
 
 /// @nodoc
 class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res, _$LoadingImpl>
+    extends _$DeleteMeasurementStateCopyWithImpl<$Res, _$LoadingImpl>
     implements _$$LoadingImplCopyWith<$Res> {
   __$$LoadingImplCopyWithImpl(
       _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
@@ -226,7 +224,7 @@ class _$LoadingImpl implements _Loading {
 
   @override
   String toString() {
-    return 'GetSingleMeasurmentsDetailsState.loading()';
+    return 'DeleteMeasurementState.loading()';
   }
 
   @override
@@ -243,8 +241,8 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
+    required TResult Function(String id) deleted,
+    required TResult Function(String message) error,
   }) {
     return loading();
   }
@@ -254,8 +252,8 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String cause)? failed,
-    TResult? Function(List<Measurement> list)? success,
+    TResult? Function(String id)? deleted,
+    TResult? Function(String message)? error,
   }) {
     return loading?.call();
   }
@@ -265,8 +263,8 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(String id)? deleted,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -280,8 +278,8 @@ class _$LoadingImpl implements _Loading {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(AllMeasurementsLoaded value) success,
+    required TResult Function(_Deleted value) deleted,
+    required TResult Function(_Error value) error,
   }) {
     return loading(this);
   }
@@ -291,8 +289,8 @@ class _$LoadingImpl implements _Loading {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(AllMeasurementsLoaded value)? success,
+    TResult? Function(_Deleted value)? deleted,
+    TResult? Function(_Error value)? error,
   }) {
     return loading?.call(this);
   }
@@ -302,8 +300,8 @@ class _$LoadingImpl implements _Loading {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(AllMeasurementsLoaded value)? success,
+    TResult Function(_Deleted value)? deleted,
+    TResult Function(_Error value)? error,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -313,36 +311,36 @@ class _$LoadingImpl implements _Loading {
   }
 }
 
-abstract class _Loading implements GetSingleMeasurmentsDetailsState {
+abstract class _Loading implements DeleteMeasurementState {
   const factory _Loading() = _$LoadingImpl;
 }
 
 /// @nodoc
-abstract class _$$FailedImplCopyWith<$Res> {
-  factory _$$FailedImplCopyWith(
-          _$FailedImpl value, $Res Function(_$FailedImpl) then) =
-      __$$FailedImplCopyWithImpl<$Res>;
+abstract class _$$DeletedImplCopyWith<$Res> {
+  factory _$$DeletedImplCopyWith(
+          _$DeletedImpl value, $Res Function(_$DeletedImpl) then) =
+      __$$DeletedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String cause});
+  $Res call({String id});
 }
 
 /// @nodoc
-class __$$FailedImplCopyWithImpl<$Res>
-    extends _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res, _$FailedImpl>
-    implements _$$FailedImplCopyWith<$Res> {
-  __$$FailedImplCopyWithImpl(
-      _$FailedImpl _value, $Res Function(_$FailedImpl) _then)
+class __$$DeletedImplCopyWithImpl<$Res>
+    extends _$DeleteMeasurementStateCopyWithImpl<$Res, _$DeletedImpl>
+    implements _$$DeletedImplCopyWith<$Res> {
+  __$$DeletedImplCopyWithImpl(
+      _$DeletedImpl _value, $Res Function(_$DeletedImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? cause = null,
+    Object? id = null,
   }) {
-    return _then(_$FailedImpl(
-      cause: null == cause
-          ? _value.cause
-          : cause // ignore: cast_nullable_to_non_nullable
+    return _then(_$DeletedImpl(
+      null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -350,43 +348,43 @@ class __$$FailedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FailedImpl implements _Failed {
-  const _$FailedImpl({required this.cause});
+class _$DeletedImpl implements _Deleted {
+  const _$DeletedImpl(this.id);
 
   @override
-  final String cause;
+  final String id;
 
   @override
   String toString() {
-    return 'GetSingleMeasurmentsDetailsState.failed(cause: $cause)';
+    return 'DeleteMeasurementState.deleted(id: $id)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FailedImpl &&
-            (identical(other.cause, cause) || other.cause == cause));
+            other is _$DeletedImpl &&
+            (identical(other.id, id) || other.id == id));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, cause);
+  int get hashCode => Object.hash(runtimeType, id);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$FailedImplCopyWith<_$FailedImpl> get copyWith =>
-      __$$FailedImplCopyWithImpl<_$FailedImpl>(this, _$identity);
+  _$$DeletedImplCopyWith<_$DeletedImpl> get copyWith =>
+      __$$DeletedImplCopyWithImpl<_$DeletedImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
+    required TResult Function(String id) deleted,
+    required TResult Function(String message) error,
   }) {
-    return failed(cause);
+    return deleted(id);
   }
 
   @override
@@ -394,10 +392,10 @@ class _$FailedImpl implements _Failed {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String cause)? failed,
-    TResult? Function(List<Measurement> list)? success,
+    TResult? Function(String id)? deleted,
+    TResult? Function(String message)? error,
   }) {
-    return failed?.call(cause);
+    return deleted?.call(id);
   }
 
   @override
@@ -405,12 +403,12 @@ class _$FailedImpl implements _Failed {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(String id)? deleted,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) {
-    if (failed != null) {
-      return failed(cause);
+    if (deleted != null) {
+      return deleted(id);
     }
     return orElse();
   }
@@ -420,10 +418,10 @@ class _$FailedImpl implements _Failed {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(AllMeasurementsLoaded value) success,
+    required TResult Function(_Deleted value) deleted,
+    required TResult Function(_Error value) error,
   }) {
-    return failed(this);
+    return deleted(this);
   }
 
   @override
@@ -431,10 +429,10 @@ class _$FailedImpl implements _Failed {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(AllMeasurementsLoaded value)? success,
+    TResult? Function(_Deleted value)? deleted,
+    TResult? Function(_Error value)? error,
   }) {
-    return failed?.call(this);
+    return deleted?.call(this);
   }
 
   @override
@@ -442,106 +440,96 @@ class _$FailedImpl implements _Failed {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(AllMeasurementsLoaded value)? success,
+    TResult Function(_Deleted value)? deleted,
+    TResult Function(_Error value)? error,
     required TResult orElse(),
   }) {
-    if (failed != null) {
-      return failed(this);
+    if (deleted != null) {
+      return deleted(this);
     }
     return orElse();
   }
 }
 
-abstract class _Failed implements GetSingleMeasurmentsDetailsState {
-  const factory _Failed({required final String cause}) = _$FailedImpl;
+abstract class _Deleted implements DeleteMeasurementState {
+  const factory _Deleted(final String id) = _$DeletedImpl;
 
-  String get cause;
+  String get id;
   @JsonKey(ignore: true)
-  _$$FailedImplCopyWith<_$FailedImpl> get copyWith =>
+  _$$DeletedImplCopyWith<_$DeletedImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$AllMeasurementsLoadedImplCopyWith<$Res> {
-  factory _$$AllMeasurementsLoadedImplCopyWith(
-          _$AllMeasurementsLoadedImpl value,
-          $Res Function(_$AllMeasurementsLoadedImpl) then) =
-      __$$AllMeasurementsLoadedImplCopyWithImpl<$Res>;
+abstract class _$$ErrorImplCopyWith<$Res> {
+  factory _$$ErrorImplCopyWith(
+          _$ErrorImpl value, $Res Function(_$ErrorImpl) then) =
+      __$$ErrorImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<Measurement> list});
+  $Res call({String message});
 }
 
 /// @nodoc
-class __$$AllMeasurementsLoadedImplCopyWithImpl<$Res>
-    extends _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res,
-        _$AllMeasurementsLoadedImpl>
-    implements _$$AllMeasurementsLoadedImplCopyWith<$Res> {
-  __$$AllMeasurementsLoadedImplCopyWithImpl(_$AllMeasurementsLoadedImpl _value,
-      $Res Function(_$AllMeasurementsLoadedImpl) _then)
+class __$$ErrorImplCopyWithImpl<$Res>
+    extends _$DeleteMeasurementStateCopyWithImpl<$Res, _$ErrorImpl>
+    implements _$$ErrorImplCopyWith<$Res> {
+  __$$ErrorImplCopyWithImpl(
+      _$ErrorImpl _value, $Res Function(_$ErrorImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? list = null,
+    Object? message = null,
   }) {
-    return _then(_$AllMeasurementsLoadedImpl(
-      list: null == list
-          ? _value._list
-          : list // ignore: cast_nullable_to_non_nullable
-              as List<Measurement>,
+    return _then(_$ErrorImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
 /// @nodoc
 
-class _$AllMeasurementsLoadedImpl implements AllMeasurementsLoaded {
-  const _$AllMeasurementsLoadedImpl({required final List<Measurement> list})
-      : _list = list;
+class _$ErrorImpl implements _Error {
+  const _$ErrorImpl(this.message);
 
-  final List<Measurement> _list;
   @override
-  List<Measurement> get list {
-    if (_list is EqualUnmodifiableListView) return _list;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_list);
-  }
+  final String message;
 
   @override
   String toString() {
-    return 'GetSingleMeasurmentsDetailsState.success(list: $list)';
+    return 'DeleteMeasurementState.error(message: $message)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AllMeasurementsLoadedImpl &&
-            const DeepCollectionEquality().equals(other._list, _list));
+            other is _$ErrorImpl &&
+            (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_list));
+  int get hashCode => Object.hash(runtimeType, message);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AllMeasurementsLoadedImplCopyWith<_$AllMeasurementsLoadedImpl>
-      get copyWith => __$$AllMeasurementsLoadedImplCopyWithImpl<
-          _$AllMeasurementsLoadedImpl>(this, _$identity);
+  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
+      __$$ErrorImplCopyWithImpl<_$ErrorImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
+    required TResult Function(String id) deleted,
+    required TResult Function(String message) error,
   }) {
-    return success(list);
+    return error(message);
   }
 
   @override
@@ -549,10 +537,10 @@ class _$AllMeasurementsLoadedImpl implements AllMeasurementsLoaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String cause)? failed,
-    TResult? Function(List<Measurement> list)? success,
+    TResult? Function(String id)? deleted,
+    TResult? Function(String message)? error,
   }) {
-    return success?.call(list);
+    return error?.call(message);
   }
 
   @override
@@ -560,12 +548,12 @@ class _$AllMeasurementsLoadedImpl implements AllMeasurementsLoaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(String id)? deleted,
+    TResult Function(String message)? error,
     required TResult orElse(),
   }) {
-    if (success != null) {
-      return success(list);
+    if (error != null) {
+      return error(message);
     }
     return orElse();
   }
@@ -575,10 +563,10 @@ class _$AllMeasurementsLoadedImpl implements AllMeasurementsLoaded {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(AllMeasurementsLoaded value) success,
+    required TResult Function(_Deleted value) deleted,
+    required TResult Function(_Error value) error,
   }) {
-    return success(this);
+    return error(this);
   }
 
   @override
@@ -586,10 +574,10 @@ class _$AllMeasurementsLoadedImpl implements AllMeasurementsLoaded {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initial value)? initial,
     TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(AllMeasurementsLoaded value)? success,
+    TResult? Function(_Deleted value)? deleted,
+    TResult? Function(_Error value)? error,
   }) {
-    return success?.call(this);
+    return error?.call(this);
   }
 
   @override
@@ -597,24 +585,22 @@ class _$AllMeasurementsLoadedImpl implements AllMeasurementsLoaded {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(AllMeasurementsLoaded value)? success,
+    TResult Function(_Deleted value)? deleted,
+    TResult Function(_Error value)? error,
     required TResult orElse(),
   }) {
-    if (success != null) {
-      return success(this);
+    if (error != null) {
+      return error(this);
     }
     return orElse();
   }
 }
 
-abstract class AllMeasurementsLoaded
-    implements GetSingleMeasurmentsDetailsState {
-  const factory AllMeasurementsLoaded({required final List<Measurement> list}) =
-      _$AllMeasurementsLoadedImpl;
+abstract class _Error implements DeleteMeasurementState {
+  const factory _Error(final String message) = _$ErrorImpl;
 
-  List<Measurement> get list;
+  String get message;
   @JsonKey(ignore: true)
-  _$$AllMeasurementsLoadedImplCopyWith<_$AllMeasurementsLoadedImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$ErrorImplCopyWith<_$ErrorImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

@@ -1,11 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/app/data/helpers.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
-import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
 
 part 'getallmeasurments_state.dart';
 part 'getallmeasurments_cubit.freezed.dart';
@@ -22,7 +20,7 @@ class GetSingleMeasurmentsDetailsCubit
   Future<void> fetchAllData({
     required String type,
     required AppPreferences appPreferences,
-    required DurationsEnum durationsEnum,
+    // required DurationsEnum durationsEnum,
   }) async {
     emit(const GetSingleMeasurmentsDetailsState.loading());
 
@@ -42,10 +40,32 @@ class GetSingleMeasurmentsDetailsCubit
       (r) => emit(
         GetSingleMeasurmentsDetailsState.success(
           list: r,
-          durationsEnum: durationsEnum,
-          startDate: enumToStartDate(durationsEnum),
+          //todo: not required
+          // durationsEnum: durationsEnum,
+          // startDate: enumToStartDate(durationsEnum),
         ),
       ),
     );
+  }
+
+  void reloadList(String id) {
+    final previousState = state;
+    emit(const GetSingleMeasurmentsDetailsState.loading());
+    if (previousState is AllMeasurementsLoaded) {
+      final list =
+          previousState.list.where((element) => element.id != id).toList();
+      // emit(
+      //   previousState.copyWith(
+      //     list: list,
+      //   ),
+      // );
+      emit(
+        GetSingleMeasurmentsDetailsState.success(
+          list: list,
+          // durationsEnum: previousState.durationsEnum,
+          // startDate: previousState.startDate,
+        ),
+      );
+    }
   }
 }

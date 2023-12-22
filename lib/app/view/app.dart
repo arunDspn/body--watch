@@ -25,6 +25,7 @@ import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/filter_chart_bloc/filterchart_bloc.dart';
 import 'package:watcha_body/presentation/home/charts/charts.dart';
 import 'package:watcha_body/presentation/home/home.dart';
+import 'package:watcha_body/presentation/measurement_in_detail/cubit/delete_measurement_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
@@ -82,6 +83,11 @@ class App extends StatelessWidget {
           ),
           BlocProvider<DeleteAllDataCubit>(
             create: (context) => DeleteAllDataCubit(
+              context.read<MeasurementRepository>(),
+            ),
+          ),
+          BlocProvider<DeleteMeasurementCubit>(
+            create: (context) => DeleteMeasurementCubit(
               context.read<MeasurementRepository>(),
             ),
           ),
@@ -175,7 +181,7 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
               )..fetchAllData(
                   type: _args.name,
                   appPreferences: appPref,
-                  durationsEnum: DurationsEnum.month1,
+                  // durationsEnum: DurationsEnum.month1,
                   // (appPrefWrapperState as SavedAndReady)
                   //     .appPreferences,
                 ),

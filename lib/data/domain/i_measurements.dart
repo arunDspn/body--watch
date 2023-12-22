@@ -32,10 +32,15 @@ abstract class IMeasurementsFacade {
     required Measurement measurement,
   });
 
+  /// Deletes all [Measurement] Data
+  Future<Either<String, Unit>> deleteAllData({
+    String? id,
+  });
+
   /// Deletes a [Measurement]
   /// Based on [Measurement.id]
   Future<Either<String, Unit>> deleteMeasurement({
-    String? id,
+    required String id,
   });
 
   /// Returns List of Types added in table as String

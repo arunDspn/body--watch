@@ -9,6 +9,7 @@ import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
+import 'package:watcha_body/presentation/measurement_in_detail/cubit/delete_measurement_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/metrics_line_graph.dart';
@@ -34,126 +35,179 @@ class MeasurementInDetail extends StatelessWidget {
     final appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
     return Scaffold(
       body: SafeArea(
-        child: BlocBuilder<GetSingleMeasurmentsDetailsCubit,
-            GetSingleMeasurmentsDetailsState>(
-          builder: (context, state) {
-            return state.maybeMap(
-              orElse: () {
-                return const Text('No You Cant See Me');
-              },
-              loading: (_) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-              failed: (value) {
-                return Text(value.cause);
-              },
-              success: (value) {
-                return BlocListener<AdddataCubit, AdddataState>(
-                  listener: (context, state) {
-                    state.maybeMap(
-                      orElse: () {},
-                      success: (_) {
-                        context
-                            .read<GetSingleMeasurmentsDetailsCubit>()
-                            .fetchAllData(
-                              type: measurementType.name,
-                              appPreferences: appPref.appPreferences,
-                              durationsEnum: value.durationsEnum,
-                            );
-                      },
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<DeleteMeasurementCubit, DeleteMeasurementState>(
+              listener: (context, state) {
+                state.maybeMap(
+                  orElse: () {},
+                  // loading: (_) {
+                  //   ScaffoldMessenger.of(context).showSnackBar(
+                  //     const SnackBar(
+                  //       content: Text('Deleting'),
+                  //     ),
+                  //   );
+                  // },
+                  error: (value) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(value.message),
+                      ),
                     );
                   },
-                  child: Column(
-                    children: [
-                      // Appbar
-                      // SizedBox(
-                      //   width: double.infinity,
-                      //   height: SizeConfig.screenHeight! * 0.08,
-                      //   child: Stack(
-                      //     children: [
-                      //       Align(
-                      //         child: Text(
-                      //           measurementType.name,
-                      //           // style: Theme.of(context).textTheme.displaySmall,
-                      //         ),
-                      //       ),
-                      //       Align(
-                      //         alignment: Alignment.centerLeft,
-                      //         child: TextButton(
-                      //           onPressed: () {
-                      //             Navigator.pop(context);
-                      //           },
-                      //           child: const Text('Cancel'),
-                      //         ),
-                      //       ),
-                      //       // Align(
-                      //       //   alignment: Alignment.centerRight,
-                      //       //   child: DropdownButton<DurationsEnum>(
-                      //       //     //TODO: Better universal
-                      //       //     borderRadius: BorderRadius.circular(20),
-                      //       //     value: value.durationsEnum,
-                      //       //     icon: Icon(
-                      //       //       Icons.arrow_drop_down,
-                      //       //       color:
-                      //       //           Theme.of(context).colorScheme.secondary,
-                      //       //     ),
-                      //       //     underline: Container(),
-                      //       //     onChanged: (value) {
-                      //       //       if (value != null) {
-                      //       //         context
-                      //       //             .read<
-                      //       //                 GetSingleMeasurmentsDetailsCubit>()
-                      //       //             .fetchAllData(
-                      //       //               type: measurementType.name,
-                      //       //               appPreferences:
-                      //       //                   appPref.appPreferences,
-                      //       //               durationsEnum: value,
-                      //       //             );
-                      //       //       }
-                      //       //     },
-                      //       //     items: DurationsEnum.values.map((e) {
-                      //       //       return DropdownMenuItem(
-                      //       //         value: e,
-                      //       //         child: Text(
-                      //       //           EnumToString.convertToString(
-                      //       //             e,
-                      //       //             camelCase: true,
-                      //       //           ),
-                      //       //           style:
-                      //       //               Theme.of(context).textTheme.bodyLarge,
-                      //       //         ),
-                      //       //       );
-                      //       //     }).toList(),
-                      //       //   ),
-                      //       // ),
-                      //     ],
-                      //   ),
-                      // ),
-                      AppBar(
-                        title: Text(measurementType.name),
-                        centerTitle: true,
+                  deleted: (value) {
+                    context
+                        .read<GetSingleMeasurmentsDetailsCubit>()
+                        .reloadList(value.id);
+                    // Deleted msg
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Deleted'),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      BlocProvider(
-                        create: (context) => TimeUnitFilterCubit(),
-                        child: Expanded(
-                          child: _MeasurementList(
-                            measurementList: value.list,
-                            measurementType: measurementType,
-                            startDate: value.startDate,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 );
               },
-            );
-          },
+            ),
+            BlocListener<AdddataCubit, AdddataState>(
+              listener: (context, state) {
+                state.maybeMap(
+                  orElse: () {},
+                  success: (_) {
+                    context
+                        .read<GetSingleMeasurmentsDetailsCubit>()
+                        .fetchAllData(
+                          type: measurementType.name,
+                          appPreferences: appPref.appPreferences,
+                          // durationsEnum: value.durationsEnum,
+                        );
+                  },
+                );
+              },
+            ),
+          ],
+          child: BlocBuilder<GetSingleMeasurmentsDetailsCubit,
+              GetSingleMeasurmentsDetailsState>(
+            builder: (context, state) {
+              return state.maybeMap(
+                orElse: () {
+                  return const Text('No You Cant See Me');
+                },
+                loading: (_) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+                failed: (value) {
+                  return Text(value.cause);
+                },
+                //todo: Group all listners
+                success: (value) {
+                  return BlocListener<AdddataCubit, AdddataState>(
+                    listener: (context, state) {
+                      state.maybeMap(
+                        orElse: () {},
+                        success: (_) {
+                          context
+                              .read<GetSingleMeasurmentsDetailsCubit>()
+                              .fetchAllData(
+                                type: measurementType.name,
+                                appPreferences: appPref.appPreferences,
+                                // durationsEnum: value.durationsEnum,
+                              );
+                        },
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        // Appbar
+                        // SizedBox(
+                        //   width: double.infinity,
+                        //   height: SizeConfig.screenHeight! * 0.08,
+                        //   child: Stack(
+                        //     children: [
+                        //       Align(
+                        //         child: Text(
+                        //           measurementType.name,
+                        //           // style: Theme.of(context).textTheme.displaySmall,
+                        //         ),
+                        //       ),
+                        //       Align(
+                        //         alignment: Alignment.centerLeft,
+                        //         child: TextButton(
+                        //           onPressed: () {
+                        //             Navigator.pop(context);
+                        //           },
+                        //           child: const Text('Cancel'),
+                        //         ),
+                        //       ),
+                        //       // Align(
+                        //       //   alignment: Alignment.centerRight,
+                        //       //   child: DropdownButton<DurationsEnum>(
+                        //       //     //TODO: Better universal
+                        //       //     borderRadius: BorderRadius.circular(20),
+                        //       //     value: value.durationsEnum,
+                        //       //     icon: Icon(
+                        //       //       Icons.arrow_drop_down,
+                        //       //       color:
+                        //       //           Theme.of(context).colorScheme.secondary,
+                        //       //     ),
+                        //       //     underline: Container(),
+                        //       //     onChanged: (value) {
+                        //       //       if (value != null) {
+                        //       //         context
+                        //       //             .read<
+                        //       //                 GetSingleMeasurmentsDetailsCubit>()
+                        //       //             .fetchAllData(
+                        //       //               type: measurementType.name,
+                        //       //               appPreferences:
+                        //       //                   appPref.appPreferences,
+                        //       //               durationsEnum: value,
+                        //       //             );
+                        //       //       }
+                        //       //     },
+                        //       //     items: DurationsEnum.values.map((e) {
+                        //       //       return DropdownMenuItem(
+                        //       //         value: e,
+                        //       //         child: Text(
+                        //       //           EnumToString.convertToString(
+                        //       //             e,
+                        //       //             camelCase: true,
+                        //       //           ),
+                        //       //           style:
+                        //       //               Theme.of(context).textTheme.bodyLarge,
+                        //       //         ),
+                        //       //       );
+                        //       //     }).toList(),
+                        //       //   ),
+                        //       // ),
+                        //     ],
+                        //   ),
+                        // ),
+                        AppBar(
+                          title: Text(measurementType.name),
+                          centerTitle: true,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        BlocProvider(
+                          create: (context) => TimeUnitFilterCubit(),
+                          child: Expanded(
+                            child: _MeasurementList(
+                              measurementList: value.list,
+                              measurementType: measurementType,
+                              // startDate: value.startDate,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );
@@ -165,12 +219,12 @@ class _MeasurementList extends StatelessWidget {
     Key? key,
     required this.measurementList,
     required this.measurementType,
-    required this.startDate,
+    // required this.startDate,
   }) : super(key: key);
 
   final List<Measurement> measurementList;
   final MeasurementType measurementType;
-  final DateTime startDate;
+  // final DateTime startDate;
 
   @override
   Widget build(BuildContext context) {
@@ -275,150 +329,173 @@ class DataView extends StatelessWidget {
       )..add(
           const TimeRangeFilterEvent.currentRange(),
         ),
-      child: Builder(
-        builder: (context) {
-          return Column(
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(18),
-                child: TimeRangeFilterInputStepper(),
-              ),
-              BlocBuilder<TimeRangeFilterBloc, TimeRangeFilterState>(
-                builder: (context, state) {
-                  // Filter
-                  return state.map(
-                    state: (value) {
-                      // final filteredMeasurements = measurementList
-                      //     .where(
-                      //       (element) =>
-                      //           (element.date.isAfter(value.startDate) &&
-                      //               element.date.isBefore(value.endDate)) ||
-                      //           element.date
-                      //               .isAtSameMomentAs(value.startDate) ||
-                      //           element.date.isAtSameMomentAs(value.endDate),
-                      //     )
-                      //     .toList();
+      child: BlocConsumer<GetSingleMeasurmentsDetailsCubit,
+          GetSingleMeasurmentsDetailsState>(
+        listener: (context, state) {
+          state.mapOrNull(
+            success: (value) {
+              context.read<TimeRangeFilterBloc>().add(
+                    TimeRangeFilterEvent.updateData(
+                      newMeasurementList: value.list,
+                    ),
+                  );
+            },
+          );
+        },
+        builder: (context, state) {
+          return Builder(
+            builder: (context) {
+              return Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(18),
+                    child: TimeRangeFilterInputStepper(),
+                  ),
+                  BlocBuilder<TimeRangeFilterBloc, TimeRangeFilterState>(
+                    builder: (context, state) {
+                      // Filter
+                      return state.map(
+                        state: (value) {
+                          // final filteredMeasurements = measurementList
+                          //     .where(
+                          //       (element) =>
+                          //           (element.date.isAfter(value.startDate) &&
+                          //               element.date.isBefore(value.endDate)) ||
+                          //           element.date
+                          //               .isAtSameMomentAs(value.startDate) ||
+                          //           element.date.isAtSameMomentAs(value.endDate),
+                          //     )
+                          //     .toList();
 
-                      // Measurement? previousMeasurement;
-                      // Measurement? nextMeasurement;
+                          // Measurement? previousMeasurement;
+                          // Measurement? nextMeasurement;
 
-                      // previousMeasurement = measurementList.lastWhereOrNull(
-                      //   (element) => element.date.isBefore(value.startDate),
-                      // );
-                      // nextMeasurement = measurementList.firstWhereOrNull(
-                      //   (element) => element.date.isAfter(value.endDate),
-                      // );
+                          // previousMeasurement = measurementList.lastWhereOrNull(
+                          //   (element) => element.date.isBefore(value.startDate),
+                          // );
+                          // nextMeasurement = measurementList.firstWhereOrNull(
+                          //   (element) => element.date.isAfter(value.endDate),
+                          // );
 
-                      return Column(
-                        children: [
-                          // Chart
-                          MetricsLineGraph(
-                            filteredMeasurements: value.filteredMeasurements,
-                            endDate: value.endDate,
-                            startDate: value.startDate,
-                            previousMeasurement: value.previousMeasurement,
-                            nextMeasurement: value.nextMeasurement,
-                            dayToText: DayToText(
-                              timeUnit: timeUnit,
-                              endDate: value.endDate,
-                              startDate: value.startDate,
-                            ),
-                          ),
+                          if (timeUnit == TimeUnit.year) {
+                            print(value.filteredMeasurements.length);
+                          }
 
-                          // Measure List
-                          SizedBox(
-                            width: SizeConfig.screenWidth! * 0.85,
-                            // Head
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Measurement(s) ${value.filteredMeasurements.length}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium
-                                      ?.copyWith(fontWeight: FontWeight.w600),
+                          return Column(
+                            children: [
+                              // Chart
+                              MetricsLineGraph(
+                                filteredMeasurements:
+                                    value.filteredMeasurements,
+                                endDate: value.endDate,
+                                startDate: value.startDate,
+                                previousMeasurement: value.previousMeasurement,
+                                nextMeasurement: value.nextMeasurement,
+                                dayToText: DayToText(
+                                  timeUnit: timeUnit,
+                                  endDate: value.endDate,
+                                  startDate: value.startDate,
                                 ),
-                                TextButton(
-                                  onPressed: () {
-                                    showModalBottomSheet<void>(
-                                      context: context,
-                                      builder: (context) {
-                                        return AddDataModal.add(
-                                          type: measurementType,
+                              ),
+
+                              // Measure List
+                              SizedBox(
+                                width: SizeConfig.screenWidth! * 0.85,
+                                // Head
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Measurement(s) ${value.filteredMeasurements.length}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        showModalBottomSheet<void>(
+                                          context: context,
+                                          builder: (context) {
+                                            return AddDataModal.add(
+                                              type: measurementType,
+                                            );
+                                          },
                                         );
                                       },
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Add',
-                                    textAlign: TextAlign.end,
+                                      child: const Text(
+                                        'Add',
+                                        textAlign: TextAlign.end,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // List
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: Container(
+                                  // constraints: BoxConstraints(
+                                  //   maxHeight: SizeConfig.screenHeight! * 0.4,
+                                  // ),
+                                  // padding: const EdgeInsets.only(top: 8),
+                                  width: SizeConfig.screenWidth! * 0.85,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: value.filteredMeasurements.isNotEmpty
+                                        // ? ListView.builder(
+                                        //     shrinkWrap: true,
+                                        //     physics: const BouncingScrollPhysics(
+                                        //       parent:
+                                        //           AlwaysScrollableScrollPhysics(),
+                                        //     ),
+                                        //     itemCount: filteredMeasurements.length,
+                                        //     itemBuilder: (context, index) {
+                                        //       return _TableCell(
+                                        //         date: filteredMeasurements[index]
+                                        //             .date,
+                                        //         measurement:
+                                        //             filteredMeasurements[index]
+                                        //                 .value,
+                                        //       );
+                                        //     },
+                                        //   )
+                                        ? Column(
+                                            children: value.filteredMeasurements
+                                                .map((e) {
+                                              return _TableCell(
+                                                measurement: e,
+                                              );
+                                            }).toList(),
+                                          )
+                                        : const Text(
+                                            'No Data',
+                                            textAlign: TextAlign.center,
+                                          ),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          // List
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: Container(
-                              // constraints: BoxConstraints(
-                              //   maxHeight: SizeConfig.screenHeight! * 0.4,
-                              // ),
-                              // padding: const EdgeInsets.only(top: 8),
-                              width: SizeConfig.screenWidth! * 0.85,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer,
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: value.filteredMeasurements.isNotEmpty
-                                    // ? ListView.builder(
-                                    //     shrinkWrap: true,
-                                    //     physics: const BouncingScrollPhysics(
-                                    //       parent:
-                                    //           AlwaysScrollableScrollPhysics(),
-                                    //     ),
-                                    //     itemCount: filteredMeasurements.length,
-                                    //     itemBuilder: (context, index) {
-                                    //       return _TableCell(
-                                    //         date: filteredMeasurements[index]
-                                    //             .date,
-                                    //         measurement:
-                                    //             filteredMeasurements[index]
-                                    //                 .value,
-                                    //       );
-                                    //     },
-                                    //   )
-                                    ? Column(
-                                        children:
-                                            value.filteredMeasurements.map((e) {
-                                          return _TableCell(
-                                            date: e.date,
-                                            measurement: e.value,
-                                          );
-                                        }).toList(),
-                                      )
-                                    : const Text(
-                                        'No Data',
-                                        textAlign: TextAlign.center,
-                                      ),
-                              ),
-                            ),
-                          ),
-                        ],
+                            ],
+                          );
+                        },
+                        loading: (value) {
+                          return const CircularProgressIndicator();
+                        },
                       );
                     },
-                    loading: (value) {
-                      return const CircularProgressIndicator();
-                    },
-                  );
-                },
-              ),
-            ],
+                  ),
+                ],
+              );
+            },
           );
         },
       ),
@@ -430,28 +507,64 @@ class _TableCell extends StatelessWidget {
   _TableCell({
     Key? key,
     required this.measurement,
-    required this.date,
   }) : super(key: key);
 
-  final double measurement;
-  final DateTime date;
+  final Measurement measurement;
 
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            measurement.toStringAsFixed(2),
+            measurement.value.toStringAsFixed(2),
             style: Theme.of(context).textTheme.bodyLarge,
           ),
+          const Spacer(),
           Text(
-            formatter.format(date),
+            formatter.format(measurement.date),
             style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          // overflow menu
+          PopupMenuButton<String>(
+            padding: EdgeInsets.zero,
+            icon: const Icon(Icons.more_vert),
+            onSelected: (value) {
+              // Handle menu item selection here
+              if (value == 'edit') {
+                // Handle edit action
+                print('Edit selected');
+              } else if (value == 'delete') {
+                context
+                    .read<DeleteMeasurementCubit>()
+                    .delete(id: measurement.id!);
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                const PopupMenuItem<String>(
+                  value: 'edit',
+                  child: ListTile(
+                    leading: Icon(Icons.edit),
+                    title: Text('Edit'),
+                  ),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'delete',
+                  child: ListTile(
+                    leading: Icon(Icons.delete, color: Colors.red),
+                    title: Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ),
+              ];
+            },
           ),
         ],
       ),

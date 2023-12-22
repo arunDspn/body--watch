@@ -36,8 +36,10 @@ class TimeRangeFilterBloc
             final filteredList = filterMeasurements(
               startDate: range.startDate,
               endDate: range.endDate,
+              allMeasurements: allMeasurements,
             );
 
+            emit(const TimeRangeFilterState.loading());
             emit(
               TimeRangeFilterState.state(
                 startDate: range.startDate,
@@ -76,7 +78,10 @@ class TimeRangeFilterBloc
             final filteredList = filterMeasurements(
               startDate: range.startDate,
               endDate: range.endDate,
+              allMeasurements: allMeasurements,
             );
+
+            emit(const TimeRangeFilterState.loading());
             emit(
               TimeRangeFilterState.state(
                 startDate: range.startDate,
@@ -113,7 +118,10 @@ class TimeRangeFilterBloc
             final filteredList = filterMeasurements(
               startDate: range.startDate,
               endDate: range.endDate,
+              allMeasurements: allMeasurements,
             );
+
+            emit(const TimeRangeFilterState.loading());
             emit(
               TimeRangeFilterState.state(
                 startDate: range.startDate,
@@ -126,17 +134,40 @@ class TimeRangeFilterBloc
               ),
             );
           },
+          updateData: (value) {
+            // final previousState = ;
+            // emit(const TimeRangeFilterState.loading());
+            // allMeasurements = value.newMeasurementList;
+            // if (previousState is _NextRange) {
+            //   add(const TimeRangeFilterEvent.nextRange());
+            // } else if (previousState is _PreviousRange) {
+            //   add(const TimeRangeFilterEvent.previousRange());
+            // } else if (previousState is _CurrentRange) {
+            //   add(const TimeRangeFilterEvent.currentRange());
+            // }
+            allMeasurements = value.newMeasurementList;
+            final previousState = state;
+            if (previousState is _State) {
+              final list = filterMeasurements(
+                startDate: previousState.startDate,
+                endDate: previousState.endDate,
+                allMeasurements: value.newMeasurementList,
+              );
+              emit(previousState.copyWith(filteredMeasurements: list));
+            }
+          },
         );
       },
     );
   }
   final TimeUnit timeUnit;
   final TimeRangeService timeRangeService;
-  final List<Measurement> allMeasurements;
+  List<Measurement> allMeasurements;
 
   List<Measurement> filterMeasurements({
     required DateTime startDate,
     required DateTime endDate,
+    required List<Measurement> allMeasurements,
   }) {
     return allMeasurements
         .where(

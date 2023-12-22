@@ -13,7 +13,7 @@ class DeleteAllDataCubit extends Cubit<DeleteAllDataState> {
   Future<void> deleteAllData() async {
     emit(const DeleteAllDataState.loading());
 
-    final _result = await measurementRepository.deleteMeasurement();
+    final _result = await measurementRepository.deleteAllData();
 
     _result.fold(
       (l) {

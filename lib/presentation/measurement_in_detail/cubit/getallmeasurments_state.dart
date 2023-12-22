@@ -9,7 +9,7 @@ class GetSingleMeasurmentsDetailsState with _$GetSingleMeasurmentsDetailsState {
   }) = _Failed;
   const factory GetSingleMeasurmentsDetailsState.success({
     required List<Measurement> list,
-    required DurationsEnum durationsEnum,
-    required DateTime startDate,
-  }) = _Success;
+    // required DurationsEnum durationsEnum,
+    // required DateTime startDate,
+  }) = AllMeasurementsLoaded;
 }

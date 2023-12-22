@@ -48,7 +48,7 @@ ORDER BY type, date DESC;
   }
 
   @override
-  Future<Either<String, Unit>> deleteMeasurement({
+  Future<Either<String, Unit>> deleteAllData({
     String? id,
   }) async {
     try {
@@ -192,6 +192,18 @@ ORDER BY type, date DESC;
       }
       await databaseService.restoreData(
         datas: _datas,
+      );
+      return const Right(unit);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, Unit>> deleteMeasurement({required String id}) async {
+    try {
+      await databaseService.delete(
+        id: id,
       );
       return const Right(unit);
     } catch (e) {
