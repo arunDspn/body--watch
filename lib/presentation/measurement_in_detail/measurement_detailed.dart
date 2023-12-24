@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:collection/collection.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
@@ -537,7 +539,23 @@ class _TableCell extends StatelessWidget {
               // Handle menu item selection here
               if (value == 'edit') {
                 // Handle edit action
+
                 print('Edit selected');
+
+                showModalBottomSheet<void>(
+                  context: context,
+                  builder: (context) {
+                    return BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                      child: AddDataModal.edit(
+                        type: measurementTypeFromString(measurement.type)!,
+                        addedDate: measurement.date,
+                        addedValue: measurement.value,
+                        addedId: measurement.id,
+                      ),
+                    );
+                  },
+                );
               } else if (value == 'delete') {
                 context
                     .read<DeleteMeasurementCubit>()

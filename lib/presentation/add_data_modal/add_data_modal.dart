@@ -16,16 +16,34 @@ class AddDataModal extends StatefulWidget {
     Key? key,
     required this.type,
     this.add = false,
-  }) : super(key: key);
+  })  : addedId = null,
+        addedDate = null,
+        addedValue = null,
+        super(key: key);
 
   const AddDataModal.add({
     Key? key,
     required this.type,
     this.add = true,
+  })  : addedId = null,
+        addedDate = null,
+        addedValue = null,
+        super(key: key);
+
+  const AddDataModal.edit({
+    Key? key,
+    required this.type,
+    required this.addedDate,
+    required this.addedValue,
+    required this.addedId,
+    this.add = true,
   }) : super(key: key);
 
   final MeasurementType type;
   final bool add;
+  final DateTime? addedDate;
+  final double? addedValue;
+  final String? addedId;
 
   @override
   State<AddDataModal> createState() => _AddDataModalState();
@@ -38,8 +56,26 @@ class _AddDataModalState extends State<AddDataModal> {
   DateTime? selectedDate;
 
   // Controllers
-  final _measurementController = TextEditingController();
-  final _dateController = TextEditingController();
+  late final TextEditingController _measurementController;
+  late final TextEditingController _dateController;
+
+  @override
+  void initState() {
+    _measurementController = TextEditingController();
+    _dateController = TextEditingController();
+    if (widget.addedDate != null && widget.addedValue != null) {
+      selectedDate = widget.addedDate;
+      _measurementController.text = widget.addedValue.toString();
+      _dateController.text = formatter.format(selectedDate!);
+    } else {
+      selectedDate = DateTime.now();
+      // _measurementController.text = '';
+      _dateController.text = formatter.format(selectedDate!);
+    }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final appPrefState =
@@ -140,6 +176,7 @@ class _AddDataModalState extends State<AddDataModal> {
                     onPressed: () {
                       context.read<AdddataCubit>().insertData(
                             measurement: Measurement(
+                              id: widget.addedId,
                               date: selectedDate ?? DateTime.now(),
                               value: double.parse(_measurementController.text),
                               unit: measurementUnit,

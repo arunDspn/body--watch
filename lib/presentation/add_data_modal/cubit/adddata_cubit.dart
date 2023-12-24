@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
@@ -14,9 +15,16 @@ class AdddataCubit extends Cubit<AdddataState> {
     required Measurement measurement,
   }) async {
     emit(const AdddataState.loading());
-    final result = await measurementRepository.createMeasurement(
-      measurement: measurement,
-    );
+    final Either<String, Unit> result;
+    if (measurement.id == null) {
+      result = await measurementRepository.createMeasurement(
+        measurement: measurement,
+      );
+    } else {
+      result = await measurementRepository.updateMeasurement(
+        measurement: measurement,
+      );
+    }
 
     result.fold(
       (l) => emit(AdddataState.failure(l)),

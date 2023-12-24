@@ -147,9 +147,15 @@ ORDER BY type, date DESC;
   @override
   Future<Either<String, Unit>> updateMeasurement({
     required Measurement measurement,
-  }) {
-    // TODO: implement updateMeasurement
-    throw UnimplementedError();
+  }) async {
+    try {
+      await databaseService.update(
+        map: measurement.toMap(),
+      );
+      return const Right(unit);
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 
   @override
