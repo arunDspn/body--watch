@@ -1,7 +1,5 @@
 import 'dart:ui';
 
-import 'package:dynamic_color/dynamic_color.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +12,6 @@ import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/display_models/measurement_display.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
-import 'package:watcha_body/presentation/measurement_in_detail/widget/sampleman.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/widgets/overview_chart.dart';
@@ -157,7 +154,7 @@ class OverView extends StatelessWidget {
 }
 
 class _WidgetBox extends StatefulWidget {
-  _WidgetBox({
+  const _WidgetBox({
     Key? key,
     required this.data,
   }) : super(key: key);

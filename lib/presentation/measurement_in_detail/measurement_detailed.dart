@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:collection/collection.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +9,7 @@ import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
-import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
+import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/delete_measurement_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
@@ -19,6 +18,7 @@ import 'package:watcha_body/presentation/measurement_in_detail/widget/time_range
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_range_filter/time_range_filter.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/timeunit_segemented_filter_view.dart';
+import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/services/time_range_service/service.dart';
 import 'package:watcha_body/size_config.dart';
 
@@ -35,182 +35,140 @@ class MeasurementInDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appPref = context.read<ApppreferencesBloc>().state as SavedAndReady;
-    return Scaffold(
-      body: SafeArea(
-        child: MultiBlocListener(
-          listeners: [
-            BlocListener<DeleteMeasurementCubit, DeleteMeasurementState>(
-              listener: (context, state) {
-                state.maybeMap(
-                  orElse: () {},
-                  // loading: (_) {
-                  //   ScaffoldMessenger.of(context).showSnackBar(
-                  //     const SnackBar(
-                  //       content: Text('Deleting'),
-                  //     ),
-                  //   );
-                  // },
-                  error: (value) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(value.message),
-                      ),
-                    );
-                  },
-                  deleted: (value) {
-                    context
-                        .read<GetSingleMeasurmentsDetailsCubit>()
-                        .reloadList(value.id);
-                    // Deleted msg
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Deleted'),
-                      ),
-                    );
-                  },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<DeleteMeasurementCubit, DeleteMeasurementState>(
+          listener: (context, state) {
+            state.maybeMap(
+              orElse: () {},
+              error: (value) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(value.message),
+                  ),
                 );
               },
-            ),
-            BlocListener<AdddataCubit, AdddataState>(
-              listener: (context, state) {
-                state.maybeMap(
-                  orElse: () {},
-                  success: (_) {
-                    context
-                        .read<GetSingleMeasurmentsDetailsCubit>()
-                        .fetchAllData(
-                          type: measurementType.name,
-                          appPreferences: appPref.appPreferences,
-                          // durationsEnum: value.durationsEnum,
-                        );
-                  },
+              deleted: (value) {
+                context
+                    .read<GetSingleMeasurmentsDetailsCubit>()
+                    .reloadList(value.id);
+                // Deleted msg
+                ScaffoldMessenger.of(context).clearSnackBars();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Deleted'),
+                  ),
                 );
+                // Updating Widgets
+                context.read<GetallwidgetsdataBloc>().add(
+                      GetallwidgetsdataEvent.fetchAllData(
+                        appPreferences: appPref.appPreferences,
+                      ),
+                    );
               },
-            ),
-          ],
-          child: BlocBuilder<GetSingleMeasurmentsDetailsCubit,
-              GetSingleMeasurmentsDetailsState>(
-            builder: (context, state) {
-              return state.maybeMap(
-                orElse: () {
-                  return const Text('No You Cant See Me');
-                },
-                loading: (_) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-                failed: (value) {
-                  return Text(value.cause);
-                },
-                //todo: Group all listners
-                success: (value) {
-                  return BlocListener<AdddataCubit, AdddataState>(
-                    listener: (context, state) {
-                      state.maybeMap(
-                        orElse: () {},
-                        success: (_) {
-                          context
-                              .read<GetSingleMeasurmentsDetailsCubit>()
-                              .fetchAllData(
-                                type: measurementType.name,
-                                appPreferences: appPref.appPreferences,
-                                // durationsEnum: value.durationsEnum,
-                              );
-                        },
-                      );
-                    },
-                    child: Column(
-                      children: [
-                        // Appbar
-                        // SizedBox(
-                        //   width: double.infinity,
-                        //   height: SizeConfig.screenHeight! * 0.08,
-                        //   child: Stack(
-                        //     children: [
-                        //       Align(
-                        //         child: Text(
-                        //           measurementType.name,
-                        //           // style: Theme.of(context).textTheme.displaySmall,
-                        //         ),
-                        //       ),
-                        //       Align(
-                        //         alignment: Alignment.centerLeft,
-                        //         child: TextButton(
-                        //           onPressed: () {
-                        //             Navigator.pop(context);
-                        //           },
-                        //           child: const Text('Cancel'),
-                        //         ),
-                        //       ),
-                        //       // Align(
-                        //       //   alignment: Alignment.centerRight,
-                        //       //   child: DropdownButton<DurationsEnum>(
-                        //       //     //TODO: Better universal
-                        //       //     borderRadius: BorderRadius.circular(20),
-                        //       //     value: value.durationsEnum,
-                        //       //     icon: Icon(
-                        //       //       Icons.arrow_drop_down,
-                        //       //       color:
-                        //       //           Theme.of(context).colorScheme.secondary,
-                        //       //     ),
-                        //       //     underline: Container(),
-                        //       //     onChanged: (value) {
-                        //       //       if (value != null) {
-                        //       //         context
-                        //       //             .read<
-                        //       //                 GetSingleMeasurmentsDetailsCubit>()
-                        //       //             .fetchAllData(
-                        //       //               type: measurementType.name,
-                        //       //               appPreferences:
-                        //       //                   appPref.appPreferences,
-                        //       //               durationsEnum: value,
-                        //       //             );
-                        //       //       }
-                        //       //     },
-                        //       //     items: DurationsEnum.values.map((e) {
-                        //       //       return DropdownMenuItem(
-                        //       //         value: e,
-                        //       //         child: Text(
-                        //       //           EnumToString.convertToString(
-                        //       //             e,
-                        //       //             camelCase: true,
-                        //       //           ),
-                        //       //           style:
-                        //       //               Theme.of(context).textTheme.bodyLarge,
-                        //       //         ),
-                        //       //       );
-                        //       //     }).toList(),
-                        //       //   ),
-                        //       // ),
-                        //     ],
-                        //   ),
-                        // ),
-                        AppBar(
-                          title: Text(measurementType.name),
-                          centerTitle: true,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        BlocProvider(
-                          create: (context) => TimeUnitFilterCubit(),
-                          child: Expanded(
-                            child: _MeasurementList(
-                              measurementList: value.list,
-                              measurementType: measurementType,
-                              // startDate: value.startDate,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
-            },
-          ),
+            );
+          },
         ),
+        BlocListener<AdddataCubit, AdddataState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              success: (_) {
+                context.read<GetSingleMeasurmentsDetailsCubit>().fetchAllData(
+                      type: measurementType.name,
+                      appPreferences: appPref.appPreferences,
+                      // durationsEnum: value.durationsEnum,
+                    );
+                context.read<GetallwidgetsdataBloc>().add(
+                      GetallwidgetsdataEvent.fetchAllData(
+                        appPreferences: appPref.appPreferences,
+                      ),
+                    );
+              },
+            );
+          },
+        ),
+      ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(measurementType.name),
+          centerTitle: true,
+        ),
+        body: BlocBuilder<GetSingleMeasurmentsDetailsCubit,
+            GetSingleMeasurmentsDetailsState>(
+          builder: (context, state) {
+            return state.maybeMap(
+              orElse: () {
+                return const Text('No You Cant See Me');
+              },
+              loading: (_) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+              failed: (value) {
+                return Text(value.cause);
+              },
+              success: (value) {
+                if (value.list.isEmpty) {
+                  return const _NoDataToProcessView();
+                }
+                return Column(
+                  children: [
+                    BlocProvider(
+                      create: (context) => TimeUnitFilterCubit(),
+                      child: Expanded(
+                        child: _MeasurementList(
+                          measurementList: value.list,
+                          measurementType: measurementType,
+                          // startDate: value.startDate,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _NoDataToProcessView extends StatelessWidget {
+  const _NoDataToProcessView();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(14),
+            child: Text(
+              // 🥶
+              '🫥',
+              style: TextStyle(
+                fontSize: 46,
+              ),
+            ),
+          ),
+          const Text(
+            "Hold your data horses, partner! Nothing to process here. Tumbleweeds and crickets, that's all I got.",
+            textAlign: TextAlign.center,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: FilledButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Back to Overview'),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -268,19 +268,34 @@ class _AddDataModalState extends State<AddDataModal> {
     );
   }
 
-  Future<void> _selectDate(BuildContext context) async {
-    final picked = await showDatePicker(
+  void _selectDate(BuildContext context) {
+    showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2021),
       lastDate: DateTime.now(),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-        final formatted = formatter.format(selectedDate!);
-        _dateController.text = formatted;
-      });
-    }
+    ).then((picked) {
+      if (picked != null && picked != selectedDate) {
+        // time picker
+        showTimePicker(
+          context: context,
+          initialTime: const TimeOfDay(hour: 0, minute: 0),
+        ).then((pickedTime) {
+          setState(() {
+            if (pickedTime != null) {
+              selectedDate = DateTime(
+                picked.year,
+                picked.month,
+                picked.day,
+                pickedTime.hour,
+                pickedTime.minute,
+              );
+              final formatted = formatter.format(selectedDate!);
+              _dateController.text = formatted;
+            }
+          });
+        });
+      }
+    });
   }
 }

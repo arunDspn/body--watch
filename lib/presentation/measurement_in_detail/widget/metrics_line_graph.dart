@@ -43,136 +43,140 @@ class MetricsLineGraph extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: AspectRatio(
               aspectRatio: 1.50,
-              child: LineChart(
-                curve: Curves.decelerate,
-                duration: const Duration(seconds: 3),
-                LineChartData(
-                  gridData: FlGridData(
-                    checkToShowHorizontalLine: (_) => true,
-                    checkToShowVerticalLine: (_) => false,
-                  ),
-                  lineTouchData: LineTouchData(
-                    touchTooltipData: LineTouchTooltipData(
-                      tooltipBgColor:
-                          Theme.of(context).colorScheme.secondaryContainer,
-                      getTooltipItems: (touchedSpots) {
-                        final dateString = switch (dayToText.timeUnit) {
-                          TimeUnit.week => dayToText.denormalizeWeekday(
-                              touchedSpots.first.x,
-                            ),
-                          // TODO: Handle this case.
-                          TimeUnit.month => '',
-                          TimeUnit.threeMonth =>
-                            dayToText.derangeifyThreeMonthsToString(
-                              touchedSpots.first.x,
-                            ),
-                          TimeUnit.year => dayToText
-                              .derangeifyMonthsInYear(touchedSpots.first.x),
-                        };
+              child: snapshot.data!.isEmpty
+                  ? const Text('No Data')
+                  : LineChart(
+                      curve: Curves.decelerate,
+                      duration: const Duration(seconds: 3),
+                      LineChartData(
+                        gridData: FlGridData(
+                          checkToShowHorizontalLine: (_) => true,
+                          checkToShowVerticalLine: (_) => false,
+                        ),
+                        lineTouchData: LineTouchData(
+                          touchTooltipData: LineTouchTooltipData(
+                            tooltipBgColor: Theme.of(context)
+                                .colorScheme
+                                .secondaryContainer,
+                            getTooltipItems: (touchedSpots) {
+                              final dateString = switch (dayToText.timeUnit) {
+                                TimeUnit.week => dayToText.denormalizeWeekday(
+                                    touchedSpots.first.x,
+                                  ),
+                                // TODO: Handle this case.
+                                TimeUnit.month => '',
+                                TimeUnit.threeMonth =>
+                                  dayToText.derangeifyThreeMonthsToString(
+                                    touchedSpots.first.x,
+                                  ),
+                                TimeUnit.year =>
+                                  dayToText.derangeifyMonthsInYear(
+                                      touchedSpots.first.x),
+                              };
 
-                        return [
-                          LineTooltipItem(
-                            '${touchedSpots.first.y} on $dateString',
-                            TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSecondaryContainer,
-                              fontSize: 10,
+                              return [
+                                LineTooltipItem(
+                                  '${touchedSpots.first.y} on $dateString',
+                                  TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondaryContainer,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ];
+                            },
+                          ),
+                        ),
+                        titlesData: FlTitlesData(
+                          topTitles: const AxisTitles(),
+                          rightTitles: const AxisTitles(),
+                          bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 40,
+                              interval: 1,
+                              getTitlesWidget: (value, meta) {
+                                // if (dayToText.timeUnit == TimeUnit.month) {
+                                //   print(
+                                //       " -- $value ${meta.axisSide.index} --- ${dayToText.timeUnit}");
+                                // }
+
+                                return SideTitleWidget(
+                                  axisSide: meta.axisSide,
+                                  child: Text(
+                                    dayToText.getRelevantTextByNumber(
+                                      value,
+                                    ),
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
-                        ];
-                      },
-                    ),
-                  ),
-                  titlesData: FlTitlesData(
-                    topTitles: const AxisTitles(),
-                    rightTitles: const AxisTitles(),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 40,
-                        interval: 1,
-                        getTitlesWidget: (value, meta) {
-                          // if (dayToText.timeUnit == TimeUnit.month) {
-                          //   print(
-                          //       " -- $value ${meta.axisSide.index} --- ${dayToText.timeUnit}");
-                          // }
-
-                          return SideTitleWidget(
-                            axisSide: meta.axisSide,
-                            child: Text(
-                              dayToText.getRelevantTextByNumber(
-                                value,
+                          leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                              showTitles: true,
+                              reservedSize: 32,
+                              getTitlesWidget: (value, meta) => SideTitleWidget(
+                                axisSide: meta.axisSide,
+                                child: Text(
+                                  meta.formattedValue,
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                  ),
+                                ),
                               ),
-                              style: const TextStyle(
-                                fontSize: 10,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 32,
-                        getTitlesWidget: (value, meta) => SideTitleWidget(
-                          axisSide: meta.axisSide,
-                          child: Text(
-                            meta.formattedValue,
-                            style: const TextStyle(
-                              fontSize: 10,
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  borderData: FlBorderData(
-                    show: false,
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  minX: 0.9,
-                  maxY: setMaxY(snapshot.data!),
-                  minY: setMinY(snapshot.data!),
-                  maxX: setMaxX(dayToText.timeUnit, startDate),
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: snapshot.data!.reversed.toList(),
-                      isCurved: true,
-                      aboveBarData: BarAreaData(),
-                      curveSmoothness: .2,
-                      preventCurveOverShooting: true,
-                      color: Theme.of(context).colorScheme.primary,
-                      dotData: FlDotData(
-                        checkToShowDot: (spot, barData) => spot.y != 0,
-                        getDotPainter: (p0, p1, p2, p3) {
-                          if (p0.x == 0.9) {
-                            // todo: fix?
-                            return FlDotCirclePainter(
-                              color: Colors.transparent,
-                              strokeWidth: 0,
-                            );
-                          }
-                          // else if (p0.x == p2.spots.first.x) {
-                          //   // todo: fix?
-                          //   return FlDotCirclePainter(
-                          //     color: Colors.transparent,
-                          //     strokeWidth: 0,
-                          //   );
-                          // }
-                          return FlDotCirclePainter(
+                        borderData: FlBorderData(
+                          show: false,
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        minX: 0.9,
+                        maxY: setMaxY(snapshot.data!),
+                        minY: setMinY(snapshot.data!),
+                        maxX: setMaxX(dayToText.timeUnit, startDate),
+                        lineBarsData: [
+                          LineChartBarData(
+                            spots: snapshot.data!.reversed.toList(),
+                            isCurved: true,
+                            aboveBarData: BarAreaData(),
+                            curveSmoothness: .2,
+                            preventCurveOverShooting: true,
                             color: Theme.of(context).colorScheme.primary,
-                            radius: 3,
-                            strokeWidth: 0,
-                          );
-                        },
+                            dotData: FlDotData(
+                              checkToShowDot: (spot, barData) => spot.y != 0,
+                              getDotPainter: (p0, p1, p2, p3) {
+                                if (p0.x == 0.9) {
+                                  // todo: fix?
+                                  return FlDotCirclePainter(
+                                    color: Colors.transparent,
+                                    strokeWidth: 0,
+                                  );
+                                }
+                                // else if (p0.x == p2.spots.first.x) {
+                                //   // todo: fix?
+                                //   return FlDotCirclePainter(
+                                //     color: Colors.transparent,
+                                //     strokeWidth: 0,
+                                //   );
+                                // }
+                                return FlDotCirclePainter(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  radius: 3,
+                                  strokeWidth: 0,
+                                );
+                              },
+                            ),
+                            // belowBarData: BarAreaData(),
+                          ),
+                        ],
                       ),
-                      // belowBarData: BarAreaData(),
                     ),
-                  ],
-                ),
-              ),
             ),
           );
         } else {
@@ -246,6 +250,10 @@ Future<List<FlSpot>> genDataConcurrently({
   // });
 
   // const firstItem = FlSpot(0.9, 55);
+
+  if (list.isEmpty) {
+    return [];
+  }
 
   final flspots = switch (timeUnit) {
     TimeUnit.week => list
