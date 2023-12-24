@@ -23,7 +23,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   freezed_annotation: ^2.4.1
-  google_fonts: ^6.1.0
   hydrated_bloc: ^9.1.2
   intl: ^0.18.1
   media_scanner: ^2.1.0
@@ -46,3 +45,12 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: fonts/Poppins-Regular.ttf
+        - asset: fonts/Poppins-Italic.ttf
+        - asset: fonts/Poppins-Bold.ttf
+        - asset: fonts/Poppins-MediumItalic.ttf
+        - asset: fonts/Poppins-SemiBold.ttf
+          style: italic

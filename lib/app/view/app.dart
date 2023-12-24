@@ -9,11 +9,9 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/app/theme_data.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/l10n/l10n.dart';
@@ -108,7 +106,7 @@ class App extends StatelessWidget {
                         // themeMode: ThemeMode.system,
                         theme: ThemeData(
                           colorScheme: lightDynamic,
-                          textTheme: GoogleFonts.poppinsTextTheme(),
+                          fontFamily: 'Poppins',
                           useMaterial3: true,
                         ),
                         // darkTheme: ThemeData(
