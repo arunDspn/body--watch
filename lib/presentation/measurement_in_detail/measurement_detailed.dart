@@ -145,19 +145,20 @@ class _NoDataToProcessView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(14),
-            child: Text(
-              // 🥶
-              '🫥',
-              style: TextStyle(
-                fontSize: 46,
-              ),
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: Icon(
+              Icons.mood_bad_rounded,
+              size: 54,
+              color: Theme.of(context).colorScheme.tertiary,
             ),
           ),
-          const Text(
-            "Hold your data horses, partner! Nothing to process here. Tumbleweeds and crickets, that's all I got.",
-            textAlign: TextAlign.center,
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text(
+              "Hold your data horses, partner! Nothing to process here. Tumbleweeds and crickets, that's all I got.",
+              textAlign: TextAlign.center,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16),

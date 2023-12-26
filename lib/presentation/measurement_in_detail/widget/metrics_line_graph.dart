@@ -4,7 +4,7 @@ import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
 
-class MetricsLineGraph extends StatelessWidget {
+class MetricsLineGraph extends StatefulWidget {
   const MetricsLineGraph({
     super.key,
     required this.filteredMeasurements,
@@ -23,29 +23,33 @@ class MetricsLineGraph extends StatelessWidget {
   final Measurement? nextMeasurement;
 
   @override
+  State<MetricsLineGraph> createState() => _MetricsLineGraphState();
+}
+
+class _MetricsLineGraphState extends State<MetricsLineGraph> {
+  @override
   Widget build(BuildContext context) {
-    final reversedList = filteredMeasurements.reversed.toList();
+    final reversedList = widget.filteredMeasurements.reversed.toList();
 
     return FutureBuilder<List<FlSpot>>(
       future: genDataConcurrently(
         list: reversedList,
-        startDate: startDate,
-        endDate: endDate,
-        timeUnit: dayToText.timeUnit,
-        previousMeasurement: previousMeasurement,
-        nextMeasurement: nextMeasurement,
-        dayToText: dayToText,
+        startDate: widget.startDate,
+        endDate: widget.endDate,
+        timeUnit: widget.dayToText.timeUnit,
+        previousMeasurement: widget.previousMeasurement,
+        nextMeasurement: widget.nextMeasurement,
+        dayToText: widget.dayToText,
       ),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData) {
+        {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: AspectRatio(
               aspectRatio: 1.50,
-              child: snapshot.data!.isEmpty
-                  ? const Text('No Data')
-                  : LineChart(
+              child: (snapshot.connectionState == ConnectionState.done &&
+                      snapshot.hasData)
+                  ? LineChart(
                       curve: Curves.decelerate,
                       duration: const Duration(seconds: 3),
                       LineChartData(
@@ -59,19 +63,21 @@ class MetricsLineGraph extends StatelessWidget {
                                 .colorScheme
                                 .secondaryContainer,
                             getTooltipItems: (touchedSpots) {
-                              final dateString = switch (dayToText.timeUnit) {
-                                TimeUnit.week => dayToText.denormalizeWeekday(
+                              final dateString =
+                                  switch (widget.dayToText.timeUnit) {
+                                TimeUnit.week =>
+                                  widget.dayToText.denormalizeWeekday(
                                     touchedSpots.first.x,
                                   ),
                                 // TODO: Handle this case.
                                 TimeUnit.month => '',
-                                TimeUnit.threeMonth =>
-                                  dayToText.derangeifyThreeMonthsToString(
+                                TimeUnit.threeMonth => widget.dayToText
+                                      .derangeifyThreeMonthsToString(
                                     touchedSpots.first.x,
                                   ),
-                                TimeUnit.year =>
-                                  dayToText.derangeifyMonthsInYear(
-                                      touchedSpots.first.x),
+                                TimeUnit.year => widget.dayToText
+                                    .derangeifyMonthsInYear(
+                                        touchedSpots.first.x),
                               };
 
                               return [
@@ -105,7 +111,7 @@ class MetricsLineGraph extends StatelessWidget {
                                 return SideTitleWidget(
                                   axisSide: meta.axisSide,
                                   child: Text(
-                                    dayToText.getRelevantTextByNumber(
+                                    widget.dayToText.getRelevantTextByNumber(
                                       value,
                                     ),
                                     style: const TextStyle(
@@ -139,7 +145,8 @@ class MetricsLineGraph extends StatelessWidget {
                         minX: 0.9,
                         maxY: setMaxY(snapshot.data!),
                         minY: setMinY(snapshot.data!),
-                        maxX: setMaxX(dayToText.timeUnit, startDate),
+                        maxX: setMaxX(
+                            widget.dayToText.timeUnit, widget.startDate),
                         lineBarsData: [
                           LineChartBarData(
                             spots: snapshot.data!.reversed.toList(),
@@ -176,14 +183,22 @@ class MetricsLineGraph extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
+                    )
+                  : const SizedBox.shrink(),
             ),
           );
-        } else {
-          return const CircularProgressIndicator();
         }
       },
     );
+  }
+}
+
+class _NoData extends StatelessWidget {
+  const _NoData();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(child: Text('No Data'));
   }
 }
 
@@ -250,10 +265,6 @@ Future<List<FlSpot>> genDataConcurrently({
   // });
 
   // const firstItem = FlSpot(0.9, 55);
-
-  if (list.isEmpty) {
-    return [];
-  }
 
   final flspots = switch (timeUnit) {
     TimeUnit.week => list

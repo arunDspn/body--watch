@@ -129,11 +129,8 @@ class OverView extends StatelessWidget {
                       ),
                     );
                   } else {
-                    return ListView.builder(
-                      itemCount: list.widgets.length,
-                      itemBuilder: (context, index) {
-                        return _WidgetBox(data: list.widgets[index]);
-                      },
+                    return _ReorderableWidgetList(
+                      list: list.widgets,
                     );
                     // return Column(
                     //   children:
@@ -153,9 +150,51 @@ class OverView extends StatelessWidget {
   }
 }
 
+class _ReorderableWidgetList extends StatefulWidget {
+  const _ReorderableWidgetList({
+    required this.list,
+  });
+  final List<LatestMeasurementDisplayModel> list;
+
+  @override
+  State<_ReorderableWidgetList> createState() => _ReorderableWidgetListState();
+}
+
+class _ReorderableWidgetListState extends State<_ReorderableWidgetList> {
+  late List<LatestMeasurementDisplayModel> reorderList;
+
+  @override
+  void initState() {
+    reorderList = [...widget.list];
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ReorderableListView.builder(
+      onReorder: (oldIndex, newIndex) {
+        setState(() {
+          if (oldIndex < newIndex) {
+            newIndex -= 1;
+          }
+          final item = reorderList.removeAt(oldIndex);
+          reorderList.insert(newIndex, item);
+        });
+      },
+      itemCount: reorderList.length,
+      itemBuilder: (context, index) {
+        return _WidgetBox(
+          key: Key('${reorderList[index].name.name}box'),
+          data: reorderList[index],
+        );
+      },
+    );
+  }
+}
+
 class _WidgetBox extends StatefulWidget {
   const _WidgetBox({
-    Key? key,
+    required Key key,
     required this.data,
   }) : super(key: key);
 
@@ -211,6 +250,8 @@ class _WidgetBoxState extends State<_WidgetBox> {
       (value, element) => value.value > element.value ? value : element,
     );
 
+    print('rebinfing ------  box');
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: GestureDetector(
@@ -221,8 +262,7 @@ class _WidgetBoxState extends State<_WidgetBox> {
             arguments: widget.data.name,
           );
         },
-        child: AnimatedContainer(
-          duration: const Duration(seconds: 2),
+        child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(
@@ -389,6 +429,7 @@ class _WidgetBoxState extends State<_WidgetBox> {
               // ),
               if (isExpanded)
                 _ExtraDetails(
+                  key: Key('${widget.data.name.name}extraData'),
                   lastMeasurementDayFormatter: lastMeasurementDayFormatter,
                   data: widget.data,
                   minValue: minValue,
@@ -405,7 +446,7 @@ class _WidgetBoxState extends State<_WidgetBox> {
 
 class _ExtraDetails extends StatelessWidget {
   const _ExtraDetails({
-    super.key,
+    required super.key,
     required this.lastMeasurementDayFormatter,
     required this.data,
     required this.minValue,
@@ -421,6 +462,7 @@ class _ExtraDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('rebuiling ---- extra det');
     return Column(
       children: [
         SizedBox(
@@ -466,6 +508,7 @@ class _ExtraDetails extends StatelessWidget {
             ),
             Expanded(
               child: OverviewMetricsLineGraph(
+                key: Key('${data.name.name}overviewGraph'),
                 filteredMeasurements: data.lastThreeMonths,
                 startDate: data.startDate,
                 endDate: data.endDate,

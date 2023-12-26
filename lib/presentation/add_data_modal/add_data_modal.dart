@@ -170,7 +170,10 @@ class _AddDataModalState extends State<AddDataModal> {
                   ),
                   Text(
                     widget.type.name,
-                    style: Theme.of(context).textTheme.headlineSmall,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   TextButton(
                     onPressed: () {
@@ -190,70 +193,103 @@ class _AddDataModalState extends State<AddDataModal> {
                   ),
                 ],
               ),
-              Padding(
-                padding: MediaQuery.of(context).viewInsets,
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.94,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Theme.of(context).colorScheme.secondaryContainer,
+              Theme(
+                data: Theme.of(context).copyWith(
+                  inputDecorationTheme: const InputDecorationTheme(
+                    border: InputBorder.none,
+                    // style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    //       fontWeight: FontWeight.w600,
+                    //     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(14),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          children: [
-                            const Text('Measurement'),
-                            const Spacer(),
-                            SizedBox(
-                              width: SizeConfig.screenWidth! * 0.3,
-                              child: TextFormField(
-                                // maxLength: 5,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp('[0-9.]'),
-                                  ),
-                                ],
-                                controller: _measurementController,
-                                keyboardType: TextInputType.number,
+                ),
+                child: Padding(
+                  padding: MediaQuery.of(context).viewInsets,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.94,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                measurementUnit,
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
-                            ),
-                            Text(
-                              measurementUnit,
-                              style: Theme.of(context).textTheme.bodyLarge,
-                            ),
-                          ],
-                        ),
-                        const Divider(),
-                        Row(
-                          children: [
-                            const Text('Date'),
-                            const Spacer(),
-                            SizedBox(
-                              width: SizeConfig.screenWidth! * 0.3,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _selectDate(context);
-                                },
-                                child: AbsorbPointer(
-                                  child: TextFormField(
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
-                                    controller: _dateController,
+                              const Spacer(),
+                              SizedBox(
+                                width: SizeConfig.screenWidth! * 0.3,
+                                child: TextFormField(
+                                  decoration: InputDecoration(
+                                    labelStyle: TextStyle(
+                                      fontSize: 23,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
+                                    ),
+                                  ),
+                                  // maxLength: 5,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp('[0-9.]'),
+                                    ),
+                                  ],
+                                  controller: _measurementController,
+                                  keyboardType: TextInputType.number,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ),
+                              // Text(
+                              //   measurementUnit,
+                              //   style: Theme.of(context).textTheme.bodyLarge,
+                              // ),
+                            ],
+                          ),
+                          const Divider(),
+                          Row(
+                            children: [
+                              Text(
+                                'Date',
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                              const Spacer(),
+                              SizedBox(
+                                width: SizeConfig.screenWidth! * 0.3,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _selectDate(context);
+                                  },
+                                  child: AbsorbPointer(
+                                    child: TextFormField(
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                      controller: _dateController,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: getProportionateScreenWidth(20),
-                            ),
-                          ],
-                        ),
-                      ],
+                              // SizedBox(
+                              //   width: getProportionateScreenWidth(20),
+                              // ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

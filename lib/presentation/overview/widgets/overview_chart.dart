@@ -6,7 +6,7 @@ import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_
 
 class OverviewMetricsLineGraph extends StatelessWidget {
   const OverviewMetricsLineGraph({
-    super.key,
+    required super.key,
     required this.filteredMeasurements,
     required this.startDate,
     required this.endDate,
@@ -39,11 +39,13 @@ class OverviewMetricsLineGraph extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done &&
             snapshot.hasData) {
+          print("---------- rebuilding");
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: AspectRatio(
               aspectRatio: 2.5,
               child: LineChart(
+                key: Key(filteredMeasurements.first.type),
                 curve: Curves.decelerate,
                 duration: const Duration(seconds: 3),
                 LineChartData(
@@ -267,7 +269,7 @@ Future<List<FlSpot>> genDataConcurrently({
       if (lastSpot != null) ...[lastSpot] else ...[],
     ]..sort((a, b) => a.x.compareTo(b.x));
     return fd;
-  } on Exception catch (e) {
+  } on Exception catch (_) {
     rethrow;
   }
 }
