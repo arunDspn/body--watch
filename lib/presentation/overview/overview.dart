@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +15,7 @@ import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_tex
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
+import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
 import 'package:watcha_body/presentation/overview/widgets/overview_chart.dart';
 import 'package:watcha_body/size_config.dart';
 
@@ -27,54 +29,134 @@ class OverView extends StatelessWidget {
     SizeConfig().init(context);
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          AppLocalizations.of(context).overViewTitle,
-          // style: Theme.of(context).textTheme.displaySmall,
-        ),
-        centerTitle: true,
-        leading: IconButton(
-          icon: Icon(
-            Icons.settings,
-            color: Theme.of(context).colorScheme.tertiary,
-          ),
-          onPressed: () {
-            Navigator.pushNamed(context, '/settings');
+      // appBar: AppBar(
+      //   elevation: 0,
+      //   title: Text(
+      //     AppLocalizations.of(context).overViewTitle,
+      //     // style: Theme.of(context).textTheme.displaySmall,
+      //   ),
+      //   centerTitle: true,
+      //   leading: IconButton(
+      //     icon: Icon(
+      //       Icons.settings,
+      //       color: Theme.of(context).colorScheme.tertiary,
+      //     ),
+      //     onPressed: () {
+      //       Navigator.pushNamed(context, '/settings');
+      //     },
+      //   ),
+      //   actions: [
+      //     IconButton(
+      //       icon: Icon(
+      //         Icons.add,
+      //         color: Theme.of(context).colorScheme.tertiary,
+      //       ),
+      //       onPressed: () {
+      //         Navigator.pushNamed(context, AddWidget.routeName);
+      //       },
+      //     ),
+      //     // IconButton(
+      //     //   icon: Icon(
+      //     //     Icons.add,
+      //     //     color: Theme.of(context).colorScheme.secondary,
+      //     //   ),
+      //     //   onPressed: () {
+      //     //     Navigator.push<void>(context, MaterialPageRoute(
+      //     //       builder: (context) {
+      //     //         return SamplerMan();
+      //     //       },
+      //     //     ));
+      //     //   },
+      //     // ),
+      //   ],
+      // ),
+      // appBar: PreferredSize(
+      //   preferredSize: const Size.fromHeight(120),
+      //   child: SafeArea(
+      //     child: Padding(
+      //       padding: const EdgeInsets.symmetric(
+      //         horizontal: 14,
+      //         vertical: 12,
+      //       ),
+      //       child: SearchBar(
+      //         padding: const MaterialStatePropertyAll(
+      //           EdgeInsets.symmetric(horizontal: 8),
+      //         ),
+      //         elevation: const MaterialStatePropertyAll(1),
+      //         hintText: 'Search',
+      //         leading: Padding(
+      //           padding: const EdgeInsets.all(8),
+      //           child: Icon(
+      //             Icons.search,
+      //             color: Theme.of(context).colorScheme.secondary,
+      //           ),
+      //         ),
+      //         trailing: [
+      //           IconButton(
+      //             icon: Icon(
+      //               Icons.settings,
+      //               color: Theme.of(context).colorScheme.tertiary,
+      //             ),
+      //             onPressed: () {
+      //               Navigator.pushNamed(context, '/settings');
+      //             },
+      //           ),
+      //           IconButton(
+      //             icon: Icon(
+      //               Icons.add,
+      //               color: Theme.of(context).colorScheme.tertiary,
+      //             ),
+      //             onPressed: () {
+      //               Navigator.pushNamed(context, AddWidget.routeName);
+      //             },
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
+      // ),
+      body: Padding(
+        padding: const EdgeInsets.all(8),
+        child: BlocConsumer<GetallwidgetsdataBloc, GetallwidgetsdataState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              success: (value) {
+                context
+                    .read<SearchWidgetsBloc>()
+                    .add(SearchWidgetsEvent.addData(list: value.widgets));
+              },
+            );
           },
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.add,
-              color: Theme.of(context).colorScheme.tertiary,
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, AddWidget.routeName);
-            },
-          ),
-          // IconButton(
-          //   icon: Icon(
-          //     Icons.add,
-          //     color: Theme.of(context).colorScheme.secondary,
-          //   ),
-          //   onPressed: () {
-          //     Navigator.push<void>(context, MaterialPageRoute(
-          //       builder: (context) {
-          //         return SamplerMan();
-          //       },
-          //     ));
-          //   },
-          // ),
-        ],
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: BlocBuilder<GetallwidgetsdataBloc, GetallwidgetsdataState>(
-            builder: (context, state) {
-              return state.maybeMap(
-                orElse: () {
+          builder: (context, state) {
+            return state.maybeMap(
+              orElse: () {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Icon(
+                          Icons.error,
+                          color: Theme.of(context).colorScheme.error,
+                          size: 45,
+                        ),
+                      ),
+                      Text(
+                        'No You Cant See Me',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge
+                            ?.copyWith(color: Colors.red),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              loading: (value) =>
+                  const Center(child: CircularProgressIndicator()),
+              success: (list) {
+                if (list.widgets.isEmpty) {
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -82,70 +164,188 @@ class OverView extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(20),
                           child: Icon(
-                            Icons.error,
-                            color: Theme.of(context).colorScheme.error,
+                            Icons.sentiment_dissatisfied,
+                            color: Colors.grey.shade300,
                             size: 45,
                           ),
                         ),
+                        const Text('No Widgets Added'),
+                        const SizedBox(
+                          height: 8,
+                        ),
                         Text(
-                          'No You Cant See Me',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge
-                              ?.copyWith(color: Colors.red),
+                          'Add a widget by clicking + at top right \nto get started',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: FilledButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, AddWidget.routeName);
+                            },
+                            child: const Text('Add Widget'),
+                          ),
                         ),
                       ],
                     ),
                   );
-                },
-                loading: (value) =>
-                    const Center(child: CircularProgressIndicator()),
-                success: (list) {
-                  if (list.widgets.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Icon(
-                              Icons.sentiment_dissatisfied,
-                              color: Colors.grey.shade300,
-                              size: 45,
-                            ),
-                          ),
-                          const Text('No Widgets Added'),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            'Add a widget by clicking + at top right \nto get started',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    return _ReorderableWidgetList(
-                      list: list.widgets,
-                    );
-                    // return Column(
-                    //   children:
-                    //       list.widgets.map((e) => _WidgetBox(data: e)).toList(),
-                    // );
-                  }
-                },
-                failure: (cause) {
-                  return Text(cause.cause);
-                },
-              );
-            },
-          ),
+                } else {
+                  return const SearchView();
+                  // return Column(
+                  //   children:
+                  //       list.widgets.map((e) => _WidgetBox(data: e)).toList(),
+                  // );
+                }
+              },
+              failure: (cause) {
+                return Text(cause.cause);
+              },
+            );
+          },
         ),
       ),
+    );
+  }
+}
+
+class SearchView extends StatelessWidget {
+  const SearchView({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const PreferredSize(
+        preferredSize: Size.fromHeight(120),
+        child: _SearchBar(),
+      ),
+      body: BlocBuilder<SearchWidgetsBloc, SearchWidgetsState>(
+        builder: (context, state) {
+          print(state);
+          return state.map(
+            loading: (value) {
+              return const Center(child: CircularProgressIndicator());
+            },
+            loaded: (value) {
+              // return _ReorderableWidgetList(list: value.lists);
+              return WidgetList(list: value.lists);
+            },
+            failed: (value) {
+              return const Text('Utter');
+            },
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _SearchBar extends StatefulWidget {
+  const _SearchBar();
+
+  @override
+  State<_SearchBar> createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<_SearchBar> {
+  bool closeIcon = false;
+
+  final TextEditingController textEditingController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 4,
+          vertical: 12,
+        ),
+        child: SearchBar(
+          controller: textEditingController,
+          padding: const MaterialStatePropertyAll(
+            EdgeInsets.symmetric(horizontal: 8),
+          ),
+          elevation: const MaterialStatePropertyAll(0),
+          backgroundColor: MaterialStatePropertyAll(
+            Theme.of(context).colorScheme.tertiaryContainer.withOpacity(.2),
+          ),
+          hintText: 'Search',
+          onChanged: (value) {
+            setState(() {
+              if (value.isNotEmpty) {
+                closeIcon = true;
+              } else {
+                closeIcon = false;
+              }
+            });
+            context
+                .read<SearchWidgetsBloc>()
+                .add(SearchWidgetsEvent.keyChanged(value));
+          },
+          leading: Padding(
+            padding: const EdgeInsets.all(8),
+            child: closeIcon
+                ? GestureDetector(
+                    onTap: () {
+                      context.read<SearchWidgetsBloc>().add(
+                            const SearchWidgetsEvent.keyChanged(''),
+                          );
+                      setState(() {
+                        textEditingController.text = '';
+                        closeIcon = false;
+                      });
+                    },
+                    child: const Icon(Icons.chevron_left),
+                  )
+                : Icon(
+                    Icons.search,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+          ),
+          trailing: [
+            IconButton(
+              icon: Icon(
+                Icons.settings,
+                color: Theme.of(context).colorScheme.tertiary,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, '/settings');
+              },
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.add,
+                color: Theme.of(context).colorScheme.tertiary,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, AddWidget.routeName);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WidgetList extends StatelessWidget {
+  const WidgetList({super.key, required this.list});
+
+  final List<LatestMeasurementDisplayModel> list;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: list.length,
+      itemBuilder: (context, index) {
+        return _WidgetBox(
+          key: Key('${list[index].name.name}box'),
+          data: list[index],
+        );
+      },
     );
   }
 }
@@ -469,32 +669,52 @@ class _ExtraDetails extends StatelessWidget {
           height: getProportionateScreenHeight(16),
         ),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              child: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text:
-                          '${lastMeasurementDayFormatter.format(data.startDate)} - ${lastMeasurementDayFormatter.format(data.endDate)}\n',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium
-                          ?.copyWith(fontWeight: FontWeight.w600),
-                    ),
-                    // TextSpan(
-                    //   text:
-                    //       '${lastMeasurementDayFormatter.format(data.endDate)}\n',
-                    //   style: Theme.of(context)
-                    //       .textTheme
-                    //       .labelMedium
-                    //       ?.copyWith(fontWeight: FontWeight.w600),
-                    // ),
-                    TextSpan(
-                      text: '${minValue.value} - ${maxValue.value} $_unit',
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
-                  ],
+            Container(
+              decoration: BoxDecoration(
+                // round
+                // border: Border.all(
+                //   color: Theme.of(context).colorScheme.primary,
+                //   width: getProportionateScreenWidth(1),
+                // ),
+                borderRadius: BorderRadius.circular(
+                  getProportionateScreenWidth(10),
+                ),
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(.5),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text:
+                            '${lastMeasurementDayFormatter.format(data.startDate)} - ${lastMeasurementDayFormatter.format(data.endDate)}\n',
+                        style:
+                            Theme.of(context).textTheme.labelMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                      ),
+                      // TextSpan(
+                      //   text:
+                      //       '${lastMeasurementDayFormatter.format(data.endDate)}\n',
+                      //   style: Theme.of(context)
+                      //       .textTheme
+                      //       .labelMedium
+                      //       ?.copyWith(fontWeight: FontWeight.w600),
+                      // ),
+                      TextSpan(
+                        text: '${minValue.value} - ${maxValue.value} $_unit',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

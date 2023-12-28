@@ -4,6 +4,11 @@ class MeasurementType {
   });
 
   final String name;
+
+  @override
+  String toString() {
+    return name;
+  }
 }
 
 class LengthMeasurementType extends MeasurementType {

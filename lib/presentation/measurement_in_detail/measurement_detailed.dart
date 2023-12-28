@@ -492,6 +492,9 @@ class _TableCell extends StatelessWidget {
           ),
           // overflow menu
           PopupMenuButton<String>(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
             padding: EdgeInsets.zero,
             icon: const Icon(Icons.more_vert),
             onSelected: (value) {

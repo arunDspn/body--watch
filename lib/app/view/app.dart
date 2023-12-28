@@ -27,6 +27,7 @@ import 'package:watcha_body/presentation/measurement_in_detail/cubit/delete_meas
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
+import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
 import 'package:watcha_body/presentation/overview/overview.dart';
 import 'package:watcha_body/presentation/settings/cubits/backup_restore_cubit/backup_data_cubit.dart';
 import 'package:watcha_body/presentation/settings/cubits/delete_all_data_cubit/delete_all_data_cubit.dart';
@@ -88,6 +89,9 @@ class App extends StatelessWidget {
             create: (context) => DeleteMeasurementCubit(
               context.read<MeasurementRepository>(),
             ),
+          ),
+          BlocProvider<SearchWidgetsBloc>(
+            create: (context) => SearchWidgetsBloc(),
           ),
         ],
         child: Builder(

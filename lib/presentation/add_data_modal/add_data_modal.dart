@@ -100,18 +100,19 @@ class _AddDataModalState extends State<AddDataModal> {
           state.maybeMap(
             failure: (value) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Failed'),
-                  backgroundColor: Colors.redAccent,
+                SnackBar(
+                  content: const Text('Failed'),
+                  backgroundColor: Theme.of(context).colorScheme.error,
                   behavior: SnackBarBehavior.floating,
                 ),
               );
             },
             success: (value) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Success'),
-                  backgroundColor: Colors.greenAccent,
+                SnackBar(
+                  content: const Text('Success'),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  behavior: SnackBarBehavior.floating,
                 ),
               );
 
