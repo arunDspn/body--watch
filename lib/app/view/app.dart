@@ -26,6 +26,7 @@ import 'package:watcha_body/presentation/home/home.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/delete_measurement_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
 import 'package:watcha_body/presentation/overview/overview.dart';
@@ -213,6 +214,10 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
     case AppIniter.routeName:
       return MaterialPageRoute<void>(
         builder: (context) => const AppIniter(),
+      );
+    case VaultGallery.routeName:
+      return MaterialPageRoute<void>(
+        builder: (context) => const VaultGallery(),
       );
     default:
       return MaterialPageRoute<void>(

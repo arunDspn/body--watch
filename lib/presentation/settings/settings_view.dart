@@ -10,10 +10,10 @@ import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/settings/cubits/backup_restore_cubit/backup_data_cubit.dart';
 import 'package:watcha_body/presentation/settings/cubits/delete_all_data_cubit/delete_all_data_cubit.dart';
-import 'package:watcha_body/size_config.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({Key? key}) : super(key: key);
@@ -64,6 +64,16 @@ class SettingsView extends StatelessWidget {
         title: Text(
           AppLocalizations.of(context).settingsTitle,
         ),
+        actions: [
+          IconButton.filled(
+            onPressed: () {
+              Navigator.of(context).pushNamed(
+                VaultGallery.routeName,
+              );
+            },
+            icon: const Icon(Icons.settings_backup_restore_outlined),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: BlocBuilder<ApppreferencesBloc, ApppreferencesState>(
