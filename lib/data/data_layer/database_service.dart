@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -8,7 +10,7 @@ class DatabaseService {
 
   static const String tableName = 'measurements';
   static const String _databaseName = 'flutter_database.db';
-  static const _databaseVersion = 1;
+  static const _databaseVersion = 5;
 
   // static queries
   static const String _createMeasurementTable = '''
@@ -20,6 +22,43 @@ class DatabaseService {
       "unit"	TEXT NOT NULL,
       PRIMARY KEY("id" AUTOINCREMENT)
     )
+  ''';
+
+  static const String createTagTable = '''
+    CREATE TABLE IF NOT EXISTS tags (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      tag TEXT NOT NULL
+    );
+  ''';
+
+  // insert pre defined tags to table above
+  // chest, back, legs, arms, shoulders, abs, neck, waist, hips, calves, thighs, butt, feet, face,
+  static const String insertTagsQuery = '''
+    INSERT INTO tags (tag)
+    VALUES
+      ('chest'),
+      ('back'),
+      ('legs'),
+      ('arms'),
+      ('shoulders'),
+      ('abs'),
+      ('neck'),
+      ('waist'),
+      ('hips'),
+      ('calves'),
+      ('thighs'),
+      ('butt'),
+      ('feet'),
+      ('face');
+  ''';
+
+  // Pictures Table
+  static const createPictureTable = '''
+    CREATE TABLE IF NOT EXISTS pictures (
+      path TEXT NOT NULL,
+      date TEXT NOT NULL,
+      tag TEXT NOT NULL
+    );
   ''';
 
   Database? _database;
@@ -40,6 +79,19 @@ class DatabaseService {
       ),
       version: _databaseVersion,
       onCreate: _onCreateDB,
+      onUpgrade: (db, oldVersion, newVersion) {
+        log('NEW VERSION: $newVersion');
+        // new data named pictures
+        if (oldVersion < 4) {
+          db.execute(createPictureTable);
+        }
+        // new data named tags
+        if (oldVersion < 5) {
+          db
+            ..execute(createTagTable)
+            ..execute(insertTagsQuery);
+        }
+      },
     );
     return database;
   }
@@ -47,6 +99,11 @@ class DatabaseService {
   Future _onCreateDB(Database db, int version) async {
     //create tables
     await db.execute(_createMeasurementTable);
+    await db.execute(createTagTable);
+    await db.execute(createPictureTable);
+
+    // insert pre defined tags
+    await db.execute(insertTagsQuery);
   }
 
   Future<void> insert({

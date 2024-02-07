@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
+import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
@@ -323,6 +324,12 @@ class _SearchBarState extends State<_SearchBar> {
               onPressed: () {
                 Navigator.pushNamed(context, AddWidget.routeName);
               },
+            ),
+            IconButton(
+              onPressed: () {
+                context.read<BodyPictureRepository>().getAllTags();
+              },
+              icon: Icon(Icons.emoji_emotions),
             ),
           ],
         ),

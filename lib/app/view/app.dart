@@ -13,6 +13,7 @@ import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
+import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
@@ -26,6 +27,9 @@ import 'package:watcha_body/presentation/home/home.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/delete_measurement_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
+import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media_view.dart';
+import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new_media_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
@@ -41,13 +45,18 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final databaseService = DatabaseService();
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<MeasurementRepository>(
-          create: (context) => MeasurementRepository(DatabaseService()),
+          create: (context) => MeasurementRepository(databaseService),
         ),
         RepositoryProvider<TimeRangeService>(
           create: (context) => TimeRangeService(),
+        ),
+        RepositoryProvider<BodyPictureRepository>(
+          create: (context) =>
+              BodyPictureRepository(databaseService: databaseService),
         ),
       ],
       child: MultiBlocProvider(
@@ -93,6 +102,11 @@ class App extends StatelessWidget {
           ),
           BlocProvider<SearchWidgetsBloc>(
             create: (context) => SearchWidgetsBloc(),
+          ),
+          BlocProvider(
+            create: (context) =>
+                LoadPicturesCubit(context.read<BodyPictureRepository>())
+                  ..load(),
           ),
         ],
         child: Builder(
@@ -218,6 +232,14 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
     case VaultGallery.routeName:
       return MaterialPageRoute<void>(
         builder: (context) => const VaultGallery(),
+      );
+    case AddNewMediaView.routeName:
+      return MaterialPageRoute<void>(
+        builder: (context) => BlocProvider(
+          create: (context) =>
+              AddNewMediaCubit(context.read<BodyPictureRepository>()),
+          child: const AddNewMediaView(),
+        ),
       );
     default:
       return MaterialPageRoute<void>(
