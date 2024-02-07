@@ -25,7 +25,7 @@ abstract interface class IBodyPictureFacade {
   Future<Either<String, List<String>>> getAllTags();
 
   /// Add a tag
-  Future<Either<String, void>> addTag(String tag);
+  Future<Either<String, String>> addTag(String tag);
 
   /// Remove a tag
   Future<Either<String, void>> removeTag(String tag);

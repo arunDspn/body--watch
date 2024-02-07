@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
+import 'package:watcha_body/presentation/media_vault/add_new_media/components/tag_dropdown/tag_dropdown.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new_media_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/vault_gallery_view.dart';
@@ -66,7 +68,7 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    _NewWig(
+                    TagsDropdown(
                       context.read<BodyPictureRepository>(),
                       (tag) {
                         setState(() {
@@ -152,9 +154,11 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
                               ),
                             ),
                             hintText: 'Measurement Date',
-                            suffixIcon: Icon(date == null
-                                ? Icons.radio_button_unchecked
-                                : Icons.radio_button_checked),
+                            suffixIcon: Icon(
+                              date == null
+                                  ? Icons.radio_button_unchecked
+                                  : Icons.radio_button_checked,
+                            ),
                             prefixIcon:
                                 const Icon(Icons.calendar_month_outlined),
                           ),
@@ -322,7 +326,7 @@ class _MeasurementPictureSelector extends StatelessWidget {
                 color: Colors.grey.shade300,
               ),
               height: MediaQuery.of(context).size.width * 0.9,
-              width: MediaQuery.of(context).size.width * 0.9,
+              // width: MediaQuery.of(context).size.width * 0.9,
               child: formState.value == null || formState.value == ''
                   ? const Center(
                       child: Text('Add an Image'),
@@ -367,100 +371,3 @@ class _MeasurementPictureSelector extends StatelessWidget {
 //   }
 // }
 
-class _NewWig extends StatefulWidget {
-  const _NewWig(this.bodyPictureRepository, this.onTap);
-
-  final BodyPictureRepository bodyPictureRepository;
-
-  final void Function(String tag) onTap;
-
-  @override
-  State<_NewWig> createState() => _NewWigState();
-}
-
-class _NewWigState extends State<_NewWig> {
-  final FocusNode _buttonFocusNode = FocusNode(debugLabel: 'Menu Button');
-
-  final TextEditingController _controller = TextEditingController();
-  List<String> tags = [];
-  // getAllTags
-  Future<void> getAllTags() async {
-    // get all tags from the database
-    // return a list of tags
-    final result = await widget.bodyPictureRepository.getAllTags();
-
-    setState(() {
-      result.fold((l) {}, (r) => tags = r);
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getAllTags();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return MenuAnchor(
-      style: MenuStyle(
-        fixedSize: MaterialStatePropertyAll(
-          Size(size.width, size.height * 0.4),
-        ),
-      ),
-      crossAxisUnconstrained: false,
-      childFocusNode: _buttonFocusNode,
-      menuChildren: tags
-          .map(
-            (e) => MenuItemButton(
-              onPressed: () {
-                _controller.text = e;
-                _buttonFocusNode.unfocus();
-
-                widget.onTap(e);
-              },
-              child: Text(e),
-            ),
-          )
-          .toList(),
-      builder: (context, controller, child) {
-        return TextFormField(
-          focusNode: _buttonFocusNode,
-          controller: _controller,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(14),
-              ),
-            ),
-            hintText: 'Select a tag',
-            suffixIcon: Icon(Icons.arrow_drop_down),
-            prefixIcon: Icon(Icons.label),
-          ),
-          onChanged: (value) {
-            // // show a dropdown menu with all the wonders
-            // controller.open();
-            // _controller.text = value;
-          },
-          // onSubmitted: (value) {
-          //   controller.close();
-          //   // _controller.text = value;
-          // },
-          onTap: () {
-            controller.open();
-          },
-          onEditingComplete: () {
-            controller.close();
-          },
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter a tag';
-            }
-            return null;
-          },
-        );
-      },
-    );
-  }
-}

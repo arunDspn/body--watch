@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/domain/i_bodypicture_facade.dart';
@@ -18,9 +17,15 @@ class BodyPictureRepository implements IBodyPictureFacade {
   // static queries
 
   @override
-  Future<Either<String, void>> addTag(String tag) {
-    // TODO: implement addTag
-    throw UnimplementedError();
+  Future<Either<String, String>> addTag(String tag) async {
+    try {
+      final query = 'INSERT INTO tags (tag) VALUES ("$tag")';
+      final db = await databaseService.database;
+      await db.execute(query);
+      return right(tag);
+    } on Exception catch (e) {
+      return left(e.toString());
+    }
   }
 
   @override
