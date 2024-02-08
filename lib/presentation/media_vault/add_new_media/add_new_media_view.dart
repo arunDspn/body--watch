@@ -145,8 +145,8 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
                       child: AbsorbPointer(
                         child: TextFormField(
                           controller: TextEditingController(
-                              text:
-                                  date != null ? _formatter.format(date!) : ''),
+                            text: date != null ? _formatter.format(date!) : '',
+                          ),
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(
                               borderRadius: BorderRadius.all(

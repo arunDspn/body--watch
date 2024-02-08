@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media_view.dart';
+import 'package:watcha_body/presentation/media_vault/compare_pictures/compare_pictures_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 
 // 5 list items
@@ -113,6 +114,19 @@ class VaultGallery extends StatelessWidget {
                         FloatingActionButtonAnimator.scaling,
                     appBar: AppBar(
                       title: const Text('Vault Gallery'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              ComparePicturesView.routeName,
+                            );
+                          },
+                          child: const Text(
+                            'Compare',
+                          ),
+                        ),
+                      ],
                     ),
                     // Grid View for gallery
                     body: Padding(

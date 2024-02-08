@@ -29,6 +29,7 @@ import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasu
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media_view.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new_media_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/compare_pictures/compare_pictures_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
@@ -232,6 +233,10 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
     case VaultGallery.routeName:
       return MaterialPageRoute<void>(
         builder: (context) => const VaultGallery(),
+      );
+    case ComparePicturesView.routeName:
+      return MaterialPageRoute<void>(
+        builder: (context) => const ComparePicturesView(),
       );
     case AddNewMediaView.routeName:
       return MaterialPageRoute<void>(
