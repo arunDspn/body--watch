@@ -12,20 +12,38 @@ class LoadPicturesCubit extends Cubit<LoadPicturesState> {
 
   final BodyPictureRepository bodyPictureRepository;
 
+  List<VaultImage> allImages = [];
+  List<VaultImage> filteredImages = [];
+
   Future<void> load() async {
     final result = await bodyPictureRepository.getAllBodyPictures();
 
     result.fold(
       (l) => emit(LoadPicturesState.failed(l)),
-      (r) => emit(LoadPicturesState.loaded(r)),
+      (r) {
+        allImages = r;
+        filteredImages = r;
+        emit(LoadPicturesState.loaded(filteredImages));
+      },
     );
   }
 
   void updateList(VaultImage newImageData) {
     final currentState = state;
     if (currentState is Loaded) {
-      emit(LoadPicturesState.loaded([...currentState.pictures, newImageData]));
+      allImages.add(newImageData);
+      filteredImages = [...allImages];
+      emit(LoadPicturesState.loaded(filteredImages));
     }
+  }
+
+  void filterImages({required List<String> selectedTags}) {
+    if (selectedTags.isEmpty) {
+      emit(LoadPicturesState.loaded(allImages));
+    }
+    emit(LoadPicturesState.loaded(
+      allImages.where((element) => selectedTags.contains(element.tag)).toList(),
+    ));
   }
 
   // Future<void> delete(int id) async {

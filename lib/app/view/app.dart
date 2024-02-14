@@ -30,6 +30,8 @@ import 'package:watcha_body/presentation/measurement_in_detail/measurement_detai
 import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media_view.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new_media_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/compare_pictures_view.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/filtered_gallery_images_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
@@ -109,6 +111,19 @@ class App extends StatelessWidget {
                 LoadPicturesCubit(context.read<BodyPictureRepository>())
                   ..load(),
           ),
+
+          BlocProvider(
+            create: (context) => PictureTypeFilterModalBloc(
+              context.read<BodyPictureRepository>(),
+            )..add(
+                const PictureTypeFilterModalEvent.started(),
+              ),
+          ),
+          // BlocProvider(
+          //   create: (context) => PictureTypeFilterModalBloc(
+          //     context.read<BodyPictureRepository>(),
+          //   )..add(const PictureTypeFilterModalEvent.started()),
+          // ),
         ],
         child: Builder(
           builder: (context) {
@@ -232,7 +247,21 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
       );
     case VaultGallery.routeName:
       return MaterialPageRoute<void>(
-        builder: (context) => const VaultGallery(),
+        builder: (context) {
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => LoadPicturesCubit(
+                  context.read<BodyPictureRepository>(),
+                )..load(),
+              ),
+              BlocProvider(
+                create: (context) => FilteredGalleryImagesCubit(),
+              ),
+            ],
+            child: const VaultGallery(),
+          );
+        },
       );
     case ComparePicturesView.routeName:
       return MaterialPageRoute<void>(
