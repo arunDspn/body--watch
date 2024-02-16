@@ -10,6 +10,7 @@ import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media
 import 'package:watcha_body/presentation/media_vault/compare_pictures/compare_pictures_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/filter_modal.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/filtered_gallery_images_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 
@@ -522,28 +523,46 @@ class _PhotoThumbnail extends StatelessWidget {
   final VaultImage image;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(22),
-            child: Image.file(
-              File(image.path),
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
+    return GestureDetector(
+      onTap: () {
+        final images = context.read<FilteredGalleryImagesCubit>().state;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              final currentIndex = images.galleryImages.indexOf(image);
+              return PhotoViewer(
+                path: image.path,
+                images: images.galleryImages,
+                currentIndex: currentIndex,
+              );
+            },
+          ),
+        );
+      },
+      child: Column(
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(22),
+              child: Image.file(
+                File(image.path),
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              ),
             ),
           ),
-        ),
-        // Footer
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Text(
-            image.tag,
-            style: Theme.of(context).textTheme.labelLarge,
+          // Footer
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Text(
+              image.tag,
+              style: Theme.of(context).textTheme.labelLarge,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
