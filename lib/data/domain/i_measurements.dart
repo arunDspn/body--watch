@@ -54,4 +54,10 @@ abstract class IMeasurementsFacade {
     bool merge = false,
     required String stringifiedDatas,
   });
+
+  /// Returns List of [Measurement]s
+  /// It contains  all types ex: Chest, Waist, etc.. that added in table
+  Future<Either<String, List<Measurement>>> getAllMeasurementsByDate({
+    required DateTime date,
+  });
 }

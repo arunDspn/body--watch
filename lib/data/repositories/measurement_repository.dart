@@ -216,6 +216,41 @@ ORDER BY type, date DESC;
       return Left(e.toString());
     }
   }
+
+  @override
+  Future<Either<String, List<Measurement>>> getAllMeasurementsByDate({
+    required DateTime date,
+  }) async {
+    try {
+      // final stringDate = date.toIso8601String();
+      final _db = await databaseService.database;
+      // final _data = await _db.query(
+      //   'measurements',
+      //   where: 'date = ?',
+      //   whereArgs: [
+      //     stringDate,
+      //   ],
+      // );
+      final formattedDate =
+          date.toIso8601String().substring(0, 10); // Extract YYYY-MM-DD
+      final whereArgs = [formattedDate];
+
+      final result = await _db.rawQuery(
+        '''
+      SELECT *
+      FROM measurements
+      WHERE STRFTIME('%Y-%m-%d', date) = ?
+      ''',
+        whereArgs,
+      );
+      final _dData = result.map(Measurement.fromMap).toList();
+      return Right(_dData);
+    } catch (e) {
+      return Left(e.toString());
+    }
+    // TODO: implement getAllMeasurementsByDate
+    // throw UnimplementedError();
+  }
 }
 
 extension on double {

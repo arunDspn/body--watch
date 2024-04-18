@@ -545,7 +545,7 @@ class _PhotoThumbnail extends StatelessWidget {
             builder: (context) {
               final currentIndex = images.indexOf(image);
               return PhotoViewer(
-                path: image.path,
+                // path: image.path,
                 images: images,
                 currentIndex: currentIndex,
               );
