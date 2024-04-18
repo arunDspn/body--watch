@@ -13,7 +13,10 @@ class LoadPicturesCubit extends Cubit<LoadPicturesState> {
   final BodyPictureRepository bodyPictureRepository;
 
   List<VaultImage> allImages = [];
-  List<VaultImage> filteredImages = [];
+
+  _filterByDate() {
+    allImages.sort((a, b) => b.date.compareTo(a.date));
+  }
 
   Future<void> load() async {
     final result = await bodyPictureRepository.getAllBodyPictures();
@@ -22,18 +25,19 @@ class LoadPicturesCubit extends Cubit<LoadPicturesState> {
       (l) => emit(LoadPicturesState.failed(l)),
       (r) {
         allImages = r;
-        filteredImages = r;
-        emit(LoadPicturesState.loaded(filteredImages));
+        _filterByDate();
+        emit(LoadPicturesState.loaded(allImages));
       },
     );
   }
 
-  void updateList(VaultImage newImageData) {
+  Future<void> updateList(VaultImage newImageData) async {
     final currentState = state;
+    emit(const LoadPicturesState.loading());
     if (currentState is Loaded) {
       allImages.add(newImageData);
-      filteredImages = [...allImages];
-      emit(LoadPicturesState.loaded(filteredImages));
+      _filterByDate();
+      emit(LoadPicturesState.loaded(allImages));
     }
   }
 
@@ -41,13 +45,27 @@ class LoadPicturesCubit extends Cubit<LoadPicturesState> {
     if (selectedTags.isEmpty) {
       emit(LoadPicturesState.loaded(allImages));
     }
-    emit(LoadPicturesState.loaded(
-      allImages.where((element) => selectedTags.contains(element.tag)).toList(),
-    ));
+    emit(
+      LoadPicturesState.loaded(
+        allImages
+            .where((element) => selectedTags.contains(element.tag))
+            .toList(),
+      ),
+    );
   }
 
-  // Future<void> delete(int id) async {
-  //   await bodyPictureRepository.deleteBodyPicture(id);
-  //   load();
-  // }
+  Future<void> delete(String path) async {
+    // delay 3 seconds to show loading
+
+    // await Future.delayed(const Duration(seconds: 3));
+    emit(const LoadPicturesState.loading());
+    final result = await bodyPictureRepository.deleteBodyPicture(path);
+    result.fold(
+      (l) => emit(LoadPicturesState.failed(l)),
+      (r) {
+        allImages.removeWhere((element) => element.path == path);
+        emit(LoadPicturesState.loaded(allImages));
+      },
+    );
+  }
 }

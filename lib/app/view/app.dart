@@ -250,11 +250,11 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
         builder: (context) {
           return MultiBlocProvider(
             providers: [
-              BlocProvider(
-                create: (context) => LoadPicturesCubit(
-                  context.read<BodyPictureRepository>(),
-                )..load(),
-              ),
+              // BlocProvider(
+              //   create: (context) => LoadPicturesCubit(
+              //     context.read<BodyPictureRepository>(),
+              //   )..load(),
+              // ),
               BlocProvider(
                 create: (context) => FilteredGalleryImagesCubit(),
               ),

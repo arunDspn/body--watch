@@ -11,7 +11,6 @@ import 'package:watcha_body/presentation/media_vault/compare_pictures/compare_pi
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/filter_modal.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/view.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/filtered_gallery_images_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 
 // 5 list items
@@ -84,19 +83,17 @@ class VaultGallery extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<PictureTypeFilterModalBloc,
         PictureTypeFilterModalState>(
-      listenWhen: (previous, current) => true,
-      buildWhen: (previous, current) => true,
       listener: (context, state) {
-        state.mapOrNull(
-          success: (value) {
-            context.read<FilteredGalleryImagesCubit>().filterImages(
-                  selectedTags: value.selectedTypes,
-                );
-          },
-        );
+        // // state.mapOrNull(
+        // //   success: (value) {
+        // //     context.read<FilteredGalleryImagesCubit>().filterImages(
+        // //           selectedTags: value.selectedTypes,
+        // //         );
+        // //   },
+        // );
       },
-      builder: (context, state) {
-        return state.maybeMap(
+      builder: (context, filterState) {
+        return filterState.maybeMap(
           orElse: () {
             return const SizedBox.shrink();
           },
@@ -105,18 +102,18 @@ class VaultGallery extends StatelessWidget {
               child: Text('Failed to load Filters'),
             );
           },
-          success: (value) {
+          success: (filterStateValue) {
             return BlocConsumer<LoadPicturesCubit, LoadPicturesState>(
-              listenWhen: (previous, current) => true,
+              // listenWhen: (previous, current) => true,
               buildWhen: (previous, current) => true,
               listener: (context, state) {
-                state.mapOrNull(
-                  loaded: (value) {
-                    context
-                        .read<FilteredGalleryImagesCubit>()
-                        .loadImages(images: value.pictures);
-                  },
-                );
+                // state.mapOrNull(
+                //   loaded: (value) {
+                //     context
+                //         .read<FilteredGalleryImagesCubit>()
+                //         .loadImages(images: value.pictures);
+                //   },
+                // );
               },
               builder: (context, state) {
                 return state.map(
@@ -128,249 +125,264 @@ class VaultGallery extends StatelessWidget {
                   loading: (_) => const Center(
                     child: CircularProgressIndicator(),
                   ),
-                  loaded: (data) {
-                    return BlocBuilder<FilteredGalleryImagesCubit,
-                        FilteredGalleryImagesState>(
-                      buildWhen: (previous, current) => true,
-                      builder: (context, state) {
-                        return Theme(
-                          data: Theme.of(context).copyWith(
-                            cardTheme: CardTheme(
-                              elevation: 0,
-                              margin: EdgeInsets.zero,
-                              color:
-                                  Theme.of(context).colorScheme.surfaceVariant,
+                  loaded: (pictureLoadedStateValue) {
+                    // Filtering inside the UI
+                    // TODO: Is that Good
+                    var filteredImages = <VaultImage>[];
+                    if (filterStateValue.selectedTypes.isEmpty) {
+                      filteredImages = pictureLoadedStateValue.pictures;
+                    } else {
+                      filteredImages = pictureLoadedStateValue.pictures
+                          .where(
+                            (element) => filterStateValue.selectedTypes
+                                .contains(element.tag),
+                          )
+                          .toList();
+                    }
+
+                    return Theme(
+                      data: Theme.of(context).copyWith(
+                        cardTheme: CardTheme(
+                          elevation: 0,
+                          margin: EdgeInsets.zero,
+                          color: Theme.of(context).colorScheme.surfaceVariant,
+                        ),
+                      ),
+                      child: Builder(
+                        builder: (context) {
+                          return Scaffold(
+                            floatingActionButton: FloatingActionButton.large(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  AddNewMediaView.routeName,
+                                );
+                              },
+                              child: const Icon(
+                                Icons.add,
+                              ),
                             ),
-                          ),
-                          child: Builder(
-                            builder: (context) {
-                              return Scaffold(
-                                floatingActionButton:
-                                    FloatingActionButton.large(
+                            floatingActionButtonLocation:
+                                FloatingActionButtonLocation.centerFloat,
+                            floatingActionButtonAnimator:
+                                FloatingActionButtonAnimator.scaling,
+                            appBar: AppBar(
+                              title: const Text('Vault Gallery'),
+                              actions: [
+                                TextButton(
                                   onPressed: () {
                                     Navigator.pushNamed(
                                       context,
-                                      AddNewMediaView.routeName,
+                                      ComparePicturesView.routeName,
                                     );
                                   },
-                                  child: const Icon(
-                                    Icons.add,
+                                  child: const Text(
+                                    'Compare',
                                   ),
                                 ),
-                                floatingActionButtonLocation:
-                                    FloatingActionButtonLocation.centerFloat,
-                                floatingActionButtonAnimator:
-                                    FloatingActionButtonAnimator.scaling,
-                                appBar: AppBar(
-                                  title: const Text('Vault Gallery'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pushNamed(
-                                          context,
-                                          ComparePicturesView.routeName,
+                              ],
+                            ),
+                            // Grid View for gallery
+                            body: Padding(
+                              padding: const EdgeInsets.only(
+                                left: 8,
+                                right: 8,
+                                top: 8,
+                              ),
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    // filter  icon button
+                                    BlocBuilder<PictureTypeFilterModalBloc,
+                                        PictureTypeFilterModalState>(
+                                      builder: (context, state) {
+                                        var isFilterActive = false;
+
+                                        state.mapOrNull(
+                                          success: (value) {
+                                            isFilterActive =
+                                                value.selectedTypes.isNotEmpty;
+                                          },
+                                        );
+
+                                        return Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: IconButton.filled(
+                                            onPressed: () {
+                                              showModalBottomSheet(
+                                                context: context,
+                                                showDragHandle: true,
+                                                builder: (context) {
+                                                  return const FilterModal();
+                                                },
+                                              );
+                                            },
+                                            isSelected: isFilterActive,
+                                            icon: const Icon(
+                                              Icons.filter_alt_rounded,
+                                            ),
+                                          ),
                                         );
                                       },
-                                      child: const Text(
-                                        'Compare',
-                                      ),
                                     ),
-                                  ],
-                                ),
-                                // Grid View for gallery
-                                body: Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 8,
-                                    right: 8,
-                                    top: 8,
-                                  ),
-                                  child: Center(
-                                    child: Column(
-                                      children: [
-                                        // filter  icon button
-                                        BlocBuilder<PictureTypeFilterModalBloc,
-                                            PictureTypeFilterModalState>(
-                                          builder: (context, state) {
-                                            var isFilterActive = false;
+                                    //
 
-                                            state.mapOrNull(
-                                              success: (value) {
-                                                isFilterActive = value
-                                                    .selectedTypes.isNotEmpty;
-                                              },
-                                            );
-
-                                            return Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: IconButton.filled(
-                                                onPressed: () {
-                                                  showModalBottomSheet(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return const FilterModal();
-                                                    },
-                                                  );
-                                                },
-                                                isSelected: isFilterActive,
-                                                icon: const Icon(
-                                                  Icons.filter_alt_rounded,
+                                    // SingleChildScrollView(
+                                    //   scrollDirection: Axis.horizontal,
+                                    //   child: Row(
+                                    //     children: [
+                                    //       FilterChip(
+                                    //         selected: true,
+                                    //         label: const Text('Chest'),
+                                    //         onSelected: (value) {},
+                                    //       ),
+                                    //       FilterChip(
+                                    //         selected: true,
+                                    //         label: const Text('Legs'),
+                                    //         onSelected: (value) {},
+                                    //       ),
+                                    //       FilterChip(
+                                    //         selected: true,
+                                    //         label: const Text('Arms'),
+                                    //         onSelected: (value) {},
+                                    //       ),
+                                    //       FilterChip(
+                                    //         selected: true,
+                                    //         label: const Text('Back'),
+                                    //         onSelected: (value) {},
+                                    //       ),
+                                    //       FilterChip(
+                                    //         selected: true,
+                                    //         label: const Text('Abs'),
+                                    //         onSelected: (value) {},
+                                    //       ),
+                                    //       FilterChip(
+                                    //         selected: true,
+                                    //         label: const Text('Shoulders'),
+                                    //         onSelected: (value) {},
+                                    //       ),
+                                    //       FilterChip(
+                                    //         selected: true,
+                                    //         label: const Text('Cardio'),
+                                    //         onSelected: (value) {},
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
+                                    // MultiSelectDropDown<int>(
+                                    //   onOptionSelected:
+                                    //       (List<ValueItem> selectedOptions) {},
+                                    //   options: const <ValueItem<int>>[
+                                    //     ValueItem(label: 'Option 1', value: 1),
+                                    //     ValueItem(label: 'Option 2', value: 2),
+                                    //     ValueItem(label: 'Option 3', value: 3),
+                                    //     ValueItem(label: 'Option 4', value: 4),
+                                    //     ValueItem(label: 'Option 5', value: 5),
+                                    //     ValueItem(label: 'Option 6', value: 6),
+                                    //   ],
+                                    //   // selectionType: SelectionType.multi,
+                                    //   chipConfig:
+                                    //       const ChipConfig(wrapType: WrapType.wrap),
+                                    //   dropdownHeight: 300,
+                                    //   optionTextStyle: const TextStyle(fontSize: 16),
+                                    //   selectedOptionIcon:
+                                    //       const Icon(Icons.check_circle),
+                                    // ),
+                                    Expanded(
+                                      child: GroupedScrollView<VaultImage,
+                                          String>.grid(
+                                        data: filteredImages,
+                                        itemBuilder: (context, item) {
+                                          // return GridTile(
+                                          //   child: _PhotoThumbnail(
+                                          //     image: item,
+                                          //   ),
+                                          //   // footer: GridTileBar(
+                                          //   //   backgroundColor: Colors.white.withOpacity(0.5),
+                                          //   //   title: Text(
+                                          //   //     item.title,
+                                          //   //     style: Theme.of(context).textTheme.labelLarge,
+                                          //   //   ),
+                                          //   // ),
+                                          // );
+                                          return _PhotoThumbnail(
+                                            image: item,
+                                            images: filteredImages,
+                                          );
+                                        },
+                                        gridDelegate:
+                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          mainAxisSpacing: 8,
+                                          crossAxisSpacing: 8,
+                                          childAspectRatio: .8,
+                                        ),
+                                        itemsSorter: (a, b) {
+                                          return a.date.compareTo(b.date);
+                                        },
+                                        groupedOptions:
+                                            GroupedScrollViewOptions(
+                                          stickyHeaderBuilder: (
+                                            context,
+                                            header,
+                                            groupedIndex,
+                                          ) {
+                                            return Padding(
+                                              padding: const EdgeInsets.all(12),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(context)
+                                                      .scaffoldBackgroundColor
+                                                      .withOpacity(0.5),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    12,
+                                                  ),
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.all(12),
+                                                child: Text(
+                                                  header,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                  ),
                                                 ),
                                               ),
                                             );
                                           },
+                                          itemGrouper: (item) {
+                                            return formatDate(item.date);
+                                          },
                                         ),
-                                        //
-
-                                        // SingleChildScrollView(
-                                        //   scrollDirection: Axis.horizontal,
-                                        //   child: Row(
-                                        //     children: [
-                                        //       FilterChip(
-                                        //         selected: true,
-                                        //         label: const Text('Chest'),
-                                        //         onSelected: (value) {},
-                                        //       ),
-                                        //       FilterChip(
-                                        //         selected: true,
-                                        //         label: const Text('Legs'),
-                                        //         onSelected: (value) {},
-                                        //       ),
-                                        //       FilterChip(
-                                        //         selected: true,
-                                        //         label: const Text('Arms'),
-                                        //         onSelected: (value) {},
-                                        //       ),
-                                        //       FilterChip(
-                                        //         selected: true,
-                                        //         label: const Text('Back'),
-                                        //         onSelected: (value) {},
-                                        //       ),
-                                        //       FilterChip(
-                                        //         selected: true,
-                                        //         label: const Text('Abs'),
-                                        //         onSelected: (value) {},
-                                        //       ),
-                                        //       FilterChip(
-                                        //         selected: true,
-                                        //         label: const Text('Shoulders'),
-                                        //         onSelected: (value) {},
-                                        //       ),
-                                        //       FilterChip(
-                                        //         selected: true,
-                                        //         label: const Text('Cardio'),
-                                        //         onSelected: (value) {},
-                                        //       ),
-                                        //     ],
-                                        //   ),
-                                        // ),
-                                        // MultiSelectDropDown<int>(
-                                        //   onOptionSelected:
-                                        //       (List<ValueItem> selectedOptions) {},
-                                        //   options: const <ValueItem<int>>[
-                                        //     ValueItem(label: 'Option 1', value: 1),
-                                        //     ValueItem(label: 'Option 2', value: 2),
-                                        //     ValueItem(label: 'Option 3', value: 3),
-                                        //     ValueItem(label: 'Option 4', value: 4),
-                                        //     ValueItem(label: 'Option 5', value: 5),
-                                        //     ValueItem(label: 'Option 6', value: 6),
-                                        //   ],
-                                        //   // selectionType: SelectionType.multi,
-                                        //   chipConfig:
-                                        //       const ChipConfig(wrapType: WrapType.wrap),
-                                        //   dropdownHeight: 300,
-                                        //   optionTextStyle: const TextStyle(fontSize: 16),
-                                        //   selectedOptionIcon:
-                                        //       const Icon(Icons.check_circle),
-                                        // ),
-                                        Expanded(
-                                          child: GroupedScrollView<VaultImage,
-                                              String>.grid(
-                                            data: state.galleryImages,
-                                            itemBuilder: (context, item) {
-                                              // return GridTile(
-                                              //   child: _PhotoThumbnail(
-                                              //     image: item,
-                                              //   ),
-                                              //   // footer: GridTileBar(
-                                              //   //   backgroundColor: Colors.white.withOpacity(0.5),
-                                              //   //   title: Text(
-                                              //   //     item.title,
-                                              //   //     style: Theme.of(context).textTheme.labelLarge,
-                                              //   //   ),
-                                              //   // ),
-                                              // );
-                                              return _PhotoThumbnail(
-                                                image: item,
-                                              );
-                                            },
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 2,
-                                              mainAxisSpacing: 8,
-                                              crossAxisSpacing: 8,
-                                              childAspectRatio: .8,
-                                            ),
-                                            groupedOptions:
-                                                GroupedScrollViewOptions(
-                                              stickyHeaderBuilder: (
-                                                context,
-                                                header,
-                                                groupedIndex,
-                                              ) {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(12),
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: Theme.of(context)
-                                                          .scaffoldBackgroundColor
-                                                          .withOpacity(0.5),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                        12,
-                                                      ),
-                                                    ),
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            12),
-                                                    child: Text(
-                                                      header,
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              itemGrouper: (item) {
-                                                return formatDate(item.date);
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                  // child: GridView.builder(
-                                  //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  //     crossAxisCount: 3,
-                                  //     mainAxisSpacing: 8,
-                                  //     crossAxisSpacing: 8,
-                                  //   ),
-                                  //   itemBuilder: (context, index) => Image.asset(
-                                  //     'assets/mr-ponji.jpg',
-                                  //     fit: BoxFit.cover,
-                                  //   ),
-                                  // ),
+                                  ],
                                 ),
-                              );
-                            },
-                          ),
-                        );
-                      },
+                              ),
+                              // child: GridView.builder(
+                              //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              //     crossAxisCount: 3,
+                              //     mainAxisSpacing: 8,
+                              //     crossAxisSpacing: 8,
+                              //   ),
+                              //   itemBuilder: (context, index) => Image.asset(
+                              //     'assets/mr-ponji.jpg',
+                              //     fit: BoxFit.cover,
+                              //   ),
+                              // ),
+                            ),
+                          );
+                        },
+                      ),
                     );
+                    // return BlocBuilder<FilteredGalleryImagesCubit,
+                    //     FilteredGalleryImagesState>(
+                    //   buildWhen: (previous, current) => true,
+                    //   builder: (context, state) {
+                    //     ;
+                    //   },
+                    // );
                   },
                 );
               },
@@ -519,21 +531,22 @@ class AddMediaModal extends StatelessWidget {
 class _PhotoThumbnail extends StatelessWidget {
   const _PhotoThumbnail({
     required this.image,
+    required this.images,
   });
   final VaultImage image;
+  final List<VaultImage> images;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        final images = context.read<FilteredGalleryImagesCubit>().state;
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) {
-              final currentIndex = images.galleryImages.indexOf(image);
+              final currentIndex = images.indexOf(image);
               return PhotoViewer(
                 path: image.path,
-                images: images.galleryImages,
+                images: images,
                 currentIndex: currentIndex,
               );
             },

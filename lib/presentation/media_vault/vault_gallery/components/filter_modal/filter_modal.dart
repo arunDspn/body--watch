@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
 
@@ -27,6 +28,13 @@ class FilterModal extends StatelessWidget {
                   ),
                 ),
               ),
+              TextButton(
+                  onPressed: () {
+                    context.read<PictureTypeFilterModalBloc>().add(
+                          const PictureTypeFilterModalEvent.clear(),
+                        );
+                  },
+                  child: const Text('Clear All')),
               IconButton(
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -36,53 +44,56 @@ class FilterModal extends StatelessWidget {
             ],
           ),
         ),
-        BlocBuilder<PictureTypeFilterModalBloc, PictureTypeFilterModalState>(
-          builder: (context, state) {
-            return state.map(
-              failed: (value) {
-                return const Center(
-                  child: Text('Failed'),
-                );
-              },
-              loading: (value) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-              success: (value) {
-                final list = value.allTypes;
-                final selected = value.selectedTypes;
+        Expanded(
+          child: BlocBuilder<PictureTypeFilterModalBloc,
+              PictureTypeFilterModalState>(
+            builder: (context, state) {
+              return state.map(
+                failed: (value) {
+                  return const Center(
+                    child: Text('Failed'),
+                  );
+                },
+                loading: (value) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+                success: (value) {
+                  final list = value.allTypes;
+                  final selected = value.selectedTypes;
 
-                return SizedBox(
-                  height: 400,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: ListView.builder(
-                      itemCount: list.length,
-                      itemBuilder: (context, index) {
-                        return CheckboxListTile(
-                          title: Text(list[index]),
-                          selected: selected.contains(list[index]),
-                          value: selected.contains(list[index]),
-                          controlAffinity: ListTileControlAffinity.trailing,
-                          onChanged: (bool? value) {
-                            if (value != null) {
-                              context.read<PictureTypeFilterModalBloc>().add(
-                                    PictureTypeFilterModalEvent.toggle(
-                                      type: list[index],
-                                      value: value,
-                                    ),
-                                  );
-                            }
-                          },
-                        );
-                      },
+                  return SizedBox(
+                    height: 400,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: ListView.builder(
+                        itemCount: list.length,
+                        itemBuilder: (context, index) {
+                          return CheckboxListTile(
+                            title: Text(list[index]),
+                            selected: selected.contains(list[index]),
+                            value: selected.contains(list[index]),
+                            controlAffinity: ListTileControlAffinity.trailing,
+                            onChanged: (bool? value) {
+                              if (value != null) {
+                                context.read<PictureTypeFilterModalBloc>().add(
+                                      PictureTypeFilterModalEvent.toggle(
+                                        type: list[index],
+                                        value: value,
+                                      ),
+                                    );
+                              }
+                            },
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                );
-              },
-            );
-          },
+                  );
+                },
+              );
+            },
+          ),
         ),
       ],
     );

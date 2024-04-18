@@ -9,28 +9,34 @@ class FilteredGalleryImagesCubit extends Cubit<FilteredGalleryImagesState> {
   FilteredGalleryImagesCubit()
       : super(const FilteredGalleryImagesState.data(galleryImages: []));
 
-  List<VaultImage> _galleryImages = [];
+  // List<VaultImage> _galleryImages = [];
 
-  void reset() {
-    emit(FilteredGalleryImagesState.data(galleryImages: _galleryImages));
-  }
+  // void reset() {
+  //   emit(FilteredGalleryImagesState.data(galleryImages: _galleryImages));
+  // }
 
-  void loadImages({
-    required List<VaultImage> images,
-  }) {
-    _galleryImages = images;
-    emit(FilteredGalleryImagesState.data(galleryImages: images));
-  }
+  // void loadImages({
+  //   required List<VaultImage> images,
+  // }) {
+  //   _galleryImages = images;
+  //   emit(FilteredGalleryImagesState.data(galleryImages: images));
+  // }
+
+  // void updateList(VaultImage newImageData) {
+  //   _galleryImages.add(newImageData);
+  //   emit(FilteredGalleryImagesState.data(galleryImages: _galleryImages));
+  // }
 
   void filterImages({
     required List<String> selectedTags,
+    required List<VaultImage> galleryImages,
   }) {
     if (selectedTags.isEmpty) {
-      emit(FilteredGalleryImagesState.data(galleryImages: _galleryImages));
+      emit(FilteredGalleryImagesState.data(galleryImages: galleryImages));
     } else {
       emit(
         FilteredGalleryImagesState.data(
-          galleryImages: _galleryImages
+          galleryImages: galleryImages
               .where((element) => selectedTags.contains(element.tag))
               .toList(),
         ),

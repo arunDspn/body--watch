@@ -52,7 +52,17 @@ class PictureTypeFilterModalBloc
             );
           }
         },
-        clear: (value) {},
+        clear: (value) {
+          if (state is Success) {
+            final previousState = state as Success;
+            emit(const PictureTypeFilterModalState.loading());
+            emit(
+              previousState.copyWith(
+                selectedTypes: [],
+              ),
+            );
+          }
+        },
       );
     });
   }

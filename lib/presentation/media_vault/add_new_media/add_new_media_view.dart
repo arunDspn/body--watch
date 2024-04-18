@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,6 +49,9 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
               orElse: () {},
               success: (s) {
                 context.read<LoadPicturesCubit>().updateList(s.savedImage);
+                // context
+                //     .read<FilteredGalleryImagesCubit>()
+                //     .updateList(s.savedImage);
                 Navigator.pop(context);
               },
               failure: (value) {

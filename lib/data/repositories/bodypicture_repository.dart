@@ -35,9 +35,22 @@ class BodyPictureRepository implements IBodyPictureFacade {
   }
 
   @override
-  Future<Either<String, void>> deleteBodyPicture(String id) {
-    // TODO: implement deleteBodyPicture
-    throw UnimplementedError();
+  Future<Either<String, void>> deleteBodyPicture(String id) async {
+    try {
+      final db = await databaseService.database;
+      final result = await db.rawDelete(
+        'DELETE FROM pictures WHERE path = ?',
+        [id],
+      );
+
+      if (result != 1) {
+        return left('Failed to delete picture, No such id');
+      }
+      return right(null);
+    } catch (e) {
+      return left(e.toString());
+    }
+    // throw UnimplementedError();
   }
 
   @override
