@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:watcha_body/data/domain/models/compare_images_model.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 
 abstract interface class IBodyPictureFacade {
@@ -32,4 +33,11 @@ abstract interface class IBodyPictureFacade {
 
   /// Get all body pictures with a tag
   Future<Either<String, List<VaultImage>>> getBodyPicturesByTag(String tag);
+
+  /// Get a body picture by tag and date
+  Future<Either<String, CompareImagesModel>> getBodyPicturesByTagAndTwoDate({
+    required String tag,
+    required DateTime firstdate,
+    required DateTime seconddate,
+  });
 }

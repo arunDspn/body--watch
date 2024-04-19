@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/domain/i_bodypicture_facade.dart';
+import 'package:watcha_body/data/domain/models/compare_images_model.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 
 class BodyPictureRepository implements IBodyPictureFacade {
@@ -135,5 +136,38 @@ class BodyPictureRepository implements IBodyPictureFacade {
   Future<Either<String, VaultImage>> updateBodyPicture(VaultImage bodyPicture) {
     // TODO: implement updateBodyPicture
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<String, CompareImagesModel>> getBodyPicturesByTagAndTwoDate({
+    required String tag,
+    required DateTime firstdate,
+    required DateTime seconddate,
+  }) async {
+    try {
+      final db = await databaseService.database;
+      final firstResult = await db.query(
+        'pictures',
+        where: 'tag = ? AND STRFTIME("%Y-%m-%d", date) = ?',
+        whereArgs: [tag, firstdate.toIso8601String().substring(0, 10)],
+      );
+      final secondResult = await db.query(
+        'pictures',
+        where: 'tag = ? AND STRFTIME("%Y-%m-%d", date) = ?',
+        whereArgs: [tag, seconddate.toIso8601String().substring(0, 10)],
+      );
+      final firstImagesSet = firstResult.map(VaultImage.fromJson).toList();
+      final secondImagesSet = secondResult.map(VaultImage.fromJson).toList();
+      return right(
+        CompareImagesModel(
+          firstImages: firstImagesSet,
+          secondImages: secondImagesSet,
+        ),
+      );
+    } catch (exception) {
+      return left(exception.toString());
+    }
+    // TODO: implement getBodyPicturesByTagAndTwoDate
+    // throw UnimplementedError();
   }
 }

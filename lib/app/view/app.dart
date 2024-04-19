@@ -29,7 +29,9 @@ import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasu
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media_view.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new_media_cubit.dart';
-import 'package:watcha_body/presentation/media_vault/compare_pictures/compare_pictures_view.dart';
+import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/compare_picture_form_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/load_picture_to_compare_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/compare_pictures/view/compare_pictures_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/filtered_gallery_images_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
@@ -265,7 +267,19 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
       );
     case ComparePicturesView.routeName:
       return MaterialPageRoute<void>(
-        builder: (context) => const ComparePicturesView(),
+        builder: (context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => ComparePictureFormCubit(),
+            ),
+            BlocProvider(
+              create: (context) => LoadPictureToCompareCubit(
+                context.read<BodyPictureRepository>(),
+              ),
+            ),
+          ],
+          child: const ComparePicturesView(),
+        ),
       );
     case AddNewMediaView.routeName:
       return MaterialPageRoute<void>(

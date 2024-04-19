@@ -7,7 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media_view.dart';
-import 'package:watcha_body/presentation/media_vault/compare_pictures/compare_pictures_view.dart';
+import 'package:watcha_body/presentation/media_vault/compare_pictures/view/compare_pictures_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/filter_modal.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/view.dart';
