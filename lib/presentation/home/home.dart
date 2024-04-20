@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:watcha_body/presentation/home/charts/charts.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/overview/overview.dart';
 import 'package:watcha_body/size_config.dart';
 
@@ -36,9 +36,21 @@ class _HomeViewState extends State<HomeView> {
             ),
             label: 'Overview',
           ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.auto_graph_rounded,
+          //     color: Theme.of(context).colorScheme.secondary,
+          //   ),
+          //   activeIcon: Icon(
+          //     Icons.auto_graph_rounded,
+          //     color: Theme.of(context).colorScheme.primary,
+          //     size: getProportionateScreenWidth(25),
+          //   ),
+          //   label: 'Charts',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.auto_graph_rounded,
+              Icons.photo_album_sharp,
               color: Theme.of(context).colorScheme.secondary,
             ),
             activeIcon: Icon(
@@ -46,7 +58,7 @@ class _HomeViewState extends State<HomeView> {
               color: Theme.of(context).colorScheme.primary,
               size: getProportionateScreenWidth(25),
             ),
-            label: 'Charts',
+            label: 'Pictures',
           ),
         ],
         onTap: (index) {
@@ -56,11 +68,11 @@ class _HomeViewState extends State<HomeView> {
 
           // if (index == 1) {
           //   Navigator.pushNamed(context, '/settings');
-          // }
+          // }§
         },
       ),
       body: SafeArea(
-        child: index == 0 ? const OverView() : Container(),
+        child: index == 0 ? const OverView() : const VaultGallery(),
       ),
     );
   }

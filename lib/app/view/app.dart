@@ -199,7 +199,7 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
                   duration: DurationsEnum.month1,
                 ),
               );
-          return const OverView();
+          return const HomeView();
         },
       );
     case MeasurementInDetail.routeName:

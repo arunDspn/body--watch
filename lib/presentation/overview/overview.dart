@@ -226,7 +226,6 @@ class SearchView extends StatelessWidget {
       ),
       body: BlocBuilder<SearchWidgetsBloc, SearchWidgetsState>(
         builder: (context, state) {
-          print(state);
           return state.map(
             loading: (value) {
               return const Center(child: CircularProgressIndicator());
