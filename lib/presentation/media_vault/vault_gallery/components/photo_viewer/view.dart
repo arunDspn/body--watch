@@ -4,14 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:watcha_body/data/domain/i_measurements.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
-import 'package:watcha_body/data/repositories/measurement_repository.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/components/data_linked/cubit/get_data_linked_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/components/data_linked/view/data_linked_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 
-class PhotoViewer extends StatelessWidget {
+class PhotoViewer extends StatefulWidget {
   const PhotoViewer({
     super.key,
     // required this.path,
@@ -31,25 +28,25 @@ class PhotoViewer extends StatelessWidget {
   }
 
   @override
+  State<PhotoViewer> createState() => _PhotoViewerState();
+}
+
+class _PhotoViewerState extends State<PhotoViewer> {
+  late int _currentIndex = widget.currentIndex;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
+      const SystemUiOverlayStyle(
         statusBarColor: Colors.black, // Transparent status bar
         statusBarIconBrightness: Brightness.light, // Dark status bar icons
       ),
     );
     return Scaffold(
-      // body: PhotoView(imageProvider: FileImage(File(path))),
-      // appBar: AppBar(
-      //   title: Text(
-      //     images[currentIndex].tag,
-      //     style: const TextStyle(
-      //       color: Colors.white,
-      //       fontSize: 18,
-      //       fontWeight: FontWeight.bold,
-      //     ),
-      //   ),
-      // ),
       body: BlocListener<LoadPicturesCubit, LoadPicturesState>(
         listener: (context, state) {
           state.mapOrNull(
@@ -60,22 +57,25 @@ class PhotoViewer extends StatelessWidget {
           child: Stack(
             children: [
               PhotoViewGallery.builder(
-                pageController: PageController(initialPage: currentIndex),
-                itemCount: images.length,
+                pageController: PageController(initialPage: _currentIndex),
+                itemCount: widget.images.length,
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
                 builder: (context, index) {
                   return PhotoViewGalleryPageOptions(
                     imageProvider: FileImage(
-                      File(images[index].path),
+                      File(widget.images[index].path),
                     ),
                   );
                 },
               ),
               Align(
                 alignment: Alignment.topCenter,
-                child: Container(
-                  // color: Colors.red.withOpacity(.5),
+                child: SizedBox(
                   width: double.infinity,
-                  // height: 50,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 14,
@@ -98,19 +98,18 @@ class PhotoViewer extends StatelessWidget {
                           children: [
                             Text(
                               // to Pascal Case
-                              images[currentIndex]
-                                      .tag
+                              widget.images[_currentIndex].tag
                                       .substring(0, 1)
                                       .toUpperCase() +
-                                  images[currentIndex].tag.substring(1),
+                                  widget.images[_currentIndex].tag.substring(1),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
                               ),
                             ),
                             Text(
-                              formatDateImageViewer(
-                                images[currentIndex].date,
+                              PhotoViewer.formatDateImageViewer(
+                                widget.images[_currentIndex].date,
                               ),
                               style: const TextStyle(
                                 color: Colors.white,
@@ -120,7 +119,6 @@ class PhotoViewer extends StatelessWidget {
                           ],
                         ),
                         const Spacer(),
-
                         IconButton(
                           onPressed: () {
                             showModalBottomSheet(
@@ -129,7 +127,7 @@ class PhotoViewer extends StatelessWidget {
                               isDismissible: true,
                               builder: (context) {
                                 return DataLinkedView(
-                                  date: images[currentIndex].date,
+                                  date: widget.images[widget.currentIndex].date,
                                 );
                               },
                             );
@@ -143,14 +141,14 @@ class PhotoViewer extends StatelessWidget {
                         IconButton(
                           onPressed: () {
                             context.read<LoadPicturesCubit>().delete(
-                                  images[currentIndex].path,
+                                  widget.images[widget.currentIndex].path,
                                 );
                           },
                           icon: Icon(
                             Icons.delete_sharp,
                             color: Colors.red.shade400,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
