@@ -10,6 +10,8 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i5;
 import 'package:watcha_body/data/data_layer/database_service.dart' as _i2;
 import 'package:watcha_body/data/domain/models/pmeasurement.dart' as _i7;
+import 'package:watcha_body/data/domain/models/two_dates_record_model.dart'
+    as _i8;
 import 'package:watcha_body/data/repositories/measurement_repository.dart'
     as _i4;
 
@@ -302,4 +304,34 @@ class MockMeasurementRepository extends _i1.Mock
               ),
             )),
           ) as _i6.Future<_i3.Either<String, List<_i7.Measurement>>>);
+
+  @override
+  _i6.Future<_i3.Either<String, List<_i8.TwoDatesRecord>>>
+      getAllRecordsByTwoDates({
+    required DateTime? dateOne,
+    required DateTime? dateTwo,
+  }) =>
+          (super.noSuchMethod(
+            Invocation.method(
+              #getAllRecordsByTwoDates,
+              [],
+              {
+                #dateOne: dateOne,
+                #dateTwo: dateTwo,
+              },
+            ),
+            returnValue:
+                _i6.Future<_i3.Either<String, List<_i8.TwoDatesRecord>>>.value(
+                    _FakeEither_1<String, List<_i8.TwoDatesRecord>>(
+              this,
+              Invocation.method(
+                #getAllRecordsByTwoDates,
+                [],
+                {
+                  #dateOne: dateOne,
+                  #dateTwo: dateTwo,
+                },
+              ),
+            )),
+          ) as _i6.Future<_i3.Either<String, List<_i8.TwoDatesRecord>>>);
 }

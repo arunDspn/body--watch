@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/domain/i_bodypicture_facade.dart';
 import 'package:watcha_body/data/domain/models/compare_images_model.dart';
+import 'package:watcha_body/data/domain/models/two_dates_record_model.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 
 class BodyPictureRepository implements IBodyPictureFacade {
@@ -169,5 +170,34 @@ class BodyPictureRepository implements IBodyPictureFacade {
     }
     // TODO: implement getBodyPicturesByTagAndTwoDate
     // throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<String, List<TwoDatesRecord>>> getAllRecordsByTwoDates({
+    required DateTime dateOne,
+    required DateTime dateTwo,
+  }) async {
+    // TODO: implement getAllRecordsByTwoDates
+    // throw UnimplementedError();
+
+    try {
+      final db = await databaseService.database;
+
+      final result = await db.rawQuery('''
+    SELECT m1.name, m1.VALUE AS data1, m2.VALUE AS data2
+    FROM measurements AS m1
+    FULL JOIN (
+      SELECT name, VALUE
+      FROM measurements
+      WHERE STRFTIME("%Y-%m-%d", date) = ${dateOne.toIso8601String().substring(0, 10)}
+    ) AS m2 ON m1.name = m2.name
+    WHERE STRFTIME("%Y-%m-%d", m1.date) = ${dateTwo.toIso8601String().substring(0, 10)}
+  };
+  ''');
+
+      return right(result.map(TwoDatesRecord.fromJson).toList());
+    } catch (exception) {
+      return left(exception.toString());
+    }
   }
 }

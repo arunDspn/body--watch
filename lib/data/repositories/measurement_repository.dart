@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/domain/i_measurements.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/models/two_dates_record_model.dart';
 
 class MeasurementRepository extends IMeasurementsFacade {
   MeasurementRepository(this.databaseService);
@@ -250,6 +252,89 @@ ORDER BY type, date DESC;
     }
     // TODO: implement getAllMeasurementsByDate
     // throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<String, List<TwoDatesRecord>>> getAllRecordsByTwoDates({
+    required DateTime dateOne,
+    required DateTime dateTwo,
+  }) async {
+    // TODO: implement getAllRecordsByTwoDates
+    // throw UnimplementedError();
+
+    try {
+      final db = await databaseService.database;
+
+      //     final result = await db.rawQuery('''
+      //   SELECT m1.name, m1.VALUE AS data1, m2.VALUE AS data2
+      //   FROM measurements AS m1
+      //   FULL JOIN (
+      //     SELECT name, VALUE
+      //     FROM measurements
+      //     WHERE STRFTIME("%Y-%m-%d", date) = ${dateOne.toIso8601String().substring(0, 10)}
+      //   ) AS m2 ON m1.name = m2.name
+      //   WHERE STRFTIME("%Y-%m-%d", m1.date) = ${dateTwo.toIso8601String().substring(0, 10)}
+      // };
+      // ''');
+      final date = dateOne.toIso8601String().substring(0, 10);
+      final sime = await db.query(
+        'measurements',
+        columns: [
+          'type',
+          'value',
+        ],
+        where: 'date = ?',
+        whereArgs: [
+          date,
+        ],
+      );
+
+      final resultOne = await db.query(
+        'measurements',
+        // columns: [
+        //   'type',
+        //   'value',
+        // ],
+        where: 'STRFTIME("%Y-%m-%d", date) = ?',
+        whereArgs: [
+          dateOne.toIso8601String().substring(0, 10),
+        ],
+      );
+
+      final resultTwo = await db.query(
+        'measurements',
+        // columns: [
+        //   'type',
+        //   'value',
+        // ],
+        where: 'STRFTIME("%Y-%m-%d", date) = ?',
+        whereArgs: [
+          dateTwo.toIso8601String().substring(0, 10),
+        ],
+      );
+
+      final dataOne = resultOne.map(Measurement.fromMap).toList();
+      final dataTwo = resultTwo.map(Measurement.fromMap).toList();
+
+      var namesSet = dataOne.map((e) => e.type).toSet();
+      namesSet = namesSet.union(dataTwo.map((e) => e.type).toSet());
+
+      final data = namesSet.map((e) {
+        return TwoDatesRecord(
+          name: e,
+          data1:
+              dataOne.firstWhereOrNull((element) => element.type == e)?.value,
+          data2:
+              dataTwo.firstWhereOrNull((element) => element.type == e)?.value,
+        );
+      }).toList();
+
+      return Right(data);
+
+      // return right(result.map(TwoDatesRecord.fromJson).toList());
+    } catch (exception) {
+      return left(exception.toString());
+    }
   }
 }
 

@@ -5,7 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_compare_slider/image_compare_slider.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
+import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/components/tag_dropdown_menu/view/view.dart';
+import 'package:watcha_body/presentation/media_vault/compare_pictures/components/view_comparison_data/cubit/comparison_data_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/compare_pictures/components/view_comparison_data/view.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/compare_picture_form_cubit.dart'
     as ComparePictureFormCubitAlias;
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/load_picture_to_compare_cubit.dart';
@@ -54,6 +57,32 @@ class ComparePicturesView extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Compare Pictures'),
+            actions: [
+              if (state.ready)
+                TextButton(
+                  child: const Text('View Comparsion Data'),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      showDragHandle: true,
+                      builder: (context) {
+                        return BlocProvider(
+                          create: (context) => ComparisonDataCubit(
+                            context.read<MeasurementRepository>(),
+                          )..loadData(
+                              dateOne: state.firstDate!,
+                              dateTwo: state.secondDate!,
+                            ),
+                          child: ViewComparisonDataModalView(
+                            firstDate: state.firstDate!,
+                            secondDate: state.secondDate!,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                )
+            ],
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -274,52 +303,53 @@ class _CompareImageViewerState extends State<_CompareImageViewer> {
           itemOneBuilder: (child, context) => IntrinsicHeight(child: child),
           itemTwoBuilder: (child, context) => IntrinsicHeight(child: child),
         ),
-        Row(
-          children: [
-            IconButton(
-              onPressed: () {
-                if (firstImageIndex > 0) {
-                  setState(() {
-                    firstImageIndex--;
-                  });
-                }
-              },
-              icon: const Icon(Icons.arrow_left),
-            ),
-            Text('${firstImageIndex + 1} / ${widget.firstImages.length}'),
-            IconButton(
-              onPressed: () {
-                if (firstImageIndex < widget.firstImages.length - 1) {
-                  setState(() {
-                    firstImageIndex++;
-                  });
-                }
-              },
-              icon: const Icon(Icons.arrow_right),
-            ),
-            const Spacer(),
-            IconButton(
+        if (widget.firstImages.length > 1 && widget.secondImages.length > 1)
+          Row(
+            children: [
+              IconButton(
                 onPressed: () {
-                  if (secondImageIndex > 0) {
+                  if (firstImageIndex > 0) {
                     setState(() {
-                      secondImageIndex--;
+                      firstImageIndex--;
                     });
                   }
                 },
-                icon: const Icon(Icons.arrow_left)),
-            Text('${secondImageIndex + 1} / ${widget.secondImages.length}'),
-            IconButton(
-              onPressed: () {
-                if (secondImageIndex < widget.secondImages.length - 1) {
-                  setState(() {
-                    secondImageIndex++;
-                  });
-                }
-              },
-              icon: const Icon(Icons.arrow_right),
-            ),
-          ],
-        )
+                icon: const Icon(Icons.arrow_left),
+              ),
+              Text('${firstImageIndex + 1} / ${widget.firstImages.length}'),
+              IconButton(
+                onPressed: () {
+                  if (firstImageIndex < widget.firstImages.length - 1) {
+                    setState(() {
+                      firstImageIndex++;
+                    });
+                  }
+                },
+                icon: const Icon(Icons.arrow_right),
+              ),
+              const Spacer(),
+              IconButton(
+                  onPressed: () {
+                    if (secondImageIndex > 0) {
+                      setState(() {
+                        secondImageIndex--;
+                      });
+                    }
+                  },
+                  icon: const Icon(Icons.arrow_left)),
+              Text('${secondImageIndex + 1} / ${widget.secondImages.length}'),
+              IconButton(
+                onPressed: () {
+                  if (secondImageIndex < widget.secondImages.length - 1) {
+                    setState(() {
+                      secondImageIndex++;
+                    });
+                  }
+                },
+                icon: const Icon(Icons.arrow_right),
+              ),
+            ],
+          )
       ],
     );
   }

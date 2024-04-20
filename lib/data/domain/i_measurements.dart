@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/models/two_dates_record_model.dart';
 
 abstract class IMeasurementsFacade {
   /// Will return a list of [Measurement]s
@@ -59,5 +60,11 @@ abstract class IMeasurementsFacade {
   /// It contains  all types ex: Chest, Waist, etc.. that added in table
   Future<Either<String, List<Measurement>>> getAllMeasurementsByDate({
     required DateTime date,
+  });
+
+  /// Get all records by two dates
+  Future<Either<String, List<TwoDatesRecord>>> getAllRecordsByTwoDates({
+    required DateTime dateOne,
+    required DateTime dateTwo,
   });
 }

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:watcha_body/data/domain/models/compare_images_model.dart';
+import 'package:watcha_body/data/domain/models/two_dates_record_model.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 
 abstract interface class IBodyPictureFacade {
