@@ -47,7 +47,21 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
           listener: (context, state) {
             state.maybeMap(
               orElse: () {},
+              loading: (value) {
+                // dialog box of loading
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return const AlertDialog(
+                      title: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  },
+                );
+              },
               success: (s) {
+                Navigator.of(context).pop();
                 context.read<LoadPicturesCubit>().updateList(s.savedImage);
                 // context
                 //     .read<FilteredGalleryImagesCubit>()
@@ -55,6 +69,7 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
                 Navigator.pop(context);
               },
               failure: (value) {
+                Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(value.failure),

@@ -13,6 +13,9 @@ class AddNewMediaCubit extends Cubit<AddNewMediaState> {
   final BodyPictureRepository bodyPictureRepository;
 
   Future<void> saveMedia(VaultImage image) async {
+    emit(const AddNewMediaState.loading());
+    //delay 4 seconds to simulate loading
+    await Future.delayed(const Duration(seconds: 4));
     final result = await bodyPictureRepository.saveBodyPicture(image);
 
     result.fold(

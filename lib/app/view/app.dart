@@ -9,6 +9,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
@@ -43,6 +44,8 @@ import 'package:watcha_body/presentation/settings/cubits/backup_restore_cubit/ba
 import 'package:watcha_body/presentation/settings/cubits/delete_all_data_cubit/delete_all_data_cubit.dart';
 import 'package:watcha_body/presentation/settings/settings_view.dart';
 import 'package:watcha_body/presentation/splash/splash_view.dart';
+import 'package:watcha_body/services/cache_service/cache_service.dart';
+import 'package:watcha_body/services/encryption_service/src/encryption_service.dart';
 import 'package:watcha_body/services/time_range_service/service.dart';
 
 class App extends StatelessWidget {
@@ -51,8 +54,21 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final databaseService = DatabaseService();
+    final encryptService =
+        EncryptService(storage: const FlutterSecureStorage());
+
+    final cacheService = CacheService();
+
+    //
+
     return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<EncryptService>(
+          create: (context) => encryptService,
+        ),
+        RepositoryProvider<CacheService>(
+          create: (context) => cacheService,
+        ),
         RepositoryProvider<MeasurementRepository>(
           create: (context) => MeasurementRepository(databaseService),
         ),
@@ -60,8 +76,11 @@ class App extends StatelessWidget {
           create: (context) => TimeRangeService(),
         ),
         RepositoryProvider<BodyPictureRepository>(
-          create: (context) =>
-              BodyPictureRepository(databaseService: databaseService),
+          create: (context) => BodyPictureRepository(
+            databaseService: databaseService,
+            encryptService: encryptService,
+            cacheService: cacheService,
+          ),
         ),
       ],
       child: MultiBlocProvider(
