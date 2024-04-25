@@ -31,6 +31,11 @@ class LoadPicturesCubit extends Cubit<LoadPicturesState> {
     );
   }
 
+  void reset() {
+    allImages = [];
+    emit(const LoadPicturesState.loading());
+  }
+
   Future<void> updateList(VaultImage newImageData) async {
     final currentState = state;
     emit(const LoadPicturesState.loading());

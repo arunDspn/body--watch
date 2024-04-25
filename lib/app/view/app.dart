@@ -36,6 +36,7 @@ import 'package:watcha_body/presentation/media_vault/compare_pictures/view/compa
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/filtered_gallery_images_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/lock_gallery_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
@@ -129,10 +130,9 @@ class App extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) =>
-                LoadPicturesCubit(context.read<BodyPictureRepository>())
-                  ..load(),
+                LoadPicturesCubit(context.read<BodyPictureRepository>()),
+            // ..load(),
           ),
-
           BlocProvider(
             create: (context) => PictureTypeFilterModalBloc(
               context.read<BodyPictureRepository>(),
@@ -140,11 +140,10 @@ class App extends StatelessWidget {
                 const PictureTypeFilterModalEvent.started(),
               ),
           ),
-          // BlocProvider(
-          //   create: (context) => PictureTypeFilterModalBloc(
-          //     context.read<BodyPictureRepository>(),
-          //   )..add(const PictureTypeFilterModalEvent.started()),
-          // ),
+          BlocProvider(
+            create: (context) =>
+                LockGalleryCubit(context.read<BodyPictureRepository>()),
+          ),
         ],
         child: Builder(
           builder: (context) {

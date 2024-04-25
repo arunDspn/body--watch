@@ -40,4 +40,6 @@ abstract interface class IBodyPictureFacade {
     required DateTime firstdate,
     required DateTime seconddate,
   });
+
+  Future<Either<String, Unit>> clearLocalCache();
 }

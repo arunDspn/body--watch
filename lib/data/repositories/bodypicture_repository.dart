@@ -223,8 +223,14 @@ class BodyPictureRepository implements IBodyPictureFacade {
     final fileName = '${DateTime.now()}.$extension'; // Unique filename
 
     // Encrypt Image
-    final encryptedImageData =
-        await encryptService.encryptPhoto(filePath: bodyPicture.path);
+
+    final rootToken = RootIsolateToken.instance!;
+    final encryptedImageData = await Isolate.run(
+      () async {
+        BackgroundIsolateBinaryMessenger.ensureInitialized(rootToken);
+        return encryptService.encryptPhoto(filePath: bodyPicture.path);
+      },
+    );
 
     // check [encryptedFolderPath] exists
     if (!Directory('${appDocDir.path}/$encrytedFolderPath').existsSync()) {
@@ -325,6 +331,16 @@ class BodyPictureRepository implements IBodyPictureFacade {
       );
     } catch (exception) {
       return left(exception.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, Unit>> clearLocalCache() async {
+    try {
+      await cacheService.clear();
+      return right(unit);
+    } catch (e) {
+      return left(e.toString());
     }
   }
 }

@@ -5,6 +5,7 @@
 
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CacheService {
@@ -75,8 +76,9 @@ class CacheService {
   /// Deletes all data from the cache.
   Future<void> clear() async {
     final appDocDir = await getApplicationDocumentsDirectory();
-    final dir = Directory('${appDocDir.path}/$cachePath');
-    if (dir.existsSync()) {
+    final dir = Directory('${appDocDir.path}/$cachePath/');
+    final isExists = dir.existsSync();
+    if (isExists) {
       dir.deleteSync(recursive: true);
     }
   }
@@ -86,6 +88,21 @@ class CacheService {
 
   // /// Returns the number of items in the cache.
   // int count() {}
+
+  dos() async {
+    // check for cache folder is empty or not
+    final appDocDir = await getApplicationDocumentsDirectory();
+    final dir = Directory('${appDocDir.path}/$cachePath/');
+
+    if (dir.existsSync()) {
+      final files = dir.listSync();
+      for (var file in files) {
+        debugPrint(file.path);
+      }
+    } else {
+      debugPrint('not exists');
+    }
+  }
 }
 
 // // cache_service.dart
