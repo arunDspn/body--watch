@@ -116,6 +116,21 @@ class BodyPictureRepository implements IBodyPictureFacade {
 
       final encryptedDataList = data.map(VaultImage.fromJson).toList();
 
+      final decrytedDataList = <VaultImage>[];
+      for (final e in encryptedDataList) {
+        // also trim .enc at last
+        final fileName = e.path.split('/').last.replaceFirst('.enc', '');
+
+        final data =
+            await encryptService.decryptPhoto(File(e.path).readAsBytesSync());
+
+        final newCachedPath = await cacheService.storeFromBytes(data, fileName);
+        final d = e.copyWith(
+          path: newCachedPath,
+        );
+        decrytedDataList.add(d);
+      }
+
       // final decrytedDataList = encryptedDataList.map((e) async {
       //   final d = e.copyWith(
       //     path: await cacheService.get(e.path) ?? '',
@@ -127,33 +142,33 @@ class BodyPictureRepository implements IBodyPictureFacade {
 
       // }, message);
 
-      final rootToken = RootIsolateToken.instance!;
-      final decrytedDataList = await Isolate.run<List<VaultImage>>(
-        () async {
-          BackgroundIsolateBinaryMessenger.ensureInitialized(rootToken);
-          final decrytedDataList = <VaultImage>[];
-          try {
-            for (final e in encryptedDataList) {
-              // also trim .enc at last
-              final fileName = e.path.split('/').last.replaceFirst('.enc', '');
+      // final rootToken = RootIsolateToken.instance!;
+      // final decrytedDataList = await Isolate.run<List<VaultImage>>(
+      //   () async {
+      //     BackgroundIsolateBinaryMessenger.ensureInitialized(rootToken);
+      //     final decrytedDataList = <VaultImage>[];
+      //     try {
+      //       for (final e in encryptedDataList) {
+      //         // also trim .enc at last
+      //         final fileName = e.path.split('/').last.replaceFirst('.enc', '');
 
-              final data = await encryptService
-                  .decryptPhoto(File(e.path).readAsBytesSync());
+      //         final data = await encryptService
+      //             .decryptPhoto(File(e.path).readAsBytesSync());
 
-              final newCachedPath =
-                  await cacheService.storeFromBytes(data, fileName);
-              final d = e.copyWith(
-                path: newCachedPath,
-              );
-              decrytedDataList.add(d);
-            }
-          } on Exception catch (e) {
-            debugPrint(e.toString());
-            rethrow;
-          }
-          return decrytedDataList;
-        },
-      );
+      //         final newCachedPath =
+      //             await cacheService.storeFromBytes(data, fileName);
+      //         final d = e.copyWith(
+      //           path: newCachedPath,
+      //         );
+      //         decrytedDataList.add(d);
+      //       }
+      //     } on Exception catch (e) {
+      //       debugPrint(e.toString());
+      //       rethrow;
+      //     }
+      //     return decrytedDataList;
+      //   },
+      // );
 
       // final decrytedDataList = <VaultImage>[];
 
@@ -224,13 +239,16 @@ class BodyPictureRepository implements IBodyPictureFacade {
 
     // Encrypt Image
 
-    final rootToken = RootIsolateToken.instance!;
-    final encryptedImageData = await Isolate.run(
-      () async {
-        BackgroundIsolateBinaryMessenger.ensureInitialized(rootToken);
-        return encryptService.encryptPhoto(filePath: bodyPicture.path);
-      },
-    );
+    // final rootToken = RootIsolateToken.instance!;
+    // final encryptedImageData = await Isolate.run(
+    //   () async {
+    //     BackgroundIsolateBinaryMessenger.ensureInitialized(rootToken);
+    //     return encryptService.encryptPhoto(filePath: bodyPicture.path);
+    //   },
+    // );
+
+    final encryptedImageData =
+        await encryptService.encryptPhoto(filePath: bodyPicture.path);
 
     // check [encryptedFolderPath] exists
     if (!Directory('${appDocDir.path}/$encrytedFolderPath').existsSync()) {

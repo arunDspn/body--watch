@@ -5,11 +5,12 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import 'dart:isolate';
+
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
@@ -40,7 +41,6 @@ import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/lock_ga
 import 'package:watcha_body/presentation/media_vault/vault_gallery/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
-import 'package:watcha_body/presentation/overview/overview.dart';
 import 'package:watcha_body/presentation/settings/cubits/backup_restore_cubit/backup_data_cubit.dart';
 import 'package:watcha_body/presentation/settings/cubits/delete_all_data_cubit/delete_all_data_cubit.dart';
 import 'package:watcha_body/presentation/settings/settings_view.dart';
@@ -50,13 +50,30 @@ import 'package:watcha_body/services/encryption_service/src/encryption_service.d
 import 'package:watcha_body/services/time_range_service/service.dart';
 
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  // const App({super.key});
+
+  const App({
+    Key? key,
+    required this.encryptReceiverStream,
+    required this.decryptReceiverStream,
+    required this.encryptSenderPort,
+    required this.decryptSenderPort,
+  }) : super(key: key);
+
+  final Stream<dynamic> encryptReceiverStream;
+  final Stream<dynamic> decryptReceiverStream;
+  final SendPort encryptSenderPort;
+  final SendPort decryptSenderPort;
 
   @override
   Widget build(BuildContext context) {
     final databaseService = DatabaseService();
-    final encryptService =
-        EncryptService(storage: const FlutterSecureStorage());
+    final encryptService = EncryptService(
+      decryptionResultPort: decryptReceiverStream,
+      decryptionSendPort: decryptSenderPort,
+      encryptionResultPort: encryptReceiverStream,
+      encryptionSendPort: encryptSenderPort,
+    );
 
     final cacheService = CacheService();
 
