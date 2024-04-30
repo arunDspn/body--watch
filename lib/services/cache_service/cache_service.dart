@@ -24,8 +24,8 @@ class CacheService {
 
     // create temp folder
     final dir = Directory('${appDocDir.path}/$cachePath');
-    if (!dir.existsSync()) {
-      dir.createSync();
+    if (!await dir.exists()) {
+      await dir.create();
     }
 
     // create temp folder
@@ -42,13 +42,13 @@ class CacheService {
 
     // create temp folder
     final dir = Directory('${appDocDir.path}/$cachePath');
-    if (!dir.existsSync()) {
-      dir.createSync();
+    if (!await dir.exists()) {
+      await dir.create();
     }
 
     // create temp folder
     final cachedFile = File('${appDocDir.path}/$cachePath/$fileName');
-    cachedFile.writeAsBytesSync(bytes);
+    await cachedFile.writeAsBytes(bytes);
     return cachedFile.path;
   }
 
@@ -58,7 +58,7 @@ class CacheService {
     final appDocDir = await getApplicationDocumentsDirectory();
 
     final cachedFile = File('${appDocDir.path}/$cachePath/$filename');
-    if (cachedFile.existsSync()) {
+    if (await cachedFile.exists()) {
       return cachedFile.path;
     }
     return null;
@@ -68,7 +68,7 @@ class CacheService {
   Future<void> delete(String filename) async {
     final appDocDir = await getApplicationDocumentsDirectory();
     final file = File('${appDocDir.path}/$cachePath/$filename');
-    if (file.existsSync()) {
+    if (await file.exists()) {
       await file.delete();
     }
   }
@@ -77,9 +77,9 @@ class CacheService {
   Future<void> clear() async {
     final appDocDir = await getApplicationDocumentsDirectory();
     final dir = Directory('${appDocDir.path}/$cachePath/');
-    final isExists = dir.existsSync();
+    final isExists = await dir.exists();
     if (isExists) {
-      dir.deleteSync(recursive: true);
+      await dir.delete(recursive: true);
     }
   }
 
