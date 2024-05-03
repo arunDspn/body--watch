@@ -37,8 +37,8 @@ class CounterBloc extends HydratedBloc<int, CounterState> {
 
 //
 
-  // del
-  // @override
-  // Stream<CounterState> mapEventToState(int event) async* {
-  //   yield state.copyWith(value: state.value + event);
-  // }
+// del
+// @override
+// Stream<CounterState> mapEventToState(int event) async* {
+//   yield state.copyWith(value: state.value + event);
+// }

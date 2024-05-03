@@ -4,6 +4,8 @@ import 'dart:isolate';
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:watcha_body/presentation/splash/splash_view.dart';
+import 'package:watcha_body/src/rust/api/crypter.dart';
 
 class EncryptService {
   EncryptService({
@@ -74,13 +76,29 @@ class EncryptService {
     // Encrypt photo bytes
     // final encryptedPhoto = encrypter.encryptBytes(photoBytes, iv: iv);
 
-    encryptionSendPort.send(photoBytes);
-    final encryptedPhotoBytes = await encryptionResultPort.first;
+    // encryptionSendPort.send(photoBytes);
+    // final encryptedPhotoBytes = await encryptionResultPort.first;
 
-    if (encryptedPhotoBytes is! Uint8List) {
-      throw Exception('encryptedPhotoBytes is not Uint8List');
+    // if (encryptedPhotoBytes is! Uint8List) {
+    //   throw Exception('encryptedPhotoBytes is not Uint8List');
+    // }
+    // return encryptedPhotoBytes;
+
+    try {
+      final key = await const FlutterSecureStorage().read(key: keyTerm);
+
+      if (key == null) {
+        throw Exception('key is null');
+      }
+
+      final encryptedPhotoBytes = encrypt(
+        key: Uint8List.fromList(key.codeUnits),
+        data: photoBytes,
+      );
+      return encryptedPhotoBytes;
+    } catch (e) {
+      rethrow;
     }
-    return encryptedPhotoBytes;
   }
 
   Future<List<int>> decryptPhoto(Uint8List encryptedPhotoBytes) async {
@@ -100,14 +118,30 @@ class EncryptService {
     // final decryptedBytes =
     //     encrypter.decryptBytes(Encrypted(encryptedPhotoBytes), iv: iv);
 
-    decryptionSendPort.send(encryptedPhotoBytes);
-    final decryptedBytes = await decryptionResultPort.first;
+    // decryptionSendPort.send(encryptedPhotoBytes);
+    // final decryptedBytes = await decryptionResultPort.first;
 
-    if (decryptedBytes is! List<int>) {
-      throw Exception('decryptedBytes is not List<int>');
+    // if (decryptedBytes is! List<int>) {
+    //   throw Exception('decryptedBytes is not List<int>');
+    // }
+
+    // return decryptedBytes; // Return decrypted bytes as a list of ints
+
+    try {
+      final key = await const FlutterSecureStorage().read(key: keyTerm);
+
+      if (key == null) {
+        throw Exception('key is null');
+      }
+
+      final decryptedBytes = decrypt(
+        key: Uint8List.fromList(key.codeUnits),
+        data: encryptedPhotoBytes,
+      );
+      return decryptedBytes;
+    } catch (e) {
+      rethrow;
     }
-
-    return decryptedBytes; // Return decrypted bytes as a list of ints
   }
 
   // // Static Isloates

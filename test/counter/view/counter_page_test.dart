@@ -13,7 +13,6 @@
 
 // import 'package:watcha_body/counter/counter.dart';
 
-
 // class MockCounterCubit extends MockCubit<int> implements CounterCubit {}
 
 // void main() {

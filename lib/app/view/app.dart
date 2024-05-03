@@ -48,6 +48,8 @@ import 'package:watcha_body/presentation/splash/splash_view.dart';
 import 'package:watcha_body/services/cache_service/cache_service.dart';
 import 'package:watcha_body/services/encryption_service/src/encryption_service.dart';
 import 'package:watcha_body/services/time_range_service/service.dart';
+import 'package:watcha_body/src/rust/api/crypter.dart';
+import 'package:watcha_body/src/rust/frb_generated.dart';
 
 class App extends StatelessWidget {
   // const App({super.key});
