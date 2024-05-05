@@ -15,6 +15,7 @@ import 'package:watcha_body/presentation/media_vault/compare_pictures/view/compa
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/filter_modal.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/view.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/back_up_pictures_to_zip_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/lock_gallery_cubit.dart';
 
@@ -30,399 +31,477 @@ class VaultGallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LockGalleryCubit, LockGalleryState>(
+    return BlocListener<BackUpPicturesToZipCubit, BackUpPicturesToZipState>(
       listener: (context, state) {
-        state.mapOrNull(
-          locked: (value) {
-            context.read<LoadPicturesCubit>().reset();
+        state.maybeMap(
+          orElse: () {},
+          failure: (value) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(value.message),
+              ),
+            );
+            // Navigator.pop(context);
+            Navigator.of(context).pop();
           },
-          unlocked: (value) {
-            context.read<LoadPicturesCubit>().load();
+          loading: (value) {
+            // Pop up a progress indicator
+            return showDialog(
+              context: context,
+              useRootNavigator: true,
+              builder: (context) {
+                // return const Center(
+                //   child: CircularProgressIndicator(),
+                // );
+                return const AlertDialog(
+                  title: Text('Backup in progress'),
+                  content: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                );
+              },
+            );
+          },
+          success: (value) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                duration: const Duration(seconds: 7),
+                content: Text(
+                  'Backup successful \n Backup Path: ${value.path}',
+                ),
+              ),
+            );
+
+            // Navigator.of(context).pop();
           },
         );
       },
-      builder: (context, state) {
-        return state.map(
-          locked: (value) {
-            return _LockView();
-          },
-          unlocked: (value) {
-            return Center(
-              child: BlocConsumer<PictureTypeFilterModalBloc,
-                  PictureTypeFilterModalState>(
-                listener: (context, state) {
-                  // // state.mapOrNull(
-                  // //   success: (value) {
-                  // //     context.read<FilteredGalleryImagesCubit>().filterImages(
-                  // //           selectedTags: value.selectedTypes,
-                  // //         );
-                  // //   },
-                  // );
-                },
-                builder: (context, filterState) {
-                  return filterState.maybeMap(
-                    orElse: () {
-                      return const SizedBox.shrink();
-                    },
-                    failed: (value) {
-                      return const Center(
-                        child: Text('Failed to load Filters'),
-                      );
-                    },
-                    success: (filterStateValue) {
-                      return BlocConsumer<LoadPicturesCubit, LoadPicturesState>(
-                        // listenWhen: (previous, current) => true,
-                        buildWhen: (previous, current) => true,
-                        listener: (context, state) {
-                          // state.mapOrNull(
-                          //   loaded: (value) {
-                          //     context
-                          //         .read<FilteredGalleryImagesCubit>()
-                          //         .loadImages(images: value.pictures);
-                          //   },
-                          // );
-                        },
-                        builder: (context, state) {
-                          return state.map(
-                            failed: (value) {
-                              return const Center(
-                                child: Text('Failed to load Pictures'),
-                              );
-                            },
-                            loading: (_) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                            loaded: (pictureLoadedStateValue) {
-                              // Filtering inside the UI
-                              // TODO: Is that Good
-                              var filteredImages = <VaultImage>[];
-                              if (filterStateValue.selectedTypes.isEmpty) {
-                                filteredImages =
-                                    pictureLoadedStateValue.pictures;
-                              } else {
-                                filteredImages =
-                                    pictureLoadedStateValue.pictures
-                                        .where(
-                                          (element) => filterStateValue
-                                              .selectedTypes
-                                              .contains(element.tag),
-                                        )
-                                        .toList();
-                              }
+      child: BlocConsumer<LockGalleryCubit, LockGalleryState>(
+        listener: (context, state) {
+          state.mapOrNull(
+            locked: (value) {
+              context.read<LoadPicturesCubit>().reset();
+            },
+            unlocked: (value) {
+              context.read<LoadPicturesCubit>().load();
+            },
+          );
+        },
+        builder: (context, state) {
+          return state.map(
+            locked: (value) {
+              return _LockView();
+            },
+            unlocked: (value) {
+              return Center(
+                child: BlocConsumer<PictureTypeFilterModalBloc,
+                    PictureTypeFilterModalState>(
+                  listener: (context, state) {
+                    // // state.mapOrNull(
+                    // //   success: (value) {
+                    // //     context.read<FilteredGalleryImagesCubit>().filterImages(
+                    // //           selectedTags: value.selectedTypes,
+                    // //         );
+                    // //   },
+                    // );
+                  },
+                  builder: (context, filterState) {
+                    return filterState.maybeMap(
+                      orElse: () {
+                        return const SizedBox.shrink();
+                      },
+                      failed: (value) {
+                        return const Center(
+                          child: Text('Failed to load Filters'),
+                        );
+                      },
+                      success: (filterStateValue) {
+                        return BlocConsumer<LoadPicturesCubit,
+                            LoadPicturesState>(
+                          // listenWhen: (previous, current) => true,
+                          buildWhen: (previous, current) => true,
+                          listener: (context, state) {
+                            // state.mapOrNull(
+                            //   loaded: (value) {
+                            //     context
+                            //         .read<FilteredGalleryImagesCubit>()
+                            //         .loadImages(images: value.pictures);
+                            //   },
+                            // );
+                          },
+                          builder: (context, state) {
+                            return state.map(
+                              failed: (value) {
+                                return const Center(
+                                  child: Text('Failed to load Pictures'),
+                                );
+                              },
+                              loading: (_) => const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              loaded: (pictureLoadedStateValue) {
+                                // Filtering inside the UI
+                                // TODO: Is that Good
+                                var filteredImages = <VaultImage>[];
+                                if (filterStateValue.selectedTypes.isEmpty) {
+                                  filteredImages =
+                                      pictureLoadedStateValue.pictures;
+                                } else {
+                                  filteredImages =
+                                      pictureLoadedStateValue.pictures
+                                          .where(
+                                            (element) => filterStateValue
+                                                .selectedTypes
+                                                .contains(element.tag),
+                                          )
+                                          .toList();
+                                }
 
-                              return Theme(
-                                data: Theme.of(context).copyWith(
-                                  cardTheme: CardTheme(
-                                    elevation: 0,
-                                    margin: EdgeInsets.zero,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .surfaceVariant,
+                                return Theme(
+                                  data: Theme.of(context).copyWith(
+                                    cardTheme: CardTheme(
+                                      elevation: 0,
+                                      margin: EdgeInsets.zero,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .surfaceVariant,
+                                    ),
                                   ),
-                                ),
-                                child: Builder(
-                                  builder: (context) {
-                                    return Scaffold(
-                                      floatingActionButton:
-                                          FloatingActionButton.large(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            AddNewMediaView.routeName,
-                                          );
-                                        },
-                                        child: const Icon(
-                                          Icons.add,
-                                        ),
-                                      ),
-                                      floatingActionButtonLocation:
-                                          FloatingActionButtonLocation
-                                              .centerFloat,
-                                      floatingActionButtonAnimator:
-                                          FloatingActionButtonAnimator.scaling,
-                                      appBar: AppBar(
-                                        title: const Text('Vault Gallery'),
-                                        actions: [
-                                          // IconButton(
-                                          //   onPressed: () {
-                                          //     context
-                                          //         .read<BodyPictureRepository>()
-                                          //         .deleteAllBodyPictures();
-                                          //   },
-                                          //   icon: const Icon(
-                                          //     Icons.delete,
-                                          //   ), // delete
-                                          // ),
-                                          // lock icon button
-                                          IconButton(
-                                            onPressed: () {
-                                              context
-                                                  .read<LockGalleryCubit>()
-                                                  .lock();
-                                            },
-                                            icon: const Icon(
-                                              Icons.lock,
-                                            ),
+                                  child: Builder(
+                                    builder: (context) {
+                                      return Scaffold(
+                                        floatingActionButton:
+                                            FloatingActionButton.large(
+                                          onPressed: () {
+                                            Navigator.pushNamed(
+                                              context,
+                                              AddNewMediaView.routeName,
+                                            );
+                                          },
+                                          child: const Icon(
+                                            Icons.add,
                                           ),
-
-                                          // ElevatedButton(
-                                          //     onPressed: () {
-                                          //       context
-                                          //           .read<
-                                          //               BodyPictureRepository>()
-                                          //           .cacheService
-                                          //           .dos();
-                                          //     },
-                                          //     child: const Text('TEST')),
-                                          // filter
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pushNamed(
-                                                context,
-                                                ComparePicturesView.routeName,
-                                              );
-                                            },
-                                            child: const Text(
-                                              'Compare',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      // Grid View for gallery
-                                      body: Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: 8,
-                                          right: 8,
-                                          top: 8,
                                         ),
-                                        child: Center(
-                                          child: Column(
-                                            children: [
-                                              // filter  icon button
-                                              BlocBuilder<
-                                                  PictureTypeFilterModalBloc,
-                                                  PictureTypeFilterModalState>(
-                                                builder: (context, state) {
-                                                  var isFilterActive = false;
-
-                                                  state.mapOrNull(
-                                                    success: (value) {
-                                                      isFilterActive = value
-                                                          .selectedTypes
-                                                          .isNotEmpty;
-                                                    },
-                                                  );
-
-                                                  return Align(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: IconButton.filled(
-                                                      onPressed: () {
-                                                        showModalBottomSheet(
-                                                          context: context,
-                                                          showDragHandle: true,
-                                                          builder: (context) {
-                                                            return const FilterModal();
-                                                          },
-                                                        );
-                                                      },
-                                                      isSelected:
-                                                          isFilterActive,
-                                                      icon: const Icon(
-                                                        Icons
-                                                            .filter_alt_rounded,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
+                                        floatingActionButtonLocation:
+                                            FloatingActionButtonLocation
+                                                .centerFloat,
+                                        floatingActionButtonAnimator:
+                                            FloatingActionButtonAnimator
+                                                .scaling,
+                                        appBar: AppBar(
+                                          title: const Text('Vault Gallery'),
+                                          actions: [
+                                            // IconButton(
+                                            //   onPressed: () {
+                                            //     context
+                                            //         .read<BodyPictureRepository>()
+                                            //         .deleteAllBodyPictures();
+                                            //   },
+                                            //   icon: const Icon(
+                                            //     Icons.delete,
+                                            //   ), // delete
+                                            // ),
+                                            // lock icon button
+                                            IconButton(
+                                              onPressed: () {
+                                                context
+                                                    .read<LockGalleryCubit>()
+                                                    .lock();
+                                              },
+                                              icon: const Icon(
+                                                Icons.lock,
                                               ),
-                                              //
+                                            ),
 
-                                              // SingleChildScrollView(
-                                              //   scrollDirection: Axis.horizontal,
-                                              //   child: Row(
-                                              //     children: [
-                                              //       FilterChip(
-                                              //         selected: true,
-                                              //         label: const Text('Chest'),
-                                              //         onSelected: (value) {},
-                                              //       ),
-                                              //       FilterChip(
-                                              //         selected: true,
-                                              //         label: const Text('Legs'),
-                                              //         onSelected: (value) {},
-                                              //       ),
-                                              //       FilterChip(
-                                              //         selected: true,
-                                              //         label: const Text('Arms'),
-                                              //         onSelected: (value) {},
-                                              //       ),
-                                              //       FilterChip(
-                                              //         selected: true,
-                                              //         label: const Text('Back'),
-                                              //         onSelected: (value) {},
-                                              //       ),
-                                              //       FilterChip(
-                                              //         selected: true,
-                                              //         label: const Text('Abs'),
-                                              //         onSelected: (value) {},
-                                              //       ),
-                                              //       FilterChip(
-                                              //         selected: true,
-                                              //         label: const Text('Shoulders'),
-                                              //         onSelected: (value) {},
-                                              //       ),
-                                              //       FilterChip(
-                                              //         selected: true,
-                                              //         label: const Text('Cardio'),
-                                              //         onSelected: (value) {},
-                                              //       ),
-                                              //     ],
-                                              //   ),
-                                              // ),
-                                              // MultiSelectDropDown<int>(
-                                              //   onOptionSelected:
-                                              //       (List<ValueItem> selectedOptions) {},
-                                              //   options: const <ValueItem<int>>[
-                                              //     ValueItem(label: 'Option 1', value: 1),
-                                              //     ValueItem(label: 'Option 2', value: 2),
-                                              //     ValueItem(label: 'Option 3', value: 3),
-                                              //     ValueItem(label: 'Option 4', value: 4),
-                                              //     ValueItem(label: 'Option 5', value: 5),
-                                              //     ValueItem(label: 'Option 6', value: 6),
-                                              //   ],
-                                              //   // selectionType: SelectionType.multi,
-                                              //   chipConfig:
-                                              //       const ChipConfig(wrapType: WrapType.wrap),
-                                              //   dropdownHeight: 300,
-                                              //   optionTextStyle: const TextStyle(fontSize: 16),
-                                              //   selectedOptionIcon:
-                                              //       const Icon(Icons.check_circle),
-                                              // ),
-                                              Expanded(
-                                                child: GroupedScrollView<
-                                                    VaultImage, String>.grid(
-                                                  data: filteredImages,
-                                                  itemBuilder: (context, item) {
-                                                    // return GridTile(
-                                                    //   child: _PhotoThumbnail(
-                                                    //     image: item,
-                                                    //   ),
-                                                    //   // footer: GridTileBar(
-                                                    //   //   backgroundColor: Colors.white.withOpacity(0.5),
-                                                    //   //   title: Text(
-                                                    //   //     item.title,
-                                                    //   //     style: Theme.of(context).textTheme.labelLarge,
-                                                    //   //   ),
-                                                    //   // ),
-                                                    // );
-                                                    return _PhotoThumbnail(
-                                                      image: item,
-                                                      images: filteredImages,
+                                            // ElevatedButton(
+                                            //     onPressed: () {
+                                            //       context
+                                            //           .read<
+                                            //               BodyPictureRepository>()
+                                            //           .cacheService
+                                            //           .dos();
+                                            //     },
+                                            //     child: const Text('TEST')),
+                                            // filter
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                  context,
+                                                  ComparePicturesView.routeName,
+                                                );
+                                              },
+                                              child: const Text(
+                                                'Compare',
+                                              ),
+                                            ),
+
+                                            // Overflow Menu
+                                            PopupMenuButton<int>(
+                                              onSelected: (value) {
+                                                if (1 == value) {
+                                                } else {
+                                                  context
+                                                      .read<
+                                                          BackUpPicturesToZipCubit>()
+                                                      .backupPictures();
+                                                }
+                                              },
+                                              itemBuilder:
+                                                  (BuildContext context) {
+                                                return [
+                                                  const PopupMenuItem(
+                                                    value: 1,
+                                                    child: Text('Compare'),
+                                                  ),
+                                                  const PopupMenuItem(
+                                                    value: 2,
+                                                    child: Text('Backup'),
+                                                  ),
+                                                ];
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        // Grid View for gallery
+                                        body: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 8,
+                                            right: 8,
+                                            top: 8,
+                                          ),
+                                          child: Center(
+                                            child: Column(
+                                              children: [
+                                                // filter  icon button
+                                                BlocBuilder<
+                                                    PictureTypeFilterModalBloc,
+                                                    PictureTypeFilterModalState>(
+                                                  builder: (context, state) {
+                                                    var isFilterActive = false;
+
+                                                    state.mapOrNull(
+                                                      success: (value) {
+                                                        isFilterActive = value
+                                                            .selectedTypes
+                                                            .isNotEmpty;
+                                                      },
+                                                    );
+
+                                                    return Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: IconButton.filled(
+                                                        onPressed: () {
+                                                          showModalBottomSheet(
+                                                            context: context,
+                                                            showDragHandle:
+                                                                true,
+                                                            builder: (context) {
+                                                              return const FilterModal();
+                                                            },
+                                                          );
+                                                        },
+                                                        isSelected:
+                                                            isFilterActive,
+                                                        icon: const Icon(
+                                                          Icons
+                                                              .filter_alt_rounded,
+                                                        ),
+                                                      ),
                                                     );
                                                   },
-                                                  gridDelegate:
-                                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                                    crossAxisCount: 2,
-                                                    mainAxisSpacing: 8,
-                                                    crossAxisSpacing: 8,
-                                                    childAspectRatio: .8,
-                                                  ),
-                                                  itemsSorter: (a, b) {
-                                                    return a.date
-                                                        .compareTo(b.date);
-                                                  },
-                                                  groupedOptions:
-                                                      GroupedScrollViewOptions(
-                                                    stickyHeaderBuilder: (
-                                                      context,
-                                                      header,
-                                                      groupedIndex,
-                                                    ) {
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(12),
-                                                        child: Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Theme.of(
-                                                                    context)
-                                                                .scaffoldBackgroundColor
-                                                                .withOpacity(
-                                                                    0.5),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                              12,
-                                                            ),
-                                                          ),
+                                                ),
+                                                //
+
+                                                // SingleChildScrollView(
+                                                //   scrollDirection: Axis.horizontal,
+                                                //   child: Row(
+                                                //     children: [
+                                                //       FilterChip(
+                                                //         selected: true,
+                                                //         label: const Text('Chest'),
+                                                //         onSelected: (value) {},
+                                                //       ),
+                                                //       FilterChip(
+                                                //         selected: true,
+                                                //         label: const Text('Legs'),
+                                                //         onSelected: (value) {},
+                                                //       ),
+                                                //       FilterChip(
+                                                //         selected: true,
+                                                //         label: const Text('Arms'),
+                                                //         onSelected: (value) {},
+                                                //       ),
+                                                //       FilterChip(
+                                                //         selected: true,
+                                                //         label: const Text('Back'),
+                                                //         onSelected: (value) {},
+                                                //       ),
+                                                //       FilterChip(
+                                                //         selected: true,
+                                                //         label: const Text('Abs'),
+                                                //         onSelected: (value) {},
+                                                //       ),
+                                                //       FilterChip(
+                                                //         selected: true,
+                                                //         label: const Text('Shoulders'),
+                                                //         onSelected: (value) {},
+                                                //       ),
+                                                //       FilterChip(
+                                                //         selected: true,
+                                                //         label: const Text('Cardio'),
+                                                //         onSelected: (value) {},
+                                                //       ),
+                                                //     ],
+                                                //   ),
+                                                // ),
+                                                // MultiSelectDropDown<int>(
+                                                //   onOptionSelected:
+                                                //       (List<ValueItem> selectedOptions) {},
+                                                //   options: const <ValueItem<int>>[
+                                                //     ValueItem(label: 'Option 1', value: 1),
+                                                //     ValueItem(label: 'Option 2', value: 2),
+                                                //     ValueItem(label: 'Option 3', value: 3),
+                                                //     ValueItem(label: 'Option 4', value: 4),
+                                                //     ValueItem(label: 'Option 5', value: 5),
+                                                //     ValueItem(label: 'Option 6', value: 6),
+                                                //   ],
+                                                //   // selectionType: SelectionType.multi,
+                                                //   chipConfig:
+                                                //       const ChipConfig(wrapType: WrapType.wrap),
+                                                //   dropdownHeight: 300,
+                                                //   optionTextStyle: const TextStyle(fontSize: 16),
+                                                //   selectedOptionIcon:
+                                                //       const Icon(Icons.check_circle),
+                                                // ),
+                                                Expanded(
+                                                  child: GroupedScrollView<
+                                                      VaultImage, String>.grid(
+                                                    data: filteredImages,
+                                                    itemBuilder:
+                                                        (context, item) {
+                                                      // return GridTile(
+                                                      //   child: _PhotoThumbnail(
+                                                      //     image: item,
+                                                      //   ),
+                                                      //   // footer: GridTileBar(
+                                                      //   //   backgroundColor: Colors.white.withOpacity(0.5),
+                                                      //   //   title: Text(
+                                                      //   //     item.title,
+                                                      //   //     style: Theme.of(context).textTheme.labelLarge,
+                                                      //   //   ),
+                                                      //   // ),
+                                                      // );
+                                                      return _PhotoThumbnail(
+                                                        image: item,
+                                                        images: filteredImages,
+                                                      );
+                                                    },
+                                                    gridDelegate:
+                                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisCount: 2,
+                                                      mainAxisSpacing: 8,
+                                                      crossAxisSpacing: 8,
+                                                      childAspectRatio: .8,
+                                                    ),
+                                                    itemsSorter: (a, b) {
+                                                      return a.date
+                                                          .compareTo(b.date);
+                                                    },
+                                                    groupedOptions:
+                                                        GroupedScrollViewOptions(
+                                                      stickyHeaderBuilder: (
+                                                        context,
+                                                        header,
+                                                        groupedIndex,
+                                                      ) {
+                                                        return Padding(
                                                           padding:
                                                               const EdgeInsets
                                                                   .all(12),
-                                                          child: Text(
-                                                            header,
-                                                            style:
-                                                                const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontSize: 16,
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .scaffoldBackgroundColor
+                                                                  .withOpacity(
+                                                                      0.5),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                12,
+                                                              ),
+                                                            ),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(12),
+                                                            child: Text(
+                                                              header,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 16,
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    itemGrouper: (item) {
-                                                      return formatDate(
-                                                          item.date);
-                                                    },
+                                                        );
+                                                      },
+                                                      itemGrouper: (item) {
+                                                        return formatDate(
+                                                            item.date);
+                                                      },
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
+                                          // child: GridView.builder(
+                                          //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                          //     crossAxisCount: 3,
+                                          //     mainAxisSpacing: 8,
+                                          //     crossAxisSpacing: 8,
+                                          //   ),
+                                          //   itemBuilder: (context, index) => Image.asset(
+                                          //     'assets/mr-ponji.jpg',
+                                          //     fit: BoxFit.cover,
+                                          //   ),
+                                          // ),
                                         ),
-                                        // child: GridView.builder(
-                                        //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                        //     crossAxisCount: 3,
-                                        //     mainAxisSpacing: 8,
-                                        //     crossAxisSpacing: 8,
-                                        //   ),
-                                        //   itemBuilder: (context, index) => Image.asset(
-                                        //     'assets/mr-ponji.jpg',
-                                        //     fit: BoxFit.cover,
-                                        //   ),
-                                        // ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              );
-                              // return BlocBuilder<FilteredGalleryImagesCubit,
-                              //     FilteredGalleryImagesState>(
-                              //   buildWhen: (previous, current) => true,
-                              //   builder: (context, state) {
-                              //     ;
-                              //   },
-                              // );
-                            },
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
-              ),
-            );
-          },
-          initial: (value) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-        );
-      },
+                                      );
+                                    },
+                                  ),
+                                );
+                                // return BlocBuilder<FilteredGalleryImagesCubit,
+                                //     FilteredGalleryImagesState>(
+                                //   buildWhen: (previous, current) => true,
+                                //   builder: (context, state) {
+                                //     ;
+                                //   },
+                                // );
+                              },
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+              );
+            },
+            initial: (value) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
@@ -464,36 +543,37 @@ class _LockView extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
-              try {
-                final auth = LocalAuthentication();
-                // ···
-                final canAuthenticateWithBiometrics =
-                    await auth.canCheckBiometrics;
-                final canAuthenticate = canAuthenticateWithBiometrics ||
-                    await auth.isDeviceSupported();
+              context.read<LockGalleryCubit>().unlock();
+              // try {
+              //   final auth = LocalAuthentication();
+              //   // ···
+              //   final canAuthenticateWithBiometrics =
+              //       await auth.canCheckBiometrics;
+              //   final canAuthenticate = canAuthenticateWithBiometrics ||
+              //       await auth.isDeviceSupported();
 
-                if (canAuthenticate) {
-                  unawaited(
-                    auth
-                        .authenticate(
-                      localizedReason: 'Please authenticate to show gallery',
-                      options: const AuthenticationOptions(
-                        biometricOnly: true,
-                      ),
-                    )
-                        .then((value) {
-                      if (value) {
-                        context.read<LockGalleryCubit>().unlock();
-                      }
-                    }),
-                  );
-                }
-              } on PlatformException catch (e) {
-                debugPrint(e.toString());
-              } on Exception catch (e) {
-                // TODO
-                debugPrint(e.toString());
-              }
+              //   if (canAuthenticate) {
+              //     unawaited(
+              //       auth
+              //           .authenticate(
+              //         localizedReason: 'Please authenticate to show gallery',
+              //         options: const AuthenticationOptions(
+              //           biometricOnly: true,
+              //         ),
+              //       )
+              //           .then((value) {
+              //         if (value) {
+              //           context.read<LockGalleryCubit>().unlock();
+              //         }
+              //       }),
+              //     );
+              //   }
+              // } on PlatformException catch (e) {
+              //   debugPrint(e.toString());
+              // } on Exception catch (e) {
+              //   // TODO
+              //   debugPrint(e.toString());
+              // }
             },
             child: const Text('Activate'),
           ),

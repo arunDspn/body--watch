@@ -42,4 +42,6 @@ abstract interface class IBodyPictureFacade {
   });
 
   Future<Either<String, Unit>> clearLocalCache();
+
+  Future<Either<String, String>> backupPhotosToZip();
 }

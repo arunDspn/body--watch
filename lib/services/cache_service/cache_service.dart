@@ -103,6 +103,11 @@ class CacheService {
       debugPrint('not exists');
     }
   }
+
+  Future<String> getCacheDirectory() async {
+    final appDocDir = await getApplicationDocumentsDirectory();
+    return '${appDocDir.path}/$cachePath/';
+  }
 }
 
 // // cache_service.dart

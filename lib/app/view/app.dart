@@ -35,6 +35,7 @@ import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/comp
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/load_picture_to_compare_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/view/compare_pictures_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/back_up_pictures_to_zip_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/filtered_gallery_images_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/lock_gallery_cubit.dart';
@@ -162,6 +163,10 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (context) =>
                 LockGalleryCubit(context.read<BodyPictureRepository>()),
+          ),
+          BlocProvider(
+            create: (context) =>
+                BackUpPicturesToZipCubit(context.read<BodyPictureRepository>()),
           ),
         ],
         child: Builder(

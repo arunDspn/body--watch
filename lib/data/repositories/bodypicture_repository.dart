@@ -3,8 +3,11 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:dartz/dartz.dart';
+import 'package:external_path/external_path.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_archive/flutter_archive.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/domain/i_bodypicture_facade.dart';
@@ -357,6 +360,31 @@ class BodyPictureRepository implements IBodyPictureFacade {
     try {
       await cacheService.clear();
       return right(unit);
+    } catch (e) {
+      return left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, String>> backupPhotosToZip() async {
+    try {
+      final formatter = DateFormat('dd_mm_yyyy_hh_mm_ss');
+      // Check for permission
+      final photoPath = await cacheService.getCacheDirectory();
+      final fileName = formatter.format(DateTime.now());
+      final dataDir = Directory(photoPath);
+      // Source Directory
+      final downloadPath = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOCUMENTS,
+      );
+      final storeFile = File('$downloadPath/$fileName.zip');
+      await storeFile.create(recursive: true);
+      await ZipFile.createFromDirectory(
+        sourceDir: dataDir,
+        zipFile: storeFile,
+        recurseSubDirs: true,
+      );
+      return right(storeFile.path);
     } catch (e) {
       return left(e.toString());
     }
