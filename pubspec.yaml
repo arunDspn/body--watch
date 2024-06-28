@@ -33,7 +33,7 @@ dependencies:
   hydrated_bloc: ^9.1.2
   image_compare_slider: ^2.8.0
   image_picker: ^1.0.5
-  intl: ^0.18.1
+  intl: ^0.19.0
   json_annotation: ^4.8.1
   local_auth: ^2.2.0
   media_scanner: ^2.1.0
