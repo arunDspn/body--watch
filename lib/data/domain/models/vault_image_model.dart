@@ -1,12 +1,16 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'vault_image_model.freezed.dart';
 part 'vault_image_model.g.dart';
 
+/// This is used for translation of db records
 @freezed
 class VaultImage with _$VaultImage {
   const factory VaultImage({
     required String tag,
     required String path,
+    @JsonKey(name: 'thumbnail_path') required String thumbnailPath,
     required DateTime date,
   }) = _VaultImage;
 

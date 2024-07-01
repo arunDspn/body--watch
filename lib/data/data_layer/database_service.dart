@@ -10,7 +10,7 @@ class DatabaseService {
 
   static const String tableName = 'measurements';
   static const String _databaseName = 'flutter_database.db';
-  static const _databaseVersion = 5;
+  static const _databaseVersion = 6;
 
   // static queries
   static const String _createMeasurementTable = '''
@@ -56,6 +56,7 @@ class DatabaseService {
   static const createPictureTable = '''
     CREATE TABLE IF NOT EXISTS pictures (
       path TEXT NOT NULL,
+      thumbnail_path TEXT NOT NULL,
       date TEXT NOT NULL,
       tag TEXT NOT NULL
     );

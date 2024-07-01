@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:watcha_body/data/domain/display_vault_image_model.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
+import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/components/custom_image_provider.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/components/data_linked/view/data_linked_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 
@@ -17,7 +20,7 @@ class PhotoViewer extends StatefulWidget {
   });
 
   // final String path;
-  final List<VaultImage> images;
+  final List<DisplayVaultImageModel> images;
   final int currentIndex;
 
   // todo: put it in helper functions
@@ -64,10 +67,21 @@ class _PhotoViewerState extends State<PhotoViewer> {
                     _currentIndex = index;
                   });
                 },
+                loadingBuilder: (context, event) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
                 builder: (context, index) {
                   return PhotoViewGalleryPageOptions(
-                    imageProvider: FileImage(
-                      File(widget.images[index].path),
+                    // imageProvider: FileImage(
+                    //   File(widget.images[index].path),
+                    // ),
+                    imageProvider: CustomImageProvider(
+                      widget.images[index].path,
+                      context
+                          .read<BodyPictureRepository>()
+                          .decryptImageFromPath,
                     ),
                   );
                 },

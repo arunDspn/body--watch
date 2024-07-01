@@ -19,21 +19,21 @@ mixin _$LoadPicturesState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<VaultImage> pictures) loaded,
+    required TResult Function(List<DisplayVaultImageModel> pictures) loaded,
     required TResult Function(String message) failed,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<VaultImage> pictures)? loaded,
+    TResult? Function(List<DisplayVaultImageModel> pictures)? loaded,
     TResult? Function(String message)? failed,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<VaultImage> pictures)? loaded,
+    TResult Function(List<DisplayVaultImageModel> pictures)? loaded,
     TResult Function(String message)? failed,
     required TResult orElse(),
   }) =>
@@ -119,7 +119,7 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<VaultImage> pictures) loaded,
+    required TResult Function(List<DisplayVaultImageModel> pictures) loaded,
     required TResult Function(String message) failed,
   }) {
     return loading();
@@ -129,7 +129,7 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<VaultImage> pictures)? loaded,
+    TResult? Function(List<DisplayVaultImageModel> pictures)? loaded,
     TResult? Function(String message)? failed,
   }) {
     return loading?.call();
@@ -139,7 +139,7 @@ class _$LoadingImpl implements _Loading {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<VaultImage> pictures)? loaded,
+    TResult Function(List<DisplayVaultImageModel> pictures)? loaded,
     TResult Function(String message)? failed,
     required TResult orElse(),
   }) {
@@ -194,7 +194,7 @@ abstract class _$$LoadedImplCopyWith<$Res> {
           _$LoadedImpl value, $Res Function(_$LoadedImpl) then) =
       __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<VaultImage> pictures});
+  $Res call({List<DisplayVaultImageModel> pictures});
 }
 
 /// @nodoc
@@ -214,7 +214,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
       null == pictures
           ? _value._pictures
           : pictures // ignore: cast_nullable_to_non_nullable
-              as List<VaultImage>,
+              as List<DisplayVaultImageModel>,
     ));
   }
 }
@@ -222,11 +222,12 @@ class __$$LoadedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$LoadedImpl implements Loaded {
-  const _$LoadedImpl(final List<VaultImage> pictures) : _pictures = pictures;
+  const _$LoadedImpl(final List<DisplayVaultImageModel> pictures)
+      : _pictures = pictures;
 
-  final List<VaultImage> _pictures;
+  final List<DisplayVaultImageModel> _pictures;
   @override
-  List<VaultImage> get pictures {
+  List<DisplayVaultImageModel> get pictures {
     if (_pictures is EqualUnmodifiableListView) return _pictures;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_pictures);
@@ -259,7 +260,7 @@ class _$LoadedImpl implements Loaded {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<VaultImage> pictures) loaded,
+    required TResult Function(List<DisplayVaultImageModel> pictures) loaded,
     required TResult Function(String message) failed,
   }) {
     return loaded(pictures);
@@ -269,7 +270,7 @@ class _$LoadedImpl implements Loaded {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<VaultImage> pictures)? loaded,
+    TResult? Function(List<DisplayVaultImageModel> pictures)? loaded,
     TResult? Function(String message)? failed,
   }) {
     return loaded?.call(pictures);
@@ -279,7 +280,7 @@ class _$LoadedImpl implements Loaded {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<VaultImage> pictures)? loaded,
+    TResult Function(List<DisplayVaultImageModel> pictures)? loaded,
     TResult Function(String message)? failed,
     required TResult orElse(),
   }) {
@@ -325,9 +326,10 @@ class _$LoadedImpl implements Loaded {
 }
 
 abstract class Loaded implements LoadPicturesState {
-  const factory Loaded(final List<VaultImage> pictures) = _$LoadedImpl;
+  const factory Loaded(final List<DisplayVaultImageModel> pictures) =
+      _$LoadedImpl;
 
-  List<VaultImage> get pictures;
+  List<DisplayVaultImageModel> get pictures;
   @JsonKey(ignore: true)
   _$$LoadedImplCopyWith<_$LoadedImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -398,7 +400,7 @@ class _$FailedImpl implements _Failed {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<VaultImage> pictures) loaded,
+    required TResult Function(List<DisplayVaultImageModel> pictures) loaded,
     required TResult Function(String message) failed,
   }) {
     return failed(message);
@@ -408,7 +410,7 @@ class _$FailedImpl implements _Failed {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<VaultImage> pictures)? loaded,
+    TResult? Function(List<DisplayVaultImageModel> pictures)? loaded,
     TResult? Function(String message)? failed,
   }) {
     return failed?.call(message);
@@ -418,7 +420,7 @@ class _$FailedImpl implements _Failed {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<VaultImage> pictures)? loaded,
+    TResult Function(List<DisplayVaultImageModel> pictures)? loaded,
     TResult Function(String message)? failed,
     required TResult orElse(),
   }) {

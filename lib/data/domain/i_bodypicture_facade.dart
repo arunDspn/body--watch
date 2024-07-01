@@ -1,13 +1,19 @@
+import 'dart:typed_data';
+
 import 'package:dartz/dartz.dart';
+import 'package:watcha_body/data/domain/display_vault_image_model.dart';
 import 'package:watcha_body/data/domain/models/compare_images_model.dart';
+import 'package:watcha_body/data/domain/models/save_vault_image_model.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 
 abstract interface class IBodyPictureFacade {
   // Save a new body picture
-  Future<Either<String, VaultImage>> saveBodyPicture(VaultImage bodyPicture);
+  Future<Either<String, DisplayVaultImageModel>> saveBodyPicture(
+    SaveVaultImageModel bodyPicture,
+  );
 
   // // Get all body pictures
-  Future<Either<String, List<VaultImage>>> getAllBodyPictures();
+  Future<Either<String, List<DisplayVaultImageModel>>> getAllBodyPictures();
 
   // // Get a body picture by id
   Future<Either<String, VaultImage>> getBodyPictureById(int id);
@@ -44,4 +50,7 @@ abstract interface class IBodyPictureFacade {
   Future<Either<String, Unit>> clearLocalCache();
 
   Future<Either<String, String>> backupPhotosToZip();
+  Future<Uint8List> decryptImageFromPath(
+    String path,
+  );
 }

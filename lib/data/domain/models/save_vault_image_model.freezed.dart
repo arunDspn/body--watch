@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'vault_image_model.dart';
+part of 'save_vault_image_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,41 +14,35 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-VaultImage _$VaultImageFromJson(Map<String, dynamic> json) {
-  return _VaultImage.fromJson(json);
+SaveVaultImageModel _$SaveVaultImageModelFromJson(Map<String, dynamic> json) {
+  return _SaveVaultImageModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$VaultImage {
+mixin _$SaveVaultImageModel {
   String get tag => throw _privateConstructorUsedError;
   String get path => throw _privateConstructorUsedError;
-  @JsonKey(name: 'thumbnail_path')
-  String get thumbnailPath => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $VaultImageCopyWith<VaultImage> get copyWith =>
+  $SaveVaultImageModelCopyWith<SaveVaultImageModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $VaultImageCopyWith<$Res> {
-  factory $VaultImageCopyWith(
-          VaultImage value, $Res Function(VaultImage) then) =
-      _$VaultImageCopyWithImpl<$Res, VaultImage>;
+abstract class $SaveVaultImageModelCopyWith<$Res> {
+  factory $SaveVaultImageModelCopyWith(
+          SaveVaultImageModel value, $Res Function(SaveVaultImageModel) then) =
+      _$SaveVaultImageModelCopyWithImpl<$Res, SaveVaultImageModel>;
   @useResult
-  $Res call(
-      {String tag,
-      String path,
-      @JsonKey(name: 'thumbnail_path') String thumbnailPath,
-      DateTime date});
+  $Res call({String tag, String path, DateTime date});
 }
 
 /// @nodoc
-class _$VaultImageCopyWithImpl<$Res, $Val extends VaultImage>
-    implements $VaultImageCopyWith<$Res> {
-  _$VaultImageCopyWithImpl(this._value, this._then);
+class _$SaveVaultImageModelCopyWithImpl<$Res, $Val extends SaveVaultImageModel>
+    implements $SaveVaultImageModelCopyWith<$Res> {
+  _$SaveVaultImageModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -60,7 +54,6 @@ class _$VaultImageCopyWithImpl<$Res, $Val extends VaultImage>
   $Res call({
     Object? tag = null,
     Object? path = null,
-    Object? thumbnailPath = null,
     Object? date = null,
   }) {
     return _then(_value.copyWith(
@@ -72,10 +65,6 @@ class _$VaultImageCopyWithImpl<$Res, $Val extends VaultImage>
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
               as String,
-      thumbnailPath: null == thumbnailPath
-          ? _value.thumbnailPath
-          : thumbnailPath // ignore: cast_nullable_to_non_nullable
-              as String,
       date: null == date
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
@@ -85,26 +74,22 @@ class _$VaultImageCopyWithImpl<$Res, $Val extends VaultImage>
 }
 
 /// @nodoc
-abstract class _$$VaultImageImplCopyWith<$Res>
-    implements $VaultImageCopyWith<$Res> {
-  factory _$$VaultImageImplCopyWith(
-          _$VaultImageImpl value, $Res Function(_$VaultImageImpl) then) =
-      __$$VaultImageImplCopyWithImpl<$Res>;
+abstract class _$$SaveVaultImageModelImplCopyWith<$Res>
+    implements $SaveVaultImageModelCopyWith<$Res> {
+  factory _$$SaveVaultImageModelImplCopyWith(_$SaveVaultImageModelImpl value,
+          $Res Function(_$SaveVaultImageModelImpl) then) =
+      __$$SaveVaultImageModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String tag,
-      String path,
-      @JsonKey(name: 'thumbnail_path') String thumbnailPath,
-      DateTime date});
+  $Res call({String tag, String path, DateTime date});
 }
 
 /// @nodoc
-class __$$VaultImageImplCopyWithImpl<$Res>
-    extends _$VaultImageCopyWithImpl<$Res, _$VaultImageImpl>
-    implements _$$VaultImageImplCopyWith<$Res> {
-  __$$VaultImageImplCopyWithImpl(
-      _$VaultImageImpl _value, $Res Function(_$VaultImageImpl) _then)
+class __$$SaveVaultImageModelImplCopyWithImpl<$Res>
+    extends _$SaveVaultImageModelCopyWithImpl<$Res, _$SaveVaultImageModelImpl>
+    implements _$$SaveVaultImageModelImplCopyWith<$Res> {
+  __$$SaveVaultImageModelImplCopyWithImpl(_$SaveVaultImageModelImpl _value,
+      $Res Function(_$SaveVaultImageModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -112,10 +97,9 @@ class __$$VaultImageImplCopyWithImpl<$Res>
   $Res call({
     Object? tag = null,
     Object? path = null,
-    Object? thumbnailPath = null,
     Object? date = null,
   }) {
-    return _then(_$VaultImageImpl(
+    return _then(_$SaveVaultImageModelImpl(
       tag: null == tag
           ? _value.tag
           : tag // ignore: cast_nullable_to_non_nullable
@@ -123,10 +107,6 @@ class __$$VaultImageImplCopyWithImpl<$Res>
       path: null == path
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
-              as String,
-      thumbnailPath: null == thumbnailPath
-          ? _value.thumbnailPath
-          : thumbnailPath // ignore: cast_nullable_to_non_nullable
               as String,
       date: null == date
           ? _value.date
@@ -138,82 +118,71 @@ class __$$VaultImageImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$VaultImageImpl implements _VaultImage {
-  const _$VaultImageImpl(
-      {required this.tag,
-      required this.path,
-      @JsonKey(name: 'thumbnail_path') required this.thumbnailPath,
-      required this.date});
+class _$SaveVaultImageModelImpl implements _SaveVaultImageModel {
+  const _$SaveVaultImageModelImpl(
+      {required this.tag, required this.path, required this.date});
 
-  factory _$VaultImageImpl.fromJson(Map<String, dynamic> json) =>
-      _$$VaultImageImplFromJson(json);
+  factory _$SaveVaultImageModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SaveVaultImageModelImplFromJson(json);
 
   @override
   final String tag;
   @override
   final String path;
   @override
-  @JsonKey(name: 'thumbnail_path')
-  final String thumbnailPath;
-  @override
   final DateTime date;
 
   @override
   String toString() {
-    return 'VaultImage(tag: $tag, path: $path, thumbnailPath: $thumbnailPath, date: $date)';
+    return 'SaveVaultImageModel(tag: $tag, path: $path, date: $date)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$VaultImageImpl &&
+            other is _$SaveVaultImageModelImpl &&
             (identical(other.tag, tag) || other.tag == tag) &&
             (identical(other.path, path) || other.path == path) &&
-            (identical(other.thumbnailPath, thumbnailPath) ||
-                other.thumbnailPath == thumbnailPath) &&
             (identical(other.date, date) || other.date == date));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, tag, path, thumbnailPath, date);
+  int get hashCode => Object.hash(runtimeType, tag, path, date);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$VaultImageImplCopyWith<_$VaultImageImpl> get copyWith =>
-      __$$VaultImageImplCopyWithImpl<_$VaultImageImpl>(this, _$identity);
+  _$$SaveVaultImageModelImplCopyWith<_$SaveVaultImageModelImpl> get copyWith =>
+      __$$SaveVaultImageModelImplCopyWithImpl<_$SaveVaultImageModelImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$VaultImageImplToJson(
+    return _$$SaveVaultImageModelImplToJson(
       this,
     );
   }
 }
 
-abstract class _VaultImage implements VaultImage {
-  const factory _VaultImage(
+abstract class _SaveVaultImageModel implements SaveVaultImageModel {
+  const factory _SaveVaultImageModel(
       {required final String tag,
       required final String path,
-      @JsonKey(name: 'thumbnail_path') required final String thumbnailPath,
-      required final DateTime date}) = _$VaultImageImpl;
+      required final DateTime date}) = _$SaveVaultImageModelImpl;
 
-  factory _VaultImage.fromJson(Map<String, dynamic> json) =
-      _$VaultImageImpl.fromJson;
+  factory _SaveVaultImageModel.fromJson(Map<String, dynamic> json) =
+      _$SaveVaultImageModelImpl.fromJson;
 
   @override
   String get tag;
   @override
   String get path;
   @override
-  @JsonKey(name: 'thumbnail_path')
-  String get thumbnailPath;
-  @override
   DateTime get date;
   @override
   @JsonKey(ignore: true)
-  _$$VaultImageImplCopyWith<_$VaultImageImpl> get copyWith =>
+  _$$SaveVaultImageModelImplCopyWith<_$SaveVaultImageModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

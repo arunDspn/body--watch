@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +10,7 @@ import 'package:grouped_scroll_view/grouped_scroll_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:watcha_body/data/domain/display_vault_image_model.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media_view.dart';
@@ -113,8 +116,12 @@ class VaultGallery extends StatelessWidget {
                         return const SizedBox.shrink();
                       },
                       failed: (value) {
-                        return const Center(
-                          child: Text('Failed to load Filters'),
+                        return Column(
+                          children: [
+                            const Center(
+                              child: Text('Failed to load Filters'),
+                            ),
+                          ],
                         );
                       },
                       success: (filterStateValue) {
@@ -134,8 +141,29 @@ class VaultGallery extends StatelessWidget {
                           builder: (context, state) {
                             return state.map(
                               failed: (value) {
-                                return const Center(
-                                  child: Text('Failed to load Pictures'),
+                                return Column(
+                                  children: [
+                                    const Center(
+                                      child: Text('Failed to load Pictures'),
+                                    ),
+                                    OutlinedButton(
+                                        onPressed: () {
+                                          final folder = Directory(
+                                              '/data/user/0/com.example.verygoodcore.watcha_body.dev/app_flutter/encrypted_thumbnails/');
+
+                                          print(folder.existsSync());
+                                          if (folder.existsSync()) {
+                                            // folder.open().then(
+                                            //   (value) {
+                                            //     print(value.path);
+                                            //   },
+                                            // );
+                                            // list contents in folder
+                                            log(folder.listSync().toString());
+                                          }
+                                        },
+                                        child: Text('Retry')),
+                                  ],
                                 );
                               },
                               loading: (_) => const Center(
@@ -144,7 +172,7 @@ class VaultGallery extends StatelessWidget {
                               loaded: (pictureLoadedStateValue) {
                                 // Filtering inside the UI
                                 // TODO: Is that Good
-                                var filteredImages = <VaultImage>[];
+                                var filteredImages = <DisplayVaultImageModel>[];
                                 if (filterStateValue.selectedTypes.isEmpty) {
                                   filteredImages =
                                       pictureLoadedStateValue.pictures;
@@ -378,7 +406,8 @@ class VaultGallery extends StatelessWidget {
                                                 // ),
                                                 Expanded(
                                                   child: GroupedScrollView<
-                                                      VaultImage, String>.grid(
+                                                      DisplayVaultImageModel,
+                                                      String>.grid(
                                                     data: filteredImages,
                                                     itemBuilder:
                                                         (context, item) {
@@ -725,8 +754,8 @@ class _PhotoThumbnail extends StatelessWidget {
     required this.image,
     required this.images,
   });
-  final VaultImage image;
-  final List<VaultImage> images;
+  final DisplayVaultImageModel image;
+  final List<DisplayVaultImageModel> images;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -750,8 +779,8 @@ class _PhotoThumbnail extends StatelessWidget {
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(22),
-              child: Image.file(
-                File(image.path),
+              child: Image.memory(
+                image.thumbnailData,
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: double.infinity,

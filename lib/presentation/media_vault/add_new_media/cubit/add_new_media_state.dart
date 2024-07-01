@@ -6,8 +6,8 @@ class AddNewMediaState with _$AddNewMediaState {
   // Loading
   const factory AddNewMediaState.loading() = _Loading;
   // Success
-  const factory AddNewMediaState.success({required VaultImage savedImage}) =
-      _Success;
+  const factory AddNewMediaState.success(
+      {required DisplayVaultImageModel savedImage}) = _Success;
   // Failure
   const factory AddNewMediaState.failure(String failure) = _Failure;
 }

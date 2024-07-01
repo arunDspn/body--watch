@@ -10,8 +10,11 @@ import 'package:watcha_body/presentation/media_vault/compare_pictures/components
 import 'package:watcha_body/presentation/media_vault/compare_pictures/components/view_comparison_data/cubit/comparison_data_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/components/view_comparison_data/view.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/compare_picture_form_cubit.dart'
-    as ComparePictureFormCubitAlias;
+    as compare_picture_form_cubit_alias;
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/load_picture_to_compare_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/components/custom_image_provider.dart';
+
+part '../components/compare_view.dart';
 
 class ComparePicturesView extends StatelessWidget {
   const ComparePicturesView({super.key});
@@ -38,8 +41,9 @@ class ComparePicturesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return BlocConsumer<ComparePictureFormCubitAlias.ComparePictureFormCubit,
-        ComparePictureFormCubitAlias.ComparePictureFormState>(
+    return BlocConsumer<
+        compare_picture_form_cubit_alias.ComparePictureFormCubit,
+        compare_picture_form_cubit_alias.ComparePictureFormState>(
       listener: (context, state) {
         state.mapOrNull(
           state: (value) {
@@ -95,7 +99,7 @@ class ComparePicturesView extends StatelessWidget {
                     onSelected: (tag) {
                       context
                           .read<
-                              ComparePictureFormCubitAlias
+                              compare_picture_form_cubit_alias
                               .ComparePictureFormCubit>()
                           .alterTag(tag);
                     },
@@ -129,7 +133,7 @@ class ComparePicturesView extends StatelessWidget {
                             selectDate(context).then((value) {
                               context
                                   .read<
-                                      ComparePictureFormCubitAlias
+                                      compare_picture_form_cubit_alias
                                       .ComparePictureFormCubit>()
                                   .alterFirstDate(value);
                             });
@@ -163,7 +167,7 @@ class ComparePicturesView extends StatelessWidget {
                             selectDate(context).then((value) {
                               context
                                   .read<
-                                      ComparePictureFormCubitAlias
+                                      compare_picture_form_cubit_alias
                                       .ComparePictureFormCubit>()
                                   .alterSecondDate(value);
                             });
@@ -211,146 +215,6 @@ class ComparePicturesView extends StatelessWidget {
           // ),
         );
       },
-    );
-  }
-}
-
-class _CompareView extends StatelessWidget {
-  const _CompareView();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<LoadPictureToCompareCubit, LoadPictureToCompareState>(
-      builder: (context, state) {
-        return state.map(
-          initial: (value) {
-            return const Center(
-              child: Column(
-                children: [
-                  Text('Fill above form to compare pictures'),
-                ],
-              ),
-            );
-          },
-          loading: (value) {
-            return const Center(child: CircularProgressIndicator());
-          },
-          loaded: (value) {
-            if (value.compareImagesModel.firstImages.isEmpty &&
-                value.compareImagesModel.secondImages.isEmpty) {
-              return const Center(
-                child: Text('No images to compare'),
-              );
-            }
-            return _CompareImageViewer(
-              firstImages: value.compareImagesModel.firstImages,
-              secondImages: value.compareImagesModel.secondImages,
-            );
-          },
-          error: (value) {
-            return Center(
-              child: Text('Error + ${value.message}'),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-class _CompareImageViewer extends StatefulWidget {
-  const _CompareImageViewer({
-    required this.firstImages,
-    required this.secondImages,
-  });
-
-  final List<VaultImage> firstImages;
-  final List<VaultImage> secondImages;
-
-  @override
-  State<_CompareImageViewer> createState() => _CompareImageViewerState();
-}
-
-class _CompareImageViewerState extends State<_CompareImageViewer> {
-  int firstImageIndex = 0;
-  int secondImageIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ImageCompareSlider(
-          // photoRadius: BorderRadius.circular(8),
-          itemOne: Image.file(
-            // 'assets/File-2.png',
-            File(widget.firstImages[firstImageIndex].path),
-            // height: size.height * 0.6,
-            // width: size.width * 0.5,
-            fit: BoxFit.cover,
-          ),
-          itemTwo: Image.file(
-            // 'assets/File-4.png',
-            File(widget.secondImages[secondImageIndex].path),
-            // height: size.height * 0.6,
-            // width: size.width * 0.5,
-            fit: BoxFit.cover,
-          ),
-          itemOneBuilder: (child, context) => IntrinsicHeight(child: child),
-          itemTwoBuilder: (child, context) => IntrinsicHeight(child: child),
-        ),
-        if (widget.firstImages.length > 1 && widget.secondImages.length > 1)
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  if (firstImageIndex > 0) {
-                    setState(() {
-                      firstImageIndex--;
-                    });
-                  }
-                },
-                icon: const Icon(Icons.arrow_left),
-              ),
-              Text('${firstImageIndex + 1} / ${widget.firstImages.length}'),
-              IconButton(
-                onPressed: () {
-                  if (firstImageIndex < widget.firstImages.length - 1) {
-                    setState(() {
-                      firstImageIndex++;
-                    });
-                  }
-                },
-                icon: const Icon(Icons.arrow_right),
-              ),
-              const Spacer(),
-              IconButton(
-                  onPressed: () {
-                    if (secondImageIndex > 0) {
-                      setState(() {
-                        secondImageIndex--;
-                      });
-                    }
-                  },
-                  icon: const Icon(Icons.arrow_left)),
-              Text('${secondImageIndex + 1} / ${widget.secondImages.length}'),
-              IconButton(
-                onPressed: () {
-                  if (secondImageIndex < widget.secondImages.length - 1) {
-                    setState(() {
-                      secondImageIndex++;
-                    });
-                  }
-                },
-                icon: const Icon(Icons.arrow_right),
-              ),
-            ],
-          )
-      ],
     );
   }
 }

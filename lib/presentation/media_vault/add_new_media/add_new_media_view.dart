@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:watcha_body/data/domain/models/save_vault_image_model.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/components/tag_dropdown/tag_dropdown.dart';
@@ -280,7 +281,7 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
         icon: const Icon(Icons.image),
         onPressed: () {
           if (_formKey.currentState!.validate()) {
-            final image = VaultImage(
+            final image = SaveVaultImageModel(
               tag: tag,
               path: imagePath,
               date: date!,

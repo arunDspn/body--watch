@@ -20,7 +20,7 @@ mixin _$AddNewMediaState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(VaultImage savedImage) success,
+    required TResult Function(DisplayVaultImageModel savedImage) success,
     required TResult Function(String failure) failure,
   }) =>
       throw _privateConstructorUsedError;
@@ -28,7 +28,7 @@ mixin _$AddNewMediaState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(VaultImage savedImage)? success,
+    TResult? Function(DisplayVaultImageModel savedImage)? success,
     TResult? Function(String failure)? failure,
   }) =>
       throw _privateConstructorUsedError;
@@ -36,7 +36,7 @@ mixin _$AddNewMediaState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(VaultImage savedImage)? success,
+    TResult Function(DisplayVaultImageModel savedImage)? success,
     TResult Function(String failure)? failure,
     required TResult orElse(),
   }) =>
@@ -126,7 +126,7 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(VaultImage savedImage) success,
+    required TResult Function(DisplayVaultImageModel savedImage) success,
     required TResult Function(String failure) failure,
   }) {
     return initial();
@@ -137,7 +137,7 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(VaultImage savedImage)? success,
+    TResult? Function(DisplayVaultImageModel savedImage)? success,
     TResult? Function(String failure)? failure,
   }) {
     return initial?.call();
@@ -148,7 +148,7 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(VaultImage savedImage)? success,
+    TResult Function(DisplayVaultImageModel savedImage)? success,
     TResult Function(String failure)? failure,
     required TResult orElse(),
   }) {
@@ -240,7 +240,7 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(VaultImage savedImage) success,
+    required TResult Function(DisplayVaultImageModel savedImage) success,
     required TResult Function(String failure) failure,
   }) {
     return loading();
@@ -251,7 +251,7 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(VaultImage savedImage)? success,
+    TResult? Function(DisplayVaultImageModel savedImage)? success,
     TResult? Function(String failure)? failure,
   }) {
     return loading?.call();
@@ -262,7 +262,7 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(VaultImage savedImage)? success,
+    TResult Function(DisplayVaultImageModel savedImage)? success,
     TResult Function(String failure)? failure,
     required TResult orElse(),
   }) {
@@ -320,9 +320,7 @@ abstract class _$$SuccessImplCopyWith<$Res> {
           _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
       __$$SuccessImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({VaultImage savedImage});
-
-  $VaultImageCopyWith<$Res> get savedImage;
+  $Res call({DisplayVaultImageModel savedImage});
 }
 
 /// @nodoc
@@ -342,16 +340,8 @@ class __$$SuccessImplCopyWithImpl<$Res>
       savedImage: null == savedImage
           ? _value.savedImage
           : savedImage // ignore: cast_nullable_to_non_nullable
-              as VaultImage,
+              as DisplayVaultImageModel,
     ));
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $VaultImageCopyWith<$Res> get savedImage {
-    return $VaultImageCopyWith<$Res>(_value.savedImage, (value) {
-      return _then(_value.copyWith(savedImage: value));
-    });
   }
 }
 
@@ -361,7 +351,7 @@ class _$SuccessImpl implements _Success {
   const _$SuccessImpl({required this.savedImage});
 
   @override
-  final VaultImage savedImage;
+  final DisplayVaultImageModel savedImage;
 
   @override
   String toString() {
@@ -391,7 +381,7 @@ class _$SuccessImpl implements _Success {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(VaultImage savedImage) success,
+    required TResult Function(DisplayVaultImageModel savedImage) success,
     required TResult Function(String failure) failure,
   }) {
     return success(savedImage);
@@ -402,7 +392,7 @@ class _$SuccessImpl implements _Success {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(VaultImage savedImage)? success,
+    TResult? Function(DisplayVaultImageModel savedImage)? success,
     TResult? Function(String failure)? failure,
   }) {
     return success?.call(savedImage);
@@ -413,7 +403,7 @@ class _$SuccessImpl implements _Success {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(VaultImage savedImage)? success,
+    TResult Function(DisplayVaultImageModel savedImage)? success,
     TResult Function(String failure)? failure,
     required TResult orElse(),
   }) {
@@ -462,10 +452,10 @@ class _$SuccessImpl implements _Success {
 }
 
 abstract class _Success implements AddNewMediaState {
-  const factory _Success({required final VaultImage savedImage}) =
+  const factory _Success({required final DisplayVaultImageModel savedImage}) =
       _$SuccessImpl;
 
-  VaultImage get savedImage;
+  DisplayVaultImageModel get savedImage;
   @JsonKey(ignore: true)
   _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -537,7 +527,7 @@ class _$FailureImpl implements _Failure {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(VaultImage savedImage) success,
+    required TResult Function(DisplayVaultImageModel savedImage) success,
     required TResult Function(String failure) failure,
   }) {
     return failure(this.failure);
@@ -548,7 +538,7 @@ class _$FailureImpl implements _Failure {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(VaultImage savedImage)? success,
+    TResult? Function(DisplayVaultImageModel savedImage)? success,
     TResult? Function(String failure)? failure,
   }) {
     return failure?.call(this.failure);
@@ -559,7 +549,7 @@ class _$FailureImpl implements _Failure {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(VaultImage savedImage)? success,
+    TResult Function(DisplayVaultImageModel savedImage)? success,
     TResult Function(String failure)? failure,
     required TResult orElse(),
   }) {

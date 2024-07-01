@@ -1,20 +1,23 @@
 import 'dart:developer';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:dartz/dartz.dart';
 import 'package:external_path/external_path.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_archive/flutter_archive.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
+import 'package:watcha_body/data/domain/display_vault_image_model.dart';
 import 'package:watcha_body/data/domain/i_bodypicture_facade.dart';
 import 'package:watcha_body/data/domain/models/compare_images_model.dart';
+import 'package:watcha_body/data/domain/models/save_vault_image_model.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/services/cache_service/cache_service.dart';
 import 'package:watcha_body/services/encryption_service/src/encryption_service.dart';
+
+import 'package:image/image.dart' as img;
 
 class BodyPictureRepository implements IBodyPictureFacade {
   BodyPictureRepository({
@@ -27,7 +30,8 @@ class BodyPictureRepository implements IBodyPictureFacade {
   final EncryptService encryptService;
   final CacheService cacheService;
 
-  static const encrytedFolderPath = 'encrypted_images';
+  static const encrytedImagesFolderPath = 'encrypted_images';
+  static const encrytedThumbnailsFolderPath = 'encrypted_thumbnails';
 
   // static queries
 
@@ -82,8 +86,8 @@ class BodyPictureRepository implements IBodyPictureFacade {
     try {
       final extractedfileName = id.split('/').last;
       final appDocDir = await getApplicationDocumentsDirectory();
-      final encryptedFile =
-          File('${appDocDir.path}/$encrytedFolderPath/$extractedfileName.enc');
+      final encryptedFile = File(
+          '${appDocDir.path}/$encrytedImagesFolderPath/$extractedfileName.enc');
       final db = await databaseService.database;
       final result = await db.rawDelete(
         'DELETE FROM pictures WHERE path = ?',
@@ -109,7 +113,8 @@ class BodyPictureRepository implements IBodyPictureFacade {
   }
 
   @override
-  Future<Either<String, List<VaultImage>>> getAllBodyPictures() async {
+  Future<Either<String, List<DisplayVaultImageModel>>>
+      getAllBodyPictures() async {
     try {
       final db = await databaseService.database;
 
@@ -119,19 +124,26 @@ class BodyPictureRepository implements IBodyPictureFacade {
 
       final encryptedDataList = data.map(VaultImage.fromJson).toList();
 
-      final decrytedDataList = <VaultImage>[];
+      final decrytedDataList = <DisplayVaultImageModel>[];
       for (final e in encryptedDataList) {
         // also trim .enc at last
-        final fileName = e.path.split('/').last.replaceFirst('.enc', '');
-
+        // final fileName =
+        //     e.thumbnailPath.split('/').last.replaceFirst('.enc', '');
+        final fileName = e.thumbnailPath;
         final data =
-            await encryptService.decryptPhoto(File(e.path).readAsBytesSync());
+            await encryptService.decryptPhoto(File(fileName).readAsBytesSync());
 
-        final newCachedPath = await cacheService.storeFromBytes(data, fileName);
-        final d = e.copyWith(
-          path: newCachedPath,
+        // final newCachedPath = await cacheService.storeFromBytes(data, fileName);
+        // final d = e.copyWith(
+        //   path: newCachedPath,
+        // );
+        final displayModel = DisplayVaultImageModel(
+          tag: e.tag,
+          path: e.path,
+          thumbnailData: data as Uint8List,
+          date: e.date,
         );
-        decrytedDataList.add(d);
+        decrytedDataList.add(displayModel);
       }
 
       // final decrytedDataList = encryptedDataList.map((e) async {
@@ -190,7 +202,7 @@ class BodyPictureRepository implements IBodyPictureFacade {
       // }
 
       return right(decrytedDataList);
-    } on Exception catch (e) {
+    } catch (e) {
       return left(e.toString());
     }
   }
@@ -229,65 +241,153 @@ class BodyPictureRepository implements IBodyPictureFacade {
   }
 
   @override
-  Future<Either<String, VaultImage>> saveBodyPicture(
-    VaultImage bodyPicture,
+  Future<Either<String, DisplayVaultImageModel>> saveBodyPicture(
+    SaveVaultImageModel bodyPicture,
   ) async {
-    // Save picture to Flutter secure storage
+    try {
+      // Get the app's documents directory
+      final appDocDir = await getApplicationDocumentsDirectory();
+      // get extension of the orginal file
+      final extension = bodyPicture.path.split('.').last;
+      final orginalFileNameToSave =
+          '${DateTime.now()}_${bodyPicture.tag}.$extension'; // Unique filename
 
-    // Get the app's documents directory
-    final appDocDir = await getApplicationDocumentsDirectory();
-    // get extension of the orginal file
-    final extension = bodyPicture.path.split('.').last;
-    final fileName = '${DateTime.now()}.$extension'; // Unique filename
+      final thumbnailFileNameToSave =
+          '${DateTime.now()}_${bodyPicture.tag}_thumbnail.$extension'; // Unique filename
 
-    // Encrypt Image
+      // Encrypting
+      // Orginal File
+      final encryptedImageData =
+          await encryptService.encryptPhotoFromPath(filePath: bodyPicture.path);
 
-    // final rootToken = RootIsolateToken.instance!;
-    // final encryptedImageData = await Isolate.run(
-    //   () async {
-    //     BackgroundIsolateBinaryMessenger.ensureInitialized(rootToken);
-    //     return encryptService.encryptPhoto(filePath: bodyPicture.path);
-    //   },
-    // );
+      // Thumbnail
 
-    final encryptedImageData =
-        await encryptService.encryptPhoto(filePath: bodyPicture.path);
+      img.Image? sourceImage;
+      if (extension == 'jpg' || extension == 'jpeg') {
+        sourceImage = img.decodeJpg(File(bodyPicture.path).readAsBytesSync());
+      } else if (extension == 'png') {
+        sourceImage = img.decodePng(File(bodyPicture.path).readAsBytesSync());
+      } else if (extension == 'heic') {
+        throw UnimplementedError();
+      } else {
+        throw UnimplementedError();
+      }
 
-    // check [encryptedFolderPath] exists
-    if (!Directory('${appDocDir.path}/$encrytedFolderPath').existsSync()) {
-      await Directory('${appDocDir.path}/$encrytedFolderPath').create();
+      if (sourceImage == null) {
+        throw Exception('ThumbnailImageBytes is null');
+      }
+
+      final thumbnailImage = img.copyResize(
+        sourceImage,
+        width: 100,
+      );
+
+      Uint8List thumbnailImageBytes;
+      if (extension == 'jpg' || extension == 'jpeg') {
+        thumbnailImageBytes = img.encodeJpg(thumbnailImage);
+      } else if (extension == 'png') {
+        thumbnailImageBytes = img.encodePng(thumbnailImage);
+      } else if (extension == 'heic') {
+        throw UnimplementedError();
+      } else {
+        throw UnimplementedError();
+      }
+
+      // final _saveDir = await ExternalPath.getExternalStoragePublicDirectory(
+      //   ExternalPath.DIRECTORY_DOCUMENTS,
+      // );
+
+      // final formatter = DateFormat('dd_mm_yyyy_hh_mm_ss');
+
+      // final _file = await File(
+      //   '$_saveDir/watchbody/wb_backup_${formatter.format(DateTime.now())}.$extension',
+      // ).create(recursive: true);
+
+      // // await _file.writeAsBytes(data);
+
+      // await img.writeFile(_file.path, thumbnailImageBytes);
+
+      final encryptedThumbnailImageData = await encryptService
+          .encryptPhotoFromBytes(photoBytes: thumbnailImageBytes);
+
+      // check [encryptedFolderPath] exists
+      if (!Directory('${appDocDir.path}/$encrytedImagesFolderPath')
+              .existsSync() &&
+          !Directory('${appDocDir.path}/$encrytedThumbnailsFolderPath')
+              .existsSync()) {
+        await Directory('${appDocDir.path}/$encrytedImagesFolderPath').create();
+        await Directory('${appDocDir.path}/$encrytedThumbnailsFolderPath')
+            .create();
+      }
+
+      // Saving encrypted files
+
+      // Source
+      // todo: correct it
+      final encryptedFile = File(
+          '${appDocDir.path}/$encrytedImagesFolderPath/$orginalFileNameToSave.enc');
+      await encryptedFile.writeAsBytes(encryptedImageData);
+
+      // Thumbnail
+      final encryptedThumbnailFile = File(
+          '${appDocDir.path}/$encrytedThumbnailsFolderPath/$thumbnailFileNameToSave.enc');
+      await encryptedThumbnailFile.writeAsBytes(encryptedThumbnailImageData);
+
+      // final savedImageInTemporaryDirectory =
+      //     await cacheService.store(bodyPicture.path, orginalFileNameToSave);
+      // await File(bodyPicture.path).copy('${appDocDir.path}/temp/$fileName');
+
+      // final dbData = bodyPicture.copyWith(
+      //   path: encryptedFile.path,
+      // );
+
+      // final uiData = bodyPicture.copyWith(
+      //   // path: '${appDocDir.path}/$fileName',
+      //   path: savedImageInTemporaryDirectory,
+      // );
+
+      final dbData = VaultImage(
+        tag: bodyPicture.tag,
+        path: encryptedFile.path,
+        thumbnailPath: encryptedThumbnailFile.path,
+        date: bodyPicture.date,
+      );
+
+      final uiData = DisplayVaultImageModel(
+        tag: bodyPicture.tag,
+        path: encryptedFile.path,
+        thumbnailData: thumbnailImageBytes,
+        date: bodyPicture.date,
+      );
+      final db = await databaseService.database;
+
+      final result = await db.insert('pictures', dbData.toJson());
+
+      //todo: check result and handle result
+
+      return right(uiData);
+    } on DatabaseException catch (e) {
+      return left(e.toString());
+    } catch (e) {
+      return left(e.toString());
+    } finally {
+      // _deleteImageAndThumbnailByName(, thumbnailFileName)
     }
+  }
 
-    // todo: correct it
+  _deleteImageAndThumbnailByName(
+    String fileName,
+    String thumbnailFileName,
+  ) async {
+    final appDocDir = await getApplicationDocumentsDirectory();
 
-    final encryptedFile =
-        File('${appDocDir.path}/$encrytedFolderPath/$fileName.enc');
-    await encryptedFile.writeAsBytes(encryptedImageData);
+    await File('${appDocDir.path}/$encrytedImagesFolderPath/$fileName.enc')
+        .delete();
 
-    final savedImageInTemporaryDirectory =
-        await cacheService.store(bodyPicture.path, fileName);
-    // await File(bodyPicture.path).copy('${appDocDir.path}/temp/$fileName');
-
-    final dbData = bodyPicture.copyWith(
-      path: encryptedFile.path,
-    );
-
-    final uiData = bodyPicture.copyWith(
-      // path: '${appDocDir.path}/$fileName',
-      path: savedImageInTemporaryDirectory,
-    );
-    final db = await databaseService.database;
-
-    final result = await db.insert('pictures', dbData.toJson());
-
-    //todo: check result and handle result
-
-    return right(uiData);
-
-    // Save details to database
-
-    // TODO: implement saveBodyPicture
-    // throw UnimplementedError();
+    // Thumbnail
+    await File(
+            '${appDocDir.path}/$encrytedThumbnailsFolderPath/$thumbnailFileName.enc')
+        .delete();
   }
 
   // _saveFileInTempDirectoryViaPath(String path) async {
@@ -325,24 +425,32 @@ class BodyPictureRepository implements IBodyPictureFacade {
       // final firstImages = firstImagesSet.map((e) => e.copyWith(path: cacheService.store(e.path))).toList();
       // final secondImages = secondImagesSet.map((e) => e.path).toList();
 
-      final firstImages = <VaultImage>[];
-      final secondImages = <VaultImage>[];
+      final firstImages = firstImagesSet
+          .map(
+            (e) => e.path,
+          )
+          .toList();
+      final secondImages = secondImagesSet
+          .map(
+            (e) => e.path,
+          )
+          .toList();
 
-      for (final e in firstImagesSet) {
-        final fileName = e.path.split('/').last.replaceFirst('.enc', '');
-        final newData = e.copyWith(
-          path: await cacheService.get(fileName) ?? '',
-        );
-        firstImages.add(newData);
-      }
+      // for (final e in firstImagesSet) {
+      //   final fileName = e.path.split('/').last.replaceFirst('.enc', '');
+      //   final newData = e.copyWith(
+      //     path: await cacheService.get(fileName) ?? '',
+      //   );
+      //   firstImages.add(newData.path);
+      // }
 
-      for (final e in secondImagesSet) {
-        final fileName = e.path.split('/').last.replaceFirst('.enc', '');
-        final newData = e.copyWith(
-          path: await cacheService.get(fileName) ?? '',
-        );
-        secondImages.add(newData);
-      }
+      // for (final e in secondImagesSet) {
+      //   final fileName = e.path.split('/').last.replaceFirst('.enc', '');
+      //   final newData = e.copyWith(
+      //     path: await cacheService.get(fileName) ?? '',
+      //   );
+      //   secondImages.add(newData.path);
+      // }
 
       return right(
         CompareImagesModel(
@@ -387,6 +495,18 @@ class BodyPictureRepository implements IBodyPictureFacade {
       return right(storeFile.path);
     } catch (e) {
       return left(e.toString());
+    }
+  }
+
+  @override
+  Future<Uint8List> decryptImageFromPath(
+    String path,
+  ) async {
+    try {
+      final bytes = await encryptService.decryptPhotoFromPath(path);
+      return bytes as Uint8List;
+    } catch (e) {
+      rethrow;
     }
   }
 }

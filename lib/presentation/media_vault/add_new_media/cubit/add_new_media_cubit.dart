@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:watcha_body/data/domain/display_vault_image_model.dart';
+import 'package:watcha_body/data/domain/models/save_vault_image_model.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 
@@ -12,7 +14,7 @@ class AddNewMediaCubit extends Cubit<AddNewMediaState> {
 
   final BodyPictureRepository bodyPictureRepository;
 
-  Future<void> saveMedia(VaultImage image) async {
+  Future<void> saveMedia(SaveVaultImageModel image) async {
     emit(const AddNewMediaState.loading());
     //delay 4 seconds to simulate loading
     await Future.delayed(const Duration(seconds: 4));
