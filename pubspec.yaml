@@ -47,6 +47,7 @@ dependencies:
     path: rust_builder
   share_plus: ^8.0.3
   sqflite: ^2.0.2
+  uuid: ^4.4.0
 
 dev_dependencies:
   bloc_test: ^9.0.3

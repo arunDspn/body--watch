@@ -8,16 +8,18 @@ part of 'vault_image_model.dart';
 
 _$VaultImageImpl _$$VaultImageImplFromJson(Map<String, dynamic> json) =>
     _$VaultImageImpl(
+      id: json['id'] as String,
       tag: json['tag'] as String,
-      path: json['path'] as String,
-      thumbnailPath: json['thumbnail_path'] as String,
+      file: json['file'] as String,
+      thumbnailFile: json['thumbnail_file'] as String,
       date: DateTime.parse(json['date'] as String),
     );
 
 Map<String, dynamic> _$$VaultImageImplToJson(_$VaultImageImpl instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'tag': instance.tag,
-      'path': instance.path,
-      'thumbnail_path': instance.thumbnailPath,
+      'file': instance.file,
+      'thumbnail_file': instance.thumbnailFile,
       'date': instance.date.toIso8601String(),
     };

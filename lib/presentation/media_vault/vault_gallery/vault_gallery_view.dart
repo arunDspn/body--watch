@@ -17,6 +17,7 @@ import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media
 import 'package:watcha_body/presentation/media_vault/compare_pictures/view/compare_pictures_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/filter_modal.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/cubit/delete_image_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/back_up_pictures_to_zip_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
@@ -765,10 +766,18 @@ class _PhotoThumbnail extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) {
               final currentIndex = images.indexOf(image);
-              return PhotoViewer(
-                // path: image.path,
-                images: images,
-                currentIndex: currentIndex,
+              return BlocProvider(
+                create: (context) =>
+                    DeleteImageCubit(context.read<BodyPictureRepository>()),
+                child: Builder(
+                  builder: (context) {
+                    return PhotoViewer(
+                      // path: image.path,
+                      images: images,
+                      currentIndex: currentIndex,
+                    );
+                  },
+                ),
               );
             },
           ),

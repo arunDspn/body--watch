@@ -9,6 +9,7 @@ import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/components/custom_image_provider.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/components/data_linked/view/data_linked_view.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/cubit/delete_image_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 
 class PhotoViewer extends StatefulWidget {
@@ -50,10 +51,15 @@ class _PhotoViewerState extends State<PhotoViewer> {
       ),
     );
     return Scaffold(
-      body: BlocListener<LoadPicturesCubit, LoadPicturesState>(
+      body: BlocListener<DeleteImageCubit, DeleteImageState>(
         listener: (context, state) {
           state.mapOrNull(
-            loaded: (_) => Navigator.of(context).pop(),
+            success: (value) {
+              context
+                  .read<LoadPicturesCubit>()
+                  .updateListAfterDelete(value.deletedItemId);
+              Navigator.of(context).pop();
+            },
           );
         },
         child: SafeArea(
@@ -78,7 +84,7 @@ class _PhotoViewerState extends State<PhotoViewer> {
                     //   File(widget.images[index].path),
                     // ),
                     imageProvider: CustomImageProvider(
-                      widget.images[index].path,
+                      widget.images[index].file,
                       context
                           .read<BodyPictureRepository>()
                           .decryptImageFromPath,
@@ -138,7 +144,6 @@ class _PhotoViewerState extends State<PhotoViewer> {
                             showModalBottomSheet(
                               context: context,
                               showDragHandle: true,
-                              isDismissible: true,
                               builder: (context) {
                                 return DataLinkedView(
                                   date: widget.images[widget.currentIndex].date,
@@ -154,8 +159,8 @@ class _PhotoViewerState extends State<PhotoViewer> {
                         // delete Icon
                         IconButton(
                           onPressed: () {
-                            context.read<LoadPicturesCubit>().delete(
-                                  widget.images[widget.currentIndex].path,
+                            context.read<DeleteImageCubit>().delete(
+                                  widget.images[widget.currentIndex].id,
                                 );
                           },
                           icon: Icon(

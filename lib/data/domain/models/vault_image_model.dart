@@ -8,9 +8,10 @@ part 'vault_image_model.g.dart';
 @freezed
 class VaultImage with _$VaultImage {
   const factory VaultImage({
+    required String id,
     required String tag,
-    required String path,
-    @JsonKey(name: 'thumbnail_path') required String thumbnailPath,
+    required String file,
+    @JsonKey(name: 'thumbnail_file') required String thumbnailFile,
     required DateTime date,
   }) = _VaultImage;
 

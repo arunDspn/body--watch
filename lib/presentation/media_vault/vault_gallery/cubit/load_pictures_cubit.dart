@@ -59,18 +59,23 @@ class LoadPicturesCubit extends Cubit<LoadPicturesState> {
     );
   }
 
-  Future<void> delete(String path) async {
-    // delay 3 seconds to show loading
+  // Future<void> delete(String path) async {
+  //   // delay 3 seconds to show loading
 
-    // await Future.delayed(const Duration(seconds: 3));
+  //   // await Future.delayed(const Duration(seconds: 3));
+  //   emit(const LoadPicturesState.loading());
+  //   final result = await bodyPictureRepository.deleteBodyPicture(path);
+  //   result.fold(
+  //     (l) => emit(LoadPicturesState.failed(l)),
+  //     (r) {
+  //       allImages.removeWhere((element) => element.file == path);
+  //       emit(LoadPicturesState.loaded(allImages));
+  //     },
+  //   );
+  // }
+  Future<void> updateListAfterDelete(String id) async {
     emit(const LoadPicturesState.loading());
-    final result = await bodyPictureRepository.deleteBodyPicture(path);
-    result.fold(
-      (l) => emit(LoadPicturesState.failed(l)),
-      (r) {
-        allImages.removeWhere((element) => element.path == path);
-        emit(LoadPicturesState.loaded(allImages));
-      },
-    );
+    allImages.removeWhere((element) => element.id == id);
+    emit(LoadPicturesState.loaded(allImages));
   }
 }

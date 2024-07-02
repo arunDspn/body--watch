@@ -55,8 +55,9 @@ class DatabaseService {
   // Pictures Table
   static const createPictureTable = '''
     CREATE TABLE IF NOT EXISTS pictures (
-      path TEXT NOT NULL,
-      thumbnail_path TEXT NOT NULL,
+      id TEXT PRIMARY KEY NOT NULL UNIQUE,
+      file TEXT NOT NULL,
+      thumbnail_file TEXT NOT NULL,
       date TEXT NOT NULL,
       tag TEXT NOT NULL
     );

@@ -20,10 +20,11 @@ VaultImage _$VaultImageFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$VaultImage {
+  String get id => throw _privateConstructorUsedError;
   String get tag => throw _privateConstructorUsedError;
-  String get path => throw _privateConstructorUsedError;
-  @JsonKey(name: 'thumbnail_path')
-  String get thumbnailPath => throw _privateConstructorUsedError;
+  String get file => throw _privateConstructorUsedError;
+  @JsonKey(name: 'thumbnail_file')
+  String get thumbnailFile => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -39,9 +40,10 @@ abstract class $VaultImageCopyWith<$Res> {
       _$VaultImageCopyWithImpl<$Res, VaultImage>;
   @useResult
   $Res call(
-      {String tag,
-      String path,
-      @JsonKey(name: 'thumbnail_path') String thumbnailPath,
+      {String id,
+      String tag,
+      String file,
+      @JsonKey(name: 'thumbnail_file') String thumbnailFile,
       DateTime date});
 }
 
@@ -58,23 +60,28 @@ class _$VaultImageCopyWithImpl<$Res, $Val extends VaultImage>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? tag = null,
-    Object? path = null,
-    Object? thumbnailPath = null,
+    Object? file = null,
+    Object? thumbnailFile = null,
     Object? date = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       tag: null == tag
           ? _value.tag
           : tag // ignore: cast_nullable_to_non_nullable
               as String,
-      path: null == path
-          ? _value.path
-          : path // ignore: cast_nullable_to_non_nullable
+      file: null == file
+          ? _value.file
+          : file // ignore: cast_nullable_to_non_nullable
               as String,
-      thumbnailPath: null == thumbnailPath
-          ? _value.thumbnailPath
-          : thumbnailPath // ignore: cast_nullable_to_non_nullable
+      thumbnailFile: null == thumbnailFile
+          ? _value.thumbnailFile
+          : thumbnailFile // ignore: cast_nullable_to_non_nullable
               as String,
       date: null == date
           ? _value.date
@@ -93,9 +100,10 @@ abstract class _$$VaultImageImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String tag,
-      String path,
-      @JsonKey(name: 'thumbnail_path') String thumbnailPath,
+      {String id,
+      String tag,
+      String file,
+      @JsonKey(name: 'thumbnail_file') String thumbnailFile,
       DateTime date});
 }
 
@@ -110,23 +118,28 @@ class __$$VaultImageImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? tag = null,
-    Object? path = null,
-    Object? thumbnailPath = null,
+    Object? file = null,
+    Object? thumbnailFile = null,
     Object? date = null,
   }) {
     return _then(_$VaultImageImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       tag: null == tag
           ? _value.tag
           : tag // ignore: cast_nullable_to_non_nullable
               as String,
-      path: null == path
-          ? _value.path
-          : path // ignore: cast_nullable_to_non_nullable
+      file: null == file
+          ? _value.file
+          : file // ignore: cast_nullable_to_non_nullable
               as String,
-      thumbnailPath: null == thumbnailPath
-          ? _value.thumbnailPath
-          : thumbnailPath // ignore: cast_nullable_to_non_nullable
+      thumbnailFile: null == thumbnailFile
+          ? _value.thumbnailFile
+          : thumbnailFile // ignore: cast_nullable_to_non_nullable
               as String,
       date: null == date
           ? _value.date
@@ -140,27 +153,30 @@ class __$$VaultImageImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$VaultImageImpl implements _VaultImage {
   const _$VaultImageImpl(
-      {required this.tag,
-      required this.path,
-      @JsonKey(name: 'thumbnail_path') required this.thumbnailPath,
+      {required this.id,
+      required this.tag,
+      required this.file,
+      @JsonKey(name: 'thumbnail_file') required this.thumbnailFile,
       required this.date});
 
   factory _$VaultImageImpl.fromJson(Map<String, dynamic> json) =>
       _$$VaultImageImplFromJson(json);
 
   @override
+  final String id;
+  @override
   final String tag;
   @override
-  final String path;
+  final String file;
   @override
-  @JsonKey(name: 'thumbnail_path')
-  final String thumbnailPath;
+  @JsonKey(name: 'thumbnail_file')
+  final String thumbnailFile;
   @override
   final DateTime date;
 
   @override
   String toString() {
-    return 'VaultImage(tag: $tag, path: $path, thumbnailPath: $thumbnailPath, date: $date)';
+    return 'VaultImage(id: $id, tag: $tag, file: $file, thumbnailFile: $thumbnailFile, date: $date)';
   }
 
   @override
@@ -168,16 +184,18 @@ class _$VaultImageImpl implements _VaultImage {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$VaultImageImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.tag, tag) || other.tag == tag) &&
-            (identical(other.path, path) || other.path == path) &&
-            (identical(other.thumbnailPath, thumbnailPath) ||
-                other.thumbnailPath == thumbnailPath) &&
+            (identical(other.file, file) || other.file == file) &&
+            (identical(other.thumbnailFile, thumbnailFile) ||
+                other.thumbnailFile == thumbnailFile) &&
             (identical(other.date, date) || other.date == date));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, tag, path, thumbnailPath, date);
+  int get hashCode =>
+      Object.hash(runtimeType, id, tag, file, thumbnailFile, date);
 
   @JsonKey(ignore: true)
   @override
@@ -195,21 +213,24 @@ class _$VaultImageImpl implements _VaultImage {
 
 abstract class _VaultImage implements VaultImage {
   const factory _VaultImage(
-      {required final String tag,
-      required final String path,
-      @JsonKey(name: 'thumbnail_path') required final String thumbnailPath,
+      {required final String id,
+      required final String tag,
+      required final String file,
+      @JsonKey(name: 'thumbnail_file') required final String thumbnailFile,
       required final DateTime date}) = _$VaultImageImpl;
 
   factory _VaultImage.fromJson(Map<String, dynamic> json) =
       _$VaultImageImpl.fromJson;
 
   @override
+  String get id;
+  @override
   String get tag;
   @override
-  String get path;
+  String get file;
   @override
-  @JsonKey(name: 'thumbnail_path')
-  String get thumbnailPath;
+  @JsonKey(name: 'thumbnail_file')
+  String get thumbnailFile;
   @override
   DateTime get date;
   @override
