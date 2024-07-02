@@ -4,6 +4,7 @@
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
 import 'api/crypter.dart';
+import 'api/resizer.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'frb_generated.io.dart' if (dart.library.html) 'frb_generated.web.dart';
@@ -56,7 +57,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.0.0-dev.32';
 
   @override
-  int get rustContentHash => 1405119625;
+  int get rustContentHash => -1023869149;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -76,6 +77,9 @@ abstract class RustLibApi extends BaseApi {
   Future<void> initApp({dynamic hint});
 
   Future<Uint8List> makeKey({dynamic hint});
+
+  Future<Uint8List> generateThumbnail(
+      {required List<int> imageBytes, dynamic hint});
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -186,6 +190,32 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kMakeKeyConstMeta => const TaskConstMeta(
         debugName: "make_key",
         argNames: [],
+      );
+
+  @override
+  Future<Uint8List> generateThumbnail(
+      {required List<int> imageBytes, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        sse_encode_list_prim_u_8_loose(imageBytes, serializer);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 5, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_list_prim_u_8_strict,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kGenerateThumbnailConstMeta,
+      argValues: [imageBytes],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kGenerateThumbnailConstMeta => const TaskConstMeta(
+        debugName: "generate_thumbnail",
+        argNames: ["imageBytes"],
       );
 
   @protected

@@ -18,6 +18,7 @@ import 'package:watcha_body/services/cache_service/cache_service.dart';
 import 'package:watcha_body/services/encryption_service/src/encryption_service.dart';
 
 import 'package:image/image.dart' as img;
+import 'package:watcha_body/src/rust/api/resizer.dart';
 
 class BodyPictureRepository implements IBodyPictureFacade {
   BodyPictureRepository({
@@ -262,36 +263,36 @@ class BodyPictureRepository implements IBodyPictureFacade {
 
       // Thumbnail
 
-      img.Image? sourceImage;
-      if (extension == 'jpg' || extension == 'jpeg') {
-        sourceImage = img.decodeJpg(File(bodyPicture.path).readAsBytesSync());
-      } else if (extension == 'png') {
-        sourceImage = img.decodePng(File(bodyPicture.path).readAsBytesSync());
-      } else if (extension == 'heic') {
-        throw UnimplementedError();
-      } else {
-        throw UnimplementedError();
-      }
+      // img.Image? sourceImage;
+      // if (extension == 'jpg' || extension == 'jpeg') {
+      //   sourceImage = img.decodeJpg(File(bodyPicture.path).readAsBytesSync());
+      // } else if (extension == 'png') {
+      //   sourceImage = img.decodePng(File(bodyPicture.path).readAsBytesSync());
+      // } else if (extension == 'heic') {
+      //   throw UnimplementedError();
+      // } else {
+      //   throw UnimplementedError();
+      // }
 
-      if (sourceImage == null) {
-        throw Exception('ThumbnailImageBytes is null');
-      }
+      // if (sourceImage == null) {
+      //   throw Exception('ThumbnailImageBytes is null');
+      // }
 
-      final thumbnailImage = img.copyResize(
-        sourceImage,
-        width: 100,
-      );
+      // final thumbnailImage = img.copyResize(
+      //   sourceImage,
+      //   width: 100,
+      // );
 
-      Uint8List thumbnailImageBytes;
-      if (extension == 'jpg' || extension == 'jpeg') {
-        thumbnailImageBytes = img.encodeJpg(thumbnailImage);
-      } else if (extension == 'png') {
-        thumbnailImageBytes = img.encodePng(thumbnailImage);
-      } else if (extension == 'heic') {
-        throw UnimplementedError();
-      } else {
-        throw UnimplementedError();
-      }
+      // Uint8List thumbnailImageBytes;
+      // if (extension == 'jpg' || extension == 'jpeg') {
+      //   thumbnailImageBytes = img.encodeJpg(thumbnailImage);
+      // } else if (extension == 'png') {
+      //   thumbnailImageBytes = img.encodePng(thumbnailImage);
+      // } else if (extension == 'heic') {
+      //   throw UnimplementedError();
+      // } else {
+      //   throw UnimplementedError();
+      // }
 
       // final _saveDir = await ExternalPath.getExternalStoragePublicDirectory(
       //   ExternalPath.DIRECTORY_DOCUMENTS,
@@ -306,6 +307,10 @@ class BodyPictureRepository implements IBodyPictureFacade {
       // // await _file.writeAsBytes(data);
 
       // await img.writeFile(_file.path, thumbnailImageBytes);
+
+      final thumbnailImageBytes = await generateThumbnail(
+        imageBytes: File(bodyPicture.path).readAsBytesSync(),
+      );
 
       final encryptedThumbnailImageData = await encryptService
           .encryptPhotoFromBytes(photoBytes: thumbnailImageBytes);

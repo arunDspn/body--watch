@@ -11,3 +11,4 @@ flutter_rust_bridge = "=2.0.0-dev.32"
 # crypt_guard = "1.2.7"
 ring = {version = "0.17.8" , features = ["std"]}
 anyhow = "1.0.82"
+image = "0.25.1"

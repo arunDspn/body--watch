@@ -4,3 +4,4 @@
 
 // pub mod simple;
 pub mod crypter;
+pub mod resizer;
