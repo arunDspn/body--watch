@@ -1,4 +1,4 @@
-part of '../vault_gallery_view.dart';
+part of 'gallery_view/vault_gallery_view.dart';
 
 class _GalleryView extends StatelessWidget {
   const _GalleryView({required this.filteredImages});
@@ -65,7 +65,7 @@ class _GalleryView extends StatelessWidget {
                   );
                 },
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
+                  crossAxisCount: 3,
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
                   childAspectRatio: .8,
@@ -136,8 +136,10 @@ class _PhotoThumbnail extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        Navigator.of(
           context,
+          rootNavigator: true,
+        ).push(
           MaterialPageRoute(
             builder: (context) {
               final currentIndex = images.indexOf(image);

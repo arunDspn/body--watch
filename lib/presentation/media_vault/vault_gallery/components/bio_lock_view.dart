@@ -1,4 +1,4 @@
-part of '../vault_gallery_view.dart';
+part of 'gallery_view/vault_gallery_view.dart';
 
 class _BioLockView extends StatelessWidget {
   const _BioLockView({

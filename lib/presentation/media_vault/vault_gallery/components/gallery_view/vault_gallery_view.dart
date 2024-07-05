@@ -8,6 +8,9 @@ import 'package:watcha_body/data/domain/display_vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media_view.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/view/compare_pictures_view.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/bloc/auth_gate_keeper_bloc.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/bloc/auth_initialization_checker_bloc.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/view/auth_init_check_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/filter_modal.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/cubit/delete_image_cubit.dart';
@@ -16,14 +19,14 @@ import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/back_up
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/lock_gallery_cubit.dart';
 
-part 'components/add_media_modal.dart';
-part 'components/bio_lock_view.dart';
-part 'components/gallery_view.dart';
+part '../add_media_modal.dart';
+part '../bio_lock_view.dart';
+part '../gallery_view.dart';
 
-class VaultGallery extends StatelessWidget {
-  const VaultGallery({super.key});
+class VaultGalleryView extends StatelessWidget {
+  const VaultGalleryView({super.key});
 
-  static const routeName = '/vault_gallery';
+  static const routeName = '/vault-section/vault_gallery';
 
   @override
   Widget build(BuildContext context) {
@@ -171,8 +174,14 @@ class VaultGallery extends StatelessWidget {
                                         floatingActionButton:
                                             FloatingActionButton.large(
                                           onPressed: () {
-                                            Navigator.pushNamed(
+                                            // Navigator.pushNamed(
+                                            //   context,
+                                            //   AddNewMediaView.routeName,
+                                            // );
+                                            Navigator.of(
                                               context,
+                                              rootNavigator: true,
+                                            ).pushNamed(
                                               AddNewMediaView.routeName,
                                             );
                                           },
@@ -188,6 +197,7 @@ class VaultGallery extends StatelessWidget {
                                                 .scaling,
                                         appBar: AppBar(
                                           title: const Text('Vault Gallery'),
+                                          automaticallyImplyLeading: false,
                                           actions: [
                                             // IconButton(
                                             //   onPressed: () {
@@ -202,9 +212,15 @@ class VaultGallery extends StatelessWidget {
                                             // lock icon button
                                             IconButton(
                                               onPressed: () {
+                                                // context
+                                                //     .read<LockGalleryCubit>()
+                                                //     .lock();
                                                 context
-                                                    .read<LockGalleryCubit>()
-                                                    .lock();
+                                                    .read<AuthGateKeeperBloc>()
+                                                    .add(
+                                                      const AuthGateKeeperEvent
+                                                          .triggerUnAuth(),
+                                                    );
                                               },
                                               icon: const Icon(
                                                 Icons.lock,
@@ -223,8 +239,14 @@ class VaultGallery extends StatelessWidget {
                                             // filter
                                             TextButton(
                                               onPressed: () {
-                                                Navigator.pushNamed(
+                                                // Navigator.pushNamed(
+                                                //   context,
+                                                //   ComparePicturesView.routeName,
+                                                // );
+                                                Navigator.of(
                                                   context,
+                                                  rootNavigator: true,
+                                                ).pushNamed(
                                                   ComparePicturesView.routeName,
                                                 );
                                               },
@@ -286,8 +308,13 @@ class VaultGallery extends StatelessWidget {
               );
             },
             initial: (value) {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Column(
+                children: [
+                  Text('Lock Loading'),
+                  const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ],
               );
             },
           );

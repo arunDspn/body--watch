@@ -1,9 +1,8 @@
-
-
 use anyhow::Result;
 use ring::{
     aead::{Aad, LessSafeKey, Nonce, UnboundKey, AES_256_GCM},
-    rand,
+    hmac,
+    rand::{self, SecureRandom},
 };
 
 #[flutter_rust_bridge::frb(init)]
@@ -20,10 +19,22 @@ pub fn init_app() {
 pub fn make_key() -> Result<Vec<u8>> {
     // we need an UnboundKey for doing crypto
     let rng = rand::SystemRandom::new(); // this has SecureRandom, which rand::generate wants
-    let s : Vec<u8> = rand::generate::<[u8; 32]>(&rng).unwrap().expose().to_vec();
+    let s: Vec<u8> = rand::generate::<[u8; 32]>(&rng).unwrap().expose().to_vec();
     Ok(s)
 }
 
+pub fn generate_key_from_pass(pass: String) -> Result<Vec<u8>> {
+    let sign_key = hmac::Key::new(hmac::HMAC_SHA256, pass.as_bytes());
+    let key = vec![0; 16];
+    hmac::sign(&sign_key, &key);
+    Ok(key)
+}
+
+pub fn generate_random_nonce() -> Result<Vec<u8>> {
+    let mut nonce_bytes = vec![0; ring::aead::NONCE_LEN]; // Pre-allocate memory for efficiency
+    rand::SystemRandom::new().fill(&mut nonce_bytes)?;
+    Ok(nonce_bytes)
+}
 
 // #[flutter_rust_bridge::frb(async)] // Synchronous mode for simplicity of the demo
 pub fn encrypt(key: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
@@ -39,6 +50,22 @@ pub fn encrypt(key: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
     return Ok(encrypted_data);
 }
 
+pub fn encrypt_with_nonce(key: Vec<u8>, nonce: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
+    // Key
+    let key = LessSafeKey::new(UnboundKey::new(&AES_256_GCM, &key).unwrap()); // not sure why it's less safe but it has a simpler API
+
+    // Nonce
+    let mut nonce_array = [0; ring::aead::NONCE_LEN];
+    nonce_array.copy_from_slice(&nonce[..ring::aead::NONCE_LEN]);
+    let nonce = Nonce::assume_unique_for_key(nonce_array); // this is probably a bad idea
+                                                           // create a mut vec of u8
+    let mut encrypted_data: Vec<u8> = Vec::new();
+    encrypted_data.extend_from_slice(&data);
+    key.seal_in_place_append_tag(nonce, Aad::empty(), &mut encrypted_data)
+        .unwrap();
+
+    return Ok(encrypted_data);
+}
 
 // #[flutter_rust_bridge::frb(async)] // Synchronous mode for simplicity of the demo
 pub fn decrypt(key: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
@@ -52,6 +79,21 @@ pub fn decrypt(key: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
     return Ok(decrypted_data);
 }
 
+pub fn decrypt_with_nonce(key: Vec<u8>, nonce: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
+    let key = LessSafeKey::new(UnboundKey::new(&AES_256_GCM, &key).unwrap());
+
+    // Nonce
+    let mut nonce_array = [0; ring::aead::NONCE_LEN];
+    nonce_array.copy_from_slice(&nonce[..ring::aead::NONCE_LEN]);
+    let nonce = Nonce::assume_unique_for_key(nonce_array);
+
+    let mut decrypted_data: Vec<u8> = Vec::new();
+    decrypted_data.extend_from_slice(&data);
+    key.open_in_place(nonce, Aad::empty(), &mut decrypted_data)
+        .unwrap(); // I think this does decryption
+    decrypted_data.truncate(data.len() - AES_256_GCM.tag_len()); // remove the garbage on the end
+    return Ok(decrypted_data);
+}
 
 // use ring::cipher::{
 //     BlockCipher, NewBlockCipher, NewStreamCipher, StreamCipher

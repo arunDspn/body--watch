@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/vault_gallery_view.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/view/vault_section.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/gallery_view/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/overview/overview.dart';
 import 'package:watcha_body/size_config.dart';
 
@@ -13,6 +14,10 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final screens = [
+    const OverView(),
+    const VaultSection(),
+  ];
   int index = 0;
   @override
   Widget build(BuildContext context) {
@@ -72,7 +77,12 @@ class _HomeViewState extends State<HomeView> {
         },
       ),
       body: SafeArea(
-        child: index == 0 ? const OverView() : const VaultGallery(),
+        // child: index == 0 ? const OverView() : VaultSection(),
+        // child: screens[index],
+        child: IndexedStack(
+          index: index,
+          children: screens,
+        ),
       ),
     );
   }

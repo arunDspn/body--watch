@@ -15,6 +15,7 @@ import 'package:watcha_body/presentation/display_models/measurement_display.dart
 import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/view/vault_section.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
 import 'package:watcha_body/presentation/overview/widgets/overview_chart.dart';
@@ -326,7 +327,12 @@ class _SearchBarState extends State<_SearchBar> {
             ),
             IconButton(
               onPressed: () {
-                context.read<BodyPictureRepository>().getAllTags();
+                // context.read<BodyPictureRepository>().getAllTags();
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return VaultSection();
+                  },
+                ));
               },
               icon: Icon(Icons.emoji_emotions),
             ),

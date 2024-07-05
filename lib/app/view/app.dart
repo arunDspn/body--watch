@@ -11,11 +11,14 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
+import 'package:watcha_body/data/domain/i_auth_repository.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
+import 'package:watcha_body/data/repositories/local_auth_repository_impl.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
@@ -34,12 +37,18 @@ import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/compare_picture_form_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/load_picture_to_compare_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/view/compare_pictures_view.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/bloc/auth_gate_keeper_bloc.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/bloc/auth_initialization_checker_bloc.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/cubit/auth_gate_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/cubit/authenicate_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/cubit/create_password_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/view/auth_check_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/back_up_pictures_to_zip_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/filtered_gallery_images_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/lock_gallery_cubit.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/vault_gallery_view.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/gallery_view/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
 import 'package:watcha_body/presentation/settings/cubits/backup_restore_cubit/backup_data_cubit.dart';
@@ -80,7 +89,13 @@ class App extends StatelessWidget {
 
     final cacheService = CacheService();
 
+    final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+
     //
+
+    final IAuthRepository authRepository = LocalAuthRepositoryImpl(
+      secureStorage: secureStorage,
+    );
 
     return MultiRepositoryProvider(
       providers: [
@@ -102,6 +117,9 @@ class App extends StatelessWidget {
             encryptService: encryptService,
             cacheService: cacheService,
           ),
+        ),
+        RepositoryProvider<IAuthRepository>.value(
+          value: authRepository,
         ),
       ],
       child: MultiBlocProvider(
@@ -150,7 +168,8 @@ class App extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) =>
-                LoadPicturesCubit(context.read<BodyPictureRepository>()),
+                LoadPicturesCubit(context.read<BodyPictureRepository>())
+                  ..load(),
             // ..load(),
           ),
           BlocProvider(
@@ -167,6 +186,25 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (context) =>
                 BackUpPicturesToZipCubit(context.read<BodyPictureRepository>()),
+          ),
+          BlocProvider(
+            create: (context) => AuthInitializationChecker(authRepository)
+              ..add(const AuthInitializationCheckerEvents.checkAuth()),
+          ),
+          BlocProvider(
+            create: (context) => AuthenicateCubit(authRepository),
+          ),
+          BlocProvider(
+            create: (context) => CreatePasswordCubit(authRepository),
+          ),
+          // BlocProvider(
+          //   create: (context) => AuthGateCubit()..unauthenicate(),
+          //   lazy: false,
+          // ),
+          BlocProvider(
+            create: (context) => AuthGateKeeperBloc()
+              ..add(const AuthGateKeeperEvent.triggerUnAuth()),
+            lazy: false,
           ),
         ],
         child: Builder(
@@ -188,6 +226,7 @@ class App extends StatelessWidget {
                           fontFamily: 'Poppins',
                           useMaterial3: true,
                         ),
+
                         // darkTheme: ThemeData(
                         //   colorScheme: darkDynamic,
                         //   textTheme: GoogleFonts.poppinsTextTheme(),
@@ -289,24 +328,24 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
       return MaterialPageRoute<void>(
         builder: (context) => const AppIniter(),
       );
-    case VaultGallery.routeName:
-      return MaterialPageRoute<void>(
-        builder: (context) {
-          return MultiBlocProvider(
-            providers: [
-              // BlocProvider(
-              //   create: (context) => LoadPicturesCubit(
-              //     context.read<BodyPictureRepository>(),
-              //   )..load(),
-              // ),
-              BlocProvider(
-                create: (context) => FilteredGalleryImagesCubit(),
-              ),
-            ],
-            child: const VaultGallery(),
-          );
-        },
-      );
+    // case VaultGalleryView.routeName:
+    //   return MaterialPageRoute<void>(
+    //     builder: (context) {
+    //       return MultiBlocProvider(
+    //         providers: [
+    //           // BlocProvider(
+    //           //   create: (context) => LoadPicturesCubit(
+    //           //     context.read<BodyPictureRepository>(),
+    //           //   )..load(),
+    //           // ),
+    //           BlocProvider(
+    //             create: (context) => FilteredGalleryImagesCubit(),
+    //           ),
+    //         ],
+    //         child: const VaultGalleryView(),
+    //       );
+    //     },
+    //   );
     case ComparePicturesView.routeName:
       return MaterialPageRoute<void>(
         builder: (context) => MultiBlocProvider(

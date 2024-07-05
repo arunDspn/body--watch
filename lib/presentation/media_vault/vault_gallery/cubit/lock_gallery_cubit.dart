@@ -8,7 +8,7 @@ part 'lock_gallery_cubit.freezed.dart';
 
 class LockGalleryCubit extends Cubit<LockGalleryState> {
   LockGalleryCubit(this.bodyPictureRepository)
-      : super(const LockGalleryState.locked());
+      : super(const LockGalleryState.unlocked());
 
   final BodyPictureRepository bodyPictureRepository;
 

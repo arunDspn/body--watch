@@ -9,7 +9,7 @@ import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/components/tag_dropdown/tag_dropdown.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new_media_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/vault_gallery_view.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/gallery_view/vault_gallery_view.dart';
 
 class AddNewMediaView extends StatefulWidget {
   const AddNewMediaView({super.key});
