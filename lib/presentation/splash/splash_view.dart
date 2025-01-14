@@ -30,28 +30,23 @@ class SplashView extends StatelessWidget {
       },
     );
 
-    return FutureBuilder<void>(
-      future: _checkKeyOrBuild(),
-      builder: (context, snapshot) {
-        return const Scaffold(
-          body: Center(child: Text('Splash')),
-        );
-      },
+    return const Scaffold(
+      body: Center(child: Text('Splash')),
     );
   }
 }
 
-const keyTerm = 'blablakey';
+// const keyTerm = 'blablakey';
 
-Future<void> _checkKeyOrBuild() async {
-  final key = await const FlutterSecureStorage().read(key: keyTerm);
+// Future<void> _checkKeyOrBuild() async {
+//   final key = await const FlutterSecureStorage().read(key: keyTerm);
 
-  if (key == null || key.isEmpty) {
-    log('key is not exist, build new key');
-    final key = await makeKey();
+//   if (key == null || key.isEmpty) {
+//     log('key is not exist, build new key');
+//     final key = await makeKey();
 
-    await const FlutterSecureStorage()
-        .write(key: keyTerm, value: String.fromCharCodes(key));
-  }
-  log(' NOw key is exist, no need to build new key');
-}
+//     await const FlutterSecureStorage()
+//         .write(key: keyTerm, value: String.fromCharCodes(key));
+//   }
+//   log(' NOw key is exist, no need to build new key');
+// }

@@ -1,7 +1,6 @@
-use anyhow::Result;
+use anyhow::{Ok, Result};
 use ring::{
     aead::{Aad, LessSafeKey, Nonce, UnboundKey, AES_256_GCM},
-    hmac,
     rand::{self, SecureRandom},
 };
 
@@ -16,19 +15,23 @@ pub fn init_app() {
 
 /// we need an encryption key
 // #[flutter_rust_bridge::frb(async)] // Synchronous mode for simplicity of the demo
-pub fn make_key() -> Result<Vec<u8>> {
-    // we need an UnboundKey for doing crypto
-    let rng = rand::SystemRandom::new(); // this has SecureRandom, which rand::generate wants
-    let s: Vec<u8> = rand::generate::<[u8; 32]>(&rng).unwrap().expose().to_vec();
-    Ok(s)
-}
+// pub fn make_key() -> Result<Vec<u8>> {
+//     // we need an UnboundKey for doing crypto
+//     let rng = rand::SystemRandom::new(); // this has SecureRandom, which rand::generate wants
+//     let s: Vec<u8> = rand::generate::<[u8; 32]>(&rng).unwrap().expose().to_vec();
+//     Ok(s)
+// }
 
-pub fn generate_key_from_pass(pass: String) -> Result<Vec<u8>> {
-    let sign_key = hmac::Key::new(hmac::HMAC_SHA256, pass.as_bytes());
-    let key = vec![0; 16];
-    hmac::sign(&sign_key, &key);
-    Ok(key)
-}
+// pub fn generate_key_from_pass(pass: String) -> Result<Vec<u8>> {
+//     // let sign_key = hmac::Key::new(hmac::HMAC_SHA256, pass.as_bytes());
+//     // let key = vec![0; 16];
+//     // hmac::sign(&sign_key, &key);
+//     // Ok(key)
+
+//     let key_from_pass = LessSafeKey::new(UnboundKey::new(&AES_256_GCM, pass.as_bytes()).unwrap());
+
+//     Ok(key_from_pass)
+// }
 
 pub fn generate_random_nonce() -> Result<Vec<u8>> {
     let mut nonce_bytes = vec![0; ring::aead::NONCE_LEN]; // Pre-allocate memory for efficiency
@@ -37,22 +40,22 @@ pub fn generate_random_nonce() -> Result<Vec<u8>> {
 }
 
 // #[flutter_rust_bridge::frb(async)] // Synchronous mode for simplicity of the demo
-pub fn encrypt(key: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
-    let key = LessSafeKey::new(UnboundKey::new(&AES_256_GCM, &key).unwrap()); // not sure why it's less safe but it has a simpler API
-    let nonce = Nonce::assume_unique_for_key([0u8; 12]); // this is probably a bad idea
-                                                         // create a mut vec of u8
-    let mut encrypted_data: Vec<u8> = Vec::new();
-    encrypted_data.extend_from_slice(&data);
-    key.seal_in_place_append_tag(nonce, Aad::empty(), &mut encrypted_data)
-        .unwrap();
-    // I think this does encryption
+// pub fn encrypt(key: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
+//     let key = LessSafeKey::new(UnboundKey::new(&AES_256_GCM, &key).unwrap()); // not sure why it's less safe but it has a simpler API
+//     let nonce = Nonce::assume_unique_for_key([0u8; 12]); // this is probably a bad idea
+//                                                          // create a mut vec of u8
+//     let mut encrypted_data: Vec<u8> = Vec::new();
+//     encrypted_data.extend_from_slice(&data);
+//     key.seal_in_place_append_tag(nonce, Aad::empty(), &mut encrypted_data)
+//         .unwrap();
+//     // I think this does encryption
 
-    return Ok(encrypted_data);
-}
+//     return Ok(encrypted_data);
+// }
 
-pub fn encrypt_with_nonce(key: Vec<u8>, nonce: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
+pub fn encrypt_with_nonce(password: Vec<u8>, nonce: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
     // Key
-    let key = LessSafeKey::new(UnboundKey::new(&AES_256_GCM, &key).unwrap()); // not sure why it's less safe but it has a simpler API
+    let key = LessSafeKey::new(UnboundKey::new(&AES_256_GCM, &password).expect("Failed to generate key")); // not sure why it's less safe but it has a simpler API
 
     // Nonce
     let mut nonce_array = [0; ring::aead::NONCE_LEN];
@@ -68,19 +71,19 @@ pub fn encrypt_with_nonce(key: Vec<u8>, nonce: Vec<u8>, data: Vec<u8>) -> Result
 }
 
 // #[flutter_rust_bridge::frb(async)] // Synchronous mode for simplicity of the demo
-pub fn decrypt(key: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
-    let key = LessSafeKey::new(UnboundKey::new(&AES_256_GCM, &key).unwrap());
-    let nonce = Nonce::assume_unique_for_key([0u8; 12]);
-    let mut decrypted_data: Vec<u8> = Vec::new();
-    decrypted_data.extend_from_slice(&data);
-    key.open_in_place(nonce, Aad::empty(), &mut decrypted_data)
-        .unwrap(); // I think this does decryption
-    decrypted_data.truncate(data.len() - AES_256_GCM.tag_len()); // remove the garbage on the end
-    return Ok(decrypted_data);
-}
+// pub fn decrypt(key: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
+//     let key = LessSafeKey::new(UnboundKey::new(&AES_256_GCM, &key).unwrap());
+//     let nonce = Nonce::assume_unique_for_key([0u8; 12]);
+//     let mut decrypted_data: Vec<u8> = Vec::new();
+//     decrypted_data.extend_from_slice(&data);
+//     key.open_in_place(nonce, Aad::empty(), &mut decrypted_data)
+//         .unwrap(); // I think this does decryption
+//     decrypted_data.truncate(data.len() - AES_256_GCM.tag_len()); // remove the garbage on the end
+//     return Ok(decrypted_data);
+// }
 
-pub fn decrypt_with_nonce(key: Vec<u8>, nonce: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
-    let key = LessSafeKey::new(UnboundKey::new(&AES_256_GCM, &key).unwrap());
+pub fn decrypt_with_nonce(password: Vec<u8>, nonce: Vec<u8>, data: Vec<u8>) -> Result<Vec<u8>> {
+    let key = LessSafeKey::new(UnboundKey::new(&AES_256_GCM, &password).unwrap());
 
     // Nonce
     let mut nonce_array = [0; ring::aead::NONCE_LEN];

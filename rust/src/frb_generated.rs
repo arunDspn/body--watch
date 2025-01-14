@@ -31,7 +31,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.0.0-dev.32";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1023869149;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 2027333335;
 
 // Section: executor
 
@@ -39,7 +39,7 @@ flutter_rust_bridge::frb_generated_default_handler!();
 
 // Section: wire_funcs
 
-fn wire_decrypt_impl(
+fn wire_decrypt_with_nonce_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -47,7 +47,7 @@ fn wire_decrypt_impl(
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "decrypt",
+            debug_name: "decrypt_with_nonce",
             port: Some(port_),
             mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
         },
@@ -61,16 +61,19 @@ fn wire_decrypt_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_key = <Vec<u8>>::sse_decode(&mut deserializer);
+            let api_password = <Vec<u8>>::sse_decode(&mut deserializer);
+            let api_nonce = <Vec<u8>>::sse_decode(&mut deserializer);
             let api_data = <Vec<u8>>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse((move || crate::api::crypter::decrypt(api_key, api_data))())
+                transform_result_sse((move || {
+                    crate::api::crypter::decrypt_with_nonce(api_password, api_nonce, api_data)
+                })())
             }
         },
     )
 }
-fn wire_encrypt_impl(
+fn wire_encrypt_with_nonce_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -78,7 +81,7 @@ fn wire_encrypt_impl(
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "encrypt",
+            debug_name: "encrypt_with_nonce",
             port: Some(port_),
             mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
         },
@@ -92,11 +95,43 @@ fn wire_encrypt_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_key = <Vec<u8>>::sse_decode(&mut deserializer);
+            let api_password = <Vec<u8>>::sse_decode(&mut deserializer);
+            let api_nonce = <Vec<u8>>::sse_decode(&mut deserializer);
             let api_data = <Vec<u8>>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
-                transform_result_sse((move || crate::api::crypter::encrypt(api_key, api_data))())
+                transform_result_sse((move || {
+                    crate::api::crypter::encrypt_with_nonce(api_password, api_nonce, api_data)
+                })())
+            }
+        },
+    )
+}
+fn wire_generate_random_nonce_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "generate_random_nonce",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse((move || crate::api::crypter::generate_random_nonce())())
             }
         },
     )
@@ -129,33 +164,6 @@ fn wire_init_app_impl(
                     Result::<_, ()>::Ok(crate::api::crypter::init_app())
                 })())
             }
-        },
-    )
-}
-fn wire_make_key_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "make_key",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            move |context| transform_result_sse((move || crate::api::crypter::make_key())())
         },
     )
 }
@@ -256,10 +264,10 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        4 => wire_decrypt_impl(port, ptr, rust_vec_len, data_len),
-        3 => wire_encrypt_impl(port, ptr, rust_vec_len, data_len),
+        4 => wire_decrypt_with_nonce_impl(port, ptr, rust_vec_len, data_len),
+        3 => wire_encrypt_with_nonce_impl(port, ptr, rust_vec_len, data_len),
+        2 => wire_generate_random_nonce_impl(port, ptr, rust_vec_len, data_len),
         1 => wire_init_app_impl(port, ptr, rust_vec_len, data_len),
-        2 => wire_make_key_impl(port, ptr, rust_vec_len, data_len),
         5 => wire_generate_thumbnail_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }

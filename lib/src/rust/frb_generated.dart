@@ -57,7 +57,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.0.0-dev.32';
 
   @override
-  int get rustContentHash => -1023869149;
+  int get rustContentHash => 2027333335;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -68,15 +68,21 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  Future<Uint8List> decrypt(
-      {required List<int> key, required List<int> data, dynamic hint});
+  Future<Uint8List> decryptWithNonce(
+      {required List<int> password,
+      required List<int> nonce,
+      required List<int> data,
+      dynamic hint});
 
-  Future<Uint8List> encrypt(
-      {required List<int> key, required List<int> data, dynamic hint});
+  Future<Uint8List> encryptWithNonce(
+      {required List<int> password,
+      required List<int> nonce,
+      required List<int> data,
+      dynamic hint});
+
+  Future<Uint8List> generateRandomNonce({dynamic hint});
 
   Future<void> initApp({dynamic hint});
-
-  Future<Uint8List> makeKey({dynamic hint});
 
   Future<Uint8List> generateThumbnail(
       {required List<int> imageBytes, dynamic hint});
@@ -91,12 +97,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  Future<Uint8List> decrypt(
-      {required List<int> key, required List<int> data, dynamic hint}) {
+  Future<Uint8List> decryptWithNonce(
+      {required List<int> password,
+      required List<int> nonce,
+      required List<int> data,
+      dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_list_prim_u_8_loose(key, serializer);
+        sse_encode_list_prim_u_8_loose(password, serializer);
+        sse_encode_list_prim_u_8_loose(nonce, serializer);
         sse_encode_list_prim_u_8_loose(data, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 4, port: port_);
@@ -105,25 +115,29 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeSuccessData: sse_decode_list_prim_u_8_strict,
         decodeErrorData: sse_decode_AnyhowException,
       ),
-      constMeta: kDecryptConstMeta,
-      argValues: [key, data],
+      constMeta: kDecryptWithNonceConstMeta,
+      argValues: [password, nonce, data],
       apiImpl: this,
       hint: hint,
     ));
   }
 
-  TaskConstMeta get kDecryptConstMeta => const TaskConstMeta(
-        debugName: "decrypt",
-        argNames: ["key", "data"],
+  TaskConstMeta get kDecryptWithNonceConstMeta => const TaskConstMeta(
+        debugName: "decrypt_with_nonce",
+        argNames: ["password", "nonce", "data"],
       );
 
   @override
-  Future<Uint8List> encrypt(
-      {required List<int> key, required List<int> data, dynamic hint}) {
+  Future<Uint8List> encryptWithNonce(
+      {required List<int> password,
+      required List<int> nonce,
+      required List<int> data,
+      dynamic hint}) {
     return handler.executeNormal(NormalTask(
       callFfi: (port_) {
         final serializer = SseSerializer(generalizedFrbRustBinding);
-        sse_encode_list_prim_u_8_loose(key, serializer);
+        sse_encode_list_prim_u_8_loose(password, serializer);
+        sse_encode_list_prim_u_8_loose(nonce, serializer);
         sse_encode_list_prim_u_8_loose(data, serializer);
         pdeCallFfi(generalizedFrbRustBinding, serializer,
             funcId: 3, port: port_);
@@ -132,16 +146,40 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         decodeSuccessData: sse_decode_list_prim_u_8_strict,
         decodeErrorData: sse_decode_AnyhowException,
       ),
-      constMeta: kEncryptConstMeta,
-      argValues: [key, data],
+      constMeta: kEncryptWithNonceConstMeta,
+      argValues: [password, nonce, data],
       apiImpl: this,
       hint: hint,
     ));
   }
 
-  TaskConstMeta get kEncryptConstMeta => const TaskConstMeta(
-        debugName: "encrypt",
-        argNames: ["key", "data"],
+  TaskConstMeta get kEncryptWithNonceConstMeta => const TaskConstMeta(
+        debugName: "encrypt_with_nonce",
+        argNames: ["password", "nonce", "data"],
+      );
+
+  @override
+  Future<Uint8List> generateRandomNonce({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        final serializer = SseSerializer(generalizedFrbRustBinding);
+        pdeCallFfi(generalizedFrbRustBinding, serializer,
+            funcId: 2, port: port_);
+      },
+      codec: SseCodec(
+        decodeSuccessData: sse_decode_list_prim_u_8_strict,
+        decodeErrorData: sse_decode_AnyhowException,
+      ),
+      constMeta: kGenerateRandomNonceConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kGenerateRandomNonceConstMeta => const TaskConstMeta(
+        debugName: "generate_random_nonce",
+        argNames: [],
       );
 
   @override
@@ -165,30 +203,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kInitAppConstMeta => const TaskConstMeta(
         debugName: "init_app",
-        argNames: [],
-      );
-
-  @override
-  Future<Uint8List> makeKey({dynamic hint}) {
-    return handler.executeNormal(NormalTask(
-      callFfi: (port_) {
-        final serializer = SseSerializer(generalizedFrbRustBinding);
-        pdeCallFfi(generalizedFrbRustBinding, serializer,
-            funcId: 2, port: port_);
-      },
-      codec: SseCodec(
-        decodeSuccessData: sse_decode_list_prim_u_8_strict,
-        decodeErrorData: sse_decode_AnyhowException,
-      ),
-      constMeta: kMakeKeyConstMeta,
-      argValues: [],
-      apiImpl: this,
-      hint: hint,
-    ));
-  }
-
-  TaskConstMeta get kMakeKeyConstMeta => const TaskConstMeta(
-        debugName: "make_key",
         argNames: [],
       );
 

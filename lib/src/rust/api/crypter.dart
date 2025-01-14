@@ -8,13 +8,21 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 /// AES-256 has 256-bit keys
 /// we need an encryption key
-Future<Uint8List> makeKey({dynamic hint}) =>
-    RustLib.instance.api.makeKey(hint: hint);
+Future<Uint8List> generateRandomNonce({dynamic hint}) =>
+    RustLib.instance.api.generateRandomNonce(hint: hint);
 
-Future<Uint8List> encrypt(
-        {required List<int> key, required List<int> data, dynamic hint}) =>
-    RustLib.instance.api.encrypt(key: key, data: data, hint: hint);
+Future<Uint8List> encryptWithNonce(
+        {required List<int> password,
+        required List<int> nonce,
+        required List<int> data,
+        dynamic hint}) =>
+    RustLib.instance.api.encryptWithNonce(
+        password: password, nonce: nonce, data: data, hint: hint);
 
-Future<Uint8List> decrypt(
-        {required List<int> key, required List<int> data, dynamic hint}) =>
-    RustLib.instance.api.decrypt(key: key, data: data, hint: hint);
+Future<Uint8List> decryptWithNonce(
+        {required List<int> password,
+        required List<int> nonce,
+        required List<int> data,
+        dynamic hint}) =>
+    RustLib.instance.api.decryptWithNonce(
+        password: password, nonce: nonce, data: data, hint: hint);

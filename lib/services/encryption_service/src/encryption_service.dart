@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -14,6 +15,8 @@ class EncryptService {
     required this.encryptionSendPort,
     required this.decryptionSendPort,
   });
+
+  List<int>? _password;
 
   final Stream<dynamic> encryptionResultPort;
   final Stream<dynamic> decryptionResultPort;
@@ -59,8 +62,28 @@ class EncryptService {
     }
   }
 
+  // Future<void> createKeyFromPassword({
+  //   required String password,
+  // }) async {
+  //   // Create a key from the password
+  //   final key = await generateKeyFromPass(pass: password);
+
+  //   // Store it in memory for future
+  //   encKey = key;
+  // }
+
+  void setPassword(String password) {
+    _password = password.codeUnits;
+  }
+
+  Future<Uint8List> createRandomNonce() async {
+    final nonce = await generateRandomNonce();
+    return nonce;
+  }
+
   Future<Uint8List> encryptPhotoFromPath({
     required String filePath,
+    required Uint8List nonce,
   }) async {
     // Get key and IV from storage
     // final (key, iv) = await getKeyAndIV();
@@ -85,15 +108,23 @@ class EncryptService {
     // return encryptedPhotoBytes;
 
     try {
-      final key = await const FlutterSecureStorage().read(key: keyTerm);
+      // final key = await const FlutterSecureStorage().read(key: keyTerm);
 
-      if (key == null) {
-        throw Exception('key is null');
+      // if (key == null) {
+      //   throw Exception('key is null');
+      // }
+
+      if (_password == null) {
+        throw Exception(
+          'encKey is null',
+        );
       }
 
-      final encryptedPhotoBytes = encrypt(
-        key: Uint8List.fromList(key.codeUnits),
+      final encryptedPhotoBytes = encryptWithNonce(
+        // key: Uint8List.fromList(key.codeUnits),
+        password: _password!,
         data: photoBytes,
+        nonce: nonce,
       );
       return encryptedPhotoBytes;
     } catch (e) {
@@ -103,17 +134,24 @@ class EncryptService {
 
   Future<Uint8List> encryptPhotoFromBytes({
     required Uint8List photoBytes,
+    required Uint8List nonce,
   }) async {
     try {
-      final key = await const FlutterSecureStorage().read(key: keyTerm);
+      // final key = await const FlutterSecureStorage().read(key: keyTerm);
 
-      if (key == null) {
-        throw Exception('key is null');
+      // if (key == null) {
+      //   throw Exception('key is null');
+      // }
+
+      if (_password == null) {
+        throw Exception('encKey is null');
       }
 
-      final encryptedPhotoBytes = encrypt(
-        key: Uint8List.fromList(key.codeUnits),
+      final encryptedPhotoBytes = encryptWithNonce(
+        // key: Uint8List.fromList(key.codeUnits),
+        password: _password!,
         data: photoBytes,
+        nonce: nonce,
       );
       return encryptedPhotoBytes;
     } catch (e) {
@@ -121,7 +159,10 @@ class EncryptService {
     }
   }
 
-  Future<List<int>> decryptPhoto(Uint8List encryptedPhotoBytes) async {
+  Future<List<int>> decryptPhoto({
+    required Uint8List encryptedPhotoBytes,
+    required Uint8List nonce,
+  }) async {
     // final (key, iv) = await getKeyAndIV(); // Get key and IV from storage
 
     // Initialize encrypter with AES algorithm and key)
@@ -148,15 +189,20 @@ class EncryptService {
     // return decryptedBytes; // Return decrypted bytes as a list of ints
 
     try {
-      final key = await const FlutterSecureStorage().read(key: keyTerm);
+      // final key = await const FlutterSecureStorage().read(key: keyTerm);
 
-      if (key == null) {
-        throw Exception('key is null');
+      // if (key == null) {
+      //   throw Exception('key is null');
+      // }
+      if (_password == null) {
+        throw Exception('encKey is null');
       }
 
-      final decryptedBytes = await decrypt(
-        key: Uint8List.fromList(key.codeUnits),
+      final decryptedBytes = await decryptWithNonce(
+        // key: Uint8List.fromList(key.codeUnits),
+        password: _password!,
         data: encryptedPhotoBytes,
+        nonce: nonce,
       );
       return decryptedBytes;
     } catch (e) {
@@ -164,21 +210,30 @@ class EncryptService {
     }
   }
 
-  Future<List<int>> decryptPhotoFromPath(String path) async {
+  Future<List<int>> decryptPhotoFromPath({
+    required String path,
+    required Uint8List nonce,
+  }) async {
     try {
-      final key = await const FlutterSecureStorage().read(key: keyTerm);
+      // final key = await const FlutterSecureStorage().read(key: keyTerm);
 
-      if (key == null) {
-        throw Exception('key is null');
+      // if (key == null) {
+      //   throw Exception('key is null');
+      // }
+
+      if (_password == null) {
+        throw Exception('encKey is null');
       }
 
       final file = File(path); // Read photo from file path
       final encryptedPhotoBytes =
           await file.readAsBytes(); // Read photo as bytes
 
-      final decryptedBytes = await decrypt(
-        key: Uint8List.fromList(key.codeUnits),
+      final decryptedBytes = await decryptWithNonce(
+        // key: Uint8List.fromList(key.codeUnits),
         data: encryptedPhotoBytes,
+        password: _password!,
+        nonce: nonce,
       );
       return decryptedBytes;
     } catch (e) {

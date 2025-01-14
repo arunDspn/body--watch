@@ -13,6 +13,8 @@ _$VaultImageImpl _$$VaultImageImplFromJson(Map<String, dynamic> json) =>
       file: json['file'] as String,
       thumbnailFile: json['thumbnail_file'] as String,
       date: DateTime.parse(json['date'] as String),
+      nonce: json['nonce'] as String,
+      note: json['note'] as String,
     );
 
 Map<String, dynamic> _$$VaultImageImplToJson(_$VaultImageImpl instance) =>
@@ -22,4 +24,6 @@ Map<String, dynamic> _$$VaultImageImplToJson(_$VaultImageImpl instance) =>
       'file': instance.file,
       'thumbnail_file': instance.thumbnailFile,
       'date': instance.date.toIso8601String(),
+      'nonce': instance.nonce,
+      'note': instance.note,
     };

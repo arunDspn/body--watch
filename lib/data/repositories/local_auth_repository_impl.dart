@@ -5,10 +5,16 @@ import 'package:crypto/crypto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:watcha_body/data/domain/i_auth_repository.dart';
+import 'package:watcha_body/services/encryption_service/src/encryption_service.dart';
 
 class LocalAuthRepositoryImpl implements IAuthRepository {
-  LocalAuthRepositoryImpl({required this.secureStorage});
+  LocalAuthRepositoryImpl({
+    required this.secureStorage,
+    required this.encryptService,
+  });
   final FlutterSecureStorage secureStorage;
+
+  final EncryptService encryptService;
 
   final hashedPasswordKey = 'hashed_password_key';
   @override
@@ -30,6 +36,8 @@ class LocalAuthRepositoryImpl implements IAuthRepository {
       if (hashedInputPassword != storedDigest) {
         return left('Wrong password');
       }
+
+      encryptService.setPassword(password);
 
       return right(unit);
     } catch (e) {
@@ -54,6 +62,9 @@ class LocalAuthRepositoryImpl implements IAuthRepository {
         key: hashedPasswordKey,
         value: base64Encode(hashedPassword.bytes),
       );
+
+      encryptService.setPassword(password);
+
       return right(unit);
     } catch (e) {
       return left(e.toString());

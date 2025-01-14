@@ -69,37 +69,38 @@ class _CompareImageViewerState extends State<_CompareImageViewer> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ImageCompareSlider(
-          // photoRadius: BorderRadius.circular(8),
-          itemOne: Image(
-            image: CustomImageProvider(
-              widget.firstImages[firstImageIndex],
-              context.read<BodyPictureRepository>().decryptImageFromPath,
-            ),
-          ),
-          //  Image.file(
-          //   // 'assets/File-2.png',
-          //   // File(widget.firstImages[firstImageIndex].path),
-          //   // height: size.height * 0.6,
-          //   // width: size.width * 0.5,
-          //   fit: BoxFit.cover,
-          // ),
-          itemTwo: Image(
-            image: CustomImageProvider(
-              widget.secondImages[secondImageIndex],
-              context.read<BodyPictureRepository>().decryptImageFromPath,
-            ),
-          ),
-          // Image.file(
-          //   // 'assets/File-4.png',
-          //   File(widget.secondImages[secondImageIndex].path),
-          //   // height: size.height * 0.6,
-          //   // width: size.width * 0.5,
-          //   fit: BoxFit.cover,
-          // ),
-          itemOneBuilder: (child, context) => IntrinsicHeight(child: child),
-          itemTwoBuilder: (child, context) => IntrinsicHeight(child: child),
-        ),
+        // ImageCompareSlider(
+        //   // photoRadius: BorderRadius.circular(8),
+        //   itemOne: Image(
+        //     image: CustomImageProvider(
+        //       widget.firstImages[firstImageIndex],
+        //       context.read<BodyPictureRepository>().decryptImageFromPath,
+        //       widget.firstImages[firstImageIndex].n
+        //     ),
+        //   ),
+        //   //  Image.file(
+        //   //   // 'assets/File-2.png',
+        //   //   // File(widget.firstImages[firstImageIndex].path),
+        //   //   // height: size.height * 0.6,
+        //   //   // width: size.width * 0.5,
+        //   //   fit: BoxFit.cover,
+        //   // ),
+        //   itemTwo: Image(
+        //     image: CustomImageProvider(
+        //       widget.secondImages[secondImageIndex],
+        //       context.read<BodyPictureRepository>().decryptImageFromPath,
+        //     ),
+        //   ),
+        //   // Image.file(
+        //   //   // 'assets/File-4.png',
+        //   //   File(widget.secondImages[secondImageIndex].path),
+        //   //   // height: size.height * 0.6,
+        //   //   // width: size.width * 0.5,
+        //   //   fit: BoxFit.cover,
+        //   // ),
+        //   itemOneBuilder: (child, context) => IntrinsicHeight(child: child),
+        //   itemTwoBuilder: (child, context) => IntrinsicHeight(child: child),
+        // ),
         if (widget.firstImages.length > 1 && widget.secondImages.length > 1)
           Row(
             children: [

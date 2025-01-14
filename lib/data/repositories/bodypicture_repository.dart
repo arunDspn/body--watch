@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -151,8 +152,10 @@ class BodyPictureRepository implements IBodyPictureFacade {
         final encryptedFilesPath =
             '${appDocDir.path}/$encrytedImagesFolderPath/';
 
-        final data =
-            await encryptService.decryptPhoto(thumbnailFile.readAsBytesSync());
+        final data = await encryptService.decryptPhoto(
+          encryptedPhotoBytes: thumbnailFile.readAsBytesSync(),
+          nonce: Uint8List.fromList([]),
+        );
 
         // final newCachedPath = await cacheService.storeFromBytes(data, fileName);
         // final d = e.copyWith(
@@ -164,6 +167,7 @@ class BodyPictureRepository implements IBodyPictureFacade {
           file: encryptedFilesPath + e.file,
           thumbnailData: data as Uint8List,
           date: e.date,
+          nonce: e.nonce,
         );
         decrytedDataList.add(displayModel);
       }
@@ -276,10 +280,14 @@ class BodyPictureRepository implements IBodyPictureFacade {
       final thumbnailFileNameToSave =
           '${DateTime.now()}_${bodyPicture.tag}_thumbnail.$extension.enc'; // Unique filename
 
+      final nonce = await encryptService.createRandomNonce();
+
       // Encrypting
       // Orginal File
-      final encryptedImageData =
-          await encryptService.encryptPhotoFromPath(filePath: bodyPicture.path);
+      final encryptedImageData = await encryptService.encryptPhotoFromPath(
+        filePath: bodyPicture.path,
+        nonce: nonce,
+      );
 
       // Thumbnail
 
@@ -332,8 +340,11 @@ class BodyPictureRepository implements IBodyPictureFacade {
         imageBytes: File(bodyPicture.path).readAsBytesSync(),
       );
 
-      final encryptedThumbnailImageData = await encryptService
-          .encryptPhotoFromBytes(photoBytes: thumbnailImageBytes);
+      final encryptedThumbnailImageData =
+          await encryptService.encryptPhotoFromBytes(
+        photoBytes: thumbnailImageBytes,
+        nonce: nonce,
+      );
 
       // check [encryptedFolderPath] exists
       if (!Directory('${appDocDir.path}/$encrytedImagesFolderPath')
@@ -375,12 +386,16 @@ class BodyPictureRepository implements IBodyPictureFacade {
 
       final id = const Uuid().v1();
 
+      final baseCodedNonce = base64Encode(nonce);
+
       final dbData = VaultImage(
         id: id,
         tag: bodyPicture.tag,
         file: orginalFileNameToSave,
         thumbnailFile: thumbnailFileNameToSave,
         date: bodyPicture.date,
+        nonce: baseCodedNonce,
+        note: '',
       );
 
       final uiData = DisplayVaultImageModel(
@@ -389,6 +404,7 @@ class BodyPictureRepository implements IBodyPictureFacade {
         file: encryptedFile.path,
         thumbnailData: thumbnailImageBytes,
         date: bodyPicture.date,
+        nonce: baseCodedNonce,
       );
       final db = await databaseService.database;
 
@@ -530,11 +546,15 @@ class BodyPictureRepository implements IBodyPictureFacade {
   }
 
   @override
-  Future<Uint8List> decryptImageFromPath(
-    String path,
-  ) async {
+  Future<Uint8List> decryptImageFromPath({
+    required String path,
+    required Uint8List nonce,
+  }) async {
     try {
-      final bytes = await encryptService.decryptPhotoFromPath(path);
+      final bytes = await encryptService.decryptPhotoFromPath(
+        path: path,
+        nonce: nonce,
+      );
       return bytes as Uint8List;
     } catch (e) {
       rethrow;

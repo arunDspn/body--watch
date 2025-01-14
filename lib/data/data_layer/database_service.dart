@@ -59,7 +59,9 @@ class DatabaseService {
       file TEXT NOT NULL,
       thumbnail_file TEXT NOT NULL,
       date TEXT NOT NULL,
-      tag TEXT NOT NULL
+      tag TEXT NOT NULL,
+      nonce TEXT NOT NULL,
+      note TEXT NOT NULL
     );
   ''';
 

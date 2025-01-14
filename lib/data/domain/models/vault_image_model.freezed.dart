@@ -26,6 +26,8 @@ mixin _$VaultImage {
   @JsonKey(name: 'thumbnail_file')
   String get thumbnailFile => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
+  String get nonce => throw _privateConstructorUsedError;
+  String get note => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,7 +46,9 @@ abstract class $VaultImageCopyWith<$Res> {
       String tag,
       String file,
       @JsonKey(name: 'thumbnail_file') String thumbnailFile,
-      DateTime date});
+      DateTime date,
+      String nonce,
+      String note});
 }
 
 /// @nodoc
@@ -65,6 +69,8 @@ class _$VaultImageCopyWithImpl<$Res, $Val extends VaultImage>
     Object? file = null,
     Object? thumbnailFile = null,
     Object? date = null,
+    Object? nonce = null,
+    Object? note = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -87,6 +93,14 @@ class _$VaultImageCopyWithImpl<$Res, $Val extends VaultImage>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      nonce: null == nonce
+          ? _value.nonce
+          : nonce // ignore: cast_nullable_to_non_nullable
+              as String,
+      note: null == note
+          ? _value.note
+          : note // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -104,7 +118,9 @@ abstract class _$$VaultImageImplCopyWith<$Res>
       String tag,
       String file,
       @JsonKey(name: 'thumbnail_file') String thumbnailFile,
-      DateTime date});
+      DateTime date,
+      String nonce,
+      String note});
 }
 
 /// @nodoc
@@ -123,6 +139,8 @@ class __$$VaultImageImplCopyWithImpl<$Res>
     Object? file = null,
     Object? thumbnailFile = null,
     Object? date = null,
+    Object? nonce = null,
+    Object? note = null,
   }) {
     return _then(_$VaultImageImpl(
       id: null == id
@@ -145,6 +163,14 @@ class __$$VaultImageImplCopyWithImpl<$Res>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      nonce: null == nonce
+          ? _value.nonce
+          : nonce // ignore: cast_nullable_to_non_nullable
+              as String,
+      note: null == note
+          ? _value.note
+          : note // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -157,7 +183,9 @@ class _$VaultImageImpl implements _VaultImage {
       required this.tag,
       required this.file,
       @JsonKey(name: 'thumbnail_file') required this.thumbnailFile,
-      required this.date});
+      required this.date,
+      required this.nonce,
+      required this.note});
 
   factory _$VaultImageImpl.fromJson(Map<String, dynamic> json) =>
       _$$VaultImageImplFromJson(json);
@@ -173,10 +201,14 @@ class _$VaultImageImpl implements _VaultImage {
   final String thumbnailFile;
   @override
   final DateTime date;
+  @override
+  final String nonce;
+  @override
+  final String note;
 
   @override
   String toString() {
-    return 'VaultImage(id: $id, tag: $tag, file: $file, thumbnailFile: $thumbnailFile, date: $date)';
+    return 'VaultImage(id: $id, tag: $tag, file: $file, thumbnailFile: $thumbnailFile, date: $date, nonce: $nonce, note: $note)';
   }
 
   @override
@@ -189,13 +221,15 @@ class _$VaultImageImpl implements _VaultImage {
             (identical(other.file, file) || other.file == file) &&
             (identical(other.thumbnailFile, thumbnailFile) ||
                 other.thumbnailFile == thumbnailFile) &&
-            (identical(other.date, date) || other.date == date));
+            (identical(other.date, date) || other.date == date) &&
+            (identical(other.nonce, nonce) || other.nonce == nonce) &&
+            (identical(other.note, note) || other.note == note));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, tag, file, thumbnailFile, date);
+      Object.hash(runtimeType, id, tag, file, thumbnailFile, date, nonce, note);
 
   @JsonKey(ignore: true)
   @override
@@ -217,7 +251,9 @@ abstract class _VaultImage implements VaultImage {
       required final String tag,
       required final String file,
       @JsonKey(name: 'thumbnail_file') required final String thumbnailFile,
-      required final DateTime date}) = _$VaultImageImpl;
+      required final DateTime date,
+      required final String nonce,
+      required final String note}) = _$VaultImageImpl;
 
   factory _VaultImage.fromJson(Map<String, dynamic> json) =
       _$VaultImageImpl.fromJson;
@@ -233,6 +269,10 @@ abstract class _VaultImage implements VaultImage {
   String get thumbnailFile;
   @override
   DateTime get date;
+  @override
+  String get nonce;
+  @override
+  String get note;
   @override
   @JsonKey(ignore: true)
   _$$VaultImageImplCopyWith<_$VaultImageImpl> get copyWith =>

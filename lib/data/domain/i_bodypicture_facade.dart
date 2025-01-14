@@ -50,7 +50,10 @@ abstract interface class IBodyPictureFacade {
   Future<Either<String, Unit>> clearLocalCache();
 
   Future<Either<String, String>> backupPhotosToZip();
-  Future<Uint8List> decryptImageFromPath(
-    String path,
-  );
+
+  // Used as callback for decrypting image provider
+  Future<Uint8List> decryptImageFromPath({
+    required String path,
+    required Uint8List nonce,
+  });
 }

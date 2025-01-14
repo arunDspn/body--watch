@@ -89,12 +89,13 @@ class App extends StatelessWidget {
 
     final cacheService = CacheService();
 
-    final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+    const secureStorage = FlutterSecureStorage();
 
     //
 
     final IAuthRepository authRepository = LocalAuthRepositoryImpl(
       secureStorage: secureStorage,
+      encryptService: encryptService,
     );
 
     return MultiRepositoryProvider(

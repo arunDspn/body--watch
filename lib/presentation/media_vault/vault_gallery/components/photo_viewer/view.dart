@@ -88,6 +88,7 @@ class _PhotoViewerState extends State<PhotoViewer> {
                       context
                           .read<BodyPictureRepository>()
                           .decryptImageFromPath,
+                      widget.images[index].nonce,
                     ),
                   );
                 },

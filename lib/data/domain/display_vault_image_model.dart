@@ -7,6 +7,7 @@ class DisplayVaultImageModel {
     required this.file,
     required this.thumbnailData,
     required this.date,
+    required this.nonce,
   });
 
   final String id;
@@ -14,4 +15,5 @@ class DisplayVaultImageModel {
   final String file;
   final Uint8List thumbnailData;
   final DateTime date;
+  final String nonce;
 }
