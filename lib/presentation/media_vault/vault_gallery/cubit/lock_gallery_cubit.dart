@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 
@@ -14,15 +13,15 @@ class LockGalleryCubit extends Cubit<LockGalleryState> {
 
   void unlock() => emit(const LockGalleryState.unlocked());
   Future<void> lock() async {
-    final result = await bodyPictureRepository.clearLocalCache();
+    // final result = await bodyPictureRepository.clearLocalCache();
 
-    result.fold(
-      (failure) {
-        debugPrint(failure);
-      },
-      (_) => emit(const LockGalleryState.locked()),
-    );
+    // result.fold(
+    //   (failure) {
+    //     debugPrint(failure);
+    //   },
+    //   (_) => emit(const LockGalleryState.locked()),
+    // );
 
-    // emit(const LockGalleryState.locked());
+    emit(const LockGalleryState.locked());
   }
 }

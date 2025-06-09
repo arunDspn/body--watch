@@ -5,8 +5,6 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
-import 'dart:isolate';
-
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,10 +15,12 @@ import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/domain/i_auth_repository.dart';
+import 'package:watcha_body/data/domain/i_bodypicture_facade.dart';
+import 'package:watcha_body/data/domain/i_measurements.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/data/repositories/local_auth_repository_impl.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
-import 'package:watcha_body/l10n/l10n.dart';
+import 'package:watcha_body/l10n/arb/app_localizations.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
@@ -39,55 +39,32 @@ import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/load
 import 'package:watcha_body/presentation/media_vault/compare_pictures/view/compare_pictures_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/bloc/auth_gate_keeper_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/bloc/auth_initialization_checker_bloc.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/cubit/auth_gate_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/cubit/authenicate_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/cubit/create_password_cubit.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/view/auth_check_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/back_up_pictures_to_zip_cubit.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/filtered_gallery_images_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/lock_gallery_cubit.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/components/gallery_view/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
 import 'package:watcha_body/presentation/settings/cubits/backup_restore_cubit/backup_data_cubit.dart';
 import 'package:watcha_body/presentation/settings/cubits/delete_all_data_cubit/delete_all_data_cubit.dart';
 import 'package:watcha_body/presentation/settings/settings_view.dart';
 import 'package:watcha_body/presentation/splash/splash_view.dart';
-import 'package:watcha_body/services/cache_service/cache_service.dart';
-import 'package:watcha_body/services/encryption_service/src/encryption_service.dart';
 import 'package:watcha_body/services/time_range_service/service.dart';
-import 'package:watcha_body/src/rust/api/crypter.dart';
-import 'package:watcha_body/src/rust/frb_generated.dart';
+import 'package:watcha_body/utils/folder_path.dart';
 
 class App extends StatelessWidget {
-  // const App({super.key});
-
   const App({
     Key? key,
-    required this.encryptReceiverStream,
-    required this.decryptReceiverStream,
-    required this.encryptSenderPort,
-    required this.decryptSenderPort,
+    required this.folderPath,
   }) : super(key: key);
 
-  final Stream<dynamic> encryptReceiverStream;
-  final Stream<dynamic> decryptReceiverStream;
-  final SendPort encryptSenderPort;
-  final SendPort decryptSenderPort;
+  final FolderPath folderPath;
 
   @override
   Widget build(BuildContext context) {
     final databaseService = DatabaseService();
-    final encryptService = EncryptService(
-      decryptionResultPort: decryptReceiverStream,
-      decryptionSendPort: decryptSenderPort,
-      encryptionResultPort: encryptReceiverStream,
-      encryptionSendPort: encryptSenderPort,
-    );
-
-    final cacheService = CacheService();
 
     const secureStorage = FlutterSecureStorage();
 
@@ -95,29 +72,33 @@ class App extends StatelessWidget {
 
     final IAuthRepository authRepository = LocalAuthRepositoryImpl(
       secureStorage: secureStorage,
-      encryptService: encryptService,
     );
 
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<EncryptService>(
-          create: (context) => encryptService,
+        RepositoryProvider<FolderPath>.value(
+          value: folderPath,
         ),
-        RepositoryProvider<CacheService>(
-          create: (context) => cacheService,
-        ),
-        RepositoryProvider<MeasurementRepository>(
+        // RepositoryProvider<EncryptService>(
+        //   create: (context) => encryptService,
+        // ),
+        // RepositoryProvider<CacheService>(
+        //   create: (context) => cacheService,
+        // ),
+        RepositoryProvider<IMeasurementsFacade>(
           create: (context) => MeasurementRepository(databaseService),
         ),
         RepositoryProvider<TimeRangeService>(
           create: (context) => TimeRangeService(),
         ),
-        RepositoryProvider<BodyPictureRepository>(
-          create: (context) => BodyPictureRepository(
-            databaseService: databaseService,
-            encryptService: encryptService,
-            cacheService: cacheService,
-          ),
+        RepositoryProvider<IBodyPictureFacade>(
+          create: (context) {
+            return BodyPictureRepository(
+              databaseService: databaseService,
+              imagesFolderPath: folderPath.imagesPath,
+              thumbnailsFolderPath: folderPath.thumbnailsPath,
+            );
+          },
         ),
         RepositoryProvider<IAuthRepository>.value(
           value: authRepository,

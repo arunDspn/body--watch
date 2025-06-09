@@ -21,7 +21,7 @@ class PhotoViewer extends StatefulWidget {
   });
 
   // final String path;
-  final List<DisplayVaultImageModel> images;
+  final List<VaultImage> images;
   final int currentIndex;
 
   // todo: put it in helper functions

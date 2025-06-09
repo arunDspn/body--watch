@@ -1,16 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grouped_scroll_view/grouped_scroll_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-import 'package:watcha_body/data/domain/display_vault_image_model.dart';
+import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media_view.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/view/compare_pictures_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/bloc/auth_gate_keeper_bloc.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/bloc/auth_initialization_checker_bloc.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/view/auth_init_check_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/filter_modal.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/cubit/delete_image_cubit.dart';
@@ -143,7 +143,7 @@ class VaultGalleryView extends StatelessWidget {
                               loaded: (pictureLoadedStateValue) {
                                 // Filtering inside the UI
                                 // TODO: Is that Good
-                                var filteredImages = <DisplayVaultImageModel>[];
+                                var filteredImages = <VaultImage>[];
                                 if (filterStateValue.selectedTypes.isEmpty) {
                                   filteredImages =
                                       pictureLoadedStateValue.pictures;
@@ -160,12 +160,12 @@ class VaultGalleryView extends StatelessWidget {
 
                                 return Theme(
                                   data: Theme.of(context).copyWith(
-                                    cardTheme: CardTheme(
+                                    cardTheme: CardThemeData(
                                       elevation: 0,
                                       margin: EdgeInsets.zero,
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .surfaceVariant,
+                                          .surfaceContainerHighest,
                                     ),
                                   ),
                                   child: Builder(

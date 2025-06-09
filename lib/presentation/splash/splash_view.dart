@@ -1,14 +1,8 @@
-import 'dart:developer';
-import 'dart:typed_data';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/presentation/app_initializer/app_initer.dart';
 import 'package:watcha_body/presentation/home/home.dart';
-import 'package:watcha_body/src/rust/api/crypter.dart';
 
 class SplashView extends StatelessWidget {
   const SplashView({Key? key}) : super(key: key);

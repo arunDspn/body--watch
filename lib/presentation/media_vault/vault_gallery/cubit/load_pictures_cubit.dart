@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/data/domain/display_vault_image_model.dart';
+import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 
 part 'load_pictures_state.dart';
@@ -12,7 +12,7 @@ class LoadPicturesCubit extends Cubit<LoadPicturesState> {
 
   final BodyPictureRepository bodyPictureRepository;
 
-  List<DisplayVaultImageModel> allImages = [];
+  List<VaultImage> allImages = [];
 
   void _filterByDate() {
     allImages.sort((a, b) => b.date.compareTo(a.date));
@@ -36,7 +36,7 @@ class LoadPicturesCubit extends Cubit<LoadPicturesState> {
     emit(const LoadPicturesState.loading());
   }
 
-  Future<void> updateList(DisplayVaultImageModel newImageData) async {
+  Future<void> updateList(VaultImage newImageData) async {
     final currentState = state;
     emit(const LoadPicturesState.loading());
     if (currentState is Loaded) {

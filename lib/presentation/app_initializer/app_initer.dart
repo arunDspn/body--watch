@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
+import 'package:watcha_body/l10n/arb/app_localizations.dart';
 import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/home/home.dart';
 import 'package:watcha_body/presentation/settings/settings_view.dart';

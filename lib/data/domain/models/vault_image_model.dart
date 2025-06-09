@@ -13,13 +13,9 @@ class VaultImage with _$VaultImage {
     required String file,
     @JsonKey(name: 'thumbnail_file') required String thumbnailFile,
     required DateTime date,
-    required String nonce,
     required String note,
   }) = _VaultImage;
 
   factory VaultImage.fromJson(Map<String, dynamic> json) =>
       _$VaultImageFromJson(json);
 }
-
-      // nonce TEXT NOT NULL,
-      // note TEXT NOT NULL

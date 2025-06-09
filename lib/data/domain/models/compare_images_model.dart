@@ -1,21 +1,12 @@
-import 'package:watcha_body/data/domain/display_vault_image_model.dart';
-
 class CompareImagesModel {
   CompareImagesModel({
     required this.firstImages,
     required this.secondImages,
   });
 
-  // final List<DisplayVaultImageModel> firstImages;
-  // final List<DisplayVaultImageModel> secondImages;
-
+  /// List of image paths for the first set of images
   final List<String> firstImages;
+
+  /// List of image paths for the second set of images
   final List<String> secondImages;
 }
-
-// class CompareDisplayVaultImageModel {
-//   final String tag;
-//   final String path;
-//   final Uint8List thumbnailData;
-//   final DateTime date;
-// }

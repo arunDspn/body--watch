@@ -3,7 +3,7 @@ part of 'gallery_view/vault_gallery_view.dart';
 class _GalleryView extends StatelessWidget {
   const _GalleryView({required this.filteredImages});
 
-  final List<DisplayVaultImageModel> filteredImages;
+  final List<VaultImage> filteredImages;
 
   // formated date to like 25 dec 2023 using intl package
   String formatDate(DateTime date) {
@@ -56,7 +56,7 @@ class _GalleryView extends StatelessWidget {
 
             //
             Expanded(
-              child: GroupedScrollView<DisplayVaultImageModel, String>.grid(
+              child: GroupedScrollView<VaultImage, String>.grid(
                 data: filteredImages,
                 itemBuilder: (context, item) {
                   return _PhotoThumbnail(
@@ -130,8 +130,8 @@ class _PhotoThumbnail extends StatelessWidget {
     required this.image,
     required this.images,
   });
-  final DisplayVaultImageModel image;
-  final List<DisplayVaultImageModel> images;
+  final VaultImage image;
+  final List<VaultImage> images;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -165,8 +165,8 @@ class _PhotoThumbnail extends StatelessWidget {
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(22),
-              child: Image.memory(
-                image.thumbnailData,
+              child: Image.file(
+                File(image.thumbnailFile),
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: double.infinity,
