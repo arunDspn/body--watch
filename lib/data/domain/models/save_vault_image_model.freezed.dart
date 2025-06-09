@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,89 +10,65 @@ part of 'save_vault_image_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-SaveVaultImageModel _$SaveVaultImageModelFromJson(Map<String, dynamic> json) {
-  return _SaveVaultImageModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$SaveVaultImageModel {
-  String get tag => throw _privateConstructorUsedError;
-  String get path => throw _privateConstructorUsedError;
-  DateTime get date => throw _privateConstructorUsedError;
+  String get tag;
+  String get path;
+  DateTime get date;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $SaveVaultImageModelCopyWith<SaveVaultImageModel> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $SaveVaultImageModelCopyWith<$Res> {
-  factory $SaveVaultImageModelCopyWith(
-          SaveVaultImageModel value, $Res Function(SaveVaultImageModel) then) =
-      _$SaveVaultImageModelCopyWithImpl<$Res, SaveVaultImageModel>;
-  @useResult
-  $Res call({String tag, String path, DateTime date});
-}
-
-/// @nodoc
-class _$SaveVaultImageModelCopyWithImpl<$Res, $Val extends SaveVaultImageModel>
-    implements $SaveVaultImageModelCopyWith<$Res> {
-  _$SaveVaultImageModelCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
+  /// Create a copy of SaveVaultImageModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
+  $SaveVaultImageModelCopyWith<SaveVaultImageModel> get copyWith =>
+      _$SaveVaultImageModelCopyWithImpl<SaveVaultImageModel>(
+          this as SaveVaultImageModel, _$identity);
+
+  /// Serializes this SaveVaultImageModel to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? tag = null,
-    Object? path = null,
-    Object? date = null,
-  }) {
-    return _then(_value.copyWith(
-      tag: null == tag
-          ? _value.tag
-          : tag // ignore: cast_nullable_to_non_nullable
-              as String,
-      path: null == path
-          ? _value.path
-          : path // ignore: cast_nullable_to_non_nullable
-              as String,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is SaveVaultImageModel &&
+            (identical(other.tag, tag) || other.tag == tag) &&
+            (identical(other.path, path) || other.path == path) &&
+            (identical(other.date, date) || other.date == date));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, tag, path, date);
+
+  @override
+  String toString() {
+    return 'SaveVaultImageModel(tag: $tag, path: $path, date: $date)';
   }
 }
 
 /// @nodoc
-abstract class _$$SaveVaultImageModelImplCopyWith<$Res>
-    implements $SaveVaultImageModelCopyWith<$Res> {
-  factory _$$SaveVaultImageModelImplCopyWith(_$SaveVaultImageModelImpl value,
-          $Res Function(_$SaveVaultImageModelImpl) then) =
-      __$$SaveVaultImageModelImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $SaveVaultImageModelCopyWith<$Res> {
+  factory $SaveVaultImageModelCopyWith(
+          SaveVaultImageModel value, $Res Function(SaveVaultImageModel) _then) =
+      _$SaveVaultImageModelCopyWithImpl;
   @useResult
   $Res call({String tag, String path, DateTime date});
 }
 
 /// @nodoc
-class __$$SaveVaultImageModelImplCopyWithImpl<$Res>
-    extends _$SaveVaultImageModelCopyWithImpl<$Res, _$SaveVaultImageModelImpl>
-    implements _$$SaveVaultImageModelImplCopyWith<$Res> {
-  __$$SaveVaultImageModelImplCopyWithImpl(_$SaveVaultImageModelImpl _value,
-      $Res Function(_$SaveVaultImageModelImpl) _then)
-      : super(_value, _then);
+class _$SaveVaultImageModelCopyWithImpl<$Res>
+    implements $SaveVaultImageModelCopyWith<$Res> {
+  _$SaveVaultImageModelCopyWithImpl(this._self, this._then);
 
+  final SaveVaultImageModel _self;
+  final $Res Function(SaveVaultImageModel) _then;
+
+  /// Create a copy of SaveVaultImageModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -99,17 +76,17 @@ class __$$SaveVaultImageModelImplCopyWithImpl<$Res>
     Object? path = null,
     Object? date = null,
   }) {
-    return _then(_$SaveVaultImageModelImpl(
+    return _then(_self.copyWith(
       tag: null == tag
-          ? _value.tag
+          ? _self.tag
           : tag // ignore: cast_nullable_to_non_nullable
               as String,
       path: null == path
-          ? _value.path
+          ? _self.path
           : path // ignore: cast_nullable_to_non_nullable
               as String,
       date: null == date
-          ? _value.date
+          ? _self.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
     ));
@@ -118,12 +95,11 @@ class __$$SaveVaultImageModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SaveVaultImageModelImpl implements _SaveVaultImageModel {
-  const _$SaveVaultImageModelImpl(
+class _SaveVaultImageModel implements SaveVaultImageModel {
+  const _SaveVaultImageModel(
       {required this.tag, required this.path, required this.date});
-
-  factory _$SaveVaultImageModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SaveVaultImageModelImplFromJson(json);
+  factory _SaveVaultImageModel.fromJson(Map<String, dynamic> json) =>
+      _$SaveVaultImageModelFromJson(json);
 
   @override
   final String tag;
@@ -132,57 +108,85 @@ class _$SaveVaultImageModelImpl implements _SaveVaultImageModel {
   @override
   final DateTime date;
 
+  /// Create a copy of SaveVaultImageModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'SaveVaultImageModel(tag: $tag, path: $path, date: $date)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$SaveVaultImageModelCopyWith<_SaveVaultImageModel> get copyWith =>
+      __$SaveVaultImageModelCopyWithImpl<_SaveVaultImageModel>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$SaveVaultImageModelToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SaveVaultImageModelImpl &&
+            other is _SaveVaultImageModel &&
             (identical(other.tag, tag) || other.tag == tag) &&
             (identical(other.path, path) || other.path == path) &&
             (identical(other.date, date) || other.date == date));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, tag, path, date);
 
-  @JsonKey(ignore: true)
   @override
-  @pragma('vm:prefer-inline')
-  _$$SaveVaultImageModelImplCopyWith<_$SaveVaultImageModelImpl> get copyWith =>
-      __$$SaveVaultImageModelImplCopyWithImpl<_$SaveVaultImageModelImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$SaveVaultImageModelImplToJson(
-      this,
-    );
+  String toString() {
+    return 'SaveVaultImageModel(tag: $tag, path: $path, date: $date)';
   }
 }
 
-abstract class _SaveVaultImageModel implements SaveVaultImageModel {
-  const factory _SaveVaultImageModel(
-      {required final String tag,
-      required final String path,
-      required final DateTime date}) = _$SaveVaultImageModelImpl;
-
-  factory _SaveVaultImageModel.fromJson(Map<String, dynamic> json) =
-      _$SaveVaultImageModelImpl.fromJson;
-
+/// @nodoc
+abstract mixin class _$SaveVaultImageModelCopyWith<$Res>
+    implements $SaveVaultImageModelCopyWith<$Res> {
+  factory _$SaveVaultImageModelCopyWith(_SaveVaultImageModel value,
+          $Res Function(_SaveVaultImageModel) _then) =
+      __$SaveVaultImageModelCopyWithImpl;
   @override
-  String get tag;
-  @override
-  String get path;
-  @override
-  DateTime get date;
-  @override
-  @JsonKey(ignore: true)
-  _$$SaveVaultImageModelImplCopyWith<_$SaveVaultImageModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @useResult
+  $Res call({String tag, String path, DateTime date});
 }
+
+/// @nodoc
+class __$SaveVaultImageModelCopyWithImpl<$Res>
+    implements _$SaveVaultImageModelCopyWith<$Res> {
+  __$SaveVaultImageModelCopyWithImpl(this._self, this._then);
+
+  final _SaveVaultImageModel _self;
+  final $Res Function(_SaveVaultImageModel) _then;
+
+  /// Create a copy of SaveVaultImageModel
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? tag = null,
+    Object? path = null,
+    Object? date = null,
+  }) {
+    return _then(_SaveVaultImageModel(
+      tag: null == tag
+          ? _self.tag
+          : tag // ignore: cast_nullable_to_non_nullable
+              as String,
+      path: null == path
+          ? _self.path
+          : path // ignore: cast_nullable_to_non_nullable
+              as String,
+      date: null == date
+          ? _self.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ));
+  }
+}
+
+// dart format on

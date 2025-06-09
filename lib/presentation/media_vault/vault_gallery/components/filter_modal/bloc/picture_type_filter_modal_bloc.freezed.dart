@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,230 +10,116 @@ part of 'picture_type_filter_modal_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$PictureTypeFilterModalEvent {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function(String type, bool value) toggle,
-    required TResult Function(String query) search,
-    required TResult Function() clear,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function(String type, bool value)? toggle,
-    TResult? Function(String query)? search,
-    TResult? Function()? clear,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(String type, bool value)? toggle,
-    TResult Function(String query)? search,
-    TResult Function()? clear,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_Toggle value) toggle,
-    required TResult Function(_Search value) search,
-    required TResult Function(_Clear value) clear,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_Toggle value)? toggle,
-    TResult? Function(_Search value)? search,
-    TResult? Function(_Clear value)? clear,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_Toggle value)? toggle,
-    TResult Function(_Search value)? search,
-    TResult Function(_Clear value)? clear,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $PictureTypeFilterModalEventCopyWith<$Res> {
-  factory $PictureTypeFilterModalEventCopyWith(
-          PictureTypeFilterModalEvent value,
-          $Res Function(PictureTypeFilterModalEvent) then) =
-      _$PictureTypeFilterModalEventCopyWithImpl<$Res,
-          PictureTypeFilterModalEvent>;
-}
-
-/// @nodoc
-class _$PictureTypeFilterModalEventCopyWithImpl<$Res,
-        $Val extends PictureTypeFilterModalEvent>
-    implements $PictureTypeFilterModalEventCopyWith<$Res> {
-  _$PictureTypeFilterModalEventCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-}
-
-/// @nodoc
-abstract class _$$StartedImplCopyWith<$Res> {
-  factory _$$StartedImplCopyWith(
-          _$StartedImpl value, $Res Function(_$StartedImpl) then) =
-      __$$StartedImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$StartedImplCopyWithImpl<$Res>
-    extends _$PictureTypeFilterModalEventCopyWithImpl<$Res, _$StartedImpl>
-    implements _$$StartedImplCopyWith<$Res> {
-  __$$StartedImplCopyWithImpl(
-      _$StartedImpl _value, $Res Function(_$StartedImpl) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$StartedImpl implements _Started {
-  const _$StartedImpl();
-
-  @override
-  String toString() {
-    return 'PictureTypeFilterModalEvent.started()';
-  }
-
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$StartedImpl);
+        (other.runtimeType == runtimeType &&
+            other is PictureTypeFilterModalEvent);
   }
 
   @override
   int get hashCode => runtimeType.hashCode;
 
   @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function(String type, bool value) toggle,
-    required TResult Function(String query) search,
-    required TResult Function() clear,
-  }) {
-    return started();
+  String toString() {
+    return 'PictureTypeFilterModalEvent()';
   }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function(String type, bool value)? toggle,
-    TResult? Function(String query)? search,
-    TResult? Function()? clear,
-  }) {
-    return started?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(String type, bool value)? toggle,
-    TResult Function(String query)? search,
-    TResult Function()? clear,
-    required TResult orElse(),
-  }) {
-    if (started != null) {
-      return started();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_Toggle value) toggle,
-    required TResult Function(_Search value) search,
-    required TResult Function(_Clear value) clear,
-  }) {
-    return started(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_Toggle value)? toggle,
-    TResult? Function(_Search value)? search,
-    TResult? Function(_Clear value)? clear,
-  }) {
-    return started?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_Toggle value)? toggle,
-    TResult Function(_Search value)? search,
-    TResult Function(_Clear value)? clear,
-    required TResult orElse(),
-  }) {
-    if (started != null) {
-      return started(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Started implements PictureTypeFilterModalEvent {
-  const factory _Started() = _$StartedImpl;
 }
 
 /// @nodoc
-abstract class _$$ToggleImplCopyWith<$Res> {
-  factory _$$ToggleImplCopyWith(
-          _$ToggleImpl value, $Res Function(_$ToggleImpl) then) =
-      __$$ToggleImplCopyWithImpl<$Res>;
+class $PictureTypeFilterModalEventCopyWith<$Res> {
+  $PictureTypeFilterModalEventCopyWith(PictureTypeFilterModalEvent _,
+      $Res Function(PictureTypeFilterModalEvent) __);
+}
+
+/// @nodoc
+
+class _Started implements PictureTypeFilterModalEvent {
+  const _Started();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _Started);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'PictureTypeFilterModalEvent.started()';
+  }
+}
+
+/// @nodoc
+
+class _Toggle implements PictureTypeFilterModalEvent {
+  const _Toggle({required this.type, required this.value});
+
+  final String type;
+  final bool value;
+
+  /// Create a copy of PictureTypeFilterModalEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ToggleCopyWith<_Toggle> get copyWith =>
+      __$ToggleCopyWithImpl<_Toggle>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _Toggle &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.value, value) || other.value == value));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, type, value);
+
+  @override
+  String toString() {
+    return 'PictureTypeFilterModalEvent.toggle(type: $type, value: $value)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$ToggleCopyWith<$Res>
+    implements $PictureTypeFilterModalEventCopyWith<$Res> {
+  factory _$ToggleCopyWith(_Toggle value, $Res Function(_Toggle) _then) =
+      __$ToggleCopyWithImpl;
   @useResult
   $Res call({String type, bool value});
 }
 
 /// @nodoc
-class __$$ToggleImplCopyWithImpl<$Res>
-    extends _$PictureTypeFilterModalEventCopyWithImpl<$Res, _$ToggleImpl>
-    implements _$$ToggleImplCopyWith<$Res> {
-  __$$ToggleImplCopyWithImpl(
-      _$ToggleImpl _value, $Res Function(_$ToggleImpl) _then)
-      : super(_value, _then);
+class __$ToggleCopyWithImpl<$Res> implements _$ToggleCopyWith<$Res> {
+  __$ToggleCopyWithImpl(this._self, this._then);
 
+  final _Toggle _self;
+  final $Res Function(_Toggle) _then;
+
+  /// Create a copy of PictureTypeFilterModalEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  @override
   $Res call({
     Object? type = null,
     Object? value = null,
   }) {
-    return _then(_$ToggleImpl(
+    return _then(_Toggle(
       type: null == type
-          ? _value.type
+          ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
       value: null == value
-          ? _value.value
+          ? _self.value
           : value // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
@@ -241,148 +128,60 @@ class __$$ToggleImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ToggleImpl implements _Toggle {
-  const _$ToggleImpl({required this.type, required this.value});
+class _Search implements PictureTypeFilterModalEvent {
+  const _Search({required this.query});
 
-  @override
-  final String type;
-  @override
-  final bool value;
+  final String query;
 
-  @override
-  String toString() {
-    return 'PictureTypeFilterModalEvent.toggle(type: $type, value: $value)';
-  }
+  /// Create a copy of PictureTypeFilterModalEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$SearchCopyWith<_Search> get copyWith =>
+      __$SearchCopyWithImpl<_Search>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ToggleImpl &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.value, value) || other.value == value));
+            other is _Search &&
+            (identical(other.query, query) || other.query == query));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, type, value);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ToggleImplCopyWith<_$ToggleImpl> get copyWith =>
-      __$$ToggleImplCopyWithImpl<_$ToggleImpl>(this, _$identity);
+  int get hashCode => Object.hash(runtimeType, query);
 
   @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function(String type, bool value) toggle,
-    required TResult Function(String query) search,
-    required TResult Function() clear,
-  }) {
-    return toggle(type, value);
+  String toString() {
+    return 'PictureTypeFilterModalEvent.search(query: $query)';
   }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function(String type, bool value)? toggle,
-    TResult? Function(String query)? search,
-    TResult? Function()? clear,
-  }) {
-    return toggle?.call(type, value);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(String type, bool value)? toggle,
-    TResult Function(String query)? search,
-    TResult Function()? clear,
-    required TResult orElse(),
-  }) {
-    if (toggle != null) {
-      return toggle(type, value);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_Toggle value) toggle,
-    required TResult Function(_Search value) search,
-    required TResult Function(_Clear value) clear,
-  }) {
-    return toggle(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_Toggle value)? toggle,
-    TResult? Function(_Search value)? search,
-    TResult? Function(_Clear value)? clear,
-  }) {
-    return toggle?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_Toggle value)? toggle,
-    TResult Function(_Search value)? search,
-    TResult Function(_Clear value)? clear,
-    required TResult orElse(),
-  }) {
-    if (toggle != null) {
-      return toggle(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Toggle implements PictureTypeFilterModalEvent {
-  const factory _Toggle(
-      {required final String type, required final bool value}) = _$ToggleImpl;
-
-  String get type;
-  bool get value;
-  @JsonKey(ignore: true)
-  _$$ToggleImplCopyWith<_$ToggleImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SearchImplCopyWith<$Res> {
-  factory _$$SearchImplCopyWith(
-          _$SearchImpl value, $Res Function(_$SearchImpl) then) =
-      __$$SearchImplCopyWithImpl<$Res>;
+abstract mixin class _$SearchCopyWith<$Res>
+    implements $PictureTypeFilterModalEventCopyWith<$Res> {
+  factory _$SearchCopyWith(_Search value, $Res Function(_Search) _then) =
+      __$SearchCopyWithImpl;
   @useResult
   $Res call({String query});
 }
 
 /// @nodoc
-class __$$SearchImplCopyWithImpl<$Res>
-    extends _$PictureTypeFilterModalEventCopyWithImpl<$Res, _$SearchImpl>
-    implements _$$SearchImplCopyWith<$Res> {
-  __$$SearchImplCopyWithImpl(
-      _$SearchImpl _value, $Res Function(_$SearchImpl) _then)
-      : super(_value, _then);
+class __$SearchCopyWithImpl<$Res> implements _$SearchCopyWith<$Res> {
+  __$SearchCopyWithImpl(this._self, this._then);
 
+  final _Search _self;
+  final $Res Function(_Search) _then;
+
+  /// Create a copy of PictureTypeFilterModalEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  @override
   $Res call({
     Object? query = null,
   }) {
-    return _then(_$SearchImpl(
+    return _then(_Search(
       query: null == query
-          ? _value.query
+          ? _self.query
           : query // ignore: cast_nullable_to_non_nullable
               as String,
     ));
@@ -391,440 +190,124 @@ class __$$SearchImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SearchImpl implements _Search {
-  const _$SearchImpl({required this.query});
-
-  @override
-  final String query;
-
-  @override
-  String toString() {
-    return 'PictureTypeFilterModalEvent.search(query: $query)';
-  }
+class _Clear implements PictureTypeFilterModalEvent {
+  const _Clear();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$SearchImpl &&
-            (identical(other.query, query) || other.query == query));
+        (other.runtimeType == runtimeType && other is _Clear);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, query);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$SearchImplCopyWith<_$SearchImpl> get copyWith =>
-      __$$SearchImplCopyWithImpl<_$SearchImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function(String type, bool value) toggle,
-    required TResult Function(String query) search,
-    required TResult Function() clear,
-  }) {
-    return search(query);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function(String type, bool value)? toggle,
-    TResult? Function(String query)? search,
-    TResult? Function()? clear,
-  }) {
-    return search?.call(query);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(String type, bool value)? toggle,
-    TResult Function(String query)? search,
-    TResult Function()? clear,
-    required TResult orElse(),
-  }) {
-    if (search != null) {
-      return search(query);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_Toggle value) toggle,
-    required TResult Function(_Search value) search,
-    required TResult Function(_Clear value) clear,
-  }) {
-    return search(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_Toggle value)? toggle,
-    TResult? Function(_Search value)? search,
-    TResult? Function(_Clear value)? clear,
-  }) {
-    return search?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_Toggle value)? toggle,
-    TResult Function(_Search value)? search,
-    TResult Function(_Clear value)? clear,
-    required TResult orElse(),
-  }) {
-    if (search != null) {
-      return search(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Search implements PictureTypeFilterModalEvent {
-  const factory _Search({required final String query}) = _$SearchImpl;
-
-  String get query;
-  @JsonKey(ignore: true)
-  _$$SearchImplCopyWith<_$SearchImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$ClearImplCopyWith<$Res> {
-  factory _$$ClearImplCopyWith(
-          _$ClearImpl value, $Res Function(_$ClearImpl) then) =
-      __$$ClearImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$ClearImplCopyWithImpl<$Res>
-    extends _$PictureTypeFilterModalEventCopyWithImpl<$Res, _$ClearImpl>
-    implements _$$ClearImplCopyWith<$Res> {
-  __$$ClearImplCopyWithImpl(
-      _$ClearImpl _value, $Res Function(_$ClearImpl) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$ClearImpl implements _Clear {
-  const _$ClearImpl();
+  int get hashCode => runtimeType.hashCode;
 
   @override
   String toString() {
     return 'PictureTypeFilterModalEvent.clear()';
   }
+}
 
+/// @nodoc
+mixin _$PictureTypeFilterModalState {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$ClearImpl);
+        (other.runtimeType == runtimeType &&
+            other is PictureTypeFilterModalState);
   }
 
   @override
   int get hashCode => runtimeType.hashCode;
 
   @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() started,
-    required TResult Function(String type, bool value) toggle,
-    required TResult Function(String query) search,
-    required TResult Function() clear,
-  }) {
-    return clear();
+  String toString() {
+    return 'PictureTypeFilterModalState()';
+  }
+}
+
+/// @nodoc
+class $PictureTypeFilterModalStateCopyWith<$Res> {
+  $PictureTypeFilterModalStateCopyWith(PictureTypeFilterModalState _,
+      $Res Function(PictureTypeFilterModalState) __);
+}
+
+/// @nodoc
+
+class _Loading implements PictureTypeFilterModalState {
+  const _Loading();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _Loading);
   }
 
   @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? started,
-    TResult? Function(String type, bool value)? toggle,
-    TResult? Function(String query)? search,
-    TResult? Function()? clear,
-  }) {
-    return clear?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? started,
-    TResult Function(String type, bool value)? toggle,
-    TResult Function(String query)? search,
-    TResult Function()? clear,
-    required TResult orElse(),
-  }) {
-    if (clear != null) {
-      return clear();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Started value) started,
-    required TResult Function(_Toggle value) toggle,
-    required TResult Function(_Search value) search,
-    required TResult Function(_Clear value) clear,
-  }) {
-    return clear(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Started value)? started,
-    TResult? Function(_Toggle value)? toggle,
-    TResult? Function(_Search value)? search,
-    TResult? Function(_Clear value)? clear,
-  }) {
-    return clear?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Started value)? started,
-    TResult Function(_Toggle value)? toggle,
-    TResult Function(_Search value)? search,
-    TResult Function(_Clear value)? clear,
-    required TResult orElse(),
-  }) {
-    if (clear != null) {
-      return clear(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Clear implements PictureTypeFilterModalEvent {
-  const factory _Clear() = _$ClearImpl;
-}
-
-/// @nodoc
-mixin _$PictureTypeFilterModalState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(String message) failed,
-    required TResult Function(List<String> allTypes, List<String> selectedTypes)
-        success,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(String message)? failed,
-    TResult? Function(List<String> allTypes, List<String> selectedTypes)?
-        success,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(String message)? failed,
-    TResult Function(List<String> allTypes, List<String> selectedTypes)?
-        success,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(Success value) success,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(Success value)? success,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(Success value)? success,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $PictureTypeFilterModalStateCopyWith<$Res> {
-  factory $PictureTypeFilterModalStateCopyWith(
-          PictureTypeFilterModalState value,
-          $Res Function(PictureTypeFilterModalState) then) =
-      _$PictureTypeFilterModalStateCopyWithImpl<$Res,
-          PictureTypeFilterModalState>;
-}
-
-/// @nodoc
-class _$PictureTypeFilterModalStateCopyWithImpl<$Res,
-        $Val extends PictureTypeFilterModalState>
-    implements $PictureTypeFilterModalStateCopyWith<$Res> {
-  _$PictureTypeFilterModalStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-}
-
-/// @nodoc
-abstract class _$$LoadingImplCopyWith<$Res> {
-  factory _$$LoadingImplCopyWith(
-          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
-      __$$LoadingImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$PictureTypeFilterModalStateCopyWithImpl<$Res, _$LoadingImpl>
-    implements _$$LoadingImplCopyWith<$Res> {
-  __$$LoadingImplCopyWithImpl(
-      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$LoadingImpl implements _Loading {
-  const _$LoadingImpl();
+  int get hashCode => runtimeType.hashCode;
 
   @override
   String toString() {
     return 'PictureTypeFilterModalState.loading()';
   }
+}
+
+/// @nodoc
+
+class _Failed implements PictureTypeFilterModalState {
+  const _Failed({required this.message});
+
+  final String message;
+
+  /// Create a copy of PictureTypeFilterModalState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$FailedCopyWith<_Failed> get copyWith =>
+      __$FailedCopyWithImpl<_Failed>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadingImpl);
+        (other.runtimeType == runtimeType &&
+            other is _Failed &&
+            (identical(other.message, message) || other.message == message));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, message);
 
   @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(String message) failed,
-    required TResult Function(List<String> allTypes, List<String> selectedTypes)
-        success,
-  }) {
-    return loading();
+  String toString() {
+    return 'PictureTypeFilterModalState.failed(message: $message)';
   }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(String message)? failed,
-    TResult? Function(List<String> allTypes, List<String> selectedTypes)?
-        success,
-  }) {
-    return loading?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(String message)? failed,
-    TResult Function(List<String> allTypes, List<String> selectedTypes)?
-        success,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(Success value) success,
-  }) {
-    return loading(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(Success value)? success,
-  }) {
-    return loading?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(Success value)? success,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Loading implements PictureTypeFilterModalState {
-  const factory _Loading() = _$LoadingImpl;
 }
 
 /// @nodoc
-abstract class _$$FailedImplCopyWith<$Res> {
-  factory _$$FailedImplCopyWith(
-          _$FailedImpl value, $Res Function(_$FailedImpl) then) =
-      __$$FailedImplCopyWithImpl<$Res>;
+abstract mixin class _$FailedCopyWith<$Res>
+    implements $PictureTypeFilterModalStateCopyWith<$Res> {
+  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) =
+      __$FailedCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$$FailedImplCopyWithImpl<$Res>
-    extends _$PictureTypeFilterModalStateCopyWithImpl<$Res, _$FailedImpl>
-    implements _$$FailedImplCopyWith<$Res> {
-  __$$FailedImplCopyWithImpl(
-      _$FailedImpl _value, $Res Function(_$FailedImpl) _then)
-      : super(_value, _then);
+class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
+  __$FailedCopyWithImpl(this._self, this._then);
 
+  final _Failed _self;
+  final $Res Function(_Failed) _then;
+
+  /// Create a copy of PictureTypeFilterModalState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  @override
   $Res call({
     Object? message = null,
   }) {
-    return _then(_$FailedImpl(
+    return _then(_Failed(
       message: null == message
-          ? _value.message
+          ? _self.message
           : message // ignore: cast_nullable_to_non_nullable
               as String,
     ));
@@ -833,162 +316,14 @@ class __$$FailedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FailedImpl implements _Failed {
-  const _$FailedImpl({required this.message});
-
-  @override
-  final String message;
-
-  @override
-  String toString() {
-    return 'PictureTypeFilterModalState.failed(message: $message)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$FailedImpl &&
-            (identical(other.message, message) || other.message == message));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, message);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$FailedImplCopyWith<_$FailedImpl> get copyWith =>
-      __$$FailedImplCopyWithImpl<_$FailedImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(String message) failed,
-    required TResult Function(List<String> allTypes, List<String> selectedTypes)
-        success,
-  }) {
-    return failed(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(String message)? failed,
-    TResult? Function(List<String> allTypes, List<String> selectedTypes)?
-        success,
-  }) {
-    return failed?.call(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(String message)? failed,
-    TResult Function(List<String> allTypes, List<String> selectedTypes)?
-        success,
-    required TResult orElse(),
-  }) {
-    if (failed != null) {
-      return failed(message);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(Success value) success,
-  }) {
-    return failed(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(Success value)? success,
-  }) {
-    return failed?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(Success value)? success,
-    required TResult orElse(),
-  }) {
-    if (failed != null) {
-      return failed(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Failed implements PictureTypeFilterModalState {
-  const factory _Failed({required final String message}) = _$FailedImpl;
-
-  String get message;
-  @JsonKey(ignore: true)
-  _$$FailedImplCopyWith<_$FailedImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$SuccessImplCopyWith<$Res> {
-  factory _$$SuccessImplCopyWith(
-          _$SuccessImpl value, $Res Function(_$SuccessImpl) then) =
-      __$$SuccessImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({List<String> allTypes, List<String> selectedTypes});
-}
-
-/// @nodoc
-class __$$SuccessImplCopyWithImpl<$Res>
-    extends _$PictureTypeFilterModalStateCopyWithImpl<$Res, _$SuccessImpl>
-    implements _$$SuccessImplCopyWith<$Res> {
-  __$$SuccessImplCopyWithImpl(
-      _$SuccessImpl _value, $Res Function(_$SuccessImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? allTypes = null,
-    Object? selectedTypes = null,
-  }) {
-    return _then(_$SuccessImpl(
-      allTypes: null == allTypes
-          ? _value._allTypes
-          : allTypes // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      selectedTypes: null == selectedTypes
-          ? _value._selectedTypes
-          : selectedTypes // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$SuccessImpl implements Success {
-  const _$SuccessImpl(
+class Success implements PictureTypeFilterModalState {
+  const Success(
       {required final List<String> allTypes,
       required final List<String> selectedTypes})
       : _allTypes = allTypes,
         _selectedTypes = selectedTypes;
 
   final List<String> _allTypes;
-  @override
   List<String> get allTypes {
     if (_allTypes is EqualUnmodifiableListView) return _allTypes;
     // ignore: implicit_dynamic_type
@@ -996,23 +331,24 @@ class _$SuccessImpl implements Success {
   }
 
   final List<String> _selectedTypes;
-  @override
   List<String> get selectedTypes {
     if (_selectedTypes is EqualUnmodifiableListView) return _selectedTypes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_selectedTypes);
   }
 
-  @override
-  String toString() {
-    return 'PictureTypeFilterModalState.success(allTypes: $allTypes, selectedTypes: $selectedTypes)';
-  }
+  /// Create a copy of PictureTypeFilterModalState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $SuccessCopyWith<Success> get copyWith =>
+      _$SuccessCopyWithImpl<Success>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SuccessImpl &&
+            other is Success &&
             const DeepCollectionEquality().equals(other._allTypes, _allTypes) &&
             const DeepCollectionEquality()
                 .equals(other._selectedTypes, _selectedTypes));
@@ -1024,92 +360,46 @@ class _$SuccessImpl implements Success {
       const DeepCollectionEquality().hash(_allTypes),
       const DeepCollectionEquality().hash(_selectedTypes));
 
-  @JsonKey(ignore: true)
   @override
+  String toString() {
+    return 'PictureTypeFilterModalState.success(allTypes: $allTypes, selectedTypes: $selectedTypes)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $SuccessCopyWith<$Res>
+    implements $PictureTypeFilterModalStateCopyWith<$Res> {
+  factory $SuccessCopyWith(Success value, $Res Function(Success) _then) =
+      _$SuccessCopyWithImpl;
+  @useResult
+  $Res call({List<String> allTypes, List<String> selectedTypes});
+}
+
+/// @nodoc
+class _$SuccessCopyWithImpl<$Res> implements $SuccessCopyWith<$Res> {
+  _$SuccessCopyWithImpl(this._self, this._then);
+
+  final Success _self;
+  final $Res Function(Success) _then;
+
+  /// Create a copy of PictureTypeFilterModalState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
-      __$$SuccessImplCopyWithImpl<_$SuccessImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() loading,
-    required TResult Function(String message) failed,
-    required TResult Function(List<String> allTypes, List<String> selectedTypes)
-        success,
+  $Res call({
+    Object? allTypes = null,
+    Object? selectedTypes = null,
   }) {
-    return success(allTypes, selectedTypes);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? loading,
-    TResult? Function(String message)? failed,
-    TResult? Function(List<String> allTypes, List<String> selectedTypes)?
-        success,
-  }) {
-    return success?.call(allTypes, selectedTypes);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? loading,
-    TResult Function(String message)? failed,
-    TResult Function(List<String> allTypes, List<String> selectedTypes)?
-        success,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(allTypes, selectedTypes);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(Success value) success,
-  }) {
-    return success(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(Success value)? success,
-  }) {
-    return success?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(Success value)? success,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(this);
-    }
-    return orElse();
+    return _then(Success(
+      allTypes: null == allTypes
+          ? _self._allTypes
+          : allTypes // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      selectedTypes: null == selectedTypes
+          ? _self._selectedTypes
+          : selectedTypes // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ));
   }
 }
 
-abstract class Success implements PictureTypeFilterModalState {
-  const factory Success(
-      {required final List<String> allTypes,
-      required final List<String> selectedTypes}) = _$SuccessImpl;
-
-  List<String> get allTypes;
-  List<String> get selectedTypes;
-  @JsonKey(ignore: true)
-  _$$SuccessImplCopyWith<_$SuccessImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

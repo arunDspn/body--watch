@@ -1,7 +1,7 @@
 part of 'delete_image_cubit.dart';
 
 @freezed
-class DeleteImageState with _$DeleteImageState {
+abstract class DeleteImageState with _$DeleteImageState {
   const factory DeleteImageState.initial() = _Initial;
   const factory DeleteImageState.loading() = _Loading;
   const factory DeleteImageState.success({required String deletedItemId}) =

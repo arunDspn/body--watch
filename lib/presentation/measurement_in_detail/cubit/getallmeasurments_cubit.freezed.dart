@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,339 +10,129 @@ part of 'getallmeasurments_cubit.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$GetSingleMeasurmentsDetailsState {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(String cause)? failed,
-    TResult? Function(List<Measurement> list)? success,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(AllMeasurementsLoaded value) success,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(AllMeasurementsLoaded value)? success,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(AllMeasurementsLoaded value)? success,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is GetSingleMeasurmentsDetailsState);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'GetSingleMeasurmentsDetailsState()';
+  }
 }
 
 /// @nodoc
-abstract class $GetSingleMeasurmentsDetailsStateCopyWith<$Res> {
-  factory $GetSingleMeasurmentsDetailsStateCopyWith(
-          GetSingleMeasurmentsDetailsState value,
-          $Res Function(GetSingleMeasurmentsDetailsState) then) =
-      _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res,
-          GetSingleMeasurmentsDetailsState>;
-}
-
-/// @nodoc
-class _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res,
-        $Val extends GetSingleMeasurmentsDetailsState>
-    implements $GetSingleMeasurmentsDetailsStateCopyWith<$Res> {
-  _$GetSingleMeasurmentsDetailsStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-}
-
-/// @nodoc
-abstract class _$$InitialImplCopyWith<$Res> {
-  factory _$$InitialImplCopyWith(
-          _$InitialImpl value, $Res Function(_$InitialImpl) then) =
-      __$$InitialImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$InitialImplCopyWithImpl<$Res>
-    extends _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res, _$InitialImpl>
-    implements _$$InitialImplCopyWith<$Res> {
-  __$$InitialImplCopyWithImpl(
-      _$InitialImpl _value, $Res Function(_$InitialImpl) _then)
-      : super(_value, _then);
+class $GetSingleMeasurmentsDetailsStateCopyWith<$Res> {
+  $GetSingleMeasurmentsDetailsStateCopyWith(GetSingleMeasurmentsDetailsState _,
+      $Res Function(GetSingleMeasurmentsDetailsState) __);
 }
 
 /// @nodoc
 
-class _$InitialImpl implements _Initial {
-  const _$InitialImpl();
+class _Initial implements GetSingleMeasurmentsDetailsState {
+  const _Initial();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _Initial);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 
   @override
   String toString() {
     return 'GetSingleMeasurmentsDetailsState.initial()';
   }
+}
+
+/// @nodoc
+
+class _Loading implements GetSingleMeasurmentsDetailsState {
+  const _Loading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$InitialImpl);
+        (other.runtimeType == runtimeType && other is _Loading);
   }
 
   @override
   int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
-  }) {
-    return initial();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(String cause)? failed,
-    TResult? Function(List<Measurement> list)? success,
-  }) {
-    return initial?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(AllMeasurementsLoaded value) success,
-  }) {
-    return initial(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(AllMeasurementsLoaded value)? success,
-  }) {
-    return initial?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(AllMeasurementsLoaded value)? success,
-    required TResult orElse(),
-  }) {
-    if (initial != null) {
-      return initial(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Initial implements GetSingleMeasurmentsDetailsState {
-  const factory _Initial() = _$InitialImpl;
-}
-
-/// @nodoc
-abstract class _$$LoadingImplCopyWith<$Res> {
-  factory _$$LoadingImplCopyWith(
-          _$LoadingImpl value, $Res Function(_$LoadingImpl) then) =
-      __$$LoadingImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$LoadingImplCopyWithImpl<$Res>
-    extends _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res, _$LoadingImpl>
-    implements _$$LoadingImplCopyWith<$Res> {
-  __$$LoadingImplCopyWithImpl(
-      _$LoadingImpl _value, $Res Function(_$LoadingImpl) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$LoadingImpl implements _Loading {
-  const _$LoadingImpl();
 
   @override
   String toString() {
     return 'GetSingleMeasurmentsDetailsState.loading()';
   }
+}
+
+/// @nodoc
+
+class _Failed implements GetSingleMeasurmentsDetailsState {
+  const _Failed({required this.cause});
+
+  final String cause;
+
+  /// Create a copy of GetSingleMeasurmentsDetailsState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$FailedCopyWith<_Failed> get copyWith =>
+      __$FailedCopyWithImpl<_Failed>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$LoadingImpl);
+        (other.runtimeType == runtimeType &&
+            other is _Failed &&
+            (identical(other.cause, cause) || other.cause == cause));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, cause);
 
   @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
-  }) {
-    return loading();
+  String toString() {
+    return 'GetSingleMeasurmentsDetailsState.failed(cause: $cause)';
   }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(String cause)? failed,
-    TResult? Function(List<Measurement> list)? success,
-  }) {
-    return loading?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(AllMeasurementsLoaded value) success,
-  }) {
-    return loading(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(AllMeasurementsLoaded value)? success,
-  }) {
-    return loading?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(AllMeasurementsLoaded value)? success,
-    required TResult orElse(),
-  }) {
-    if (loading != null) {
-      return loading(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Loading implements GetSingleMeasurmentsDetailsState {
-  const factory _Loading() = _$LoadingImpl;
 }
 
 /// @nodoc
-abstract class _$$FailedImplCopyWith<$Res> {
-  factory _$$FailedImplCopyWith(
-          _$FailedImpl value, $Res Function(_$FailedImpl) then) =
-      __$$FailedImplCopyWithImpl<$Res>;
+abstract mixin class _$FailedCopyWith<$Res>
+    implements $GetSingleMeasurmentsDetailsStateCopyWith<$Res> {
+  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) =
+      __$FailedCopyWithImpl;
   @useResult
   $Res call({String cause});
 }
 
 /// @nodoc
-class __$$FailedImplCopyWithImpl<$Res>
-    extends _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res, _$FailedImpl>
-    implements _$$FailedImplCopyWith<$Res> {
-  __$$FailedImplCopyWithImpl(
-      _$FailedImpl _value, $Res Function(_$FailedImpl) _then)
-      : super(_value, _then);
+class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
+  __$FailedCopyWithImpl(this._self, this._then);
 
+  final _Failed _self;
+  final $Res Function(_Failed) _then;
+
+  /// Create a copy of GetSingleMeasurmentsDetailsState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  @override
   $Res call({
     Object? cause = null,
   }) {
-    return _then(_$FailedImpl(
+    return _then(_Failed(
       cause: null == cause
-          ? _value.cause
+          ? _self.cause
           : cause // ignore: cast_nullable_to_non_nullable
               as String,
     ));
@@ -350,175 +141,30 @@ class __$$FailedImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FailedImpl implements _Failed {
-  const _$FailedImpl({required this.cause});
-
-  @override
-  final String cause;
-
-  @override
-  String toString() {
-    return 'GetSingleMeasurmentsDetailsState.failed(cause: $cause)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$FailedImpl &&
-            (identical(other.cause, cause) || other.cause == cause));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, cause);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$FailedImplCopyWith<_$FailedImpl> get copyWith =>
-      __$$FailedImplCopyWithImpl<_$FailedImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
-  }) {
-    return failed(cause);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(String cause)? failed,
-    TResult? Function(List<Measurement> list)? success,
-  }) {
-    return failed?.call(cause);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
-    required TResult orElse(),
-  }) {
-    if (failed != null) {
-      return failed(cause);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(AllMeasurementsLoaded value) success,
-  }) {
-    return failed(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(AllMeasurementsLoaded value)? success,
-  }) {
-    return failed?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(AllMeasurementsLoaded value)? success,
-    required TResult orElse(),
-  }) {
-    if (failed != null) {
-      return failed(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Failed implements GetSingleMeasurmentsDetailsState {
-  const factory _Failed({required final String cause}) = _$FailedImpl;
-
-  String get cause;
-  @JsonKey(ignore: true)
-  _$$FailedImplCopyWith<_$FailedImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$AllMeasurementsLoadedImplCopyWith<$Res> {
-  factory _$$AllMeasurementsLoadedImplCopyWith(
-          _$AllMeasurementsLoadedImpl value,
-          $Res Function(_$AllMeasurementsLoadedImpl) then) =
-      __$$AllMeasurementsLoadedImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({List<Measurement> list});
-}
-
-/// @nodoc
-class __$$AllMeasurementsLoadedImplCopyWithImpl<$Res>
-    extends _$GetSingleMeasurmentsDetailsStateCopyWithImpl<$Res,
-        _$AllMeasurementsLoadedImpl>
-    implements _$$AllMeasurementsLoadedImplCopyWith<$Res> {
-  __$$AllMeasurementsLoadedImplCopyWithImpl(_$AllMeasurementsLoadedImpl _value,
-      $Res Function(_$AllMeasurementsLoadedImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? list = null,
-  }) {
-    return _then(_$AllMeasurementsLoadedImpl(
-      list: null == list
-          ? _value._list
-          : list // ignore: cast_nullable_to_non_nullable
-              as List<Measurement>,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$AllMeasurementsLoadedImpl implements AllMeasurementsLoaded {
-  const _$AllMeasurementsLoadedImpl({required final List<Measurement> list})
+class AllMeasurementsLoaded implements GetSingleMeasurmentsDetailsState {
+  const AllMeasurementsLoaded({required final List<Measurement> list})
       : _list = list;
 
   final List<Measurement> _list;
-  @override
   List<Measurement> get list {
     if (_list is EqualUnmodifiableListView) return _list;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_list);
   }
 
-  @override
-  String toString() {
-    return 'GetSingleMeasurmentsDetailsState.success(list: $list)';
-  }
+  /// Create a copy of GetSingleMeasurmentsDetailsState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $AllMeasurementsLoadedCopyWith<AllMeasurementsLoaded> get copyWith =>
+      _$AllMeasurementsLoadedCopyWithImpl<AllMeasurementsLoaded>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AllMeasurementsLoadedImpl &&
+            other is AllMeasurementsLoaded &&
             const DeepCollectionEquality().equals(other._list, _list));
   }
 
@@ -526,95 +172,43 @@ class _$AllMeasurementsLoadedImpl implements AllMeasurementsLoaded {
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(_list));
 
-  @JsonKey(ignore: true)
   @override
+  String toString() {
+    return 'GetSingleMeasurmentsDetailsState.success(list: $list)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $AllMeasurementsLoadedCopyWith<$Res>
+    implements $GetSingleMeasurmentsDetailsStateCopyWith<$Res> {
+  factory $AllMeasurementsLoadedCopyWith(AllMeasurementsLoaded value,
+          $Res Function(AllMeasurementsLoaded) _then) =
+      _$AllMeasurementsLoadedCopyWithImpl;
+  @useResult
+  $Res call({List<Measurement> list});
+}
+
+/// @nodoc
+class _$AllMeasurementsLoadedCopyWithImpl<$Res>
+    implements $AllMeasurementsLoadedCopyWith<$Res> {
+  _$AllMeasurementsLoadedCopyWithImpl(this._self, this._then);
+
+  final AllMeasurementsLoaded _self;
+  final $Res Function(AllMeasurementsLoaded) _then;
+
+  /// Create a copy of GetSingleMeasurmentsDetailsState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  _$$AllMeasurementsLoadedImplCopyWith<_$AllMeasurementsLoadedImpl>
-      get copyWith => __$$AllMeasurementsLoadedImplCopyWithImpl<
-          _$AllMeasurementsLoadedImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
+  $Res call({
+    Object? list = null,
   }) {
-    return success(list);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(String cause)? failed,
-    TResult? Function(List<Measurement> list)? success,
-  }) {
-    return success?.call(list);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(list);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initial value) initial,
-    required TResult Function(_Loading value) loading,
-    required TResult Function(_Failed value) failed,
-    required TResult Function(AllMeasurementsLoaded value) success,
-  }) {
-    return success(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initial value)? initial,
-    TResult? Function(_Loading value)? loading,
-    TResult? Function(_Failed value)? failed,
-    TResult? Function(AllMeasurementsLoaded value)? success,
-  }) {
-    return success?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initial value)? initial,
-    TResult Function(_Loading value)? loading,
-    TResult Function(_Failed value)? failed,
-    TResult Function(AllMeasurementsLoaded value)? success,
-    required TResult orElse(),
-  }) {
-    if (success != null) {
-      return success(this);
-    }
-    return orElse();
+    return _then(AllMeasurementsLoaded(
+      list: null == list
+          ? _self._list
+          : list // ignore: cast_nullable_to_non_nullable
+              as List<Measurement>,
+    ));
   }
 }
 
-abstract class AllMeasurementsLoaded
-    implements GetSingleMeasurmentsDetailsState {
-  const factory AllMeasurementsLoaded({required final List<Measurement> list}) =
-      _$AllMeasurementsLoadedImpl;
-
-  List<Measurement> get list;
-  @JsonKey(ignore: true)
-  _$$AllMeasurementsLoadedImplCopyWith<_$AllMeasurementsLoadedImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
+// dart format on

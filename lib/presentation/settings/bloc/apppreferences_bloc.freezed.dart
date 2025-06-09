@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,112 +10,66 @@ part of 'apppreferences_bloc.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$ApppreferencesEvent {
-  AppPreferences get appPreferences => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(AppPreferences appPreferences) savePreferences,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AppPreferences appPreferences)? savePreferences,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AppPreferences appPreferences)? savePreferences,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadSavedPreferences value) savePreferences,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadSavedPreferences value)? savePreferences,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadSavedPreferences value)? savePreferences,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  AppPreferences get appPreferences;
 
-  @JsonKey(ignore: true)
-  $ApppreferencesEventCopyWith<ApppreferencesEvent> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ApppreferencesEventCopyWith<$Res> {
-  factory $ApppreferencesEventCopyWith(
-          ApppreferencesEvent value, $Res Function(ApppreferencesEvent) then) =
-      _$ApppreferencesEventCopyWithImpl<$Res, ApppreferencesEvent>;
-  @useResult
-  $Res call({AppPreferences appPreferences});
-}
-
-/// @nodoc
-class _$ApppreferencesEventCopyWithImpl<$Res, $Val extends ApppreferencesEvent>
-    implements $ApppreferencesEventCopyWith<$Res> {
-  _$ApppreferencesEventCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
+  /// Create a copy of ApppreferencesEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
+  $ApppreferencesEventCopyWith<ApppreferencesEvent> get copyWith =>
+      _$ApppreferencesEventCopyWithImpl<ApppreferencesEvent>(
+          this as ApppreferencesEvent, _$identity);
+
   @override
-  $Res call({
-    Object? appPreferences = null,
-  }) {
-    return _then(_value.copyWith(
-      appPreferences: null == appPreferences
-          ? _value.appPreferences
-          : appPreferences // ignore: cast_nullable_to_non_nullable
-              as AppPreferences,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is ApppreferencesEvent &&
+            (identical(other.appPreferences, appPreferences) ||
+                other.appPreferences == appPreferences));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, appPreferences);
+
+  @override
+  String toString() {
+    return 'ApppreferencesEvent(appPreferences: $appPreferences)';
   }
 }
 
 /// @nodoc
-abstract class _$$LoadSavedPreferencesImplCopyWith<$Res>
-    implements $ApppreferencesEventCopyWith<$Res> {
-  factory _$$LoadSavedPreferencesImplCopyWith(_$LoadSavedPreferencesImpl value,
-          $Res Function(_$LoadSavedPreferencesImpl) then) =
-      __$$LoadSavedPreferencesImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $ApppreferencesEventCopyWith<$Res> {
+  factory $ApppreferencesEventCopyWith(
+          ApppreferencesEvent value, $Res Function(ApppreferencesEvent) _then) =
+      _$ApppreferencesEventCopyWithImpl;
   @useResult
   $Res call({AppPreferences appPreferences});
 }
 
 /// @nodoc
-class __$$LoadSavedPreferencesImplCopyWithImpl<$Res>
-    extends _$ApppreferencesEventCopyWithImpl<$Res, _$LoadSavedPreferencesImpl>
-    implements _$$LoadSavedPreferencesImplCopyWith<$Res> {
-  __$$LoadSavedPreferencesImplCopyWithImpl(_$LoadSavedPreferencesImpl _value,
-      $Res Function(_$LoadSavedPreferencesImpl) _then)
-      : super(_value, _then);
+class _$ApppreferencesEventCopyWithImpl<$Res>
+    implements $ApppreferencesEventCopyWith<$Res> {
+  _$ApppreferencesEventCopyWithImpl(this._self, this._then);
 
+  final ApppreferencesEvent _self;
+  final $Res Function(ApppreferencesEvent) _then;
+
+  /// Create a copy of ApppreferencesEvent
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? appPreferences = null,
   }) {
-    return _then(_$LoadSavedPreferencesImpl(
+    return _then(_self.copyWith(
       appPreferences: null == appPreferences
-          ? _value.appPreferences
+          ? _self.appPreferences
           : appPreferences // ignore: cast_nullable_to_non_nullable
               as AppPreferences,
     ));
@@ -123,22 +78,26 @@ class __$$LoadSavedPreferencesImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$LoadSavedPreferencesImpl implements _LoadSavedPreferences {
-  const _$LoadSavedPreferencesImpl({required this.appPreferences});
+class _LoadSavedPreferences implements ApppreferencesEvent {
+  const _LoadSavedPreferences({required this.appPreferences});
 
   @override
   final AppPreferences appPreferences;
 
+  /// Create a copy of ApppreferencesEvent
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'ApppreferencesEvent.savePreferences(appPreferences: $appPreferences)';
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$LoadSavedPreferencesCopyWith<_LoadSavedPreferences> get copyWith =>
+      __$LoadSavedPreferencesCopyWithImpl<_LoadSavedPreferences>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LoadSavedPreferencesImpl &&
+            other is _LoadSavedPreferences &&
             (identical(other.appPreferences, appPreferences) ||
                 other.appPreferences == appPreferences));
   }
@@ -146,80 +105,45 @@ class _$LoadSavedPreferencesImpl implements _LoadSavedPreferences {
   @override
   int get hashCode => Object.hash(runtimeType, appPreferences);
 
-  @JsonKey(ignore: true)
+  @override
+  String toString() {
+    return 'ApppreferencesEvent.savePreferences(appPreferences: $appPreferences)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$LoadSavedPreferencesCopyWith<$Res>
+    implements $ApppreferencesEventCopyWith<$Res> {
+  factory _$LoadSavedPreferencesCopyWith(_LoadSavedPreferences value,
+          $Res Function(_LoadSavedPreferences) _then) =
+      __$LoadSavedPreferencesCopyWithImpl;
+  @override
+  @useResult
+  $Res call({AppPreferences appPreferences});
+}
+
+/// @nodoc
+class __$LoadSavedPreferencesCopyWithImpl<$Res>
+    implements _$LoadSavedPreferencesCopyWith<$Res> {
+  __$LoadSavedPreferencesCopyWithImpl(this._self, this._then);
+
+  final _LoadSavedPreferences _self;
+  final $Res Function(_LoadSavedPreferences) _then;
+
+  /// Create a copy of ApppreferencesEvent
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  _$$LoadSavedPreferencesImplCopyWith<_$LoadSavedPreferencesImpl>
-      get copyWith =>
-          __$$LoadSavedPreferencesImplCopyWithImpl<_$LoadSavedPreferencesImpl>(
-              this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(AppPreferences appPreferences) savePreferences,
+  $Res call({
+    Object? appPreferences = null,
   }) {
-    return savePreferences(appPreferences);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AppPreferences appPreferences)? savePreferences,
-  }) {
-    return savePreferences?.call(appPreferences);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AppPreferences appPreferences)? savePreferences,
-    required TResult orElse(),
-  }) {
-    if (savePreferences != null) {
-      return savePreferences(appPreferences);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_LoadSavedPreferences value) savePreferences,
-  }) {
-    return savePreferences(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_LoadSavedPreferences value)? savePreferences,
-  }) {
-    return savePreferences?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_LoadSavedPreferences value)? savePreferences,
-    required TResult orElse(),
-  }) {
-    if (savePreferences != null) {
-      return savePreferences(this);
-    }
-    return orElse();
+    return _then(_LoadSavedPreferences(
+      appPreferences: null == appPreferences
+          ? _self.appPreferences
+          : appPreferences // ignore: cast_nullable_to_non_nullable
+              as AppPreferences,
+    ));
   }
 }
 
-abstract class _LoadSavedPreferences implements ApppreferencesEvent {
-  const factory _LoadSavedPreferences(
-          {required final AppPreferences appPreferences}) =
-      _$LoadSavedPreferencesImpl;
-
-  @override
-  AppPreferences get appPreferences;
-  @override
-  @JsonKey(ignore: true)
-  _$$LoadSavedPreferencesImplCopyWith<_$LoadSavedPreferencesImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
+// dart format on

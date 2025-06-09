@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,110 +10,66 @@ part of 'time_unit_filter_cubit.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$TimeUnitFilterState {
-  TimeUnit get timeUnit => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(TimeUnit timeUnit) on,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(TimeUnit timeUnit)? on,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(TimeUnit timeUnit)? on,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_On value) on,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_On value)? on,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_On value)? on,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
+  TimeUnit get timeUnit;
 
-  @JsonKey(ignore: true)
-  $TimeUnitFilterStateCopyWith<TimeUnitFilterState> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $TimeUnitFilterStateCopyWith<$Res> {
-  factory $TimeUnitFilterStateCopyWith(
-          TimeUnitFilterState value, $Res Function(TimeUnitFilterState) then) =
-      _$TimeUnitFilterStateCopyWithImpl<$Res, TimeUnitFilterState>;
-  @useResult
-  $Res call({TimeUnit timeUnit});
-}
-
-/// @nodoc
-class _$TimeUnitFilterStateCopyWithImpl<$Res, $Val extends TimeUnitFilterState>
-    implements $TimeUnitFilterStateCopyWith<$Res> {
-  _$TimeUnitFilterStateCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
+  /// Create a copy of TimeUnitFilterState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
+  $TimeUnitFilterStateCopyWith<TimeUnitFilterState> get copyWith =>
+      _$TimeUnitFilterStateCopyWithImpl<TimeUnitFilterState>(
+          this as TimeUnitFilterState, _$identity);
+
   @override
-  $Res call({
-    Object? timeUnit = null,
-  }) {
-    return _then(_value.copyWith(
-      timeUnit: null == timeUnit
-          ? _value.timeUnit
-          : timeUnit // ignore: cast_nullable_to_non_nullable
-              as TimeUnit,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is TimeUnitFilterState &&
+            (identical(other.timeUnit, timeUnit) ||
+                other.timeUnit == timeUnit));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, timeUnit);
+
+  @override
+  String toString() {
+    return 'TimeUnitFilterState(timeUnit: $timeUnit)';
   }
 }
 
 /// @nodoc
-abstract class _$$OnImplCopyWith<$Res>
-    implements $TimeUnitFilterStateCopyWith<$Res> {
-  factory _$$OnImplCopyWith(_$OnImpl value, $Res Function(_$OnImpl) then) =
-      __$$OnImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $TimeUnitFilterStateCopyWith<$Res> {
+  factory $TimeUnitFilterStateCopyWith(
+          TimeUnitFilterState value, $Res Function(TimeUnitFilterState) _then) =
+      _$TimeUnitFilterStateCopyWithImpl;
   @useResult
   $Res call({TimeUnit timeUnit});
 }
 
 /// @nodoc
-class __$$OnImplCopyWithImpl<$Res>
-    extends _$TimeUnitFilterStateCopyWithImpl<$Res, _$OnImpl>
-    implements _$$OnImplCopyWith<$Res> {
-  __$$OnImplCopyWithImpl(_$OnImpl _value, $Res Function(_$OnImpl) _then)
-      : super(_value, _then);
+class _$TimeUnitFilterStateCopyWithImpl<$Res>
+    implements $TimeUnitFilterStateCopyWith<$Res> {
+  _$TimeUnitFilterStateCopyWithImpl(this._self, this._then);
 
+  final TimeUnitFilterState _self;
+  final $Res Function(TimeUnitFilterState) _then;
+
+  /// Create a copy of TimeUnitFilterState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? timeUnit = null,
   }) {
-    return _then(_$OnImpl(
+    return _then(_self.copyWith(
       timeUnit: null == timeUnit
-          ? _value.timeUnit
+          ? _self.timeUnit
           : timeUnit // ignore: cast_nullable_to_non_nullable
               as TimeUnit,
     ));
@@ -121,22 +78,24 @@ class __$$OnImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$OnImpl implements _On {
-  const _$OnImpl({required this.timeUnit});
+class _On implements TimeUnitFilterState {
+  const _On({required this.timeUnit});
 
   @override
   final TimeUnit timeUnit;
 
+  /// Create a copy of TimeUnitFilterState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'TimeUnitFilterState.on(timeUnit: $timeUnit)';
-  }
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$OnCopyWith<_On> get copyWith => __$OnCopyWithImpl<_On>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$OnImpl &&
+            other is _On &&
             (identical(other.timeUnit, timeUnit) ||
                 other.timeUnit == timeUnit));
   }
@@ -144,76 +103,42 @@ class _$OnImpl implements _On {
   @override
   int get hashCode => Object.hash(runtimeType, timeUnit);
 
-  @JsonKey(ignore: true)
+  @override
+  String toString() {
+    return 'TimeUnitFilterState.on(timeUnit: $timeUnit)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$OnCopyWith<$Res>
+    implements $TimeUnitFilterStateCopyWith<$Res> {
+  factory _$OnCopyWith(_On value, $Res Function(_On) _then) = __$OnCopyWithImpl;
+  @override
+  @useResult
+  $Res call({TimeUnit timeUnit});
+}
+
+/// @nodoc
+class __$OnCopyWithImpl<$Res> implements _$OnCopyWith<$Res> {
+  __$OnCopyWithImpl(this._self, this._then);
+
+  final _On _self;
+  final $Res Function(_On) _then;
+
+  /// Create a copy of TimeUnitFilterState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  _$$OnImplCopyWith<_$OnImpl> get copyWith =>
-      __$$OnImplCopyWithImpl<_$OnImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(TimeUnit timeUnit) on,
+  $Res call({
+    Object? timeUnit = null,
   }) {
-    return on(timeUnit);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(TimeUnit timeUnit)? on,
-  }) {
-    return on?.call(timeUnit);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(TimeUnit timeUnit)? on,
-    required TResult orElse(),
-  }) {
-    if (on != null) {
-      return on(timeUnit);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_On value) on,
-  }) {
-    return on(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_On value)? on,
-  }) {
-    return on?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_On value)? on,
-    required TResult orElse(),
-  }) {
-    if (on != null) {
-      return on(this);
-    }
-    return orElse();
+    return _then(_On(
+      timeUnit: null == timeUnit
+          ? _self.timeUnit
+          : timeUnit // ignore: cast_nullable_to_non_nullable
+              as TimeUnit,
+    ));
   }
 }
 
-abstract class _On implements TimeUnitFilterState {
-  const factory _On({required final TimeUnit timeUnit}) = _$OnImpl;
-
-  @override
-  TimeUnit get timeUnit;
-  @override
-  @JsonKey(ignore: true)
-  _$$OnImplCopyWith<_$OnImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on

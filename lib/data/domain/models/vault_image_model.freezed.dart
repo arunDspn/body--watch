@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,109 +10,59 @@ part of 'vault_image_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-VaultImage _$VaultImageFromJson(Map<String, dynamic> json) {
-  return _VaultImage.fromJson(json);
-}
 
 /// @nodoc
 mixin _$VaultImage {
-  String get id => throw _privateConstructorUsedError;
-  String get tag => throw _privateConstructorUsedError;
-  String get file => throw _privateConstructorUsedError;
+  String get id;
+  String get tag;
+  String get file;
   @JsonKey(name: 'thumbnail_file')
-  String get thumbnailFile => throw _privateConstructorUsedError;
-  DateTime get date => throw _privateConstructorUsedError;
-  String get nonce => throw _privateConstructorUsedError;
-  String get note => throw _privateConstructorUsedError;
+  String get thumbnailFile;
+  DateTime get date;
+  String get note;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $VaultImageCopyWith<VaultImage> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $VaultImageCopyWith<$Res> {
-  factory $VaultImageCopyWith(
-          VaultImage value, $Res Function(VaultImage) then) =
-      _$VaultImageCopyWithImpl<$Res, VaultImage>;
-  @useResult
-  $Res call(
-      {String id,
-      String tag,
-      String file,
-      @JsonKey(name: 'thumbnail_file') String thumbnailFile,
-      DateTime date,
-      String nonce,
-      String note});
-}
-
-/// @nodoc
-class _$VaultImageCopyWithImpl<$Res, $Val extends VaultImage>
-    implements $VaultImageCopyWith<$Res> {
-  _$VaultImageCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
+  /// Create a copy of VaultImage
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
+  $VaultImageCopyWith<VaultImage> get copyWith =>
+      _$VaultImageCopyWithImpl<VaultImage>(this as VaultImage, _$identity);
+
+  /// Serializes this VaultImage to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? id = null,
-    Object? tag = null,
-    Object? file = null,
-    Object? thumbnailFile = null,
-    Object? date = null,
-    Object? nonce = null,
-    Object? note = null,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      tag: null == tag
-          ? _value.tag
-          : tag // ignore: cast_nullable_to_non_nullable
-              as String,
-      file: null == file
-          ? _value.file
-          : file // ignore: cast_nullable_to_non_nullable
-              as String,
-      thumbnailFile: null == thumbnailFile
-          ? _value.thumbnailFile
-          : thumbnailFile // ignore: cast_nullable_to_non_nullable
-              as String,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      nonce: null == nonce
-          ? _value.nonce
-          : nonce // ignore: cast_nullable_to_non_nullable
-              as String,
-      note: null == note
-          ? _value.note
-          : note // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is VaultImage &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.tag, tag) || other.tag == tag) &&
+            (identical(other.file, file) || other.file == file) &&
+            (identical(other.thumbnailFile, thumbnailFile) ||
+                other.thumbnailFile == thumbnailFile) &&
+            (identical(other.date, date) || other.date == date) &&
+            (identical(other.note, note) || other.note == note));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, id, tag, file, thumbnailFile, date, note);
+
+  @override
+  String toString() {
+    return 'VaultImage(id: $id, tag: $tag, file: $file, thumbnailFile: $thumbnailFile, date: $date, note: $note)';
   }
 }
 
 /// @nodoc
-abstract class _$$VaultImageImplCopyWith<$Res>
-    implements $VaultImageCopyWith<$Res> {
-  factory _$$VaultImageImplCopyWith(
-          _$VaultImageImpl value, $Res Function(_$VaultImageImpl) then) =
-      __$$VaultImageImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $VaultImageCopyWith<$Res> {
+  factory $VaultImageCopyWith(
+          VaultImage value, $Res Function(VaultImage) _then) =
+      _$VaultImageCopyWithImpl;
   @useResult
   $Res call(
       {String id,
@@ -119,18 +70,18 @@ abstract class _$$VaultImageImplCopyWith<$Res>
       String file,
       @JsonKey(name: 'thumbnail_file') String thumbnailFile,
       DateTime date,
-      String nonce,
       String note});
 }
 
 /// @nodoc
-class __$$VaultImageImplCopyWithImpl<$Res>
-    extends _$VaultImageCopyWithImpl<$Res, _$VaultImageImpl>
-    implements _$$VaultImageImplCopyWith<$Res> {
-  __$$VaultImageImplCopyWithImpl(
-      _$VaultImageImpl _value, $Res Function(_$VaultImageImpl) _then)
-      : super(_value, _then);
+class _$VaultImageCopyWithImpl<$Res> implements $VaultImageCopyWith<$Res> {
+  _$VaultImageCopyWithImpl(this._self, this._then);
 
+  final VaultImage _self;
+  final $Res Function(VaultImage) _then;
+
+  /// Create a copy of VaultImage
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -139,36 +90,31 @@ class __$$VaultImageImplCopyWithImpl<$Res>
     Object? file = null,
     Object? thumbnailFile = null,
     Object? date = null,
-    Object? nonce = null,
     Object? note = null,
   }) {
-    return _then(_$VaultImageImpl(
+    return _then(_self.copyWith(
       id: null == id
-          ? _value.id
+          ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
       tag: null == tag
-          ? _value.tag
+          ? _self.tag
           : tag // ignore: cast_nullable_to_non_nullable
               as String,
       file: null == file
-          ? _value.file
+          ? _self.file
           : file // ignore: cast_nullable_to_non_nullable
               as String,
       thumbnailFile: null == thumbnailFile
-          ? _value.thumbnailFile
+          ? _self.thumbnailFile
           : thumbnailFile // ignore: cast_nullable_to_non_nullable
               as String,
       date: null == date
-          ? _value.date
+          ? _self.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      nonce: null == nonce
-          ? _value.nonce
-          : nonce // ignore: cast_nullable_to_non_nullable
-              as String,
       note: null == note
-          ? _value.note
+          ? _self.note
           : note // ignore: cast_nullable_to_non_nullable
               as String,
     ));
@@ -177,18 +123,16 @@ class __$$VaultImageImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$VaultImageImpl implements _VaultImage {
-  const _$VaultImageImpl(
+class _VaultImage implements VaultImage {
+  const _VaultImage(
       {required this.id,
       required this.tag,
       required this.file,
       @JsonKey(name: 'thumbnail_file') required this.thumbnailFile,
       required this.date,
-      required this.nonce,
       required this.note});
-
-  factory _$VaultImageImpl.fromJson(Map<String, dynamic> json) =>
-      _$$VaultImageImplFromJson(json);
+  factory _VaultImage.fromJson(Map<String, dynamic> json) =>
+      _$VaultImageFromJson(json);
 
   @override
   final String id;
@@ -202,79 +146,111 @@ class _$VaultImageImpl implements _VaultImage {
   @override
   final DateTime date;
   @override
-  final String nonce;
-  @override
   final String note;
 
+  /// Create a copy of VaultImage
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'VaultImage(id: $id, tag: $tag, file: $file, thumbnailFile: $thumbnailFile, date: $date, nonce: $nonce, note: $note)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$VaultImageCopyWith<_VaultImage> get copyWith =>
+      __$VaultImageCopyWithImpl<_VaultImage>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$VaultImageToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$VaultImageImpl &&
+            other is _VaultImage &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.tag, tag) || other.tag == tag) &&
             (identical(other.file, file) || other.file == file) &&
             (identical(other.thumbnailFile, thumbnailFile) ||
                 other.thumbnailFile == thumbnailFile) &&
             (identical(other.date, date) || other.date == date) &&
-            (identical(other.nonce, nonce) || other.nonce == nonce) &&
             (identical(other.note, note) || other.note == note));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, tag, file, thumbnailFile, date, nonce, note);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$VaultImageImplCopyWith<_$VaultImageImpl> get copyWith =>
-      __$$VaultImageImplCopyWithImpl<_$VaultImageImpl>(this, _$identity);
+      Object.hash(runtimeType, id, tag, file, thumbnailFile, date, note);
 
   @override
-  Map<String, dynamic> toJson() {
-    return _$$VaultImageImplToJson(
-      this,
-    );
+  String toString() {
+    return 'VaultImage(id: $id, tag: $tag, file: $file, thumbnailFile: $thumbnailFile, date: $date, note: $note)';
   }
 }
 
-abstract class _VaultImage implements VaultImage {
-  const factory _VaultImage(
-      {required final String id,
-      required final String tag,
-      required final String file,
-      @JsonKey(name: 'thumbnail_file') required final String thumbnailFile,
-      required final DateTime date,
-      required final String nonce,
-      required final String note}) = _$VaultImageImpl;
-
-  factory _VaultImage.fromJson(Map<String, dynamic> json) =
-      _$VaultImageImpl.fromJson;
-
+/// @nodoc
+abstract mixin class _$VaultImageCopyWith<$Res>
+    implements $VaultImageCopyWith<$Res> {
+  factory _$VaultImageCopyWith(
+          _VaultImage value, $Res Function(_VaultImage) _then) =
+      __$VaultImageCopyWithImpl;
   @override
-  String get id;
-  @override
-  String get tag;
-  @override
-  String get file;
-  @override
-  @JsonKey(name: 'thumbnail_file')
-  String get thumbnailFile;
-  @override
-  DateTime get date;
-  @override
-  String get nonce;
-  @override
-  String get note;
-  @override
-  @JsonKey(ignore: true)
-  _$$VaultImageImplCopyWith<_$VaultImageImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @useResult
+  $Res call(
+      {String id,
+      String tag,
+      String file,
+      @JsonKey(name: 'thumbnail_file') String thumbnailFile,
+      DateTime date,
+      String note});
 }
+
+/// @nodoc
+class __$VaultImageCopyWithImpl<$Res> implements _$VaultImageCopyWith<$Res> {
+  __$VaultImageCopyWithImpl(this._self, this._then);
+
+  final _VaultImage _self;
+  final $Res Function(_VaultImage) _then;
+
+  /// Create a copy of VaultImage
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? id = null,
+    Object? tag = null,
+    Object? file = null,
+    Object? thumbnailFile = null,
+    Object? date = null,
+    Object? note = null,
+  }) {
+    return _then(_VaultImage(
+      id: null == id
+          ? _self.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      tag: null == tag
+          ? _self.tag
+          : tag // ignore: cast_nullable_to_non_nullable
+              as String,
+      file: null == file
+          ? _self.file
+          : file // ignore: cast_nullable_to_non_nullable
+              as String,
+      thumbnailFile: null == thumbnailFile
+          ? _self.thumbnailFile
+          : thumbnailFile // ignore: cast_nullable_to_non_nullable
+              as String,
+      date: null == date
+          ? _self.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      note: null == note
+          ? _self.note
+          : note // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+// dart format on

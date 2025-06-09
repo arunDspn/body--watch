@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,89 +10,65 @@ part of 'two_dates_record_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-TwoDatesRecord _$TwoDatesRecordFromJson(Map<String, dynamic> json) {
-  return _TwoDatesRecord.fromJson(json);
-}
 
 /// @nodoc
 mixin _$TwoDatesRecord {
-  String get name => throw _privateConstructorUsedError;
-  double? get data1 => throw _privateConstructorUsedError;
-  double? get data2 => throw _privateConstructorUsedError;
+  String get name;
+  double? get data1;
+  double? get data2;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $TwoDatesRecordCopyWith<TwoDatesRecord> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $TwoDatesRecordCopyWith<$Res> {
-  factory $TwoDatesRecordCopyWith(
-          TwoDatesRecord value, $Res Function(TwoDatesRecord) then) =
-      _$TwoDatesRecordCopyWithImpl<$Res, TwoDatesRecord>;
-  @useResult
-  $Res call({String name, double? data1, double? data2});
-}
-
-/// @nodoc
-class _$TwoDatesRecordCopyWithImpl<$Res, $Val extends TwoDatesRecord>
-    implements $TwoDatesRecordCopyWith<$Res> {
-  _$TwoDatesRecordCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
+  /// Create a copy of TwoDatesRecord
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
+  $TwoDatesRecordCopyWith<TwoDatesRecord> get copyWith =>
+      _$TwoDatesRecordCopyWithImpl<TwoDatesRecord>(
+          this as TwoDatesRecord, _$identity);
+
+  /// Serializes this TwoDatesRecord to a JSON map.
+  Map<String, dynamic> toJson();
+
   @override
-  $Res call({
-    Object? name = null,
-    Object? data1 = freezed,
-    Object? data2 = freezed,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      data1: freezed == data1
-          ? _value.data1
-          : data1 // ignore: cast_nullable_to_non_nullable
-              as double?,
-      data2: freezed == data2
-          ? _value.data2
-          : data2 // ignore: cast_nullable_to_non_nullable
-              as double?,
-    ) as $Val);
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is TwoDatesRecord &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.data1, data1) || other.data1 == data1) &&
+            (identical(other.data2, data2) || other.data2 == data2));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, data1, data2);
+
+  @override
+  String toString() {
+    return 'TwoDatesRecord(name: $name, data1: $data1, data2: $data2)';
   }
 }
 
 /// @nodoc
-abstract class _$$TwoDatesRecordImplCopyWith<$Res>
-    implements $TwoDatesRecordCopyWith<$Res> {
-  factory _$$TwoDatesRecordImplCopyWith(_$TwoDatesRecordImpl value,
-          $Res Function(_$TwoDatesRecordImpl) then) =
-      __$$TwoDatesRecordImplCopyWithImpl<$Res>;
-  @override
+abstract mixin class $TwoDatesRecordCopyWith<$Res> {
+  factory $TwoDatesRecordCopyWith(
+          TwoDatesRecord value, $Res Function(TwoDatesRecord) _then) =
+      _$TwoDatesRecordCopyWithImpl;
   @useResult
   $Res call({String name, double? data1, double? data2});
 }
 
 /// @nodoc
-class __$$TwoDatesRecordImplCopyWithImpl<$Res>
-    extends _$TwoDatesRecordCopyWithImpl<$Res, _$TwoDatesRecordImpl>
-    implements _$$TwoDatesRecordImplCopyWith<$Res> {
-  __$$TwoDatesRecordImplCopyWithImpl(
-      _$TwoDatesRecordImpl _value, $Res Function(_$TwoDatesRecordImpl) _then)
-      : super(_value, _then);
+class _$TwoDatesRecordCopyWithImpl<$Res>
+    implements $TwoDatesRecordCopyWith<$Res> {
+  _$TwoDatesRecordCopyWithImpl(this._self, this._then);
 
+  final TwoDatesRecord _self;
+  final $Res Function(TwoDatesRecord) _then;
+
+  /// Create a copy of TwoDatesRecord
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -99,17 +76,17 @@ class __$$TwoDatesRecordImplCopyWithImpl<$Res>
     Object? data1 = freezed,
     Object? data2 = freezed,
   }) {
-    return _then(_$TwoDatesRecordImpl(
+    return _then(_self.copyWith(
       name: null == name
-          ? _value.name
+          ? _self.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
       data1: freezed == data1
-          ? _value.data1
+          ? _self.data1
           : data1 // ignore: cast_nullable_to_non_nullable
               as double?,
       data2: freezed == data2
-          ? _value.data2
+          ? _self.data2
           : data2 // ignore: cast_nullable_to_non_nullable
               as double?,
     ));
@@ -118,12 +95,11 @@ class __$$TwoDatesRecordImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$TwoDatesRecordImpl implements _TwoDatesRecord {
-  const _$TwoDatesRecordImpl(
+class _TwoDatesRecord implements TwoDatesRecord {
+  const _TwoDatesRecord(
       {required this.name, required this.data1, required this.data2});
-
-  factory _$TwoDatesRecordImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TwoDatesRecordImplFromJson(json);
+  factory _TwoDatesRecord.fromJson(Map<String, dynamic> json) =>
+      _$TwoDatesRecordFromJson(json);
 
   @override
   final String name;
@@ -132,57 +108,84 @@ class _$TwoDatesRecordImpl implements _TwoDatesRecord {
   @override
   final double? data2;
 
+  /// Create a copy of TwoDatesRecord
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  String toString() {
-    return 'TwoDatesRecord(name: $name, data1: $data1, data2: $data2)';
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$TwoDatesRecordCopyWith<_TwoDatesRecord> get copyWith =>
+      __$TwoDatesRecordCopyWithImpl<_TwoDatesRecord>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$TwoDatesRecordToJson(
+      this,
+    );
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TwoDatesRecordImpl &&
+            other is _TwoDatesRecord &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.data1, data1) || other.data1 == data1) &&
             (identical(other.data2, data2) || other.data2 == data2));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, name, data1, data2);
 
-  @JsonKey(ignore: true)
   @override
-  @pragma('vm:prefer-inline')
-  _$$TwoDatesRecordImplCopyWith<_$TwoDatesRecordImpl> get copyWith =>
-      __$$TwoDatesRecordImplCopyWithImpl<_$TwoDatesRecordImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$TwoDatesRecordImplToJson(
-      this,
-    );
+  String toString() {
+    return 'TwoDatesRecord(name: $name, data1: $data1, data2: $data2)';
   }
 }
 
-abstract class _TwoDatesRecord implements TwoDatesRecord {
-  const factory _TwoDatesRecord(
-      {required final String name,
-      required final double? data1,
-      required final double? data2}) = _$TwoDatesRecordImpl;
-
-  factory _TwoDatesRecord.fromJson(Map<String, dynamic> json) =
-      _$TwoDatesRecordImpl.fromJson;
-
+/// @nodoc
+abstract mixin class _$TwoDatesRecordCopyWith<$Res>
+    implements $TwoDatesRecordCopyWith<$Res> {
+  factory _$TwoDatesRecordCopyWith(
+          _TwoDatesRecord value, $Res Function(_TwoDatesRecord) _then) =
+      __$TwoDatesRecordCopyWithImpl;
   @override
-  String get name;
-  @override
-  double? get data1;
-  @override
-  double? get data2;
-  @override
-  @JsonKey(ignore: true)
-  _$$TwoDatesRecordImplCopyWith<_$TwoDatesRecordImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  @useResult
+  $Res call({String name, double? data1, double? data2});
 }
+
+/// @nodoc
+class __$TwoDatesRecordCopyWithImpl<$Res>
+    implements _$TwoDatesRecordCopyWith<$Res> {
+  __$TwoDatesRecordCopyWithImpl(this._self, this._then);
+
+  final _TwoDatesRecord _self;
+  final $Res Function(_TwoDatesRecord) _then;
+
+  /// Create a copy of TwoDatesRecord
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? name = null,
+    Object? data1 = freezed,
+    Object? data2 = freezed,
+  }) {
+    return _then(_TwoDatesRecord(
+      name: null == name
+          ? _self.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      data1: freezed == data1
+          ? _self.data1
+          : data1 // ignore: cast_nullable_to_non_nullable
+              as double?,
+      data2: freezed == data2
+          ? _self.data2
+          : data2 // ignore: cast_nullable_to_non_nullable
+              as double?,
+    ));
+  }
+}
+
+// dart format on

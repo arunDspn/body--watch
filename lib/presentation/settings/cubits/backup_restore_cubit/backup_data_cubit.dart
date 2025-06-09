@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
 import 'package:external_path/external_path.dart';
@@ -136,7 +137,14 @@ class BackupRestoreDataCubit extends Cubit<BackupRestoreDataState> {
 
   Future<void> _shareFile(File file) async {
     try {
-      await Share.shareFiles([file.path]);
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          text: 'Watcha Body Backup',
+          subject: 'Watcha Body Backup Data',
+          sharePositionOrigin: const Rect.fromLTWH(0, 0, 100, 100), // Optional
+        ),
+      );
     } catch (e) {
       return Future.error(e);
     }

@@ -1,7 +1,7 @@
 part of 'picture_type_filter_modal_bloc.dart';
 
 @freezed
-class PictureTypeFilterModalState with _$PictureTypeFilterModalState {
+abstract class PictureTypeFilterModalState with _$PictureTypeFilterModalState {
   const factory PictureTypeFilterModalState.loading() = _Loading;
   // failed
   const factory PictureTypeFilterModalState.failed({

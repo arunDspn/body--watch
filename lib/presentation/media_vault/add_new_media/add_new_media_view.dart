@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/data/domain/models/save_vault_image_model.dart';
-import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/components/tag_dropdown/tag_dropdown.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new_media_cubit.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/gallery_view/vault_gallery_view.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 
 class AddNewMediaView extends StatefulWidget {
   const AddNewMediaView({super.key});

@@ -80,16 +80,16 @@ class _PhotoViewerState extends State<PhotoViewer> {
                 },
                 builder: (context, index) {
                   return PhotoViewGalleryPageOptions(
-                    // imageProvider: FileImage(
-                    //   File(widget.images[index].path),
-                    // ),
-                    imageProvider: CustomImageProvider(
-                      widget.images[index].file,
-                      context
-                          .read<BodyPictureRepository>()
-                          .decryptImageFromPath,
-                      widget.images[index].nonce,
+                    imageProvider: FileImage(
+                      File(widget.images[index].file),
                     ),
+                    // imageProvider: CustomImageProvider(
+                    //   widget.images[index].file,
+                    //   context
+                    //       .read<BodyPictureRepository>()
+                    //       .decryptImageFromPath,
+                    //   widget.images[index].nonce,
+                    // ),
                   );
                 },
               ),

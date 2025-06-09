@@ -4,7 +4,7 @@ part 'save_vault_image_model.freezed.dart';
 part 'save_vault_image_model.g.dart';
 
 @freezed
-class SaveVaultImageModel with _$SaveVaultImageModel {
+abstract class SaveVaultImageModel with _$SaveVaultImageModel {
   const factory SaveVaultImageModel({
     required String tag,
     required String path,

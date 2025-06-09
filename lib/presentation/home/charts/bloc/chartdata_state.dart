@@ -1,7 +1,7 @@
 part of 'chartdata_bloc.dart';
 
 @freezed
-class ChartdataState with _$ChartdataState {
+abstract class ChartdataState with _$ChartdataState {
   const factory ChartdataState.initial() = _Initial;
   const factory ChartdataState.loading() = _Loading;
   const factory ChartdataState.success({

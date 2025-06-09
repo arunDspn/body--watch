@@ -1,7 +1,7 @@
 part of 'comparison_data_cubit.dart';
 
 @freezed
-class ComparisonDataState with _$ComparisonDataState {
+abstract class ComparisonDataState with _$ComparisonDataState {
   const factory ComparisonDataState.initial() = _Initial;
 
   const factory ComparisonDataState.loading() = _Loading;

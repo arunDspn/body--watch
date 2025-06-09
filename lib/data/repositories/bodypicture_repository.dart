@@ -129,97 +129,9 @@ class BodyPictureRepository implements IBodyPictureFacade {
         'pictures',
       );
 
-      final encryptedDataList = data.map(VaultImage.fromJson).toList();
+      final dataList = data.map(VaultImage.fromJson).toList();
 
-      final decrytedDataList = <DisplayVaultImageModel>[];
-      for (final e in encryptedDataList) {
-        // also trim .enc at last
-        // final fileName =
-        //     e.thumbnailPath.split('/').last.replaceFirst('.enc', '');
-        final appDocDir = await getApplicationDocumentsDirectory();
-        final thumbnailFile = File(
-          '${appDocDir.path}/$encrytedThumbnailsFolderPath/${e.thumbnailFile}',
-        );
-
-        final encryptedFilesPath =
-            '${appDocDir.path}/$encrytedImagesFolderPath/';
-
-        final data = await encryptService.decryptPhoto(
-          encryptedPhotoBytes: thumbnailFile.readAsBytesSync(),
-          nonce: Uint8List.fromList([]),
-        );
-
-        // final newCachedPath = await cacheService.storeFromBytes(data, fileName);
-        // final d = e.copyWith(
-        //   path: newCachedPath,
-        // );
-        final displayModel = DisplayVaultImageModel(
-          id: e.id,
-          tag: e.tag,
-          file: encryptedFilesPath + e.file,
-          thumbnailData: data as Uint8List,
-          date: e.date,
-          nonce: e.nonce,
-        );
-        decrytedDataList.add(displayModel);
-      }
-
-      // final decrytedDataList = encryptedDataList.map((e) async {
-      //   final d = e.copyWith(
-      //     path: await cacheService.get(e.path) ?? '',
-      //   );
-      //   return d;
-      // }).toList();
-
-      // final d = await compute((message) {
-
-      // }, message);
-
-      // final rootToken = RootIsolateToken.instance!;
-      // final decrytedDataList = await Isolate.run<List<VaultImage>>(
-      //   () async {
-      //     BackgroundIsolateBinaryMessenger.ensureInitialized(rootToken);
-      //     final decrytedDataList = <VaultImage>[];
-      //     try {
-      //       for (final e in encryptedDataList) {
-      //         // also trim .enc at last
-      //         final fileName = e.path.split('/').last.replaceFirst('.enc', '');
-
-      //         final data = await encryptService
-      //             .decryptPhoto(File(e.path).readAsBytesSync());
-
-      //         final newCachedPath =
-      //             await cacheService.storeFromBytes(data, fileName);
-      //         final d = e.copyWith(
-      //           path: newCachedPath,
-      //         );
-      //         decrytedDataList.add(d);
-      //       }
-      //     } on Exception catch (e) {
-      //       debugPrint(e.toString());
-      //       rethrow;
-      //     }
-      //     return decrytedDataList;
-      //   },
-      // );
-
-      // final decrytedDataList = <VaultImage>[];
-
-      // for (final e in encryptedDataList) {
-      //   // also trim .enc at last
-      //   final fileName = e.path.split('/').last.replaceFirst('.enc', '');
-
-      //   final data =
-      //       await encryptService.decryptPhoto(File(e.path).readAsBytesSync());
-
-      //   final newCachedPath = await cacheService.storeFromBytes(data, fileName);
-      //   final d = e.copyWith(
-      //     path: newCachedPath,
-      //   );
-      //   decrytedDataList.add(d);
-      // }
-
-      return right(decrytedDataList);
+      return right(dataList);
     } catch (e) {
       return left(e.toString());
     }
@@ -393,16 +305,6 @@ class BodyPictureRepository implements IBodyPictureFacade {
     }
   }
 
-  // @override
-  // Future<Either<String, Unit>> clearLocalCache() async {
-  //   try {
-  //     await cacheService.clear();
-  //     return right(unit);
-  //   } catch (e) {
-  //     return left(e.toString());
-  //   }
-  // }
-
   @override
   Future<Either<String, String>> backupPhotosToZip() async {
     throw UnimplementedError();
@@ -427,23 +329,6 @@ class BodyPictureRepository implements IBodyPictureFacade {
     // } catch (e) {
     //   return left(e.toString());
     // }
-  }
-
-  @override
-  Future<Uint8List> decryptImageFromPath({
-    required String path,
-    required Uint8List nonce,
-  }) async {
-    // try {
-    //   final bytes = await encryptService.decryptPhotoFromPath(
-    //     path: path,
-    //     nonce: nonce,
-    //   );
-    //   return bytes as Uint8List;
-    // } catch (e) {
-    //   rethrow;
-    // }
-    throw UnimplementedError();
   }
 
   /// Create filename by current date, given tag, path's extenstion

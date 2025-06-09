@@ -6,7 +6,7 @@ part 'vault_image_model.g.dart';
 
 /// This is used for translation of db records
 @freezed
-class VaultImage with _$VaultImage {
+abstract class VaultImage with _$VaultImage {
   const factory VaultImage({
     required String id,
     required String tag,

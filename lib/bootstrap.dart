@@ -47,7 +47,9 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
         log(details.exceptionAsString(), stackTrace: details.stack);
       };
       HydratedBloc.storage = await HydratedStorage.build(
-        storageDirectory: await getApplicationDocumentsDirectory(),
+        storageDirectory: HydratedStorageDirectory(
+          (await getApplicationDocumentsDirectory()).path,
+        ),
       );
       Bloc.observer = AppBlocObserver();
       runApp(await builder());

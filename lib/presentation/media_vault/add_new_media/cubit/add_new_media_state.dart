@@ -1,7 +1,7 @@
 part of 'add_new_media_cubit.dart';
 
 @freezed
-class AddNewMediaState with _$AddNewMediaState {
+abstract class AddNewMediaState with _$AddNewMediaState {
   const factory AddNewMediaState.initial() = _Initial;
   // Loading
   const factory AddNewMediaState.loading() = _Loading;

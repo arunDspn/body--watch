@@ -59,9 +59,9 @@ class _MetricsLineGraphState extends State<MetricsLineGraph> {
                         ),
                         lineTouchData: LineTouchData(
                           touchTooltipData: LineTouchTooltipData(
-                            tooltipBgColor: Theme.of(context)
-                                .colorScheme
-                                .secondaryContainer,
+                            // tooltipBgColor: Theme.of(context)
+                            //     .colorScheme
+                            //     .secondaryContainer,
                             getTooltipItems: (touchedSpots) {
                               final dateString =
                                   switch (widget.dayToText.timeUnit) {
@@ -109,7 +109,7 @@ class _MetricsLineGraphState extends State<MetricsLineGraph> {
                                 // }
 
                                 return SideTitleWidget(
-                                  axisSide: meta.axisSide,
+                                  meta: meta,
                                   child: Text(
                                     widget.dayToText.getRelevantTextByNumber(
                                       value,
@@ -127,7 +127,8 @@ class _MetricsLineGraphState extends State<MetricsLineGraph> {
                               showTitles: true,
                               reservedSize: 32,
                               getTitlesWidget: (value, meta) => SideTitleWidget(
-                                axisSide: meta.axisSide,
+                                // axisSide: meta.axisSide,
+                                meta: meta,
                                 child: Text(
                                   meta.formattedValue,
                                   style: const TextStyle(

@@ -6,16 +6,15 @@ part of 'save_vault_image_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$SaveVaultImageModelImpl _$$SaveVaultImageModelImplFromJson(
-        Map<String, dynamic> json) =>
-    _$SaveVaultImageModelImpl(
+_SaveVaultImageModel _$SaveVaultImageModelFromJson(Map<String, dynamic> json) =>
+    _SaveVaultImageModel(
       tag: json['tag'] as String,
       path: json['path'] as String,
       date: DateTime.parse(json['date'] as String),
     );
 
-Map<String, dynamic> _$$SaveVaultImageModelImplToJson(
-        _$SaveVaultImageModelImpl instance) =>
+Map<String, dynamic> _$SaveVaultImageModelToJson(
+        _SaveVaultImageModel instance) =>
     <String, dynamic>{
       'tag': instance.tag,
       'path': instance.path,

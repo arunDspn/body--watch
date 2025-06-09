@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -9,306 +10,114 @@ part of 'app_preferences_failures.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$AppPreferencesFailure {
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() notPreferencesFound,
-    required TResult Function(String message) typicalFailure,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? notPreferencesFound,
-    TResult? Function(String message)? typicalFailure,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? notPreferencesFound,
-    TResult Function(String message)? typicalFailure,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(NotPreferencesFound value) notPreferencesFound,
-    required TResult Function(TypicalFailure value) typicalFailure,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(NotPreferencesFound value)? notPreferencesFound,
-    TResult? Function(TypicalFailure value)? typicalFailure,
-  }) =>
-      throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(NotPreferencesFound value)? notPreferencesFound,
-    TResult Function(TypicalFailure value)? typicalFailure,
-    required TResult orElse(),
-  }) =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $AppPreferencesFailureCopyWith<$Res> {
-  factory $AppPreferencesFailureCopyWith(AppPreferencesFailure value,
-          $Res Function(AppPreferencesFailure) then) =
-      _$AppPreferencesFailureCopyWithImpl<$Res, AppPreferencesFailure>;
-}
-
-/// @nodoc
-class _$AppPreferencesFailureCopyWithImpl<$Res,
-        $Val extends AppPreferencesFailure>
-    implements $AppPreferencesFailureCopyWith<$Res> {
-  _$AppPreferencesFailureCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-}
-
-/// @nodoc
-abstract class _$$NotPreferencesFoundImplCopyWith<$Res> {
-  factory _$$NotPreferencesFoundImplCopyWith(_$NotPreferencesFoundImpl value,
-          $Res Function(_$NotPreferencesFoundImpl) then) =
-      __$$NotPreferencesFoundImplCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$NotPreferencesFoundImplCopyWithImpl<$Res>
-    extends _$AppPreferencesFailureCopyWithImpl<$Res, _$NotPreferencesFoundImpl>
-    implements _$$NotPreferencesFoundImplCopyWith<$Res> {
-  __$$NotPreferencesFoundImplCopyWithImpl(_$NotPreferencesFoundImpl _value,
-      $Res Function(_$NotPreferencesFoundImpl) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$NotPreferencesFoundImpl implements NotPreferencesFound {
-  const _$NotPreferencesFoundImpl();
-
-  @override
-  String toString() {
-    return 'AppPreferencesFailure.notPreferencesFound()';
-  }
-
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$NotPreferencesFoundImpl);
+        (other.runtimeType == runtimeType && other is AppPreferencesFailure);
   }
 
   @override
   int get hashCode => runtimeType.hashCode;
 
   @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() notPreferencesFound,
-    required TResult Function(String message) typicalFailure,
-  }) {
-    return notPreferencesFound();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? notPreferencesFound,
-    TResult? Function(String message)? typicalFailure,
-  }) {
-    return notPreferencesFound?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? notPreferencesFound,
-    TResult Function(String message)? typicalFailure,
-    required TResult orElse(),
-  }) {
-    if (notPreferencesFound != null) {
-      return notPreferencesFound();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(NotPreferencesFound value) notPreferencesFound,
-    required TResult Function(TypicalFailure value) typicalFailure,
-  }) {
-    return notPreferencesFound(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(NotPreferencesFound value)? notPreferencesFound,
-    TResult? Function(TypicalFailure value)? typicalFailure,
-  }) {
-    return notPreferencesFound?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(NotPreferencesFound value)? notPreferencesFound,
-    TResult Function(TypicalFailure value)? typicalFailure,
-    required TResult orElse(),
-  }) {
-    if (notPreferencesFound != null) {
-      return notPreferencesFound(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class NotPreferencesFound implements AppPreferencesFailure {
-  const factory NotPreferencesFound() = _$NotPreferencesFoundImpl;
-}
-
-/// @nodoc
-abstract class _$$TypicalFailureImplCopyWith<$Res> {
-  factory _$$TypicalFailureImplCopyWith(_$TypicalFailureImpl value,
-          $Res Function(_$TypicalFailureImpl) then) =
-      __$$TypicalFailureImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String message});
-}
-
-/// @nodoc
-class __$$TypicalFailureImplCopyWithImpl<$Res>
-    extends _$AppPreferencesFailureCopyWithImpl<$Res, _$TypicalFailureImpl>
-    implements _$$TypicalFailureImplCopyWith<$Res> {
-  __$$TypicalFailureImplCopyWithImpl(
-      _$TypicalFailureImpl _value, $Res Function(_$TypicalFailureImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? message = null,
-  }) {
-    return _then(_$TypicalFailureImpl(
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  String toString() {
+    return 'AppPreferencesFailure()';
   }
 }
 
 /// @nodoc
+class $AppPreferencesFailureCopyWith<$Res> {
+  $AppPreferencesFailureCopyWith(
+      AppPreferencesFailure _, $Res Function(AppPreferencesFailure) __);
+}
 
-class _$TypicalFailureImpl implements TypicalFailure {
-  const _$TypicalFailureImpl({required this.message});
+/// @nodoc
+
+class NotPreferencesFound implements AppPreferencesFailure {
+  const NotPreferencesFound();
 
   @override
-  final String message;
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is NotPreferencesFound);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 
   @override
   String toString() {
-    return 'AppPreferencesFailure.typicalFailure(message: $message)';
+    return 'AppPreferencesFailure.notPreferencesFound()';
   }
+}
+
+/// @nodoc
+
+class TypicalFailure implements AppPreferencesFailure {
+  const TypicalFailure({required this.message});
+
+  final String message;
+
+  /// Create a copy of AppPreferencesFailure
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $TypicalFailureCopyWith<TypicalFailure> get copyWith =>
+      _$TypicalFailureCopyWithImpl<TypicalFailure>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TypicalFailureImpl &&
+            other is TypicalFailure &&
             (identical(other.message, message) || other.message == message));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType, message);
 
-  @JsonKey(ignore: true)
   @override
+  String toString() {
+    return 'AppPreferencesFailure.typicalFailure(message: $message)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $TypicalFailureCopyWith<$Res>
+    implements $AppPreferencesFailureCopyWith<$Res> {
+  factory $TypicalFailureCopyWith(
+          TypicalFailure value, $Res Function(TypicalFailure) _then) =
+      _$TypicalFailureCopyWithImpl;
+  @useResult
+  $Res call({String message});
+}
+
+/// @nodoc
+class _$TypicalFailureCopyWithImpl<$Res>
+    implements $TypicalFailureCopyWith<$Res> {
+  _$TypicalFailureCopyWithImpl(this._self, this._then);
+
+  final TypicalFailure _self;
+  final $Res Function(TypicalFailure) _then;
+
+  /// Create a copy of AppPreferencesFailure
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
-  _$$TypicalFailureImplCopyWith<_$TypicalFailureImpl> get copyWith =>
-      __$$TypicalFailureImplCopyWithImpl<_$TypicalFailureImpl>(
-          this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() notPreferencesFound,
-    required TResult Function(String message) typicalFailure,
+  $Res call({
+    Object? message = null,
   }) {
-    return typicalFailure(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? notPreferencesFound,
-    TResult? Function(String message)? typicalFailure,
-  }) {
-    return typicalFailure?.call(message);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? notPreferencesFound,
-    TResult Function(String message)? typicalFailure,
-    required TResult orElse(),
-  }) {
-    if (typicalFailure != null) {
-      return typicalFailure(message);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(NotPreferencesFound value) notPreferencesFound,
-    required TResult Function(TypicalFailure value) typicalFailure,
-  }) {
-    return typicalFailure(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(NotPreferencesFound value)? notPreferencesFound,
-    TResult? Function(TypicalFailure value)? typicalFailure,
-  }) {
-    return typicalFailure?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(NotPreferencesFound value)? notPreferencesFound,
-    TResult Function(TypicalFailure value)? typicalFailure,
-    required TResult orElse(),
-  }) {
-    if (typicalFailure != null) {
-      return typicalFailure(this);
-    }
-    return orElse();
+    return _then(TypicalFailure(
+      message: null == message
+          ? _self.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
-abstract class TypicalFailure implements AppPreferencesFailure {
-  const factory TypicalFailure({required final String message}) =
-      _$TypicalFailureImpl;
-
-  String get message;
-  @JsonKey(ignore: true)
-  _$$TypicalFailureImplCopyWith<_$TypicalFailureImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
+// dart format on
