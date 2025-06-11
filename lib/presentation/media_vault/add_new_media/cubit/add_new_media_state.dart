@@ -1,13 +1,14 @@
 part of 'add_new_media_cubit.dart';
 
 @freezed
-abstract class AddNewMediaState with _$AddNewMediaState {
-  const factory AddNewMediaState.initial() = _Initial;
+sealed class AddNewMediaState with _$AddNewMediaState {
+  const factory AddNewMediaState.initial() = AddNewMediaStateInitial;
   // Loading
-  const factory AddNewMediaState.loading() = _Loading;
+  const factory AddNewMediaState.loading() = AddNewMediaStateLoading;
   // Success
   const factory AddNewMediaState.success({required VaultImage savedImage}) =
-      _Success;
+      AddNewMediaStateSuccess;
   // Failure
-  const factory AddNewMediaState.failure(String failure) = _Failure;
+  const factory AddNewMediaState.failure(String failure) =
+      AddNewMediaStateFailure;
 }

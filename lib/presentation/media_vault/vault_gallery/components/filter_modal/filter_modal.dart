@@ -47,50 +47,65 @@ class FilterModal extends StatelessWidget {
           child: BlocBuilder<PictureTypeFilterModalBloc,
               PictureTypeFilterModalState>(
             builder: (context, state) {
-              return state.map(
-                failed: (value) {
-                  return const Center(
-                    child: Text('Failed'),
-                  );
-                },
-                loading: (value) {
-                  return const Center(
+              return switch (state) {
+                PictureTypeFilterModalStateLoading() => const Center(
                     child: CircularProgressIndicator(),
-                  );
-                },
-                success: (value) {
-                  final list = value.allTypes;
-                  final selected = value.selectedTypes;
+                  ),
+                PictureTypeFilterModalStateFailed() => const Center(
+                    child: Text('Failed'),
+                  ),
+                PictureTypeFilterModalStateSuccess(
+                  allTypes: final List<String> allTypes,
+                  selectedTypes: final List<String> selectedTypes,
+                ) =>
+                  Builder(
+                    builder: (context) {
+                      final list = allTypes;
+                      final selected = selectedTypes;
 
-                  return SizedBox(
-                    height: 400,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ListView.builder(
-                        itemCount: list.length,
-                        itemBuilder: (context, index) {
-                          return CheckboxListTile(
-                            title: Text(list[index]),
-                            selected: selected.contains(list[index]),
-                            value: selected.contains(list[index]),
-                            controlAffinity: ListTileControlAffinity.trailing,
-                            onChanged: (bool? value) {
-                              if (value != null) {
-                                context.read<PictureTypeFilterModalBloc>().add(
-                                      PictureTypeFilterModalEvent.toggle(
-                                        type: list[index],
-                                        value: value,
-                                      ),
-                                    );
-                              }
+                      return SizedBox(
+                        height: 400,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: ListView.builder(
+                            itemCount: list.length,
+                            itemBuilder: (context, index) {
+                              return CheckboxListTile(
+                                title: Text(list[index]),
+                                selected: selected.contains(list[index]),
+                                value: selected.contains(list[index]),
+                                controlAffinity:
+                                    ListTileControlAffinity.trailing,
+                                onChanged: (bool? value) {
+                                  if (value != null) {
+                                    context
+                                        .read<PictureTypeFilterModalBloc>()
+                                        .add(
+                                          PictureTypeFilterModalEvent.toggle(
+                                            type: list[index],
+                                            value: value,
+                                          ),
+                                        );
+                                  }
+                                },
+                              );
                             },
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                },
-              );
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+              };
+
+              // return state.map(
+              //   failed: (value) {
+              //     return;
+              //   },
+              //   loading: (value) {
+              //     return;
+              //   },
+              //   success: (value) {},
+              // );
             },
           ),
         ),

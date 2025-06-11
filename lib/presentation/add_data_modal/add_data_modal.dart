@@ -97,8 +97,8 @@ class _AddDataModalState extends State<AddDataModal> {
       // height: 400,
       child: BlocListener<AdddataCubit, AdddataState>(
         listener: (context, state) {
-          state.maybeMap(
-            failure: (value) {
+          switch (state) {
+            case AddDataFailure():
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: const Text('Failed'),
@@ -106,8 +106,8 @@ class _AddDataModalState extends State<AddDataModal> {
                   behavior: SnackBarBehavior.floating,
                 ),
               );
-            },
-            success: (value) {
+              break;
+            case AddDataSuccess():
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: const Text('Success'),
@@ -139,16 +139,11 @@ class _AddDataModalState extends State<AddDataModal> {
               //     return false;
               //   }
               // });
-            },
-            orElse: () {
-              // ScaffoldMessenger.of(context).showSnackBar(
-              //   const SnackBar(
-              //     content: Text('E:SE'),
-              //     backgroundColor: Colors.amberAccent,
-              //   ),
-              // );
-            },
-          );
+              break;
+
+            default:
+              break;
+          }
         },
         child: Container(
           decoration: BoxDecoration(

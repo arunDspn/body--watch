@@ -1,7 +1,7 @@
 part of 'auth_initialization_checker_bloc.dart';
 
 @freezed
-abstract class AuthInitializationCheckerEvents
+sealed class AuthInitializationCheckerEvents
     with _$AuthInitializationCheckerEvents {
   const factory AuthInitializationCheckerEvents.checkAuth() = _CheckAuth;
 }

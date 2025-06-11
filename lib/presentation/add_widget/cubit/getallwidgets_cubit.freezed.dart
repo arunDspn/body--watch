@@ -38,13 +38,13 @@ class $GetallwidgetsStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements GetallwidgetsState {
-  const _Initial();
+class GetAllWidgetInitial implements GetallwidgetsState {
+  const GetAllWidgetInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType && other is GetAllWidgetInitial);
   }
 
   @override
@@ -58,13 +58,13 @@ class _Initial implements GetallwidgetsState {
 
 /// @nodoc
 
-class _Loading implements GetallwidgetsState {
-  const _Loading();
+class GetAllWidgetLoading implements GetallwidgetsState {
+  const GetAllWidgetLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType && other is GetAllWidgetLoading);
   }
 
   @override
@@ -78,8 +78,8 @@ class _Loading implements GetallwidgetsState {
 
 /// @nodoc
 
-class _Failure implements GetallwidgetsState {
-  const _Failure(this.cause);
+class GetAllWidgetFailure implements GetallwidgetsState {
+  const GetAllWidgetFailure(this.cause);
 
   final String cause;
 
@@ -87,14 +87,14 @@ class _Failure implements GetallwidgetsState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailureCopyWith<_Failure> get copyWith =>
-      __$FailureCopyWithImpl<_Failure>(this, _$identity);
+  $GetAllWidgetFailureCopyWith<GetAllWidgetFailure> get copyWith =>
+      _$GetAllWidgetFailureCopyWithImpl<GetAllWidgetFailure>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failure &&
+            other is GetAllWidgetFailure &&
             (identical(other.cause, cause) || other.cause == cause));
   }
 
@@ -108,20 +108,22 @@ class _Failure implements GetallwidgetsState {
 }
 
 /// @nodoc
-abstract mixin class _$FailureCopyWith<$Res>
+abstract mixin class $GetAllWidgetFailureCopyWith<$Res>
     implements $GetallwidgetsStateCopyWith<$Res> {
-  factory _$FailureCopyWith(_Failure value, $Res Function(_Failure) _then) =
-      __$FailureCopyWithImpl;
+  factory $GetAllWidgetFailureCopyWith(
+          GetAllWidgetFailure value, $Res Function(GetAllWidgetFailure) _then) =
+      _$GetAllWidgetFailureCopyWithImpl;
   @useResult
   $Res call({String cause});
 }
 
 /// @nodoc
-class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
-  __$FailureCopyWithImpl(this._self, this._then);
+class _$GetAllWidgetFailureCopyWithImpl<$Res>
+    implements $GetAllWidgetFailureCopyWith<$Res> {
+  _$GetAllWidgetFailureCopyWithImpl(this._self, this._then);
 
-  final _Failure _self;
-  final $Res Function(_Failure) _then;
+  final GetAllWidgetFailure _self;
+  final $Res Function(GetAllWidgetFailure) _then;
 
   /// Create a copy of GetallwidgetsState
   /// with the given fields replaced by the non-null parameter values.
@@ -129,7 +131,7 @@ class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
   $Res call({
     Object? cause = null,
   }) {
-    return _then(_Failure(
+    return _then(GetAllWidgetFailure(
       null == cause
           ? _self.cause
           : cause // ignore: cast_nullable_to_non_nullable
@@ -140,8 +142,9 @@ class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
 
 /// @nodoc
 
-class _Success implements GetallwidgetsState {
-  const _Success(final List<MeasurementType> widgets) : _widgets = widgets;
+class GetAllWidgetSuccess implements GetallwidgetsState {
+  const GetAllWidgetSuccess(final List<MeasurementType> widgets)
+      : _widgets = widgets;
 
   final List<MeasurementType> _widgets;
   List<MeasurementType> get widgets {
@@ -154,14 +157,14 @@ class _Success implements GetallwidgetsState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$SuccessCopyWith<_Success> get copyWith =>
-      __$SuccessCopyWithImpl<_Success>(this, _$identity);
+  $GetAllWidgetSuccessCopyWith<GetAllWidgetSuccess> get copyWith =>
+      _$GetAllWidgetSuccessCopyWithImpl<GetAllWidgetSuccess>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Success &&
+            other is GetAllWidgetSuccess &&
             const DeepCollectionEquality().equals(other._widgets, _widgets));
   }
 
@@ -176,20 +179,22 @@ class _Success implements GetallwidgetsState {
 }
 
 /// @nodoc
-abstract mixin class _$SuccessCopyWith<$Res>
+abstract mixin class $GetAllWidgetSuccessCopyWith<$Res>
     implements $GetallwidgetsStateCopyWith<$Res> {
-  factory _$SuccessCopyWith(_Success value, $Res Function(_Success) _then) =
-      __$SuccessCopyWithImpl;
+  factory $GetAllWidgetSuccessCopyWith(
+          GetAllWidgetSuccess value, $Res Function(GetAllWidgetSuccess) _then) =
+      _$GetAllWidgetSuccessCopyWithImpl;
   @useResult
   $Res call({List<MeasurementType> widgets});
 }
 
 /// @nodoc
-class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
-  __$SuccessCopyWithImpl(this._self, this._then);
+class _$GetAllWidgetSuccessCopyWithImpl<$Res>
+    implements $GetAllWidgetSuccessCopyWith<$Res> {
+  _$GetAllWidgetSuccessCopyWithImpl(this._self, this._then);
 
-  final _Success _self;
-  final $Res Function(_Success) _then;
+  final GetAllWidgetSuccess _self;
+  final $Res Function(GetAllWidgetSuccess) _then;
 
   /// Create a copy of GetallwidgetsState
   /// with the given fields replaced by the non-null parameter values.
@@ -197,7 +202,7 @@ class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
   $Res call({
     Object? widgets = null,
   }) {
-    return _then(_Success(
+    return _then(GetAllWidgetSuccess(
       null == widgets
           ? _self._widgets
           : widgets // ignore: cast_nullable_to_non_nullable

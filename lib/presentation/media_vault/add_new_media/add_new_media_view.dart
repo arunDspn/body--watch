@@ -45,9 +45,10 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
         padding: const EdgeInsets.all(8),
         child: BlocListener<AddNewMediaCubit, AddNewMediaState>(
           listener: (context, state) {
-            state.maybeMap(
-              orElse: () {},
-              loading: (value) {
+            switch (state) {
+              case AddNewMediaStateInitial():
+                break;
+              case AddNewMediaStateLoading():
                 // dialog box of loading
                 showDialog(
                   context: context,
@@ -59,24 +60,25 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
                     );
                   },
                 );
-              },
-              success: (s) {
+                break;
+
+              case AddNewMediaStateSuccess(:final savedImage):
                 Navigator.of(context).pop();
-                context.read<LoadPicturesCubit>().updateList(s.savedImage);
+                context.read<LoadPicturesCubit>().updateList(savedImage);
                 // context
                 //     .read<FilteredGalleryImagesCubit>()
                 //     .updateList(s.savedImage);
                 Navigator.pop(context);
-              },
-              failure: (value) {
+                break;
+              case AddNewMediaStateFailure(:final failure):
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(value.failure),
+                    content: Text(failure),
                   ),
                 );
-              },
-            );
+                break;
+            }
           },
           child: SingleChildScrollView(
             child: Padding(

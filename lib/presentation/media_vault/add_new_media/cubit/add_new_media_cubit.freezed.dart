@@ -38,13 +38,13 @@ class $AddNewMediaStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements AddNewMediaState {
-  const _Initial();
+class AddNewMediaStateInitial implements AddNewMediaState {
+  const AddNewMediaStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType && other is AddNewMediaStateInitial);
   }
 
   @override
@@ -58,13 +58,13 @@ class _Initial implements AddNewMediaState {
 
 /// @nodoc
 
-class _Loading implements AddNewMediaState {
-  const _Loading();
+class AddNewMediaStateLoading implements AddNewMediaState {
+  const AddNewMediaStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType && other is AddNewMediaStateLoading);
   }
 
   @override
@@ -78,8 +78,8 @@ class _Loading implements AddNewMediaState {
 
 /// @nodoc
 
-class _Success implements AddNewMediaState {
-  const _Success({required this.savedImage});
+class AddNewMediaStateSuccess implements AddNewMediaState {
+  const AddNewMediaStateSuccess({required this.savedImage});
 
   final VaultImage savedImage;
 
@@ -87,14 +87,15 @@ class _Success implements AddNewMediaState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$SuccessCopyWith<_Success> get copyWith =>
-      __$SuccessCopyWithImpl<_Success>(this, _$identity);
+  $AddNewMediaStateSuccessCopyWith<AddNewMediaStateSuccess> get copyWith =>
+      _$AddNewMediaStateSuccessCopyWithImpl<AddNewMediaStateSuccess>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Success &&
+            other is AddNewMediaStateSuccess &&
             (identical(other.savedImage, savedImage) ||
                 other.savedImage == savedImage));
   }
@@ -109,10 +110,11 @@ class _Success implements AddNewMediaState {
 }
 
 /// @nodoc
-abstract mixin class _$SuccessCopyWith<$Res>
+abstract mixin class $AddNewMediaStateSuccessCopyWith<$Res>
     implements $AddNewMediaStateCopyWith<$Res> {
-  factory _$SuccessCopyWith(_Success value, $Res Function(_Success) _then) =
-      __$SuccessCopyWithImpl;
+  factory $AddNewMediaStateSuccessCopyWith(AddNewMediaStateSuccess value,
+          $Res Function(AddNewMediaStateSuccess) _then) =
+      _$AddNewMediaStateSuccessCopyWithImpl;
   @useResult
   $Res call({VaultImage savedImage});
 
@@ -120,11 +122,12 @@ abstract mixin class _$SuccessCopyWith<$Res>
 }
 
 /// @nodoc
-class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
-  __$SuccessCopyWithImpl(this._self, this._then);
+class _$AddNewMediaStateSuccessCopyWithImpl<$Res>
+    implements $AddNewMediaStateSuccessCopyWith<$Res> {
+  _$AddNewMediaStateSuccessCopyWithImpl(this._self, this._then);
 
-  final _Success _self;
-  final $Res Function(_Success) _then;
+  final AddNewMediaStateSuccess _self;
+  final $Res Function(AddNewMediaStateSuccess) _then;
 
   /// Create a copy of AddNewMediaState
   /// with the given fields replaced by the non-null parameter values.
@@ -132,7 +135,7 @@ class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
   $Res call({
     Object? savedImage = null,
   }) {
-    return _then(_Success(
+    return _then(AddNewMediaStateSuccess(
       savedImage: null == savedImage
           ? _self.savedImage
           : savedImage // ignore: cast_nullable_to_non_nullable
@@ -153,8 +156,8 @@ class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
 
 /// @nodoc
 
-class _Failure implements AddNewMediaState {
-  const _Failure(this.failure);
+class AddNewMediaStateFailure implements AddNewMediaState {
+  const AddNewMediaStateFailure(this.failure);
 
   final String failure;
 
@@ -162,14 +165,15 @@ class _Failure implements AddNewMediaState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailureCopyWith<_Failure> get copyWith =>
-      __$FailureCopyWithImpl<_Failure>(this, _$identity);
+  $AddNewMediaStateFailureCopyWith<AddNewMediaStateFailure> get copyWith =>
+      _$AddNewMediaStateFailureCopyWithImpl<AddNewMediaStateFailure>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failure &&
+            other is AddNewMediaStateFailure &&
             (identical(other.failure, failure) || other.failure == failure));
   }
 
@@ -183,20 +187,22 @@ class _Failure implements AddNewMediaState {
 }
 
 /// @nodoc
-abstract mixin class _$FailureCopyWith<$Res>
+abstract mixin class $AddNewMediaStateFailureCopyWith<$Res>
     implements $AddNewMediaStateCopyWith<$Res> {
-  factory _$FailureCopyWith(_Failure value, $Res Function(_Failure) _then) =
-      __$FailureCopyWithImpl;
+  factory $AddNewMediaStateFailureCopyWith(AddNewMediaStateFailure value,
+          $Res Function(AddNewMediaStateFailure) _then) =
+      _$AddNewMediaStateFailureCopyWithImpl;
   @useResult
   $Res call({String failure});
 }
 
 /// @nodoc
-class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
-  __$FailureCopyWithImpl(this._self, this._then);
+class _$AddNewMediaStateFailureCopyWithImpl<$Res>
+    implements $AddNewMediaStateFailureCopyWith<$Res> {
+  _$AddNewMediaStateFailureCopyWithImpl(this._self, this._then);
 
-  final _Failure _self;
-  final $Res Function(_Failure) _then;
+  final AddNewMediaStateFailure _self;
+  final $Res Function(AddNewMediaStateFailure) _then;
 
   /// Create a copy of AddNewMediaState
   /// with the given fields replaced by the non-null parameter values.
@@ -204,7 +210,7 @@ class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
   $Res call({
     Object? failure = null,
   }) {
-    return _then(_Failure(
+    return _then(AddNewMediaStateFailure(
       null == failure
           ? _self.failure
           : failure // ignore: cast_nullable_to_non_nullable

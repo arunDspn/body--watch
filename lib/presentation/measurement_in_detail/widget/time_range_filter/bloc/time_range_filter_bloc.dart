@@ -15,14 +15,16 @@ class TimeRangeFilterBloc
     this.timeUnit,
     this.timeRangeService,
     this.allMeasurements,
-  ) : super(const _Loading()) {
+  ) : super(const TimeRangeFilterState.loading()) {
     on<TimeRangeFilterEvent>(
       (event, emit) {
-        event.map(
-          nextRange: (value) {
+        switch (event) {
+          case _NextRange():
             final range = rangeCalculator(
               timeUnit,
-              (state as _State).endDate.add(const Duration(days: 1)),
+              (state as TimeRangeFilterStateState)
+                  .endDate
+                  .add(const Duration(days: 1)),
             );
 
             final (
@@ -51,10 +53,11 @@ class TimeRangeFilterBloc
                 previousMeasurement: previousMeasurement,
               ),
             );
-          },
-          previousRange: (value) {
+            break;
+
+          case _PreviousRange():
             late DateTime date;
-            final currentState = state as _State;
+            final currentState = state as TimeRangeFilterStateState;
             if (timeUnit == TimeUnit.threeMonth) {
               date = DateTime(
                 currentState.startDate.year,
@@ -93,8 +96,9 @@ class TimeRangeFilterBloc
                 previousMeasurement: previousMeasurement,
               ),
             );
-          },
-          currentRange: (value) {
+            break;
+
+          case _CurrentRange():
             late DateTime date;
 
             final current = DateTime.now();
@@ -133,8 +137,9 @@ class TimeRangeFilterBloc
                 previousMeasurement: previousMeasurement,
               ),
             );
-          },
-          updateData: (value) {
+            break;
+
+          case _UpdateData(:final newMeasurementList):
             // final previousState = ;
             // emit(const TimeRangeFilterState.loading());
             // allMeasurements = value.newMeasurementList;
@@ -145,18 +150,25 @@ class TimeRangeFilterBloc
             // } else if (previousState is _CurrentRange) {
             //   add(const TimeRangeFilterEvent.currentRange());
             // }
-            allMeasurements = value.newMeasurementList;
+            allMeasurements = newMeasurementList;
             final previousState = state;
-            if (previousState is _State) {
+            if (previousState is TimeRangeFilterStateState) {
               final list = filterMeasurements(
                 startDate: previousState.startDate,
                 endDate: previousState.endDate,
-                allMeasurements: value.newMeasurementList,
+                allMeasurements: newMeasurementList,
               );
               emit(previousState.copyWith(filteredMeasurements: list));
             }
-          },
-        );
+            break;
+        }
+
+        // event.map(
+        //   nextRange: (value) {},
+        //   previousRange: (value) {},
+        //   currentRange: (value) {},
+        //   updateData: (value) {},
+        // );
       },
     );
   }

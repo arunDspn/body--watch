@@ -5,20 +5,14 @@
 // license that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import 'package:flutter/material.dart';
 import 'package:watcha_body/app/app.dart';
 import 'package:watcha_body/bootstrap.dart';
 import 'package:watcha_body/constants/app_constants.dart';
 import 'package:watcha_body/utils/folder_path.dart';
 
-Future<void> main() async {
-  final imagesFolderPath = await FolderPath.create(
-    imagesFolderName: AppConstants.imagesFolderName,
-    thumbnailsFolderName: AppConstants.thumbnailFolderName,
-  );
-
-  await bootstrap(
-    () => App(
-      folderPath: imagesFolderPath,
-    ),
+void main() {
+  bootstrap(
+    App.new,
   );
 }

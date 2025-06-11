@@ -102,8 +102,8 @@ class _$ComparePictureFormStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class State implements ComparePictureFormState {
-  const State(
+class ComparePictureFormStateData implements ComparePictureFormState {
+  const ComparePictureFormStateData(
       {required this.tag,
       required this.firstDate,
       required this.secondDate,
@@ -123,14 +123,15 @@ class State implements ComparePictureFormState {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $StateCopyWith<State> get copyWith =>
-      _$StateCopyWithImpl<State>(this, _$identity);
+  $ComparePictureFormStateDataCopyWith<ComparePictureFormStateData>
+      get copyWith => _$ComparePictureFormStateDataCopyWithImpl<
+          ComparePictureFormStateData>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is State &&
+            other is ComparePictureFormStateData &&
             (identical(other.tag, tag) || other.tag == tag) &&
             (identical(other.firstDate, firstDate) ||
                 other.firstDate == firstDate) &&
@@ -150,10 +151,12 @@ class State implements ComparePictureFormState {
 }
 
 /// @nodoc
-abstract mixin class $StateCopyWith<$Res>
+abstract mixin class $ComparePictureFormStateDataCopyWith<$Res>
     implements $ComparePictureFormStateCopyWith<$Res> {
-  factory $StateCopyWith(State value, $Res Function(State) _then) =
-      _$StateCopyWithImpl;
+  factory $ComparePictureFormStateDataCopyWith(
+          ComparePictureFormStateData value,
+          $Res Function(ComparePictureFormStateData) _then) =
+      _$ComparePictureFormStateDataCopyWithImpl;
   @override
   @useResult
   $Res call(
@@ -161,11 +164,12 @@ abstract mixin class $StateCopyWith<$Res>
 }
 
 /// @nodoc
-class _$StateCopyWithImpl<$Res> implements $StateCopyWith<$Res> {
-  _$StateCopyWithImpl(this._self, this._then);
+class _$ComparePictureFormStateDataCopyWithImpl<$Res>
+    implements $ComparePictureFormStateDataCopyWith<$Res> {
+  _$ComparePictureFormStateDataCopyWithImpl(this._self, this._then);
 
-  final State _self;
-  final $Res Function(State) _then;
+  final ComparePictureFormStateData _self;
+  final $Res Function(ComparePictureFormStateData) _then;
 
   /// Create a copy of ComparePictureFormState
   /// with the given fields replaced by the non-null parameter values.
@@ -177,7 +181,7 @@ class _$StateCopyWithImpl<$Res> implements $StateCopyWith<$Res> {
     Object? secondDate = freezed,
     Object? ready = null,
   }) {
-    return _then(State(
+    return _then(ComparePictureFormStateData(
       tag: null == tag
           ? _self.tag
           : tag // ignore: cast_nullable_to_non_nullable

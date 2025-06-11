@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -14,10 +12,11 @@ part 'getallwidgetsdata_bloc.freezed.dart';
 // Used in Overview
 class GetallwidgetsdataBloc
     extends Bloc<GetallwidgetsdataEvent, GetallwidgetsdataState> {
-  GetallwidgetsdataBloc(this.measurementRepository) : super(const _Initial()) {
+  GetallwidgetsdataBloc(this.measurementRepository)
+      : super(const GetallwidgetsdataState.initial()) {
     on<GetallwidgetsdataEvent>((event, emit) async {
-      await event.map(
-        fetchAllData: (value) async {
+      switch (event) {
+        case _FetchAllData(appPreferences: final appPreferences):
           emit(const GetallwidgetsdataState.loading());
           final _addedWidgets = await measurementRepository.getAddedTypes();
 
@@ -37,10 +36,10 @@ class GetallwidgetsdataBloc
               final _allDetailsresult =
                   await measurementRepository.getDetailsByDate(
                 preferredWeightUnit: EnumToString.convertToString(
-                  value.appPreferences.weightUnit,
+                  appPreferences.weightUnit,
                 ),
                 preferredLengthUnit: EnumToString.convertToString(
-                  value.appPreferences.lengthUnit,
+                  appPreferences.lengthUnit,
                 ),
                 startDate: currentDate,
                 endDate: endDate,
@@ -68,8 +67,11 @@ class GetallwidgetsdataBloc
               );
             },
           );
-        },
-      );
+      }
+
+      // await event.map(
+      //   fetchAllData: (value) async {},
+      // );
     });
   }
 

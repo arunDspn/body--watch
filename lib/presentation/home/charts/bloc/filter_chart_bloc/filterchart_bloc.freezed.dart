@@ -349,13 +349,13 @@ class $FilterchartStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements FilterchartState {
-  const _Initial();
+class FilterchartStateInitial implements FilterchartState {
+  const FilterchartStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType && other is FilterchartStateInitial);
   }
 
   @override
@@ -369,8 +369,8 @@ class _Initial implements FilterchartState {
 
 /// @nodoc
 
-class _Data implements FilterchartState {
-  const _Data(
+class FilterchartStateData implements FilterchartState {
+  const FilterchartStateData(
       {required final List<ChartDisplayModel> chartDisplayModelList,
       required this.durationsEnum,
       required this.startDate,
@@ -399,14 +399,15 @@ class _Data implements FilterchartState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$DataCopyWith<_Data> get copyWith =>
-      __$DataCopyWithImpl<_Data>(this, _$identity);
+  $FilterchartStateDataCopyWith<FilterchartStateData> get copyWith =>
+      _$FilterchartStateDataCopyWithImpl<FilterchartStateData>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Data &&
+            other is FilterchartStateData &&
             const DeepCollectionEquality()
                 .equals(other._chartDisplayModelList, _chartDisplayModelList) &&
             (identical(other.durationsEnum, durationsEnum) ||
@@ -432,10 +433,11 @@ class _Data implements FilterchartState {
 }
 
 /// @nodoc
-abstract mixin class _$DataCopyWith<$Res>
+abstract mixin class $FilterchartStateDataCopyWith<$Res>
     implements $FilterchartStateCopyWith<$Res> {
-  factory _$DataCopyWith(_Data value, $Res Function(_Data) _then) =
-      __$DataCopyWithImpl;
+  factory $FilterchartStateDataCopyWith(FilterchartStateData value,
+          $Res Function(FilterchartStateData) _then) =
+      _$FilterchartStateDataCopyWithImpl;
   @useResult
   $Res call(
       {List<ChartDisplayModel> chartDisplayModelList,
@@ -445,11 +447,12 @@ abstract mixin class _$DataCopyWith<$Res>
 }
 
 /// @nodoc
-class __$DataCopyWithImpl<$Res> implements _$DataCopyWith<$Res> {
-  __$DataCopyWithImpl(this._self, this._then);
+class _$FilterchartStateDataCopyWithImpl<$Res>
+    implements $FilterchartStateDataCopyWith<$Res> {
+  _$FilterchartStateDataCopyWithImpl(this._self, this._then);
 
-  final _Data _self;
-  final $Res Function(_Data) _then;
+  final FilterchartStateData _self;
+  final $Res Function(FilterchartStateData) _then;
 
   /// Create a copy of FilterchartState
   /// with the given fields replaced by the non-null parameter values.
@@ -460,7 +463,7 @@ class __$DataCopyWithImpl<$Res> implements _$DataCopyWith<$Res> {
     Object? startDate = null,
     Object? filteredTypes = null,
   }) {
-    return _then(_Data(
+    return _then(FilterchartStateData(
       chartDisplayModelList: null == chartDisplayModelList
           ? _self._chartDisplayModelList
           : chartDisplayModelList // ignore: cast_nullable_to_non_nullable

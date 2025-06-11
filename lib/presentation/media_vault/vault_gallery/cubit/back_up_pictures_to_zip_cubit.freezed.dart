@@ -38,13 +38,14 @@ class $BackUpPicturesToZipStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements BackUpPicturesToZipState {
-  const _Initial();
+class BackUpPicturesToZipStateInitial implements BackUpPicturesToZipState {
+  const BackUpPicturesToZipStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType &&
+            other is BackUpPicturesToZipStateInitial);
   }
 
   @override
@@ -58,13 +59,14 @@ class _Initial implements BackUpPicturesToZipState {
 
 /// @nodoc
 
-class _Loading implements BackUpPicturesToZipState {
-  const _Loading();
+class BackUpPicturesToZipStateLoading implements BackUpPicturesToZipState {
+  const BackUpPicturesToZipStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is BackUpPicturesToZipStateLoading);
   }
 
   @override
@@ -78,8 +80,8 @@ class _Loading implements BackUpPicturesToZipState {
 
 /// @nodoc
 
-class _Success implements BackUpPicturesToZipState {
-  const _Success(this.path);
+class BackUpPicturesToZipStateSuccess implements BackUpPicturesToZipState {
+  const BackUpPicturesToZipStateSuccess(this.path);
 
   final String path;
 
@@ -87,14 +89,15 @@ class _Success implements BackUpPicturesToZipState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$SuccessCopyWith<_Success> get copyWith =>
-      __$SuccessCopyWithImpl<_Success>(this, _$identity);
+  $BackUpPicturesToZipStateSuccessCopyWith<BackUpPicturesToZipStateSuccess>
+      get copyWith => _$BackUpPicturesToZipStateSuccessCopyWithImpl<
+          BackUpPicturesToZipStateSuccess>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Success &&
+            other is BackUpPicturesToZipStateSuccess &&
             (identical(other.path, path) || other.path == path));
   }
 
@@ -108,20 +111,23 @@ class _Success implements BackUpPicturesToZipState {
 }
 
 /// @nodoc
-abstract mixin class _$SuccessCopyWith<$Res>
+abstract mixin class $BackUpPicturesToZipStateSuccessCopyWith<$Res>
     implements $BackUpPicturesToZipStateCopyWith<$Res> {
-  factory _$SuccessCopyWith(_Success value, $Res Function(_Success) _then) =
-      __$SuccessCopyWithImpl;
+  factory $BackUpPicturesToZipStateSuccessCopyWith(
+          BackUpPicturesToZipStateSuccess value,
+          $Res Function(BackUpPicturesToZipStateSuccess) _then) =
+      _$BackUpPicturesToZipStateSuccessCopyWithImpl;
   @useResult
   $Res call({String path});
 }
 
 /// @nodoc
-class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
-  __$SuccessCopyWithImpl(this._self, this._then);
+class _$BackUpPicturesToZipStateSuccessCopyWithImpl<$Res>
+    implements $BackUpPicturesToZipStateSuccessCopyWith<$Res> {
+  _$BackUpPicturesToZipStateSuccessCopyWithImpl(this._self, this._then);
 
-  final _Success _self;
-  final $Res Function(_Success) _then;
+  final BackUpPicturesToZipStateSuccess _self;
+  final $Res Function(BackUpPicturesToZipStateSuccess) _then;
 
   /// Create a copy of BackUpPicturesToZipState
   /// with the given fields replaced by the non-null parameter values.
@@ -129,7 +135,7 @@ class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
   $Res call({
     Object? path = null,
   }) {
-    return _then(_Success(
+    return _then(BackUpPicturesToZipStateSuccess(
       null == path
           ? _self.path
           : path // ignore: cast_nullable_to_non_nullable
@@ -140,8 +146,8 @@ class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
 
 /// @nodoc
 
-class _Failure implements BackUpPicturesToZipState {
-  const _Failure(this.message);
+class BackUpPicturesToZipStateFailure implements BackUpPicturesToZipState {
+  const BackUpPicturesToZipStateFailure(this.message);
 
   final String message;
 
@@ -149,14 +155,15 @@ class _Failure implements BackUpPicturesToZipState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailureCopyWith<_Failure> get copyWith =>
-      __$FailureCopyWithImpl<_Failure>(this, _$identity);
+  $BackUpPicturesToZipStateFailureCopyWith<BackUpPicturesToZipStateFailure>
+      get copyWith => _$BackUpPicturesToZipStateFailureCopyWithImpl<
+          BackUpPicturesToZipStateFailure>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failure &&
+            other is BackUpPicturesToZipStateFailure &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -170,20 +177,23 @@ class _Failure implements BackUpPicturesToZipState {
 }
 
 /// @nodoc
-abstract mixin class _$FailureCopyWith<$Res>
+abstract mixin class $BackUpPicturesToZipStateFailureCopyWith<$Res>
     implements $BackUpPicturesToZipStateCopyWith<$Res> {
-  factory _$FailureCopyWith(_Failure value, $Res Function(_Failure) _then) =
-      __$FailureCopyWithImpl;
+  factory $BackUpPicturesToZipStateFailureCopyWith(
+          BackUpPicturesToZipStateFailure value,
+          $Res Function(BackUpPicturesToZipStateFailure) _then) =
+      _$BackUpPicturesToZipStateFailureCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
-  __$FailureCopyWithImpl(this._self, this._then);
+class _$BackUpPicturesToZipStateFailureCopyWithImpl<$Res>
+    implements $BackUpPicturesToZipStateFailureCopyWith<$Res> {
+  _$BackUpPicturesToZipStateFailureCopyWithImpl(this._self, this._then);
 
-  final _Failure _self;
-  final $Res Function(_Failure) _then;
+  final BackUpPicturesToZipStateFailure _self;
+  final $Res Function(BackUpPicturesToZipStateFailure) _then;
 
   /// Create a copy of BackUpPicturesToZipState
   /// with the given fields replaced by the non-null parameter values.
@@ -191,7 +201,7 @@ class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
   $Res call({
     Object? message = null,
   }) {
-    return _then(_Failure(
+    return _then(BackUpPicturesToZipStateFailure(
       null == message
           ? _self.message
           : message // ignore: cast_nullable_to_non_nullable

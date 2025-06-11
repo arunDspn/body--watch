@@ -185,13 +185,13 @@ class $ChartdataStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements ChartdataState {
-  const _Initial();
+class ChartDataStateInitial implements ChartdataState {
+  const ChartDataStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType && other is ChartDataStateInitial);
   }
 
   @override
@@ -205,13 +205,13 @@ class _Initial implements ChartdataState {
 
 /// @nodoc
 
-class _Loading implements ChartdataState {
-  const _Loading();
+class ChartDataStateLoading implements ChartdataState {
+  const ChartDataStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType && other is ChartDataStateLoading);
   }
 
   @override
@@ -225,8 +225,8 @@ class _Loading implements ChartdataState {
 
 /// @nodoc
 
-class _Success implements ChartdataState {
-  const _Success(
+class ChartDataStateSuccess implements ChartdataState {
+  const ChartDataStateSuccess(
       {required final List<ChartDisplayModel> chartDisplayModelList,
       required this.durationsEnum,
       required this.startDate})
@@ -247,14 +247,15 @@ class _Success implements ChartdataState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$SuccessCopyWith<_Success> get copyWith =>
-      __$SuccessCopyWithImpl<_Success>(this, _$identity);
+  $ChartDataStateSuccessCopyWith<ChartDataStateSuccess> get copyWith =>
+      _$ChartDataStateSuccessCopyWithImpl<ChartDataStateSuccess>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Success &&
+            other is ChartDataStateSuccess &&
             const DeepCollectionEquality()
                 .equals(other._chartDisplayModelList, _chartDisplayModelList) &&
             (identical(other.durationsEnum, durationsEnum) ||
@@ -277,10 +278,11 @@ class _Success implements ChartdataState {
 }
 
 /// @nodoc
-abstract mixin class _$SuccessCopyWith<$Res>
+abstract mixin class $ChartDataStateSuccessCopyWith<$Res>
     implements $ChartdataStateCopyWith<$Res> {
-  factory _$SuccessCopyWith(_Success value, $Res Function(_Success) _then) =
-      __$SuccessCopyWithImpl;
+  factory $ChartDataStateSuccessCopyWith(ChartDataStateSuccess value,
+          $Res Function(ChartDataStateSuccess) _then) =
+      _$ChartDataStateSuccessCopyWithImpl;
   @useResult
   $Res call(
       {List<ChartDisplayModel> chartDisplayModelList,
@@ -289,11 +291,12 @@ abstract mixin class _$SuccessCopyWith<$Res>
 }
 
 /// @nodoc
-class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
-  __$SuccessCopyWithImpl(this._self, this._then);
+class _$ChartDataStateSuccessCopyWithImpl<$Res>
+    implements $ChartDataStateSuccessCopyWith<$Res> {
+  _$ChartDataStateSuccessCopyWithImpl(this._self, this._then);
 
-  final _Success _self;
-  final $Res Function(_Success) _then;
+  final ChartDataStateSuccess _self;
+  final $Res Function(ChartDataStateSuccess) _then;
 
   /// Create a copy of ChartdataState
   /// with the given fields replaced by the non-null parameter values.
@@ -303,7 +306,7 @@ class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
     Object? durationsEnum = null,
     Object? startDate = null,
   }) {
-    return _then(_Success(
+    return _then(ChartDataStateSuccess(
       chartDisplayModelList: null == chartDisplayModelList
           ? _self._chartDisplayModelList
           : chartDisplayModelList // ignore: cast_nullable_to_non_nullable
@@ -322,8 +325,8 @@ class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
 
 /// @nodoc
 
-class _Failed implements ChartdataState {
-  const _Failed({required this.cause});
+class ChartDataStateFailed implements ChartdataState {
+  const ChartDataStateFailed({required this.cause});
 
   final String cause;
 
@@ -331,14 +334,15 @@ class _Failed implements ChartdataState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailedCopyWith<_Failed> get copyWith =>
-      __$FailedCopyWithImpl<_Failed>(this, _$identity);
+  $ChartDataStateFailedCopyWith<ChartDataStateFailed> get copyWith =>
+      _$ChartDataStateFailedCopyWithImpl<ChartDataStateFailed>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failed &&
+            other is ChartDataStateFailed &&
             (identical(other.cause, cause) || other.cause == cause));
   }
 
@@ -352,20 +356,22 @@ class _Failed implements ChartdataState {
 }
 
 /// @nodoc
-abstract mixin class _$FailedCopyWith<$Res>
+abstract mixin class $ChartDataStateFailedCopyWith<$Res>
     implements $ChartdataStateCopyWith<$Res> {
-  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) =
-      __$FailedCopyWithImpl;
+  factory $ChartDataStateFailedCopyWith(ChartDataStateFailed value,
+          $Res Function(ChartDataStateFailed) _then) =
+      _$ChartDataStateFailedCopyWithImpl;
   @useResult
   $Res call({String cause});
 }
 
 /// @nodoc
-class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
-  __$FailedCopyWithImpl(this._self, this._then);
+class _$ChartDataStateFailedCopyWithImpl<$Res>
+    implements $ChartDataStateFailedCopyWith<$Res> {
+  _$ChartDataStateFailedCopyWithImpl(this._self, this._then);
 
-  final _Failed _self;
-  final $Res Function(_Failed) _then;
+  final ChartDataStateFailed _self;
+  final $Res Function(ChartDataStateFailed) _then;
 
   /// Create a copy of ChartdataState
   /// with the given fields replaced by the non-null parameter values.
@@ -373,7 +379,7 @@ class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
   $Res call({
     Object? cause = null,
   }) {
-    return _then(_Failed(
+    return _then(ChartDataStateFailed(
       cause: null == cause
           ? _self.cause
           : cause // ignore: cast_nullable_to_non_nullable

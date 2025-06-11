@@ -39,21 +39,16 @@ class ViewComparisonDataModalView extends StatelessWidget {
             // data table of comparison data1 then comparison name then comparsion data2
             BlocBuilder<ComparisonDataCubit, ComparisonDataState>(
               builder: (context, state) {
-                return state.map(
-                  initial: (value) {
-                    return const Text('Nobody invoked the cubit yet');
-                  },
-                  loading: (value) {
-                    return const Center(child: CircularProgressIndicator());
-                  },
-                  failure: (value) {
-                    return const Center(child: Text('Something went wrong'));
-                  },
-                  success: (value) {
-                    if (value.records.isEmpty) {
-                      return const Text('No Data');
-                    }
-                    return SingleChildScrollView(
+                return switch (state) {
+                  ComparisonDataStateInitial() =>
+                    const Text('Nobody invoked the cubit yet'),
+                  ComparisonDataStateLoading() =>
+                    const Center(child: CircularProgressIndicator()),
+                  ComparisonDataStateSuccess(:final records)
+                      when records.isEmpty =>
+                    const Text('No Data'),
+                  ComparisonDataStateSuccess(:final records) =>
+                    SingleChildScrollView(
                       child: SizedBox(
                         width: double.infinity,
                         child: DataTable(
@@ -69,7 +64,7 @@ class ViewComparisonDataModalView extends StatelessWidget {
                             DataColumn(label: Text(formatDate(secondDate))),
                           ],
                           showBottomBorder: true,
-                          rows: value.records.map((e) {
+                          rows: records.map((e) {
                             return DataRow(
                               cells: [
                                 DataCell(
@@ -89,9 +84,28 @@ class ViewComparisonDataModalView extends StatelessWidget {
                           }).toList(),
                         ),
                       ),
-                    );
-                  },
-                );
+                    ),
+                  ComparisonDataStateFailure() =>
+                    const Center(child: Text('Something went wrong')),
+                };
+
+                // return state.map(
+                //   initial: (value) {
+                //     return
+                //   },
+                //   loading: (value) {
+                //     return
+                //   },
+                //   failure: (value) {
+                //     return
+                //   },
+                //   success: (value) {
+                //     if (value.records.isEmpty) {
+                //       return
+                //     }
+                //     return ;
+                //   },
+                // );
               },
             )
           ],

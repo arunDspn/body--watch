@@ -11,22 +11,31 @@ class AuthorizeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AuthenicateCubit, AuthenicateState>(
       listener: (context, state) {
-        state.mapOrNull(
-          authenticated: (value) {
+        switch (state) {
+          case AuthenicateStateAuthenticated():
             // Navigator.pushNamed(context, VaultGalleryView.routeName);
             context
                 .read<AuthGateKeeperBloc>()
                 .add(const AuthGateKeeperEvent.triggerAuth());
-          },
-          unauthenticated: (value) {
+            break;
+
+          case AuthenicateStateUnauthenticated():
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(content: Text('Wrong password')));
-          },
-          failed: (value) {
+            break;
+          case AuthenicateStateFailed(:final message):
             ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(value.message)));
-          },
-        );
+                .showSnackBar(SnackBar(content: Text(message)));
+            break;
+          default:
+            break;
+        }
+
+        // state.mapOrNull(
+        //   authenticated: (value) {},
+        //   unauthenticated: (value) {},
+        //   failed: (value) {},
+        // );
       },
       child: const _AuthForm(),
     );

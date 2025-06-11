@@ -38,13 +38,14 @@ class $ComparisonDataStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements ComparisonDataState {
-  const _Initial();
+class ComparisonDataStateInitial implements ComparisonDataState {
+  const ComparisonDataStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType &&
+            other is ComparisonDataStateInitial);
   }
 
   @override
@@ -58,13 +59,14 @@ class _Initial implements ComparisonDataState {
 
 /// @nodoc
 
-class _Loading implements ComparisonDataState {
-  const _Loading();
+class ComparisonDataStateLoading implements ComparisonDataState {
+  const ComparisonDataStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is ComparisonDataStateLoading);
   }
 
   @override
@@ -78,8 +80,9 @@ class _Loading implements ComparisonDataState {
 
 /// @nodoc
 
-class _Success implements ComparisonDataState {
-  const _Success({required final List<TwoDatesRecord> records})
+class ComparisonDataStateSuccess implements ComparisonDataState {
+  const ComparisonDataStateSuccess(
+      {required final List<TwoDatesRecord> records})
       : _records = records;
 
   final List<TwoDatesRecord> _records;
@@ -93,14 +96,16 @@ class _Success implements ComparisonDataState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$SuccessCopyWith<_Success> get copyWith =>
-      __$SuccessCopyWithImpl<_Success>(this, _$identity);
+  $ComparisonDataStateSuccessCopyWith<ComparisonDataStateSuccess>
+      get copyWith =>
+          _$ComparisonDataStateSuccessCopyWithImpl<ComparisonDataStateSuccess>(
+              this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Success &&
+            other is ComparisonDataStateSuccess &&
             const DeepCollectionEquality().equals(other._records, _records));
   }
 
@@ -115,20 +120,22 @@ class _Success implements ComparisonDataState {
 }
 
 /// @nodoc
-abstract mixin class _$SuccessCopyWith<$Res>
+abstract mixin class $ComparisonDataStateSuccessCopyWith<$Res>
     implements $ComparisonDataStateCopyWith<$Res> {
-  factory _$SuccessCopyWith(_Success value, $Res Function(_Success) _then) =
-      __$SuccessCopyWithImpl;
+  factory $ComparisonDataStateSuccessCopyWith(ComparisonDataStateSuccess value,
+          $Res Function(ComparisonDataStateSuccess) _then) =
+      _$ComparisonDataStateSuccessCopyWithImpl;
   @useResult
   $Res call({List<TwoDatesRecord> records});
 }
 
 /// @nodoc
-class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
-  __$SuccessCopyWithImpl(this._self, this._then);
+class _$ComparisonDataStateSuccessCopyWithImpl<$Res>
+    implements $ComparisonDataStateSuccessCopyWith<$Res> {
+  _$ComparisonDataStateSuccessCopyWithImpl(this._self, this._then);
 
-  final _Success _self;
-  final $Res Function(_Success) _then;
+  final ComparisonDataStateSuccess _self;
+  final $Res Function(ComparisonDataStateSuccess) _then;
 
   /// Create a copy of ComparisonDataState
   /// with the given fields replaced by the non-null parameter values.
@@ -136,7 +143,7 @@ class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
   $Res call({
     Object? records = null,
   }) {
-    return _then(_Success(
+    return _then(ComparisonDataStateSuccess(
       records: null == records
           ? _self._records
           : records // ignore: cast_nullable_to_non_nullable
@@ -147,8 +154,8 @@ class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
 
 /// @nodoc
 
-class _Failure implements ComparisonDataState {
-  const _Failure({required this.message});
+class ComparisonDataStateFailure implements ComparisonDataState {
+  const ComparisonDataStateFailure({required this.message});
 
   final String message;
 
@@ -156,14 +163,16 @@ class _Failure implements ComparisonDataState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailureCopyWith<_Failure> get copyWith =>
-      __$FailureCopyWithImpl<_Failure>(this, _$identity);
+  $ComparisonDataStateFailureCopyWith<ComparisonDataStateFailure>
+      get copyWith =>
+          _$ComparisonDataStateFailureCopyWithImpl<ComparisonDataStateFailure>(
+              this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failure &&
+            other is ComparisonDataStateFailure &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -177,20 +186,22 @@ class _Failure implements ComparisonDataState {
 }
 
 /// @nodoc
-abstract mixin class _$FailureCopyWith<$Res>
+abstract mixin class $ComparisonDataStateFailureCopyWith<$Res>
     implements $ComparisonDataStateCopyWith<$Res> {
-  factory _$FailureCopyWith(_Failure value, $Res Function(_Failure) _then) =
-      __$FailureCopyWithImpl;
+  factory $ComparisonDataStateFailureCopyWith(ComparisonDataStateFailure value,
+          $Res Function(ComparisonDataStateFailure) _then) =
+      _$ComparisonDataStateFailureCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
-  __$FailureCopyWithImpl(this._self, this._then);
+class _$ComparisonDataStateFailureCopyWithImpl<$Res>
+    implements $ComparisonDataStateFailureCopyWith<$Res> {
+  _$ComparisonDataStateFailureCopyWithImpl(this._self, this._then);
 
-  final _Failure _self;
-  final $Res Function(_Failure) _then;
+  final ComparisonDataStateFailure _self;
+  final $Res Function(ComparisonDataStateFailure) _then;
 
   /// Create a copy of ComparisonDataState
   /// with the given fields replaced by the non-null parameter values.
@@ -198,7 +209,7 @@ class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
   $Res call({
     Object? message = null,
   }) {
-    return _then(_Failure(
+    return _then(ComparisonDataStateFailure(
       message: null == message
           ? _self.message
           : message // ignore: cast_nullable_to_non_nullable

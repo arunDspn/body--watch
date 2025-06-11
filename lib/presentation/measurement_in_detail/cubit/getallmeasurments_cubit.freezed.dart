@@ -39,13 +39,15 @@ class $GetSingleMeasurmentsDetailsStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements GetSingleMeasurmentsDetailsState {
-  const _Initial();
+class GetSingleMeasurmentsDetailsStateInitial
+    implements GetSingleMeasurmentsDetailsState {
+  const GetSingleMeasurmentsDetailsStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType &&
+            other is GetSingleMeasurmentsDetailsStateInitial);
   }
 
   @override
@@ -59,13 +61,15 @@ class _Initial implements GetSingleMeasurmentsDetailsState {
 
 /// @nodoc
 
-class _Loading implements GetSingleMeasurmentsDetailsState {
-  const _Loading();
+class GetSingleMeasurmentsDetailsStateLoading
+    implements GetSingleMeasurmentsDetailsState {
+  const GetSingleMeasurmentsDetailsStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is GetSingleMeasurmentsDetailsStateLoading);
   }
 
   @override
@@ -79,8 +83,9 @@ class _Loading implements GetSingleMeasurmentsDetailsState {
 
 /// @nodoc
 
-class _Failed implements GetSingleMeasurmentsDetailsState {
-  const _Failed({required this.cause});
+class GetSingleMeasurmentsDetailsStateFailed
+    implements GetSingleMeasurmentsDetailsState {
+  const GetSingleMeasurmentsDetailsStateFailed({required this.cause});
 
   final String cause;
 
@@ -88,14 +93,16 @@ class _Failed implements GetSingleMeasurmentsDetailsState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailedCopyWith<_Failed> get copyWith =>
-      __$FailedCopyWithImpl<_Failed>(this, _$identity);
+  $GetSingleMeasurmentsDetailsStateFailedCopyWith<
+          GetSingleMeasurmentsDetailsStateFailed>
+      get copyWith => _$GetSingleMeasurmentsDetailsStateFailedCopyWithImpl<
+          GetSingleMeasurmentsDetailsStateFailed>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failed &&
+            other is GetSingleMeasurmentsDetailsStateFailed &&
             (identical(other.cause, cause) || other.cause == cause));
   }
 
@@ -109,20 +116,23 @@ class _Failed implements GetSingleMeasurmentsDetailsState {
 }
 
 /// @nodoc
-abstract mixin class _$FailedCopyWith<$Res>
+abstract mixin class $GetSingleMeasurmentsDetailsStateFailedCopyWith<$Res>
     implements $GetSingleMeasurmentsDetailsStateCopyWith<$Res> {
-  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) =
-      __$FailedCopyWithImpl;
+  factory $GetSingleMeasurmentsDetailsStateFailedCopyWith(
+          GetSingleMeasurmentsDetailsStateFailed value,
+          $Res Function(GetSingleMeasurmentsDetailsStateFailed) _then) =
+      _$GetSingleMeasurmentsDetailsStateFailedCopyWithImpl;
   @useResult
   $Res call({String cause});
 }
 
 /// @nodoc
-class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
-  __$FailedCopyWithImpl(this._self, this._then);
+class _$GetSingleMeasurmentsDetailsStateFailedCopyWithImpl<$Res>
+    implements $GetSingleMeasurmentsDetailsStateFailedCopyWith<$Res> {
+  _$GetSingleMeasurmentsDetailsStateFailedCopyWithImpl(this._self, this._then);
 
-  final _Failed _self;
-  final $Res Function(_Failed) _then;
+  final GetSingleMeasurmentsDetailsStateFailed _self;
+  final $Res Function(GetSingleMeasurmentsDetailsStateFailed) _then;
 
   /// Create a copy of GetSingleMeasurmentsDetailsState
   /// with the given fields replaced by the non-null parameter values.
@@ -130,7 +140,7 @@ class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
   $Res call({
     Object? cause = null,
   }) {
-    return _then(_Failed(
+    return _then(GetSingleMeasurmentsDetailsStateFailed(
       cause: null == cause
           ? _self.cause
           : cause // ignore: cast_nullable_to_non_nullable

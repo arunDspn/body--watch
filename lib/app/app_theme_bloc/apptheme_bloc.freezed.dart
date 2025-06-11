@@ -78,8 +78,8 @@ class _$AppthemeEventCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _ChangeTheme implements AppthemeEvent {
-  const _ChangeTheme({required this.appTheme});
+class AppThemeEventChangeTheme implements AppthemeEvent {
+  const AppThemeEventChangeTheme({required this.appTheme});
 
   @override
   final AppTheme appTheme;
@@ -89,14 +89,15 @@ class _ChangeTheme implements AppthemeEvent {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$ChangeThemeCopyWith<_ChangeTheme> get copyWith =>
-      __$ChangeThemeCopyWithImpl<_ChangeTheme>(this, _$identity);
+  $AppThemeEventChangeThemeCopyWith<AppThemeEventChangeTheme> get copyWith =>
+      _$AppThemeEventChangeThemeCopyWithImpl<AppThemeEventChangeTheme>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _ChangeTheme &&
+            other is AppThemeEventChangeTheme &&
             (identical(other.appTheme, appTheme) ||
                 other.appTheme == appTheme));
   }
@@ -111,22 +112,23 @@ class _ChangeTheme implements AppthemeEvent {
 }
 
 /// @nodoc
-abstract mixin class _$ChangeThemeCopyWith<$Res>
+abstract mixin class $AppThemeEventChangeThemeCopyWith<$Res>
     implements $AppthemeEventCopyWith<$Res> {
-  factory _$ChangeThemeCopyWith(
-          _ChangeTheme value, $Res Function(_ChangeTheme) _then) =
-      __$ChangeThemeCopyWithImpl;
+  factory $AppThemeEventChangeThemeCopyWith(AppThemeEventChangeTheme value,
+          $Res Function(AppThemeEventChangeTheme) _then) =
+      _$AppThemeEventChangeThemeCopyWithImpl;
   @override
   @useResult
   $Res call({AppTheme appTheme});
 }
 
 /// @nodoc
-class __$ChangeThemeCopyWithImpl<$Res> implements _$ChangeThemeCopyWith<$Res> {
-  __$ChangeThemeCopyWithImpl(this._self, this._then);
+class _$AppThemeEventChangeThemeCopyWithImpl<$Res>
+    implements $AppThemeEventChangeThemeCopyWith<$Res> {
+  _$AppThemeEventChangeThemeCopyWithImpl(this._self, this._then);
 
-  final _ChangeTheme _self;
-  final $Res Function(_ChangeTheme) _then;
+  final AppThemeEventChangeTheme _self;
+  final $Res Function(AppThemeEventChangeTheme) _then;
 
   /// Create a copy of AppthemeEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -135,7 +137,7 @@ class __$ChangeThemeCopyWithImpl<$Res> implements _$ChangeThemeCopyWith<$Res> {
   $Res call({
     Object? appTheme = null,
   }) {
-    return _then(_ChangeTheme(
+    return _then(AppThemeEventChangeTheme(
       appTheme: null == appTheme
           ? _self.appTheme
           : appTheme // ignore: cast_nullable_to_non_nullable

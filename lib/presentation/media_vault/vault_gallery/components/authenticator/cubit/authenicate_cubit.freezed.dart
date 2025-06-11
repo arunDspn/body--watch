@@ -38,13 +38,13 @@ class $AuthenicateStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements AuthenicateState {
-  const _Initial();
+class AuthenicateStateInitial implements AuthenicateState {
+  const AuthenicateStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType && other is AuthenicateStateInitial);
   }
 
   @override
@@ -58,13 +58,14 @@ class _Initial implements AuthenicateState {
 
 /// @nodoc
 
-class _Authenticated implements AuthenicateState {
-  const _Authenticated();
+class AuthenicateStateAuthenticated implements AuthenicateState {
+  const AuthenicateStateAuthenticated();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Authenticated);
+        (other.runtimeType == runtimeType &&
+            other is AuthenicateStateAuthenticated);
   }
 
   @override
@@ -78,13 +79,14 @@ class _Authenticated implements AuthenicateState {
 
 /// @nodoc
 
-class _Unauthenticated implements AuthenicateState {
-  const _Unauthenticated();
+class AuthenicateStateUnauthenticated implements AuthenicateState {
+  const AuthenicateStateUnauthenticated();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Unauthenticated);
+        (other.runtimeType == runtimeType &&
+            other is AuthenicateStateUnauthenticated);
   }
 
   @override
@@ -98,13 +100,13 @@ class _Unauthenticated implements AuthenicateState {
 
 /// @nodoc
 
-class _Loading implements AuthenicateState {
-  const _Loading();
+class AuthenicateStateLoading implements AuthenicateState {
+  const AuthenicateStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType && other is AuthenicateStateLoading);
   }
 
   @override
@@ -118,8 +120,8 @@ class _Loading implements AuthenicateState {
 
 /// @nodoc
 
-class _Failed implements AuthenicateState {
-  const _Failed(this.message);
+class AuthenicateStateFailed implements AuthenicateState {
+  const AuthenicateStateFailed(this.message);
 
   final String message;
 
@@ -127,14 +129,15 @@ class _Failed implements AuthenicateState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailedCopyWith<_Failed> get copyWith =>
-      __$FailedCopyWithImpl<_Failed>(this, _$identity);
+  $AuthenicateStateFailedCopyWith<AuthenicateStateFailed> get copyWith =>
+      _$AuthenicateStateFailedCopyWithImpl<AuthenicateStateFailed>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failed &&
+            other is AuthenicateStateFailed &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -148,20 +151,22 @@ class _Failed implements AuthenicateState {
 }
 
 /// @nodoc
-abstract mixin class _$FailedCopyWith<$Res>
+abstract mixin class $AuthenicateStateFailedCopyWith<$Res>
     implements $AuthenicateStateCopyWith<$Res> {
-  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) =
-      __$FailedCopyWithImpl;
+  factory $AuthenicateStateFailedCopyWith(AuthenicateStateFailed value,
+          $Res Function(AuthenicateStateFailed) _then) =
+      _$AuthenicateStateFailedCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
-  __$FailedCopyWithImpl(this._self, this._then);
+class _$AuthenicateStateFailedCopyWithImpl<$Res>
+    implements $AuthenicateStateFailedCopyWith<$Res> {
+  _$AuthenicateStateFailedCopyWithImpl(this._self, this._then);
 
-  final _Failed _self;
-  final $Res Function(_Failed) _then;
+  final AuthenicateStateFailed _self;
+  final $Res Function(AuthenicateStateFailed) _then;
 
   /// Create a copy of AuthenicateState
   /// with the given fields replaced by the non-null parameter values.
@@ -169,7 +174,7 @@ class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
   $Res call({
     Object? message = null,
   }) {
-    return _then(_Failed(
+    return _then(AuthenicateStateFailed(
       null == message
           ? _self.message
           : message // ignore: cast_nullable_to_non_nullable

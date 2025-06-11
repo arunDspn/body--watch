@@ -170,13 +170,14 @@ class $GetallwidgetsdataStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements GetallwidgetsdataState {
-  const _Initial();
+class GetallwidgetsdataStateInitial implements GetallwidgetsdataState {
+  const GetallwidgetsdataStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType &&
+            other is GetallwidgetsdataStateInitial);
   }
 
   @override
@@ -190,13 +191,14 @@ class _Initial implements GetallwidgetsdataState {
 
 /// @nodoc
 
-class _Loading implements GetallwidgetsdataState {
-  const _Loading();
+class GetallwidgetsdataStateLoading implements GetallwidgetsdataState {
+  const GetallwidgetsdataStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is GetallwidgetsdataStateLoading);
   }
 
   @override
@@ -210,8 +212,8 @@ class _Loading implements GetallwidgetsdataState {
 
 /// @nodoc
 
-class _Failure implements GetallwidgetsdataState {
-  const _Failure(this.cause);
+class GetallwidgetsdataStateFailure implements GetallwidgetsdataState {
+  const GetallwidgetsdataStateFailure(this.cause);
 
   final String cause;
 
@@ -219,14 +221,15 @@ class _Failure implements GetallwidgetsdataState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailureCopyWith<_Failure> get copyWith =>
-      __$FailureCopyWithImpl<_Failure>(this, _$identity);
+  $GetallwidgetsdataStateFailureCopyWith<GetallwidgetsdataStateFailure>
+      get copyWith => _$GetallwidgetsdataStateFailureCopyWithImpl<
+          GetallwidgetsdataStateFailure>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failure &&
+            other is GetallwidgetsdataStateFailure &&
             (identical(other.cause, cause) || other.cause == cause));
   }
 
@@ -240,20 +243,23 @@ class _Failure implements GetallwidgetsdataState {
 }
 
 /// @nodoc
-abstract mixin class _$FailureCopyWith<$Res>
+abstract mixin class $GetallwidgetsdataStateFailureCopyWith<$Res>
     implements $GetallwidgetsdataStateCopyWith<$Res> {
-  factory _$FailureCopyWith(_Failure value, $Res Function(_Failure) _then) =
-      __$FailureCopyWithImpl;
+  factory $GetallwidgetsdataStateFailureCopyWith(
+          GetallwidgetsdataStateFailure value,
+          $Res Function(GetallwidgetsdataStateFailure) _then) =
+      _$GetallwidgetsdataStateFailureCopyWithImpl;
   @useResult
   $Res call({String cause});
 }
 
 /// @nodoc
-class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
-  __$FailureCopyWithImpl(this._self, this._then);
+class _$GetallwidgetsdataStateFailureCopyWithImpl<$Res>
+    implements $GetallwidgetsdataStateFailureCopyWith<$Res> {
+  _$GetallwidgetsdataStateFailureCopyWithImpl(this._self, this._then);
 
-  final _Failure _self;
-  final $Res Function(_Failure) _then;
+  final GetallwidgetsdataStateFailure _self;
+  final $Res Function(GetallwidgetsdataStateFailure) _then;
 
   /// Create a copy of GetallwidgetsdataState
   /// with the given fields replaced by the non-null parameter values.
@@ -261,7 +267,7 @@ class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
   $Res call({
     Object? cause = null,
   }) {
-    return _then(_Failure(
+    return _then(GetallwidgetsdataStateFailure(
       null == cause
           ? _self.cause
           : cause // ignore: cast_nullable_to_non_nullable
@@ -272,8 +278,9 @@ class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
 
 /// @nodoc
 
-class _Success implements GetallwidgetsdataState {
-  const _Success(final List<LatestMeasurementDisplayModel> widgets)
+class GetallwidgetsdataStateSuccess implements GetallwidgetsdataState {
+  const GetallwidgetsdataStateSuccess(
+      final List<LatestMeasurementDisplayModel> widgets)
       : _widgets = widgets;
 
   final List<LatestMeasurementDisplayModel> _widgets;
@@ -287,14 +294,15 @@ class _Success implements GetallwidgetsdataState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$SuccessCopyWith<_Success> get copyWith =>
-      __$SuccessCopyWithImpl<_Success>(this, _$identity);
+  $GetallwidgetsdataStateSuccessCopyWith<GetallwidgetsdataStateSuccess>
+      get copyWith => _$GetallwidgetsdataStateSuccessCopyWithImpl<
+          GetallwidgetsdataStateSuccess>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Success &&
+            other is GetallwidgetsdataStateSuccess &&
             const DeepCollectionEquality().equals(other._widgets, _widgets));
   }
 
@@ -309,20 +317,23 @@ class _Success implements GetallwidgetsdataState {
 }
 
 /// @nodoc
-abstract mixin class _$SuccessCopyWith<$Res>
+abstract mixin class $GetallwidgetsdataStateSuccessCopyWith<$Res>
     implements $GetallwidgetsdataStateCopyWith<$Res> {
-  factory _$SuccessCopyWith(_Success value, $Res Function(_Success) _then) =
-      __$SuccessCopyWithImpl;
+  factory $GetallwidgetsdataStateSuccessCopyWith(
+          GetallwidgetsdataStateSuccess value,
+          $Res Function(GetallwidgetsdataStateSuccess) _then) =
+      _$GetallwidgetsdataStateSuccessCopyWithImpl;
   @useResult
   $Res call({List<LatestMeasurementDisplayModel> widgets});
 }
 
 /// @nodoc
-class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
-  __$SuccessCopyWithImpl(this._self, this._then);
+class _$GetallwidgetsdataStateSuccessCopyWithImpl<$Res>
+    implements $GetallwidgetsdataStateSuccessCopyWith<$Res> {
+  _$GetallwidgetsdataStateSuccessCopyWithImpl(this._self, this._then);
 
-  final _Success _self;
-  final $Res Function(_Success) _then;
+  final GetallwidgetsdataStateSuccess _self;
+  final $Res Function(GetallwidgetsdataStateSuccess) _then;
 
   /// Create a copy of GetallwidgetsdataState
   /// with the given fields replaced by the non-null parameter values.
@@ -330,7 +341,7 @@ class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
   $Res call({
     Object? widgets = null,
   }) {
-    return _then(_Success(
+    return _then(GetallwidgetsdataStateSuccess(
       null == widgets
           ? _self._widgets
           : widgets // ignore: cast_nullable_to_non_nullable

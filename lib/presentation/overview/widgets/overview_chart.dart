@@ -55,8 +55,8 @@ class OverviewMetricsLineGraph extends StatelessWidget {
                   ),
                   lineTouchData: LineTouchData(
                     touchTooltipData: LineTouchTooltipData(
-                      tooltipBgColor:
-                          Theme.of(context).colorScheme.secondaryContainer,
+                      // tooltipBgColor:
+                      //     Theme.of(context).colorScheme.secondaryContainer,
                       getTooltipItems: (touchedSpots) {
                         final dateString = switch (dayToText.timeUnit) {
                           TimeUnit.week => dayToText.denormalizeWeekday(
@@ -96,7 +96,7 @@ class OverviewMetricsLineGraph extends StatelessWidget {
                         interval: 1,
                         getTitlesWidget: (value, meta) {
                           return SideTitleWidget(
-                            axisSide: meta.axisSide,
+                            meta: meta,
                             child: Text(
                               dayToText.getRelevantTextByNumber(
                                 value,

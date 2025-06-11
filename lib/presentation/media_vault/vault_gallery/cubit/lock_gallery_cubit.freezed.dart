@@ -38,13 +38,13 @@ class $LockGalleryStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Locked implements LockGalleryState {
-  const _Locked();
+class LockGalleryStateLocked implements LockGalleryState {
+  const LockGalleryStateLocked();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Locked);
+        (other.runtimeType == runtimeType && other is LockGalleryStateLocked);
   }
 
   @override
@@ -58,13 +58,13 @@ class _Locked implements LockGalleryState {
 
 /// @nodoc
 
-class _Unlocked implements LockGalleryState {
-  const _Unlocked();
+class LockGalleryStateUnlocked implements LockGalleryState {
+  const LockGalleryStateUnlocked();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Unlocked);
+        (other.runtimeType == runtimeType && other is LockGalleryStateUnlocked);
   }
 
   @override
@@ -78,13 +78,13 @@ class _Unlocked implements LockGalleryState {
 
 /// @nodoc
 
-class _Initial implements LockGalleryState {
-  const _Initial();
+class LockGalleryStateInitial implements LockGalleryState {
+  const LockGalleryStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType && other is LockGalleryStateInitial);
   }
 
   @override

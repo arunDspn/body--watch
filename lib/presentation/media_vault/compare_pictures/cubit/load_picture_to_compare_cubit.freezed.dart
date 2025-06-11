@@ -39,13 +39,14 @@ class $LoadPictureToCompareStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements LoadPictureToCompareState {
-  const _Initial();
+class LoadPictureToCompareStateInitial implements LoadPictureToCompareState {
+  const LoadPictureToCompareStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType &&
+            other is LoadPictureToCompareStateInitial);
   }
 
   @override
@@ -59,13 +60,14 @@ class _Initial implements LoadPictureToCompareState {
 
 /// @nodoc
 
-class _Loading implements LoadPictureToCompareState {
-  const _Loading();
+class LoadPictureToCompareStateLoading implements LoadPictureToCompareState {
+  const LoadPictureToCompareStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is LoadPictureToCompareStateLoading);
   }
 
   @override
@@ -79,8 +81,8 @@ class _Loading implements LoadPictureToCompareState {
 
 /// @nodoc
 
-class _Loaded implements LoadPictureToCompareState {
-  const _Loaded({required this.compareImagesModel});
+class LoadPictureToCompareStateLoaded implements LoadPictureToCompareState {
+  const LoadPictureToCompareStateLoaded({required this.compareImagesModel});
 
   final CompareImagesModel compareImagesModel;
 
@@ -88,14 +90,15 @@ class _Loaded implements LoadPictureToCompareState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$LoadedCopyWith<_Loaded> get copyWith =>
-      __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
+  $LoadPictureToCompareStateLoadedCopyWith<LoadPictureToCompareStateLoaded>
+      get copyWith => _$LoadPictureToCompareStateLoadedCopyWithImpl<
+          LoadPictureToCompareStateLoaded>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Loaded &&
+            other is LoadPictureToCompareStateLoaded &&
             (identical(other.compareImagesModel, compareImagesModel) ||
                 other.compareImagesModel == compareImagesModel));
   }
@@ -110,20 +113,23 @@ class _Loaded implements LoadPictureToCompareState {
 }
 
 /// @nodoc
-abstract mixin class _$LoadedCopyWith<$Res>
+abstract mixin class $LoadPictureToCompareStateLoadedCopyWith<$Res>
     implements $LoadPictureToCompareStateCopyWith<$Res> {
-  factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) =
-      __$LoadedCopyWithImpl;
+  factory $LoadPictureToCompareStateLoadedCopyWith(
+          LoadPictureToCompareStateLoaded value,
+          $Res Function(LoadPictureToCompareStateLoaded) _then) =
+      _$LoadPictureToCompareStateLoadedCopyWithImpl;
   @useResult
   $Res call({CompareImagesModel compareImagesModel});
 }
 
 /// @nodoc
-class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
-  __$LoadedCopyWithImpl(this._self, this._then);
+class _$LoadPictureToCompareStateLoadedCopyWithImpl<$Res>
+    implements $LoadPictureToCompareStateLoadedCopyWith<$Res> {
+  _$LoadPictureToCompareStateLoadedCopyWithImpl(this._self, this._then);
 
-  final _Loaded _self;
-  final $Res Function(_Loaded) _then;
+  final LoadPictureToCompareStateLoaded _self;
+  final $Res Function(LoadPictureToCompareStateLoaded) _then;
 
   /// Create a copy of LoadPictureToCompareState
   /// with the given fields replaced by the non-null parameter values.
@@ -131,7 +137,7 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
   $Res call({
     Object? compareImagesModel = null,
   }) {
-    return _then(_Loaded(
+    return _then(LoadPictureToCompareStateLoaded(
       compareImagesModel: null == compareImagesModel
           ? _self.compareImagesModel
           : compareImagesModel // ignore: cast_nullable_to_non_nullable
@@ -142,8 +148,8 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
 
 /// @nodoc
 
-class _Error implements LoadPictureToCompareState {
-  const _Error(this.message);
+class LoadPictureToCompareStateError implements LoadPictureToCompareState {
+  const LoadPictureToCompareStateError(this.message);
 
   final String message;
 
@@ -151,14 +157,15 @@ class _Error implements LoadPictureToCompareState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$ErrorCopyWith<_Error> get copyWith =>
-      __$ErrorCopyWithImpl<_Error>(this, _$identity);
+  $LoadPictureToCompareStateErrorCopyWith<LoadPictureToCompareStateError>
+      get copyWith => _$LoadPictureToCompareStateErrorCopyWithImpl<
+          LoadPictureToCompareStateError>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Error &&
+            other is LoadPictureToCompareStateError &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -172,20 +179,23 @@ class _Error implements LoadPictureToCompareState {
 }
 
 /// @nodoc
-abstract mixin class _$ErrorCopyWith<$Res>
+abstract mixin class $LoadPictureToCompareStateErrorCopyWith<$Res>
     implements $LoadPictureToCompareStateCopyWith<$Res> {
-  factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) =
-      __$ErrorCopyWithImpl;
+  factory $LoadPictureToCompareStateErrorCopyWith(
+          LoadPictureToCompareStateError value,
+          $Res Function(LoadPictureToCompareStateError) _then) =
+      _$LoadPictureToCompareStateErrorCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$ErrorCopyWithImpl<$Res> implements _$ErrorCopyWith<$Res> {
-  __$ErrorCopyWithImpl(this._self, this._then);
+class _$LoadPictureToCompareStateErrorCopyWithImpl<$Res>
+    implements $LoadPictureToCompareStateErrorCopyWith<$Res> {
+  _$LoadPictureToCompareStateErrorCopyWithImpl(this._self, this._then);
 
-  final _Error _self;
-  final $Res Function(_Error) _then;
+  final LoadPictureToCompareStateError _self;
+  final $Res Function(LoadPictureToCompareStateError) _then;
 
   /// Create a copy of LoadPictureToCompareState
   /// with the given fields replaced by the non-null parameter values.
@@ -193,7 +203,7 @@ class __$ErrorCopyWithImpl<$Res> implements _$ErrorCopyWith<$Res> {
   $Res call({
     Object? message = null,
   }) {
-    return _then(_Error(
+    return _then(LoadPictureToCompareStateError(
       null == message
           ? _self.message
           : message // ignore: cast_nullable_to_non_nullable

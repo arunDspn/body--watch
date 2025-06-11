@@ -82,9 +82,19 @@ class SettingsView extends StatelessWidget {
               listeners: [
                 BlocListener<BackupRestoreDataCubit, BackupRestoreDataState>(
                   listener: (context, listnerState) {
-                    listnerState.maybeMap(
-                      orElse: () => null,
-                      success: (_) {
+                    switch (listnerState) {
+                      case BackupRestoreDataStateInitial():
+                        // Do nothing
+                        break;
+                      case BackupRestoreDataStateLoading():
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Loading...'),
+                            backgroundColor: Colors.blue,
+                          ),
+                        );
+                        break;
+                      case BackupRestoreDataStateSuccess():
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Success'),
@@ -106,23 +116,25 @@ class SettingsView extends StatelessWidget {
                                 duration: DurationsEnum.month1,
                               ),
                             );
-                      },
-                      failed: (s) {
+                        break;
+                      case BackupRestoreDataStateFailed(msg: final s):
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(s.msg),
+                            content: Text(s),
                             backgroundColor: Colors.red,
                           ),
                         );
-                      },
-                    );
+                        break;
+                    }
                   },
                 ),
                 BlocListener<DeleteAllDataCubit, DeleteAllDataState>(
                   listener: (context, deleteEventstate) {
-                    deleteEventstate.maybeMap(
-                      orElse: () => null,
-                      success: (_) {
+                    switch (deleteEventstate) {
+                      case DeleteAllDataStateInitial():
+                        // Do nothing
+                        break;
+                      case DeleteAllDataStateSuccess():
                         // Update Chart and Overview
                         context.read<GetallwidgetsdataBloc>().add(
                               GetallwidgetsdataEvent.fetchAllData(
@@ -143,18 +155,21 @@ class SettingsView extends StatelessWidget {
                             backgroundColor: Colors.green,
                           ),
                         );
-                      },
-                      failed: (s) {
+                        break;
+                      case DeleteAllDataStateFailed(msg: final s):
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              s.msg,
+                              s,
                             ),
                             backgroundColor: Colors.red,
                           ),
                         );
-                      },
-                    );
+                        break;
+
+                      default:
+                        break;
+                    }
                   },
                 ),
               ],

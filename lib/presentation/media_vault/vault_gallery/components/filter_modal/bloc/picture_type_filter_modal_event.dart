@@ -1,7 +1,7 @@
 part of 'picture_type_filter_modal_bloc.dart';
 
 @freezed
-abstract class PictureTypeFilterModalEvent with _$PictureTypeFilterModalEvent {
+sealed class PictureTypeFilterModalEvent with _$PictureTypeFilterModalEvent {
   const factory PictureTypeFilterModalEvent.started() = _Started;
   // toggle
   const factory PictureTypeFilterModalEvent.toggle({

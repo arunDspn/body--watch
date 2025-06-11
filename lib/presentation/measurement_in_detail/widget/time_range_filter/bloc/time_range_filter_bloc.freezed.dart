@@ -193,8 +193,8 @@ class $TimeRangeFilterStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _State implements TimeRangeFilterState {
-  const _State(
+class TimeRangeFilterStateState implements TimeRangeFilterState {
+  const TimeRangeFilterStateState(
       {required this.startDate,
       required this.endDate,
       required final List<Measurement> filteredMeasurements,
@@ -223,14 +223,15 @@ class _State implements TimeRangeFilterState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$StateCopyWith<_State> get copyWith =>
-      __$StateCopyWithImpl<_State>(this, _$identity);
+  $TimeRangeFilterStateStateCopyWith<TimeRangeFilterStateState> get copyWith =>
+      _$TimeRangeFilterStateStateCopyWithImpl<TimeRangeFilterStateState>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _State &&
+            other is TimeRangeFilterStateState &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
             (identical(other.endDate, endDate) || other.endDate == endDate) &&
@@ -264,10 +265,11 @@ class _State implements TimeRangeFilterState {
 }
 
 /// @nodoc
-abstract mixin class _$StateCopyWith<$Res>
+abstract mixin class $TimeRangeFilterStateStateCopyWith<$Res>
     implements $TimeRangeFilterStateCopyWith<$Res> {
-  factory _$StateCopyWith(_State value, $Res Function(_State) _then) =
-      __$StateCopyWithImpl;
+  factory $TimeRangeFilterStateStateCopyWith(TimeRangeFilterStateState value,
+          $Res Function(TimeRangeFilterStateState) _then) =
+      _$TimeRangeFilterStateStateCopyWithImpl;
   @useResult
   $Res call(
       {DateTime startDate,
@@ -280,11 +282,12 @@ abstract mixin class _$StateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$StateCopyWithImpl<$Res> implements _$StateCopyWith<$Res> {
-  __$StateCopyWithImpl(this._self, this._then);
+class _$TimeRangeFilterStateStateCopyWithImpl<$Res>
+    implements $TimeRangeFilterStateStateCopyWith<$Res> {
+  _$TimeRangeFilterStateStateCopyWithImpl(this._self, this._then);
 
-  final _State _self;
-  final $Res Function(_State) _then;
+  final TimeRangeFilterStateState _self;
+  final $Res Function(TimeRangeFilterStateState) _then;
 
   /// Create a copy of TimeRangeFilterState
   /// with the given fields replaced by the non-null parameter values.
@@ -298,7 +301,7 @@ class __$StateCopyWithImpl<$Res> implements _$StateCopyWith<$Res> {
     Object? previousMeasurement = freezed,
     Object? nextMeasurement = freezed,
   }) {
-    return _then(_State(
+    return _then(TimeRangeFilterStateState(
       startDate: null == startDate
           ? _self.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
@@ -333,13 +336,14 @@ class __$StateCopyWithImpl<$Res> implements _$StateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Loading implements TimeRangeFilterState {
-  const _Loading();
+class TimeRangeFilterStateLoading implements TimeRangeFilterState {
+  const TimeRangeFilterStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is TimeRangeFilterStateLoading);
   }
 
   @override

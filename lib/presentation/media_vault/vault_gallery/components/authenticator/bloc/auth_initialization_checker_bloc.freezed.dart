@@ -83,13 +83,15 @@ class $AuthInitializationCheckerStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements AuthInitializationCheckerState {
-  const _Initial();
+class AuthInitializationCheckerStateInitial
+    implements AuthInitializationCheckerState {
+  const AuthInitializationCheckerStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType &&
+            other is AuthInitializationCheckerStateInitial);
   }
 
   @override
@@ -103,13 +105,15 @@ class _Initial implements AuthInitializationCheckerState {
 
 /// @nodoc
 
-class _NotInitialized implements AuthInitializationCheckerState {
-  const _NotInitialized();
+class AuthInitializationCheckerStateNotInitialized
+    implements AuthInitializationCheckerState {
+  const AuthInitializationCheckerStateNotInitialized();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _NotInitialized);
+        (other.runtimeType == runtimeType &&
+            other is AuthInitializationCheckerStateNotInitialized);
   }
 
   @override
@@ -123,13 +127,15 @@ class _NotInitialized implements AuthInitializationCheckerState {
 
 /// @nodoc
 
-class _Initialized implements AuthInitializationCheckerState {
-  const _Initialized();
+class AuthInitializationCheckerStateInitialized
+    implements AuthInitializationCheckerState {
+  const AuthInitializationCheckerStateInitialized();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initialized);
+        (other.runtimeType == runtimeType &&
+            other is AuthInitializationCheckerStateInitialized);
   }
 
   @override
@@ -143,13 +149,15 @@ class _Initialized implements AuthInitializationCheckerState {
 
 /// @nodoc
 
-class _Loading implements AuthInitializationCheckerState {
-  const _Loading();
+class AuthInitializationCheckerStateLoading
+    implements AuthInitializationCheckerState {
+  const AuthInitializationCheckerStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is AuthInitializationCheckerStateLoading);
   }
 
   @override
@@ -163,8 +171,9 @@ class _Loading implements AuthInitializationCheckerState {
 
 /// @nodoc
 
-class _Failed implements AuthInitializationCheckerState {
-  const _Failed(this.message);
+class AuthInitializationCheckerStateFailed
+    implements AuthInitializationCheckerState {
+  const AuthInitializationCheckerStateFailed(this.message);
 
   final String message;
 
@@ -172,14 +181,16 @@ class _Failed implements AuthInitializationCheckerState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailedCopyWith<_Failed> get copyWith =>
-      __$FailedCopyWithImpl<_Failed>(this, _$identity);
+  $AuthInitializationCheckerStateFailedCopyWith<
+          AuthInitializationCheckerStateFailed>
+      get copyWith => _$AuthInitializationCheckerStateFailedCopyWithImpl<
+          AuthInitializationCheckerStateFailed>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failed &&
+            other is AuthInitializationCheckerStateFailed &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -193,20 +204,23 @@ class _Failed implements AuthInitializationCheckerState {
 }
 
 /// @nodoc
-abstract mixin class _$FailedCopyWith<$Res>
+abstract mixin class $AuthInitializationCheckerStateFailedCopyWith<$Res>
     implements $AuthInitializationCheckerStateCopyWith<$Res> {
-  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) =
-      __$FailedCopyWithImpl;
+  factory $AuthInitializationCheckerStateFailedCopyWith(
+          AuthInitializationCheckerStateFailed value,
+          $Res Function(AuthInitializationCheckerStateFailed) _then) =
+      _$AuthInitializationCheckerStateFailedCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
-  __$FailedCopyWithImpl(this._self, this._then);
+class _$AuthInitializationCheckerStateFailedCopyWithImpl<$Res>
+    implements $AuthInitializationCheckerStateFailedCopyWith<$Res> {
+  _$AuthInitializationCheckerStateFailedCopyWithImpl(this._self, this._then);
 
-  final _Failed _self;
-  final $Res Function(_Failed) _then;
+  final AuthInitializationCheckerStateFailed _self;
+  final $Res Function(AuthInitializationCheckerStateFailed) _then;
 
   /// Create a copy of AuthInitializationCheckerState
   /// with the given fields replaced by the non-null parameter values.
@@ -214,7 +228,7 @@ class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
   $Res call({
     Object? message = null,
   }) {
-    return _then(_Failed(
+    return _then(AuthInitializationCheckerStateFailed(
       null == message
           ? _self.message
           : message // ignore: cast_nullable_to_non_nullable

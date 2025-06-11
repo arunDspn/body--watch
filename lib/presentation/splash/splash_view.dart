@@ -13,14 +13,14 @@ class SplashView extends StatelessWidget {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        context.read<ApppreferencesBloc>().state.maybeMap(
-          orElse: () {
-            Navigator.of(context).pushReplacementNamed(AppIniter.routeName);
-          },
-          savedAndReady: (value) {
+        switch (context.read<ApppreferencesBloc>().state) {
+          case SavedAndReady():
             Navigator.of(context).pushReplacementNamed(HomeView.routeName);
-          },
-        );
+            break;
+          default:
+            Navigator.of(context).pushReplacementNamed(AppIniter.routeName);
+            break;
+        }
       },
     );
 

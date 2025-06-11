@@ -101,13 +101,14 @@ class $AuthGateKeeperStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Loading implements AuthGateKeeperState {
-  const _Loading();
+class AuthGateKeeperStateLoading implements AuthGateKeeperState {
+  const AuthGateKeeperStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is AuthGateKeeperStateLoading);
   }
 
   @override
@@ -121,13 +122,14 @@ class _Loading implements AuthGateKeeperState {
 
 /// @nodoc
 
-class _Authenticated implements AuthGateKeeperState {
-  const _Authenticated();
+class AuthGateKeeperStateAuthenticated implements AuthGateKeeperState {
+  const AuthGateKeeperStateAuthenticated();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Authenticated);
+        (other.runtimeType == runtimeType &&
+            other is AuthGateKeeperStateAuthenticated);
   }
 
   @override
@@ -141,13 +143,14 @@ class _Authenticated implements AuthGateKeeperState {
 
 /// @nodoc
 
-class _Unauthenticated implements AuthGateKeeperState {
-  const _Unauthenticated();
+class AuthGateKeeperStateUnauthenticated implements AuthGateKeeperState {
+  const AuthGateKeeperStateUnauthenticated();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Unauthenticated);
+        (other.runtimeType == runtimeType &&
+            other is AuthGateKeeperStateUnauthenticated);
   }
 
   @override

@@ -9,10 +9,10 @@ part 'picture_type_filter_modal_bloc.freezed.dart';
 class PictureTypeFilterModalBloc
     extends Bloc<PictureTypeFilterModalEvent, PictureTypeFilterModalState> {
   PictureTypeFilterModalBloc(this.bodyPictureRepository)
-      : super(const _Loading()) {
+      : super(const PictureTypeFilterModalState.loading()) {
     on<PictureTypeFilterModalEvent>((event, emit) async {
-      await event.map(
-        started: (value) async {
+      switch (event) {
+        case _Started():
           // Fetch all picture types
           final result = await bodyPictureRepository.getAllTags();
           result.fold(
@@ -26,12 +26,11 @@ class PictureTypeFilterModalBloc
               );
             },
           );
-        },
-        search: (value) {},
-        toggle: (value) {
-          if (state is Success) {
-            final currentState = state as Success;
-            emit(PictureTypeFilterModalState.loading());
+
+        case _Toggle(:final type):
+          if (state is PictureTypeFilterModalStateSuccess) {
+            final currentState = state as PictureTypeFilterModalStateSuccess;
+            emit(const PictureTypeFilterModalState.loading());
             final selectedList = [...currentState.selectedTypes];
             // if (value.value) {
             //   selectedList = [...currentState.selectedTypes, value.type];
@@ -40,10 +39,10 @@ class PictureTypeFilterModalBloc
             //   selectedList.remove(value.type);
             // }
 
-            if (selectedList.contains(value.type)) {
-              selectedList.remove(value.type);
+            if (selectedList.contains(type)) {
+              selectedList.remove(type);
             } else {
-              selectedList.add(value.type);
+              selectedList.add(type);
             }
             emit(
               currentState.copyWith(
@@ -51,10 +50,13 @@ class PictureTypeFilterModalBloc
               ),
             );
           }
-        },
-        clear: (value) {
-          if (state is Success) {
-            final previousState = state as Success;
+
+        case _Search():
+          // TODO: Handle this case.
+          throw UnimplementedError();
+        case _Clear():
+          if (state is PictureTypeFilterModalStateSuccess) {
+            final previousState = state as PictureTypeFilterModalStateSuccess;
             emit(const PictureTypeFilterModalState.loading());
             emit(
               previousState.copyWith(
@@ -62,8 +64,14 @@ class PictureTypeFilterModalBloc
               ),
             );
           }
-        },
-      );
+      }
+
+      // await event.map(
+      //   started: (value) async {},
+      //   search: (value) {},
+      //   toggle: (value) {},
+      //   clear: (value) {},
+      // );
     });
   }
   final BodyPictureRepository bodyPictureRepository;

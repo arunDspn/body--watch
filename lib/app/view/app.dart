@@ -57,10 +57,10 @@ import 'package:watcha_body/utils/folder_path.dart';
 class App extends StatelessWidget {
   const App({
     Key? key,
-    required this.folderPath,
+    // required this.folderPath,
   }) : super(key: key);
 
-  final FolderPath folderPath;
+  // final FolderPath folderPath;
 
   @override
   Widget build(BuildContext context) {
@@ -76,27 +76,29 @@ class App extends StatelessWidget {
 
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<FolderPath>.value(
-          value: folderPath,
-        ),
+        // RepositoryProvider<FolderPath>.value(
+        //   value: folderPath,
+        // ),
         // RepositoryProvider<EncryptService>(
         //   create: (context) => encryptService,
         // ),
         // RepositoryProvider<CacheService>(
         //   create: (context) => cacheService,
         // ),
-        RepositoryProvider<IMeasurementsFacade>(
+        RepositoryProvider<MeasurementRepository>(
           create: (context) => MeasurementRepository(databaseService),
         ),
         RepositoryProvider<TimeRangeService>(
           create: (context) => TimeRangeService(),
         ),
-        RepositoryProvider<IBodyPictureFacade>(
+        RepositoryProvider<BodyPictureRepository>(
           create: (context) {
             return BodyPictureRepository(
               databaseService: databaseService,
-              imagesFolderPath: folderPath.imagesPath,
-              thumbnailsFolderPath: folderPath.thumbnailsPath,
+              // imagesFolderPath: folderPath.imagesPath,
+              // thumbnailsFolderPath: folderPath.thumbnailsPath,
+              imagesFolderPath: context.read<FolderPath>().imagesPath,
+              thumbnailsFolderPath: context.read<FolderPath>().thumbnailsPath,
             );
           },
         ),
@@ -197,6 +199,9 @@ class App extends StatelessWidget {
                   builder: (context, stateTheme) {
                     return DynamicColorBuilder(
                       builder: (lightDynamic, darkDynamic) => MaterialApp(
+                        themeMode: ThemeMode.dark,
+                        darkTheme: ThemeData.dark(),
+
                         // theme: AppThemeData.lightTheme,
                         // darkTheme: AppThemeData.darkTheme,
                         // themeMode: stateTheme == AppTheme.darkTheme

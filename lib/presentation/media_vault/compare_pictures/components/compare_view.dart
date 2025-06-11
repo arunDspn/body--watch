@@ -7,37 +7,48 @@ class _CompareView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoadPictureToCompareCubit, LoadPictureToCompareState>(
       builder: (context, state) {
-        return state.map(
-          initial: (value) {
-            return const Center(
+        return switch (state) {
+          LoadPictureToCompareStateInitial() => const Center(
               child: Column(
                 children: [
                   Text('Fill above form to compare pictures'),
                 ],
               ),
-            );
-          },
-          loading: (value) {
-            return const Center(child: CircularProgressIndicator());
-          },
-          loaded: (value) {
-            if (value.compareImagesModel.firstImages.isEmpty &&
-                value.compareImagesModel.secondImages.isEmpty) {
-              return const Center(
-                child: Text('No images to compare'),
-              );
-            }
-            return _CompareImageViewer(
-              firstImages: value.compareImagesModel.firstImages,
-              secondImages: value.compareImagesModel.secondImages,
-            );
-          },
-          error: (value) {
-            return Center(
-              child: Text('Error + ${value.message}'),
-            );
-          },
-        );
+            ),
+          LoadPictureToCompareStateLoading() =>
+            const Center(child: CircularProgressIndicator()),
+          LoadPictureToCompareStateLoaded(:final compareImagesModel)
+              when (compareImagesModel.firstImages.isEmpty &&
+                  compareImagesModel.secondImages.isEmpty) =>
+            const Center(
+              child: Text('No images to compare'),
+            ),
+          LoadPictureToCompareStateLoaded(:final compareImagesModel) =>
+            _CompareImageViewer(
+              firstImages: compareImagesModel.firstImages,
+              secondImages: compareImagesModel.secondImages,
+            ),
+          LoadPictureToCompareStateError(:final message) => Center(
+              child: Text('Error + $message'),
+            )
+        };
+
+        // return state.map(
+        //   initial: (value) {},
+        //   loading: (value) {
+        //     return
+        //   },
+        //   loaded: (value) {
+        //     if (value.compareImagesModel.firstImages.isEmpty &&
+        //         value.compareImagesModel.secondImages.isEmpty) {
+
+        //     }
+        //     return ;
+        //   },
+        //   error: (value) {
+        //     return ;
+        //   },
+        // );
       },
     );
   }

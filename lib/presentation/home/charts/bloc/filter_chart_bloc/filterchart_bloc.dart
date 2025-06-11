@@ -8,30 +8,60 @@ part 'filterchart_state.dart';
 part 'filterchart_bloc.freezed.dart';
 
 class FilterchartBloc extends Bloc<FilterchartEvent, FilterchartState> {
-  FilterchartBloc() : super(const _Initial()) {
+  FilterchartBloc() : super(const FilterchartState.initial()) {
     on<FilterchartEvent>((event, emit) {
-      event.map(
-        initialData: (value) {
+      switch (event) {
+        case _IntialData(
+            :final chartDisplayModelList,
+            :final durationsEnum,
+            :final startDate
+          ):
           emit(
             FilterchartState.data(
-              chartDisplayModelList: value.chartDisplayModelList,
-              durationsEnum: value.durationsEnum,
-              startDate: value.startDate,
+              chartDisplayModelList: chartDisplayModelList,
+              durationsEnum: durationsEnum,
+              startDate: startDate,
               filteredTypes: <String>[],
             ),
           );
-        },
-        filtering: (value) {
+        case _Filtering(
+            :final chartDisplayModelList,
+            :final durationsEnum,
+            :final startDate,
+            :final filterString
+          ):
           emit(
             FilterchartState.data(
-              chartDisplayModelList: value.chartDisplayModelList,
-              durationsEnum: value.durationsEnum,
-              startDate: value.startDate,
-              filteredTypes: value.filterString,
+              chartDisplayModelList: chartDisplayModelList,
+              durationsEnum: durationsEnum,
+              startDate: startDate,
+              filteredTypes: filterString,
             ),
           );
-        },
-      );
+      }
+
+      // event.map(
+      //   initialData: (value) {
+      //     emit(
+      //       FilterchartState.data(
+      //         chartDisplayModelList: value.chartDisplayModelList,
+      //         durationsEnum: value.durationsEnum,
+      //         startDate: value.startDate,
+      //         filteredTypes: <String>[],
+      //       ),
+      //     );
+      //   },
+      //   filtering: (value) {
+      //     emit(
+      //       FilterchartState.data(
+      //         chartDisplayModelList: value.chartDisplayModelList,
+      //         durationsEnum: value.durationsEnum,
+      //         startDate: value.startDate,
+      //         filteredTypes: value.filterString,
+      //       ),
+      //     );
+      //   },
+      // );
     });
   }
 }

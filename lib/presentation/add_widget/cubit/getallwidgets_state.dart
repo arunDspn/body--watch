@@ -1,10 +1,10 @@
 part of 'getallwidgets_cubit.dart';
 
 @freezed
-class GetallwidgetsState with _$GetallwidgetsState {
-  const factory GetallwidgetsState.initial() = _Initial;
-  const factory GetallwidgetsState.loading() = _Loading;
-  const factory GetallwidgetsState.failure(String cause) = _Failure;
+sealed class GetallwidgetsState with _$GetallwidgetsState {
+  const factory GetallwidgetsState.initial() = GetAllWidgetInitial;
+  const factory GetallwidgetsState.loading() = GetAllWidgetLoading;
+  const factory GetallwidgetsState.failure(String cause) = GetAllWidgetFailure;
   const factory GetallwidgetsState.success(List<MeasurementType> widgets) =
-      _Success;
+      GetAllWidgetSuccess;
 }

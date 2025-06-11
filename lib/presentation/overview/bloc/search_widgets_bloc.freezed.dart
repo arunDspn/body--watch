@@ -193,13 +193,14 @@ class $SearchWidgetsStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Loading implements SearchWidgetsState {
-  const _Loading();
+class SearchWidgetsStateLoading implements SearchWidgetsState {
+  const SearchWidgetsStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is SearchWidgetsStateLoading);
   }
 
   @override
@@ -213,8 +214,9 @@ class _Loading implements SearchWidgetsState {
 
 /// @nodoc
 
-class _Loaded implements SearchWidgetsState {
-  const _Loaded({required final List<LatestMeasurementDisplayModel> lists})
+class SearchWidgetsStateLoaded implements SearchWidgetsState {
+  const SearchWidgetsStateLoaded(
+      {required final List<LatestMeasurementDisplayModel> lists})
       : _lists = lists;
 
   final List<LatestMeasurementDisplayModel> _lists;
@@ -228,14 +230,15 @@ class _Loaded implements SearchWidgetsState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$LoadedCopyWith<_Loaded> get copyWith =>
-      __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
+  $SearchWidgetsStateLoadedCopyWith<SearchWidgetsStateLoaded> get copyWith =>
+      _$SearchWidgetsStateLoadedCopyWithImpl<SearchWidgetsStateLoaded>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Loaded &&
+            other is SearchWidgetsStateLoaded &&
             const DeepCollectionEquality().equals(other._lists, _lists));
   }
 
@@ -250,20 +253,22 @@ class _Loaded implements SearchWidgetsState {
 }
 
 /// @nodoc
-abstract mixin class _$LoadedCopyWith<$Res>
+abstract mixin class $SearchWidgetsStateLoadedCopyWith<$Res>
     implements $SearchWidgetsStateCopyWith<$Res> {
-  factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) =
-      __$LoadedCopyWithImpl;
+  factory $SearchWidgetsStateLoadedCopyWith(SearchWidgetsStateLoaded value,
+          $Res Function(SearchWidgetsStateLoaded) _then) =
+      _$SearchWidgetsStateLoadedCopyWithImpl;
   @useResult
   $Res call({List<LatestMeasurementDisplayModel> lists});
 }
 
 /// @nodoc
-class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
-  __$LoadedCopyWithImpl(this._self, this._then);
+class _$SearchWidgetsStateLoadedCopyWithImpl<$Res>
+    implements $SearchWidgetsStateLoadedCopyWith<$Res> {
+  _$SearchWidgetsStateLoadedCopyWithImpl(this._self, this._then);
 
-  final _Loaded _self;
-  final $Res Function(_Loaded) _then;
+  final SearchWidgetsStateLoaded _self;
+  final $Res Function(SearchWidgetsStateLoaded) _then;
 
   /// Create a copy of SearchWidgetsState
   /// with the given fields replaced by the non-null parameter values.
@@ -271,7 +276,7 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
   $Res call({
     Object? lists = null,
   }) {
-    return _then(_Loaded(
+    return _then(SearchWidgetsStateLoaded(
       lists: null == lists
           ? _self._lists
           : lists // ignore: cast_nullable_to_non_nullable
@@ -282,13 +287,13 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
 
 /// @nodoc
 
-class _Failed implements SearchWidgetsState {
-  const _Failed();
+class SearchWidgetsStateFailed implements SearchWidgetsState {
+  const SearchWidgetsStateFailed();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Failed);
+        (other.runtimeType == runtimeType && other is SearchWidgetsStateFailed);
   }
 
   @override

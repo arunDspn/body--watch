@@ -38,13 +38,14 @@ class $BackupRestoreDataStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements BackupRestoreDataState {
-  const _Initial();
+class BackupRestoreDataStateInitial implements BackupRestoreDataState {
+  const BackupRestoreDataStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType &&
+            other is BackupRestoreDataStateInitial);
   }
 
   @override
@@ -58,13 +59,14 @@ class _Initial implements BackupRestoreDataState {
 
 /// @nodoc
 
-class _Success implements BackupRestoreDataState {
-  const _Success();
+class BackupRestoreDataStateSuccess implements BackupRestoreDataState {
+  const BackupRestoreDataStateSuccess();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Success);
+        (other.runtimeType == runtimeType &&
+            other is BackupRestoreDataStateSuccess);
   }
 
   @override
@@ -78,13 +80,14 @@ class _Success implements BackupRestoreDataState {
 
 /// @nodoc
 
-class _Loading implements BackupRestoreDataState {
-  const _Loading();
+class BackupRestoreDataStateLoading implements BackupRestoreDataState {
+  const BackupRestoreDataStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is BackupRestoreDataStateLoading);
   }
 
   @override
@@ -98,8 +101,8 @@ class _Loading implements BackupRestoreDataState {
 
 /// @nodoc
 
-class _Failed implements BackupRestoreDataState {
-  const _Failed(this.msg);
+class BackupRestoreDataStateFailed implements BackupRestoreDataState {
+  const BackupRestoreDataStateFailed(this.msg);
 
   final String msg;
 
@@ -107,14 +110,15 @@ class _Failed implements BackupRestoreDataState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailedCopyWith<_Failed> get copyWith =>
-      __$FailedCopyWithImpl<_Failed>(this, _$identity);
+  $BackupRestoreDataStateFailedCopyWith<BackupRestoreDataStateFailed>
+      get copyWith => _$BackupRestoreDataStateFailedCopyWithImpl<
+          BackupRestoreDataStateFailed>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failed &&
+            other is BackupRestoreDataStateFailed &&
             (identical(other.msg, msg) || other.msg == msg));
   }
 
@@ -128,20 +132,23 @@ class _Failed implements BackupRestoreDataState {
 }
 
 /// @nodoc
-abstract mixin class _$FailedCopyWith<$Res>
+abstract mixin class $BackupRestoreDataStateFailedCopyWith<$Res>
     implements $BackupRestoreDataStateCopyWith<$Res> {
-  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) =
-      __$FailedCopyWithImpl;
+  factory $BackupRestoreDataStateFailedCopyWith(
+          BackupRestoreDataStateFailed value,
+          $Res Function(BackupRestoreDataStateFailed) _then) =
+      _$BackupRestoreDataStateFailedCopyWithImpl;
   @useResult
   $Res call({String msg});
 }
 
 /// @nodoc
-class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
-  __$FailedCopyWithImpl(this._self, this._then);
+class _$BackupRestoreDataStateFailedCopyWithImpl<$Res>
+    implements $BackupRestoreDataStateFailedCopyWith<$Res> {
+  _$BackupRestoreDataStateFailedCopyWithImpl(this._self, this._then);
 
-  final _Failed _self;
-  final $Res Function(_Failed) _then;
+  final BackupRestoreDataStateFailed _self;
+  final $Res Function(BackupRestoreDataStateFailed) _then;
 
   /// Create a copy of BackupRestoreDataState
   /// with the given fields replaced by the non-null parameter values.
@@ -149,7 +156,7 @@ class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
   $Res call({
     Object? msg = null,
   }) {
-    return _then(_Failed(
+    return _then(BackupRestoreDataStateFailed(
       null == msg
           ? _self.msg
           : msg // ignore: cast_nullable_to_non_nullable

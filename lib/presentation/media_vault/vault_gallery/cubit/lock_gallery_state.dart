@@ -1,8 +1,8 @@
 part of 'lock_gallery_cubit.dart';
 
 @freezed
-class LockGalleryState with _$LockGalleryState {
-  const factory LockGalleryState.locked() = _Locked;
-  const factory LockGalleryState.unlocked() = _Unlocked;
-  const factory LockGalleryState.initial() = _Initial;
+sealed class LockGalleryState with _$LockGalleryState {
+  const factory LockGalleryState.locked() = LockGalleryStateLocked;
+  const factory LockGalleryState.unlocked() = LockGalleryStateUnlocked;
+  const factory LockGalleryState.initial() = LockGalleryStateInitial;
 }

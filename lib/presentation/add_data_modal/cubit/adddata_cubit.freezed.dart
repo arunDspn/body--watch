@@ -37,13 +37,13 @@ class $AdddataStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements AdddataState {
-  const _Initial();
+class AddDataInitial implements AdddataState {
+  const AddDataInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType && other is AddDataInitial);
   }
 
   @override
@@ -57,13 +57,13 @@ class _Initial implements AdddataState {
 
 /// @nodoc
 
-class _Loading implements AdddataState {
-  const _Loading();
+class AddDataLoading implements AdddataState {
+  const AddDataLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType && other is AddDataLoading);
   }
 
   @override
@@ -77,8 +77,8 @@ class _Loading implements AdddataState {
 
 /// @nodoc
 
-class _Failure implements AdddataState {
-  const _Failure(this.message);
+class AddDataFailure implements AdddataState {
+  const AddDataFailure(this.message);
 
   final String message;
 
@@ -86,14 +86,14 @@ class _Failure implements AdddataState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailureCopyWith<_Failure> get copyWith =>
-      __$FailureCopyWithImpl<_Failure>(this, _$identity);
+  $AddDataFailureCopyWith<AddDataFailure> get copyWith =>
+      _$AddDataFailureCopyWithImpl<AddDataFailure>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failure &&
+            other is AddDataFailure &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -107,20 +107,22 @@ class _Failure implements AdddataState {
 }
 
 /// @nodoc
-abstract mixin class _$FailureCopyWith<$Res>
+abstract mixin class $AddDataFailureCopyWith<$Res>
     implements $AdddataStateCopyWith<$Res> {
-  factory _$FailureCopyWith(_Failure value, $Res Function(_Failure) _then) =
-      __$FailureCopyWithImpl;
+  factory $AddDataFailureCopyWith(
+          AddDataFailure value, $Res Function(AddDataFailure) _then) =
+      _$AddDataFailureCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
-  __$FailureCopyWithImpl(this._self, this._then);
+class _$AddDataFailureCopyWithImpl<$Res>
+    implements $AddDataFailureCopyWith<$Res> {
+  _$AddDataFailureCopyWithImpl(this._self, this._then);
 
-  final _Failure _self;
-  final $Res Function(_Failure) _then;
+  final AddDataFailure _self;
+  final $Res Function(AddDataFailure) _then;
 
   /// Create a copy of AdddataState
   /// with the given fields replaced by the non-null parameter values.
@@ -128,7 +130,7 @@ class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
   $Res call({
     Object? message = null,
   }) {
-    return _then(_Failure(
+    return _then(AddDataFailure(
       null == message
           ? _self.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -139,13 +141,13 @@ class __$FailureCopyWithImpl<$Res> implements _$FailureCopyWith<$Res> {
 
 /// @nodoc
 
-class _Success implements AdddataState {
-  const _Success();
+class AddDataSuccess implements AdddataState {
+  const AddDataSuccess();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Success);
+        (other.runtimeType == runtimeType && other is AddDataSuccess);
   }
 
   @override

@@ -7,27 +7,29 @@ part 'search_widgets_state.dart';
 part 'search_widgets_bloc.freezed.dart';
 
 class SearchWidgetsBloc extends Bloc<SearchWidgetsEvent, SearchWidgetsState> {
-  SearchWidgetsBloc() : super(const _Loading()) {
+  SearchWidgetsBloc() : super(const SearchWidgetsState.loading()) {
     on<SearchWidgetsEvent>((event, emit) {
-      event.map(
-        addData: (value) {
+      switch (event) {
+        case _AddData(:final list):
           emit(const SearchWidgetsState.loading());
-          lists = [...value.list];
+          lists = [...list];
           emit(SearchWidgetsState.loaded(lists: lists));
-        },
-        keyChanged: (value) {
+
+          break;
+        case _KeyChanged(:final key):
           emit(const SearchWidgetsState.loading());
           final newList = lists
               .where(
                 (element) => element.name
                     .toString()
                     .toLowerCase()
-                    .contains(value.key.toLowerCase()),
+                    .contains(key.toLowerCase()),
               )
               .toList();
           emit(SearchWidgetsState.loaded(lists: newList));
-        },
-      );
+
+          break;
+      }
     });
   }
   List<LatestMeasurementDisplayModel> lists = [];

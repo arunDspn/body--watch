@@ -32,20 +32,10 @@ class VaultGalleryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<BackUpPicturesToZipCubit, BackUpPicturesToZipState>(
       listener: (context, state) {
-        state.maybeMap(
-          orElse: () {},
-          failure: (value) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(value.message),
-              ),
-            );
-            // Navigator.pop(context);
-            Navigator.of(context).pop();
-          },
-          loading: (value) {
+        switch (state) {
+          case BackUpPicturesToZipStateLoading():
             // Pop up a progress indicator
-            return showDialog(
+            showDialog(
               context: context,
               builder: (context) {
                 return const AlertDialog(
@@ -58,61 +48,245 @@ class VaultGalleryView extends StatelessWidget {
                 );
               },
             );
-          },
-          success: (value) {
+            break;
+
+          case BackUpPicturesToZipStateSuccess(:final path):
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 duration: const Duration(seconds: 7),
                 content: Text(
-                  'Backup successful \n Backup Path: ${value.path}',
+                  'Backup successful \n Backup Path: $path',
                 ),
               ),
             );
-          },
-        );
+            break;
+
+          case BackUpPicturesToZipStateFailure(:final message):
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(message),
+              ),
+            );
+            // Navigator.pop(context);
+            Navigator.of(context).pop();
+            break;
+          default:
+            break;
+        }
+
+        // state.maybeMap(
+        //   orElse: () {},
+        //   failure: (value) {},
+        //   loading: (value) {},
+        //   success: (value) {},
+        // );
       },
       child: BlocConsumer<LockGalleryCubit, LockGalleryState>(
         listener: (context, state) {
-          state.mapOrNull(
-            locked: (value) {
+          switch (state) {
+            case LockGalleryStateLocked():
               context.read<LoadPicturesCubit>().reset();
-            },
-            unlocked: (value) {
+              break;
+            case LockGalleryStateUnlocked():
               context.read<LoadPicturesCubit>().load();
-            },
-          );
+              break;
+            default:
+              break;
+          }
+
+          // state.mapOrNull(
+          //   locked: (value) {},
+          //   unlocked: (value) {},
+          // );
         },
         builder: (context, state) {
-          return state.map(
-            locked: (value) {
-              return const _BioLockView();
-            },
-            unlocked: (value) {
-              return Center(
+          return switch (state) {
+            LockGalleryStateLocked() => const _BioLockView(),
+            LockGalleryStateUnlocked() => Center(
                 child: BlocBuilder<PictureTypeFilterModalBloc,
                     PictureTypeFilterModalState>(
                   builder: (context, filterState) {
-                    return filterState.maybeMap(
-                      orElse: () {
-                        return const SizedBox.shrink();
-                      },
-                      failed: (value) {
-                        return const Column(
+                    return switch (filterState) {
+                      PictureTypeFilterModalStateFailed() => const Column(
                           children: [
                             Center(
                               child: Text('Failed to load Filters'),
                             ),
                           ],
-                        );
-                      },
-                      success: (filterStateValue) {
-                        return BlocBuilder<LoadPicturesCubit,
-                            LoadPicturesState>(
+                        ),
+                      PictureTypeFilterModalStateSuccess(
+                        :final selectedTypes,
+                        :final allTypes
+                      ) =>
+                        BlocBuilder<LoadPicturesCubit, LoadPicturesState>(
                           buildWhen: (previous, current) => true,
                           builder: (context, state) {
-                            return state.map(
-                              failed: (value) {
-                                return const Column(
+                            return switch (state) {
+                              // TODO: Handle this case.
+                              LoadPicturesStateLoading() =>
+                                const CircularProgressIndicator(),
+                              LoadPicturesStateLoaded(:final pictures) =>
+                                Builder(
+                                  builder: (context) {
+                                    // Filtering inside the UI
+                                    // TODO: Is that Good
+                                    var filteredImages = <VaultImage>[];
+                                    if (selectedTypes.isEmpty) {
+                                      filteredImages = pictures;
+                                    } else {
+                                      filteredImages = pictures
+                                          .where(
+                                            (element) => selectedTypes
+                                                .contains(element.tag),
+                                          )
+                                          .toList();
+                                    }
+
+                                    return Theme(
+                                      data: Theme.of(context).copyWith(
+                                        cardTheme: CardThemeData(
+                                          elevation: 0,
+                                          margin: EdgeInsets.zero,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .surfaceContainerHighest,
+                                        ),
+                                      ),
+                                      child: Builder(
+                                        builder: (context) {
+                                          return Scaffold(
+                                            floatingActionButton:
+                                                FloatingActionButton.large(
+                                              onPressed: () {
+                                                // Navigator.pushNamed(
+                                                //   context,
+                                                //   AddNewMediaView.routeName,
+                                                // );
+                                                Navigator.of(
+                                                  context,
+                                                  rootNavigator: true,
+                                                ).pushNamed(
+                                                  AddNewMediaView.routeName,
+                                                );
+                                              },
+                                              child: const Icon(
+                                                Icons.add,
+                                              ),
+                                            ),
+                                            floatingActionButtonLocation:
+                                                FloatingActionButtonLocation
+                                                    .centerFloat,
+                                            floatingActionButtonAnimator:
+                                                FloatingActionButtonAnimator
+                                                    .scaling,
+                                            appBar: AppBar(
+                                              title:
+                                                  const Text('Vault Gallery'),
+                                              automaticallyImplyLeading: false,
+                                              actions: [
+                                                // IconButton(
+                                                //   onPressed: () {
+                                                //     context
+                                                //         .read<BodyPictureRepository>()
+                                                //         .deleteAllBodyPictures();
+                                                //   },
+                                                //   icon: const Icon(
+                                                //     Icons.delete,
+                                                //   ), // delete
+                                                // ),
+                                                // lock icon button
+                                                IconButton(
+                                                  onPressed: () {
+                                                    // context
+                                                    //     .read<LockGalleryCubit>()
+                                                    //     .lock();
+                                                    context
+                                                        .read<
+                                                            AuthGateKeeperBloc>()
+                                                        .add(
+                                                          const AuthGateKeeperEvent
+                                                              .triggerUnAuth(),
+                                                        );
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.lock,
+                                                  ),
+                                                ),
+
+                                                // ElevatedButton(
+                                                //     onPressed: () {
+                                                //       context
+                                                //           .read<
+                                                //               BodyPictureRepository>()
+                                                //           .cacheService
+                                                //           .dos();
+                                                //     },
+                                                //     child: const Text('TEST')),
+                                                // filter
+                                                TextButton(
+                                                  onPressed: () {
+                                                    // Navigator.pushNamed(
+                                                    //   context,
+                                                    //   ComparePicturesView.routeName,
+                                                    // );
+                                                    Navigator.of(
+                                                      context,
+                                                      rootNavigator: true,
+                                                    ).pushNamed(
+                                                      ComparePicturesView
+                                                          .routeName,
+                                                    );
+                                                  },
+                                                  child: const Text(
+                                                    'Compare',
+                                                  ),
+                                                ),
+
+                                                // Overflow Menu
+                                                PopupMenuButton<int>(
+                                                  onSelected: (value) {
+                                                    if (1 == value) {
+                                                    } else {
+                                                      context
+                                                          .read<
+                                                              BackUpPicturesToZipCubit>()
+                                                          .backupPictures();
+                                                    }
+                                                  },
+                                                  itemBuilder:
+                                                      (BuildContext context) {
+                                                    return [
+                                                      const PopupMenuItem(
+                                                        value: 1,
+                                                        child: Text('Compare'),
+                                                      ),
+                                                      const PopupMenuItem(
+                                                        value: 2,
+                                                        child: Text('Backup'),
+                                                      ),
+                                                    ];
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            // Grid View for gallery
+                                            body: _GalleryView(
+                                              filteredImages: filteredImages,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                    // return BlocBuilder<FilteredGalleryImagesCubit,
+                                    //     FilteredGalleryImagesState>(
+                                    //   buildWhen: (previous, current) => true,
+                                    //   builder: (context, state) {
+                                    //     ;
+                                    //   },
+                                    // );
+                                  },
+                                ),
+                              LoadPicturesStateFailed() => const Column(
                                   children: [
                                     Center(
                                       child: Text('Failed to load Pictures'),
@@ -135,189 +309,57 @@ class VaultGalleryView extends StatelessWidget {
                                     //     },
                                     //     child: const Text('Retry')),
                                   ],
-                                );
-                              },
-                              loading: (_) => const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                              loaded: (pictureLoadedStateValue) {
-                                // Filtering inside the UI
-                                // TODO: Is that Good
-                                var filteredImages = <VaultImage>[];
-                                if (filterStateValue.selectedTypes.isEmpty) {
-                                  filteredImages =
-                                      pictureLoadedStateValue.pictures;
-                                } else {
-                                  filteredImages =
-                                      pictureLoadedStateValue.pictures
-                                          .where(
-                                            (element) => filterStateValue
-                                                .selectedTypes
-                                                .contains(element.tag),
-                                          )
-                                          .toList();
-                                }
+                                ),
+                            };
 
-                                return Theme(
-                                  data: Theme.of(context).copyWith(
-                                    cardTheme: CardThemeData(
-                                      elevation: 0,
-                                      margin: EdgeInsets.zero,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .surfaceContainerHighest,
-                                    ),
-                                  ),
-                                  child: Builder(
-                                    builder: (context) {
-                                      return Scaffold(
-                                        floatingActionButton:
-                                            FloatingActionButton.large(
-                                          onPressed: () {
-                                            // Navigator.pushNamed(
-                                            //   context,
-                                            //   AddNewMediaView.routeName,
-                                            // );
-                                            Navigator.of(
-                                              context,
-                                              rootNavigator: true,
-                                            ).pushNamed(
-                                              AddNewMediaView.routeName,
-                                            );
-                                          },
-                                          child: const Icon(
-                                            Icons.add,
-                                          ),
-                                        ),
-                                        floatingActionButtonLocation:
-                                            FloatingActionButtonLocation
-                                                .centerFloat,
-                                        floatingActionButtonAnimator:
-                                            FloatingActionButtonAnimator
-                                                .scaling,
-                                        appBar: AppBar(
-                                          title: const Text('Vault Gallery'),
-                                          automaticallyImplyLeading: false,
-                                          actions: [
-                                            // IconButton(
-                                            //   onPressed: () {
-                                            //     context
-                                            //         .read<BodyPictureRepository>()
-                                            //         .deleteAllBodyPictures();
-                                            //   },
-                                            //   icon: const Icon(
-                                            //     Icons.delete,
-                                            //   ), // delete
-                                            // ),
-                                            // lock icon button
-                                            IconButton(
-                                              onPressed: () {
-                                                // context
-                                                //     .read<LockGalleryCubit>()
-                                                //     .lock();
-                                                context
-                                                    .read<AuthGateKeeperBloc>()
-                                                    .add(
-                                                      const AuthGateKeeperEvent
-                                                          .triggerUnAuth(),
-                                                    );
-                                              },
-                                              icon: const Icon(
-                                                Icons.lock,
-                                              ),
-                                            ),
-
-                                            // ElevatedButton(
-                                            //     onPressed: () {
-                                            //       context
-                                            //           .read<
-                                            //               BodyPictureRepository>()
-                                            //           .cacheService
-                                            //           .dos();
-                                            //     },
-                                            //     child: const Text('TEST')),
-                                            // filter
-                                            TextButton(
-                                              onPressed: () {
-                                                // Navigator.pushNamed(
-                                                //   context,
-                                                //   ComparePicturesView.routeName,
-                                                // );
-                                                Navigator.of(
-                                                  context,
-                                                  rootNavigator: true,
-                                                ).pushNamed(
-                                                  ComparePicturesView.routeName,
-                                                );
-                                              },
-                                              child: const Text(
-                                                'Compare',
-                                              ),
-                                            ),
-
-                                            // Overflow Menu
-                                            PopupMenuButton<int>(
-                                              onSelected: (value) {
-                                                if (1 == value) {
-                                                } else {
-                                                  context
-                                                      .read<
-                                                          BackUpPicturesToZipCubit>()
-                                                      .backupPictures();
-                                                }
-                                              },
-                                              itemBuilder:
-                                                  (BuildContext context) {
-                                                return [
-                                                  const PopupMenuItem(
-                                                    value: 1,
-                                                    child: Text('Compare'),
-                                                  ),
-                                                  const PopupMenuItem(
-                                                    value: 2,
-                                                    child: Text('Backup'),
-                                                  ),
-                                                ];
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                        // Grid View for gallery
-                                        body: _GalleryView(
-                                          filteredImages: filteredImages,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                );
-                                // return BlocBuilder<FilteredGalleryImagesCubit,
-                                //     FilteredGalleryImagesState>(
-                                //   buildWhen: (previous, current) => true,
-                                //   builder: (context, state) {
-                                //     ;
-                                //   },
-                                // );
-                              },
-                            );
+                            // return state.map(
+                            //   failed: (value) {},
+                            //   loading: (_) => const Center(
+                            //     child:
+                            //   ),
+                            //   loaded: (pictureLoadedStateValue) {
+                            //   },
+                            // );
                           },
-                        );
-                      },
-                    );
+                        ),
+                      PictureTypeFilterModalState() => const SizedBox.shrink(),
+                    };
+
+                    // return filterState.maybeMap(
+                    //   orElse: () {
+                    //     return;
+                    //   },
+                    //   failed: (value) {
+                    //     return;
+                    //   },
+                    //   success: (filterStateValue) {
+                    //     return;
+                    //   },
+                    // );
                   },
                 ),
-              );
-            },
-            initial: (value) {
-              return Column(
+              ),
+            LockGalleryStateInitial() => const Column(
                 children: [
                   Text('Lock Loading'),
-                  const Center(
+                  Center(
                     child: CircularProgressIndicator(),
                   ),
                 ],
-              );
-            },
-          );
+              ),
+          };
+
+          // return state.map(
+          //   locked: (value) {
+          //     return
+          //   },
+          //   unlocked: (value) {
+          //     return ;
+          //   },
+          //   initial: (value) {
+          //     return ;
+          //   },
+          // );
         },
       ),
     );

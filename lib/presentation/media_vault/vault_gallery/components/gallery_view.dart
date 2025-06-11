@@ -27,11 +27,20 @@ class _GalleryView extends StatelessWidget {
               builder: (context, state) {
                 var isFilterActive = false;
 
-                state.mapOrNull(
-                  success: (value) {
-                    isFilterActive = value.selectedTypes.isNotEmpty;
-                  },
-                );
+                // state.mapOrNull(
+                //   success: (value) {
+                //     isFilterActive = value.selectedTypes.isNotEmpty;
+                //   },
+                // );
+
+                switch (state) {
+                  case PictureTypeFilterModalStateSuccess(
+                      :final selectedTypes,
+                    ):
+                    isFilterActive = selectedTypes.isNotEmpty;
+                  default:
+                    break;
+                }
 
                 return Align(
                   alignment: Alignment.centerLeft,

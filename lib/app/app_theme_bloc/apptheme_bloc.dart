@@ -14,11 +14,16 @@ enum AppTheme {
 class AppthemeBloc extends HydratedBloc<AppthemeEvent, AppTheme> {
   AppthemeBloc() : super(AppTheme.lightTheme) {
     on<AppthemeEvent>((event, emit) {
-      event.map(
-        changeTheme: (e) {
-          emit(e.appTheme);
-        },
-      );
+      switch (event) {
+        case AppThemeEventChangeTheme(:final appTheme):
+          emit(appTheme);
+          break;
+      }
+      // event.map(
+      //   changeTheme: (e) {
+      //     emit(e.appTheme);
+      //   },
+      // );
     });
   }
 

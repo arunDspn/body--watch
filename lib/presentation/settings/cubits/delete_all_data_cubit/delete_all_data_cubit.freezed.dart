@@ -38,13 +38,14 @@ class $DeleteAllDataStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements DeleteAllDataState {
-  const _Initial();
+class DeleteAllDataStateInitial implements DeleteAllDataState {
+  const DeleteAllDataStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType &&
+            other is DeleteAllDataStateInitial);
   }
 
   @override
@@ -58,13 +59,14 @@ class _Initial implements DeleteAllDataState {
 
 /// @nodoc
 
-class _Loading implements DeleteAllDataState {
-  const _Loading();
+class DeleteAllDataStateLoading implements DeleteAllDataState {
+  const DeleteAllDataStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is DeleteAllDataStateLoading);
   }
 
   @override
@@ -78,13 +80,14 @@ class _Loading implements DeleteAllDataState {
 
 /// @nodoc
 
-class _Success implements DeleteAllDataState {
-  const _Success();
+class DeleteAllDataStateSuccess implements DeleteAllDataState {
+  const DeleteAllDataStateSuccess();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Success);
+        (other.runtimeType == runtimeType &&
+            other is DeleteAllDataStateSuccess);
   }
 
   @override
@@ -98,8 +101,8 @@ class _Success implements DeleteAllDataState {
 
 /// @nodoc
 
-class _Failed implements DeleteAllDataState {
-  const _Failed(this.msg);
+class DeleteAllDataStateFailed implements DeleteAllDataState {
+  const DeleteAllDataStateFailed(this.msg);
 
   final String msg;
 
@@ -107,14 +110,15 @@ class _Failed implements DeleteAllDataState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailedCopyWith<_Failed> get copyWith =>
-      __$FailedCopyWithImpl<_Failed>(this, _$identity);
+  $DeleteAllDataStateFailedCopyWith<DeleteAllDataStateFailed> get copyWith =>
+      _$DeleteAllDataStateFailedCopyWithImpl<DeleteAllDataStateFailed>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failed &&
+            other is DeleteAllDataStateFailed &&
             (identical(other.msg, msg) || other.msg == msg));
   }
 
@@ -128,20 +132,22 @@ class _Failed implements DeleteAllDataState {
 }
 
 /// @nodoc
-abstract mixin class _$FailedCopyWith<$Res>
+abstract mixin class $DeleteAllDataStateFailedCopyWith<$Res>
     implements $DeleteAllDataStateCopyWith<$Res> {
-  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) =
-      __$FailedCopyWithImpl;
+  factory $DeleteAllDataStateFailedCopyWith(DeleteAllDataStateFailed value,
+          $Res Function(DeleteAllDataStateFailed) _then) =
+      _$DeleteAllDataStateFailedCopyWithImpl;
   @useResult
   $Res call({String msg});
 }
 
 /// @nodoc
-class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
-  __$FailedCopyWithImpl(this._self, this._then);
+class _$DeleteAllDataStateFailedCopyWithImpl<$Res>
+    implements $DeleteAllDataStateFailedCopyWith<$Res> {
+  _$DeleteAllDataStateFailedCopyWithImpl(this._self, this._then);
 
-  final _Failed _self;
-  final $Res Function(_Failed) _then;
+  final DeleteAllDataStateFailed _self;
+  final $Res Function(DeleteAllDataStateFailed) _then;
 
   /// Create a copy of DeleteAllDataState
   /// with the given fields replaced by the non-null parameter values.
@@ -149,7 +155,7 @@ class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
   $Res call({
     Object? msg = null,
   }) {
-    return _then(_Failed(
+    return _then(DeleteAllDataStateFailed(
       null == msg
           ? _self.msg
           : msg // ignore: cast_nullable_to_non_nullable

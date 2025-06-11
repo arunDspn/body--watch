@@ -1,7 +1,7 @@
 part of 'time_range_filter_bloc.dart';
 
 @freezed
-class TimeRangeFilterState with _$TimeRangeFilterState {
+sealed class TimeRangeFilterState with _$TimeRangeFilterState {
   const factory TimeRangeFilterState.state({
     required DateTime startDate,
     required DateTime endDate,
@@ -10,6 +10,6 @@ class TimeRangeFilterState with _$TimeRangeFilterState {
     required bool nextable,
     required Measurement? previousMeasurement,
     required Measurement? nextMeasurement,
-  }) = _State;
-  const factory TimeRangeFilterState.loading() = _Loading;
+  }) = TimeRangeFilterStateState;
+  const factory TimeRangeFilterState.loading() = TimeRangeFilterStateLoading;
 }

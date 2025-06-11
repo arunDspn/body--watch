@@ -8,10 +8,11 @@ part 'auth_initialization_checker_bloc.freezed.dart';
 
 class AuthInitializationChecker extends Bloc<AuthInitializationCheckerEvents,
     AuthInitializationCheckerState> {
-  AuthInitializationChecker(this.authRepository) : super(const _Initial()) {
+  AuthInitializationChecker(this.authRepository)
+      : super(const AuthInitializationCheckerState.initial()) {
     on<AuthInitializationCheckerEvents>((event, emit) async {
-      await event.map(
-        checkAuth: (value) async {
+      switch (event) {
+        case _CheckAuth():
           final result = await authRepository.isUserInitialized();
 
           result.fold(
@@ -26,8 +27,13 @@ class AuthInitializationChecker extends Bloc<AuthInitializationCheckerEvents,
               }
             },
           );
-        },
-      );
+
+          break;
+      }
+
+      // await event.map(
+      //   checkAuth: (value) async {},
+      // );
     });
   }
 

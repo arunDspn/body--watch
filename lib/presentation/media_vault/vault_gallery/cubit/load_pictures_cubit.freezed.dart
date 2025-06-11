@@ -38,13 +38,13 @@ class $LoadPicturesStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Loading implements LoadPicturesState {
-  const _Loading();
+class LoadPicturesStateLoading implements LoadPicturesState {
+  const LoadPicturesStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType && other is LoadPicturesStateLoading);
   }
 
   @override
@@ -58,8 +58,9 @@ class _Loading implements LoadPicturesState {
 
 /// @nodoc
 
-class Loaded implements LoadPicturesState {
-  const Loaded(final List<VaultImage> pictures) : _pictures = pictures;
+class LoadPicturesStateLoaded implements LoadPicturesState {
+  const LoadPicturesStateLoaded(final List<VaultImage> pictures)
+      : _pictures = pictures;
 
   final List<VaultImage> _pictures;
   List<VaultImage> get pictures {
@@ -72,14 +73,15 @@ class Loaded implements LoadPicturesState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $LoadedCopyWith<Loaded> get copyWith =>
-      _$LoadedCopyWithImpl<Loaded>(this, _$identity);
+  $LoadPicturesStateLoadedCopyWith<LoadPicturesStateLoaded> get copyWith =>
+      _$LoadPicturesStateLoadedCopyWithImpl<LoadPicturesStateLoaded>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is Loaded &&
+            other is LoadPicturesStateLoaded &&
             const DeepCollectionEquality().equals(other._pictures, _pictures));
   }
 
@@ -94,20 +96,22 @@ class Loaded implements LoadPicturesState {
 }
 
 /// @nodoc
-abstract mixin class $LoadedCopyWith<$Res>
+abstract mixin class $LoadPicturesStateLoadedCopyWith<$Res>
     implements $LoadPicturesStateCopyWith<$Res> {
-  factory $LoadedCopyWith(Loaded value, $Res Function(Loaded) _then) =
-      _$LoadedCopyWithImpl;
+  factory $LoadPicturesStateLoadedCopyWith(LoadPicturesStateLoaded value,
+          $Res Function(LoadPicturesStateLoaded) _then) =
+      _$LoadPicturesStateLoadedCopyWithImpl;
   @useResult
   $Res call({List<VaultImage> pictures});
 }
 
 /// @nodoc
-class _$LoadedCopyWithImpl<$Res> implements $LoadedCopyWith<$Res> {
-  _$LoadedCopyWithImpl(this._self, this._then);
+class _$LoadPicturesStateLoadedCopyWithImpl<$Res>
+    implements $LoadPicturesStateLoadedCopyWith<$Res> {
+  _$LoadPicturesStateLoadedCopyWithImpl(this._self, this._then);
 
-  final Loaded _self;
-  final $Res Function(Loaded) _then;
+  final LoadPicturesStateLoaded _self;
+  final $Res Function(LoadPicturesStateLoaded) _then;
 
   /// Create a copy of LoadPicturesState
   /// with the given fields replaced by the non-null parameter values.
@@ -115,7 +119,7 @@ class _$LoadedCopyWithImpl<$Res> implements $LoadedCopyWith<$Res> {
   $Res call({
     Object? pictures = null,
   }) {
-    return _then(Loaded(
+    return _then(LoadPicturesStateLoaded(
       null == pictures
           ? _self._pictures
           : pictures // ignore: cast_nullable_to_non_nullable
@@ -126,8 +130,8 @@ class _$LoadedCopyWithImpl<$Res> implements $LoadedCopyWith<$Res> {
 
 /// @nodoc
 
-class _Failed implements LoadPicturesState {
-  const _Failed(this.message);
+class LoadPicturesStateFailed implements LoadPicturesState {
+  const LoadPicturesStateFailed(this.message);
 
   final String message;
 
@@ -135,14 +139,15 @@ class _Failed implements LoadPicturesState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailedCopyWith<_Failed> get copyWith =>
-      __$FailedCopyWithImpl<_Failed>(this, _$identity);
+  $LoadPicturesStateFailedCopyWith<LoadPicturesStateFailed> get copyWith =>
+      _$LoadPicturesStateFailedCopyWithImpl<LoadPicturesStateFailed>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failed &&
+            other is LoadPicturesStateFailed &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -156,20 +161,22 @@ class _Failed implements LoadPicturesState {
 }
 
 /// @nodoc
-abstract mixin class _$FailedCopyWith<$Res>
+abstract mixin class $LoadPicturesStateFailedCopyWith<$Res>
     implements $LoadPicturesStateCopyWith<$Res> {
-  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) =
-      __$FailedCopyWithImpl;
+  factory $LoadPicturesStateFailedCopyWith(LoadPicturesStateFailed value,
+          $Res Function(LoadPicturesStateFailed) _then) =
+      _$LoadPicturesStateFailedCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
-  __$FailedCopyWithImpl(this._self, this._then);
+class _$LoadPicturesStateFailedCopyWithImpl<$Res>
+    implements $LoadPicturesStateFailedCopyWith<$Res> {
+  _$LoadPicturesStateFailedCopyWithImpl(this._self, this._then);
 
-  final _Failed _self;
-  final $Res Function(_Failed) _then;
+  final LoadPicturesStateFailed _self;
+  final $Res Function(LoadPicturesStateFailed) _then;
 
   /// Create a copy of LoadPicturesState
   /// with the given fields replaced by the non-null parameter values.
@@ -177,7 +184,7 @@ class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
   $Res call({
     Object? message = null,
   }) {
-    return _then(_Failed(
+    return _then(LoadPicturesStateFailed(
       null == message
           ? _self.message
           : message // ignore: cast_nullable_to_non_nullable

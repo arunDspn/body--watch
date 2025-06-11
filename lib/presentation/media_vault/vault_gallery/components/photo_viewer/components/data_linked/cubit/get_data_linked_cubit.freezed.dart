@@ -38,13 +38,14 @@ class $GetDataLinkedStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements GetDataLinkedState {
-  const _Initial();
+class GetDataLinkedStateInitial implements GetDataLinkedState {
+  const GetDataLinkedStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType &&
+            other is GetDataLinkedStateInitial);
   }
 
   @override
@@ -58,13 +59,14 @@ class _Initial implements GetDataLinkedState {
 
 /// @nodoc
 
-class _Loading implements GetDataLinkedState {
-  const _Loading();
+class GetDataLinkedStateLoading implements GetDataLinkedState {
+  const GetDataLinkedStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is GetDataLinkedStateLoading);
   }
 
   @override
@@ -78,8 +80,8 @@ class _Loading implements GetDataLinkedState {
 
 /// @nodoc
 
-class _Loaded implements GetDataLinkedState {
-  const _Loaded({required final List<Measurement> dataLinked})
+class GetDataLinkedStateLoaded implements GetDataLinkedState {
+  const GetDataLinkedStateLoaded({required final List<Measurement> dataLinked})
       : _dataLinked = dataLinked;
 
   final List<Measurement> _dataLinked;
@@ -93,14 +95,15 @@ class _Loaded implements GetDataLinkedState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$LoadedCopyWith<_Loaded> get copyWith =>
-      __$LoadedCopyWithImpl<_Loaded>(this, _$identity);
+  $GetDataLinkedStateLoadedCopyWith<GetDataLinkedStateLoaded> get copyWith =>
+      _$GetDataLinkedStateLoadedCopyWithImpl<GetDataLinkedStateLoaded>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Loaded &&
+            other is GetDataLinkedStateLoaded &&
             const DeepCollectionEquality()
                 .equals(other._dataLinked, _dataLinked));
   }
@@ -116,20 +119,22 @@ class _Loaded implements GetDataLinkedState {
 }
 
 /// @nodoc
-abstract mixin class _$LoadedCopyWith<$Res>
+abstract mixin class $GetDataLinkedStateLoadedCopyWith<$Res>
     implements $GetDataLinkedStateCopyWith<$Res> {
-  factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) =
-      __$LoadedCopyWithImpl;
+  factory $GetDataLinkedStateLoadedCopyWith(GetDataLinkedStateLoaded value,
+          $Res Function(GetDataLinkedStateLoaded) _then) =
+      _$GetDataLinkedStateLoadedCopyWithImpl;
   @useResult
   $Res call({List<Measurement> dataLinked});
 }
 
 /// @nodoc
-class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
-  __$LoadedCopyWithImpl(this._self, this._then);
+class _$GetDataLinkedStateLoadedCopyWithImpl<$Res>
+    implements $GetDataLinkedStateLoadedCopyWith<$Res> {
+  _$GetDataLinkedStateLoadedCopyWithImpl(this._self, this._then);
 
-  final _Loaded _self;
-  final $Res Function(_Loaded) _then;
+  final GetDataLinkedStateLoaded _self;
+  final $Res Function(GetDataLinkedStateLoaded) _then;
 
   /// Create a copy of GetDataLinkedState
   /// with the given fields replaced by the non-null parameter values.
@@ -137,7 +142,7 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
   $Res call({
     Object? dataLinked = null,
   }) {
-    return _then(_Loaded(
+    return _then(GetDataLinkedStateLoaded(
       dataLinked: null == dataLinked
           ? _self._dataLinked
           : dataLinked // ignore: cast_nullable_to_non_nullable
@@ -148,8 +153,8 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
 
 /// @nodoc
 
-class _Error implements GetDataLinkedState {
-  const _Error({required this.message});
+class GetDataLinkedStateError implements GetDataLinkedState {
+  const GetDataLinkedStateError({required this.message});
 
   final String message;
 
@@ -157,14 +162,15 @@ class _Error implements GetDataLinkedState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$ErrorCopyWith<_Error> get copyWith =>
-      __$ErrorCopyWithImpl<_Error>(this, _$identity);
+  $GetDataLinkedStateErrorCopyWith<GetDataLinkedStateError> get copyWith =>
+      _$GetDataLinkedStateErrorCopyWithImpl<GetDataLinkedStateError>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Error &&
+            other is GetDataLinkedStateError &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -178,20 +184,22 @@ class _Error implements GetDataLinkedState {
 }
 
 /// @nodoc
-abstract mixin class _$ErrorCopyWith<$Res>
+abstract mixin class $GetDataLinkedStateErrorCopyWith<$Res>
     implements $GetDataLinkedStateCopyWith<$Res> {
-  factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) =
-      __$ErrorCopyWithImpl;
+  factory $GetDataLinkedStateErrorCopyWith(GetDataLinkedStateError value,
+          $Res Function(GetDataLinkedStateError) _then) =
+      _$GetDataLinkedStateErrorCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$ErrorCopyWithImpl<$Res> implements _$ErrorCopyWith<$Res> {
-  __$ErrorCopyWithImpl(this._self, this._then);
+class _$GetDataLinkedStateErrorCopyWithImpl<$Res>
+    implements $GetDataLinkedStateErrorCopyWith<$Res> {
+  _$GetDataLinkedStateErrorCopyWithImpl(this._self, this._then);
 
-  final _Error _self;
-  final $Res Function(_Error) _then;
+  final GetDataLinkedStateError _self;
+  final $Res Function(GetDataLinkedStateError) _then;
 
   /// Create a copy of GetDataLinkedState
   /// with the given fields replaced by the non-null parameter values.
@@ -199,7 +207,7 @@ class __$ErrorCopyWithImpl<$Res> implements _$ErrorCopyWith<$Res> {
   $Res call({
     Object? message = null,
   }) {
-    return _then(_Error(
+    return _then(GetDataLinkedStateError(
       message: null == message
           ? _self.message
           : message // ignore: cast_nullable_to_non_nullable

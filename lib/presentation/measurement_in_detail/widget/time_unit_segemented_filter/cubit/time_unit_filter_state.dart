@@ -22,7 +22,7 @@ enum TimeUnit {
 }
 
 @freezed
-class TimeUnitFilterState with _$TimeUnitFilterState {
+abstract class TimeUnitFilterState with _$TimeUnitFilterState {
   const factory TimeUnitFilterState.on({
     required TimeUnit timeUnit,
   }) = _On;

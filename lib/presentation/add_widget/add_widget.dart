@@ -17,9 +17,21 @@ class AddWidget extends StatelessWidget {
     return Scaffold(
       body: BlocListener<AdddataCubit, AdddataState>(
         listener: (context, state) {
-          state.mapOrNull(
-            success: (_) => Navigator.of(context).pop(),
-          );
+          switch (state) {
+            case AddDataFailure(:final message):
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Failed to add data: $message'),
+                ),
+              );
+              break;
+            case AddDataSuccess():
+              Navigator.of(context).pop();
+              break;
+            default:
+              // No action needed for initial or loading states
+              break;
+          }
         },
         child: Builder(
           builder: (context) {
@@ -41,44 +53,37 @@ class AddWidget extends StatelessWidget {
                   ),
                   BlocBuilder<GetallwidgetsCubit, GetallwidgetsState>(
                     builder: (context, state) {
-                      return state.maybeMap(
-                        orElse: () {
-                          return const Text('Never see me');
-                        },
-                        success: (value) {
-                          if (value.widgets.isEmpty) {
-                            return Expanded(
-                              child: Center(
-                                child: Text(
-                                  'No widgets remaining',
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
+                      return switch (state) {
+                        GetAllWidgetInitial() => const Text('Never see me'),
+                        GetAllWidgetLoading() =>
+                          const Center(child: CircularProgressIndicator()),
+                        GetAllWidgetFailure(:final cause) => Center(
+                            child: Text('Failed to load widgets: $cause'),
+                          ),
+                        GetAllWidgetSuccess(widgets: final widgets)
+                            when widgets.isEmpty =>
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                'No widgets remaining',
+                                style: Theme.of(context).textTheme.titleLarge,
                               ),
-                            );
-                          }
-                          return Expanded(
+                            ),
+                          ),
+                        GetAllWidgetSuccess(widgets: final widgets) => Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8),
                               child: ListView.builder(
-                                itemCount: value.widgets.length,
+                                itemCount: widgets.length,
                                 itemBuilder: (context, index) {
                                   return _Boxes(
-                                    type: value.widgets[index],
+                                    type: widgets[index],
                                   );
                                 },
                               ),
                             ),
-                          );
-                        },
-                        failure: (value) {
-                          return Text('Failed${value.cause}');
-                        },
-                        loading: (_) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                      );
+                          ),
+                      };
                     },
                   ),
                 ],

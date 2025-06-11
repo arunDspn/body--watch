@@ -234,13 +234,15 @@ class $PictureTypeFilterModalStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Loading implements PictureTypeFilterModalState {
-  const _Loading();
+class PictureTypeFilterModalStateLoading
+    implements PictureTypeFilterModalState {
+  const PictureTypeFilterModalStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is PictureTypeFilterModalStateLoading);
   }
 
   @override
@@ -254,8 +256,8 @@ class _Loading implements PictureTypeFilterModalState {
 
 /// @nodoc
 
-class _Failed implements PictureTypeFilterModalState {
-  const _Failed({required this.message});
+class PictureTypeFilterModalStateFailed implements PictureTypeFilterModalState {
+  const PictureTypeFilterModalStateFailed({required this.message});
 
   final String message;
 
@@ -263,14 +265,15 @@ class _Failed implements PictureTypeFilterModalState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailedCopyWith<_Failed> get copyWith =>
-      __$FailedCopyWithImpl<_Failed>(this, _$identity);
+  $PictureTypeFilterModalStateFailedCopyWith<PictureTypeFilterModalStateFailed>
+      get copyWith => _$PictureTypeFilterModalStateFailedCopyWithImpl<
+          PictureTypeFilterModalStateFailed>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failed &&
+            other is PictureTypeFilterModalStateFailed &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -284,20 +287,23 @@ class _Failed implements PictureTypeFilterModalState {
 }
 
 /// @nodoc
-abstract mixin class _$FailedCopyWith<$Res>
+abstract mixin class $PictureTypeFilterModalStateFailedCopyWith<$Res>
     implements $PictureTypeFilterModalStateCopyWith<$Res> {
-  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) =
-      __$FailedCopyWithImpl;
+  factory $PictureTypeFilterModalStateFailedCopyWith(
+          PictureTypeFilterModalStateFailed value,
+          $Res Function(PictureTypeFilterModalStateFailed) _then) =
+      _$PictureTypeFilterModalStateFailedCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
-  __$FailedCopyWithImpl(this._self, this._then);
+class _$PictureTypeFilterModalStateFailedCopyWithImpl<$Res>
+    implements $PictureTypeFilterModalStateFailedCopyWith<$Res> {
+  _$PictureTypeFilterModalStateFailedCopyWithImpl(this._self, this._then);
 
-  final _Failed _self;
-  final $Res Function(_Failed) _then;
+  final PictureTypeFilterModalStateFailed _self;
+  final $Res Function(PictureTypeFilterModalStateFailed) _then;
 
   /// Create a copy of PictureTypeFilterModalState
   /// with the given fields replaced by the non-null parameter values.
@@ -305,7 +311,7 @@ class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
   $Res call({
     Object? message = null,
   }) {
-    return _then(_Failed(
+    return _then(PictureTypeFilterModalStateFailed(
       message: null == message
           ? _self.message
           : message // ignore: cast_nullable_to_non_nullable
@@ -316,8 +322,9 @@ class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
 
 /// @nodoc
 
-class Success implements PictureTypeFilterModalState {
-  const Success(
+class PictureTypeFilterModalStateSuccess
+    implements PictureTypeFilterModalState {
+  const PictureTypeFilterModalStateSuccess(
       {required final List<String> allTypes,
       required final List<String> selectedTypes})
       : _allTypes = allTypes,
@@ -341,14 +348,16 @@ class Success implements PictureTypeFilterModalState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $SuccessCopyWith<Success> get copyWith =>
-      _$SuccessCopyWithImpl<Success>(this, _$identity);
+  $PictureTypeFilterModalStateSuccessCopyWith<
+          PictureTypeFilterModalStateSuccess>
+      get copyWith => _$PictureTypeFilterModalStateSuccessCopyWithImpl<
+          PictureTypeFilterModalStateSuccess>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is Success &&
+            other is PictureTypeFilterModalStateSuccess &&
             const DeepCollectionEquality().equals(other._allTypes, _allTypes) &&
             const DeepCollectionEquality()
                 .equals(other._selectedTypes, _selectedTypes));
@@ -367,20 +376,23 @@ class Success implements PictureTypeFilterModalState {
 }
 
 /// @nodoc
-abstract mixin class $SuccessCopyWith<$Res>
+abstract mixin class $PictureTypeFilterModalStateSuccessCopyWith<$Res>
     implements $PictureTypeFilterModalStateCopyWith<$Res> {
-  factory $SuccessCopyWith(Success value, $Res Function(Success) _then) =
-      _$SuccessCopyWithImpl;
+  factory $PictureTypeFilterModalStateSuccessCopyWith(
+          PictureTypeFilterModalStateSuccess value,
+          $Res Function(PictureTypeFilterModalStateSuccess) _then) =
+      _$PictureTypeFilterModalStateSuccessCopyWithImpl;
   @useResult
   $Res call({List<String> allTypes, List<String> selectedTypes});
 }
 
 /// @nodoc
-class _$SuccessCopyWithImpl<$Res> implements $SuccessCopyWith<$Res> {
-  _$SuccessCopyWithImpl(this._self, this._then);
+class _$PictureTypeFilterModalStateSuccessCopyWithImpl<$Res>
+    implements $PictureTypeFilterModalStateSuccessCopyWith<$Res> {
+  _$PictureTypeFilterModalStateSuccessCopyWithImpl(this._self, this._then);
 
-  final Success _self;
-  final $Res Function(Success) _then;
+  final PictureTypeFilterModalStateSuccess _self;
+  final $Res Function(PictureTypeFilterModalStateSuccess) _then;
 
   /// Create a copy of PictureTypeFilterModalState
   /// with the given fields replaced by the non-null parameter values.
@@ -389,7 +401,7 @@ class _$SuccessCopyWithImpl<$Res> implements $SuccessCopyWith<$Res> {
     Object? allTypes = null,
     Object? selectedTypes = null,
   }) {
-    return _then(Success(
+    return _then(PictureTypeFilterModalStateSuccess(
       allTypes: null == allTypes
           ? _self._allTypes
           : allTypes // ignore: cast_nullable_to_non_nullable

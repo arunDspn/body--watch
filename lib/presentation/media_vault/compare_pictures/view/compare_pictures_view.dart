@@ -1,9 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_compare_slider/image_compare_slider.dart';
-import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/components/tag_dropdown_menu/view/view.dart';
@@ -12,7 +8,6 @@ import 'package:watcha_body/presentation/media_vault/compare_pictures/components
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/compare_picture_form_cubit.dart'
     as compare_picture_form_cubit_alias;
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/load_picture_to_compare_cubit.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/components/custom_image_provider.dart';
 
 part '../components/compare_view.dart';
 
@@ -45,17 +40,30 @@ class ComparePicturesView extends StatelessWidget {
         compare_picture_form_cubit_alias.ComparePictureFormCubit,
         compare_picture_form_cubit_alias.ComparePictureFormState>(
       listener: (context, state) {
-        state.mapOrNull(
-          state: (value) {
-            if (value.ready) {
-              context.read<LoadPictureToCompareCubit>().loadPicture(
-                    tag: value.tag,
-                    firstDate: value.firstDate!,
-                    secondDate: value.secondDate!,
-                  );
-            }
-          },
-        );
+        switch (state) {
+          case compare_picture_form_cubit_alias.ComparePictureFormStateData(
+                :final ready,
+                :final firstDate,
+                :final secondDate,
+                :final tag,
+              )
+              when ready:
+            context.read<LoadPictureToCompareCubit>().loadPicture(
+                  tag: tag,
+                  firstDate: firstDate!,
+                  secondDate: secondDate!,
+                );
+            break;
+
+          default:
+            break;
+        }
+
+        // state.mapOrNull(
+        //   state: (value) {
+        //     if (value.ready) {}
+        //   },
+        // );
       },
       builder: (context, state) {
         return Scaffold(

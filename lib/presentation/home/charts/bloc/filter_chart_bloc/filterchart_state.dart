@@ -1,12 +1,12 @@
 part of 'filterchart_bloc.dart';
 
 @freezed
-abstract class FilterchartState with _$FilterchartState {
-  const factory FilterchartState.initial() = _Initial;
+sealed class FilterchartState with _$FilterchartState {
+  const factory FilterchartState.initial() = FilterchartStateInitial;
   const factory FilterchartState.data({
     required List<ChartDisplayModel> chartDisplayModelList,
     required DurationsEnum durationsEnum,
     required DateTime startDate,
     required List<String> filteredTypes,
-  }) = _Data;
+  }) = FilterchartStateData;
 }

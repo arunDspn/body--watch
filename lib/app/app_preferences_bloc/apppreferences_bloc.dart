@@ -11,37 +11,43 @@ class ApppreferencesBloc
     extends HydratedBloc<ApppreferencesEvent, ApppreferencesState> {
   ApppreferencesBloc() : super(const ApppreferencesState.notSavedOrReady()) {
     on<ApppreferencesEvent>((event, emit) {
-      event.map(
-        updatePreferences: (e) {
+      switch (event) {
+        case ApppreferencesEvent(appPreferences: final appPreferences):
           emit(
-            ApppreferencesState.savedAndReady(appPreferences: e.appPreferences),
+            ApppreferencesState.savedAndReady(
+              appPreferences: appPreferences,
+            ),
           );
-        },
-      );
+          break;
+      }
     });
   }
 
   @override
   Map<String, dynamic>? toJson(ApppreferencesState state) {
-    return state.maybeMap(
-      orElse: () => null,
-      savedAndReady: (value) {
-        return <String, dynamic>{
-          'weightUnit':
-              EnumToString.convertToString(value.appPreferences.weightUnit),
-          'lengthUnit':
-              EnumToString.convertToString(value.appPreferences.lengthUnit),
-          'lang': value.appPreferences.lang,
-        };
-      },
-      // notSavedOrReady: (value) {
-      //   return <String, dynamic>{
-      //     'weightUnit': '',
-      //     'lengthUnit': '',
-      //     'lang': '',
-      //   };
-      // },
-    );
+    return switch (state) {
+      SavedAndReady(
+        appPreferences: final appPreferences,
+      ) =>
+        <String, dynamic>{
+          'weightUnit': EnumToString.convertToString(appPreferences.weightUnit),
+          'lengthUnit': EnumToString.convertToString(appPreferences.lengthUnit),
+          'lang': appPreferences.lang,
+        },
+      ApppreferencesState() => null,
+    };
+
+    // return state.maybeMap(
+    //   orElse: () => null,
+    //   savedAndReady: (value) {},
+    //   // notSavedOrReady: (value) {
+    //   //   return <String, dynamic>{
+    //   //     'weightUnit': '',
+    //   //     'lengthUnit': '',
+    //   //     'lang': '',
+    //   //   };
+    //   // },
+    // );
   }
 
   @override

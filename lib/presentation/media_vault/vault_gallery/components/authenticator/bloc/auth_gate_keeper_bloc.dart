@@ -7,16 +7,21 @@ part 'auth_gate_keeper_bloc.freezed.dart';
 
 class AuthGateKeeperBloc
     extends Bloc<AuthGateKeeperEvent, AuthGateKeeperState> {
-  AuthGateKeeperBloc() : super(const _Loading()) {
+  AuthGateKeeperBloc() : super(const AuthGateKeeperState.loading()) {
     on<AuthGateKeeperEvent>((event, emit) {
-      event.map(
-        triggerAuth: (value) {
+      switch (event) {
+        case _TriggerAuth():
           emit(const AuthGateKeeperState.authenticated());
-        },
-        triggerUnAuth: (value) {
+          break;
+        case _TriggerUnAuth():
           emit(const AuthGateKeeperState.unauthenticated());
-        },
-      );
+          break;
+      }
+
+      // event.map(
+      //   triggerAuth: (value) {},
+      //   triggerUnAuth: (value) {},
+      // );
     });
   }
 }

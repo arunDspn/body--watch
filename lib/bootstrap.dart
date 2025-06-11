@@ -9,8 +9,11 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:watcha_body/constants/app_constants.dart';
+import 'package:watcha_body/utils/folder_path.dart';
 
 class AppBlocObserver extends BlocObserver {
   @override
@@ -52,7 +55,20 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
         ),
       );
       Bloc.observer = AppBlocObserver();
-      runApp(await builder());
+
+      final imagesFolderPath = await FolderPath.create(
+        imagesFolderName: AppConstants.imagesFolderName,
+        thumbnailsFolderName: AppConstants.thumbnailFolderName,
+      );
+
+      Future<Widget> newBuilder() async {
+        return RepositoryProvider.value(
+          value: imagesFolderPath,
+          child: await builder(),
+        );
+      }
+
+      runApp(await newBuilder());
     },
     (error, stackTrace) {
       log(error.toString(), stackTrace: stackTrace);

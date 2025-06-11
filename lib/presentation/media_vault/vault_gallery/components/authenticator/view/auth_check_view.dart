@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/bloc/auth_gate_keeper_bloc.dart';
@@ -14,32 +16,50 @@ class AuthGate extends StatelessWidget {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        context.read<AuthGateKeeperBloc>().state.mapOrNull(
-          authenticated: (_) {
+        switch (context.read<AuthGateKeeperBloc>().state) {
+          case AuthGateKeeperStateAuthenticated():
             Navigator.of(context).pushNamed(
               VaultGalleryView.routeName,
             );
-          },
-          unauthenticated: (value) {
+            break;
+
+          case AuthGateKeeperStateUnauthenticated():
             Navigator.of(context).pushNamed(AuthInitCheckView.routeName);
-          },
-        );
+            break;
+
+          default:
+            break;
+        }
+
+        // context.read<AuthGateKeeperBloc>().state.mapOrNull(
+        //       authenticated: (_) {},
+        //       unauthenticated: (value) {},
+        //     );
       },
     );
     return Builder(
       builder: (context) {
         return BlocListener<AuthGateKeeperBloc, AuthGateKeeperState>(
           listener: (context, state) async {
-            state.mapOrNull(
-              authenticated: (value) {
-                navigatorKey.currentState!
-                    .pushNamed(VaultGalleryView.routeName);
-              },
-              unauthenticated: (value) {
-                navigatorKey.currentState!
-                    .pushNamed(AuthInitCheckView.routeName);
-              },
-            );
+            switch (state) {
+              case AuthGateKeeperStateAuthenticated():
+                unawaited(navigatorKey.currentState!
+                    .pushNamed(VaultGalleryView.routeName));
+                break;
+
+              case AuthGateKeeperStateUnauthenticated():
+                unawaited(navigatorKey.currentState!
+                    .pushNamed(AuthInitCheckView.routeName));
+                break;
+
+              default:
+                break;
+            }
+
+            // state.mapOrNull(
+            //   authenticated: (value) {},
+            //   unauthenticated: (value) {},
+            // );
           },
           child: const Scaffold(
             body: Center(

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/bloc/auth_initialization_checker_bloc.dart';
 
-import '../components/authorize_view.dart';
-import '../components/initialize_view.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/components/authorize_view.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/components/initialize_view.dart';
 
 class AuthInitCheckView extends StatelessWidget {
   const AuthInitCheckView({super.key});
@@ -15,28 +15,31 @@ class AuthInitCheckView extends StatelessWidget {
         AuthInitializationCheckerState>(
       listener: (context, state) {},
       builder: (context, state) {
-        return state.map(
-          initial: (value) {
+        return switch (state) {
+          AuthInitializationCheckerStateInitial() =>
+
             // return const Text('No body invokes me');
-            return Center(
+            Center(
               child: CircularProgressIndicator(
                 color: Theme.of(context).colorScheme.tertiaryFixed,
               ),
-            );
-          },
-          initialized: (value) {
-            return const AuthorizeView();
-          },
-          notInitialized: (value) {
-            return const InitializeView();
-          },
-          loading: (value) {
-            return const CircularProgressIndicator();
-          },
-          failed: (value) {
-            return const Center(child: Text('Failed to initialize'));
-          },
-        );
+            ),
+          AuthInitializationCheckerStateNotInitialized() =>
+            const InitializeView(),
+          AuthInitializationCheckerStateInitialized() => const AuthorizeView(),
+          AuthInitializationCheckerStateLoading() =>
+            const CircularProgressIndicator(),
+          AuthInitializationCheckerStateFailed() =>
+            const Center(child: Text('Failed to initialize')),
+        };
+
+        // return state.map(
+        //   initial: (value) {},
+        //   initialized: (value) {},
+        //   notInitialized: (value) {},
+        //   loading: (value) {},
+        //   failed: (value) {},
+        // );
       },
     );
   }

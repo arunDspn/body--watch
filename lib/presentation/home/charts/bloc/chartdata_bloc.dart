@@ -1,8 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:collection/collection.dart';
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/app/data/helpers.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/presentation/display_models/chart_display.dart';
@@ -21,44 +18,45 @@ enum DurationsEnum {
 }
 
 class ChartdataBloc extends Bloc<ChartdataEvent, ChartdataState> {
-  ChartdataBloc(this.measurementRepository) : super(const _Initial()) {
+  ChartdataBloc(this.measurementRepository)
+      : super(const ChartDataStateInitial()) {
     on<ChartdataEvent>((event, emit) async {
-      await event.map(
-        fetchData: (value) async {
-          emit(const ChartdataState.loading());
-          // final _data = await measurementRepository.getDetailsByDate(
-          //   preferredWeightUnit: EnumToString.convertToString(
-          //     value.appPreferences.weightUnit,
-          //   ),
-          //   preferredLengthUnit: EnumToString.convertToString(
-          //     value.appPreferences.lengthUnit,
-          //   ),
-          //   endDate: DateTime.now(),
-          //   startDate: enumToStartDate(value.duration),
-          // );
+      // await event.map(
+      //   fetchData: (value) async {
+      //     emit(const ChartdataState.loading());
+      //     // final _data = await measurementRepository.getDetailsByDate(
+      //     //   preferredWeightUnit: EnumToString.convertToString(
+      //     //     value.appPreferences.weightUnit,
+      //     //   ),
+      //     //   preferredLengthUnit: EnumToString.convertToString(
+      //     //     value.appPreferences.lengthUnit,
+      //     //   ),
+      //     //   endDate: DateTime.now(),
+      //     //   startDate: enumToStartDate(value.duration),
+      //     // );
 
-          // _data.fold(
-          //   (l) => emit(ChartdataState.failed(cause: l)),
-          //   (r) {
-          //     final _groupedData = r.groupListsBy((element) => element.type);
+      //     // _data.fold(
+      //     //   (l) => emit(ChartdataState.failed(cause: l)),
+      //     //   (r) {
+      //     //     final _groupedData = r.groupListsBy((element) => element.type);
 
-          //     final _list = _groupedData.values.map((element) {
-          //       return ChartDisplayModel.fromMeasurementList(
-          //         measurement: element,
-          //         name: element.first.type,
-          //       );
-          //     }).toList();
-          //     emit(
-          //       ChartdataState.success(
-          //         chartDisplayModelList: _list,
-          //         durationsEnum: value.duration,
-          //         startDate: enumToStartDate(value.duration),
-          //       ),
-          //     );
-          //   },
-          // );
-        },
-      );
+      //     //     final _list = _groupedData.values.map((element) {
+      //     //       return ChartDisplayModel.fromMeasurementList(
+      //     //         measurement: element,
+      //     //         name: element.first.type,
+      //     //       );
+      //     //     }).toList();
+      //     //     emit(
+      //     //       ChartdataState.success(
+      //     //         chartDisplayModelList: _list,
+      //     //         durationsEnum: value.duration,
+      //     //         startDate: enumToStartDate(value.duration),
+      //     //       ),
+      //     //     );
+      //     //   },
+      //     // );
+      //   },
+      // );
     });
   }
 

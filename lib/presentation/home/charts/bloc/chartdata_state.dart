@@ -1,15 +1,15 @@
 part of 'chartdata_bloc.dart';
 
 @freezed
-abstract class ChartdataState with _$ChartdataState {
-  const factory ChartdataState.initial() = _Initial;
-  const factory ChartdataState.loading() = _Loading;
+sealed class ChartdataState with _$ChartdataState {
+  const factory ChartdataState.initial() = ChartDataStateInitial;
+  const factory ChartdataState.loading() = ChartDataStateLoading;
   const factory ChartdataState.success({
     required List<ChartDisplayModel> chartDisplayModelList,
     required DurationsEnum durationsEnum,
     required DateTime startDate,
-  }) = _Success;
+  }) = ChartDataStateSuccess;
   const factory ChartdataState.failed({
     required String cause,
-  }) = _Failed;
+  }) = ChartDataStateFailed;
 }

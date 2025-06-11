@@ -36,9 +36,8 @@ class Charts extends StatelessWidget {
         actions: [
           BlocConsumer<ChartdataBloc, ChartdataState>(
             listener: (context, state) {
-              state.maybeMap(
-                orElse: () {},
-                success: (state) {
+              switch (state) {
+                case ChartDataStateSuccess():
                   context.read<FilterchartBloc>().add(
                         FilterchartEvent.initialData(
                           chartDisplayModelList: state.chartDisplayModelList,
@@ -46,21 +45,20 @@ class Charts extends StatelessWidget {
                           startDate: state.startDate,
                         ),
                       );
-                },
-              );
+                  break;
+                default:
+                  // No action needed for initial or loading states
+                  break;
+              }
             },
             builder: (context, state) {
-              return state.maybeMap(
-                orElse: SizedBox.shrink,
-                success: (state) {
-                  context.read<FilterchartBloc>().add(
-                        FilterchartEvent.initialData(
-                          chartDisplayModelList: state.chartDisplayModelList,
-                          durationsEnum: state.durationsEnum,
-                          startDate: state.startDate,
-                        ),
-                      );
-                  return DropdownButton<DurationsEnum>(
+              return switch (state) {
+                ChartDataStateSuccess(
+                  :final chartDisplayModelList,
+                  durationsEnum: final durationsEnum,
+                  startDate: final startDate
+                ) =>
+                  DropdownButton<DurationsEnum>(
                     //TODO: Better universal
                     borderRadius: BorderRadius.circular(20),
                     value: state.durationsEnum,
@@ -91,40 +89,70 @@ class Charts extends StatelessWidget {
                         ),
                       );
                     }).toList(),
-                  );
-                },
-              );
+                  ),
+                ChartdataState() => const SizedBox.shrink(),
+              };
+              // return state.maybeMap(
+              //   orElse: SizedBox.shrink,
+              //   success: (state) {
+              //     context.read<FilterchartBloc>().add(
+              //           FilterchartEvent.initialData(
+              //             chartDisplayModelList: state.chartDisplayModelList,
+              //             durationsEnum: state.durationsEnum,
+              //             startDate: state.startDate,
+              //           ),
+              //         );
+              //   },
+              // );
             },
           ),
         ],
       ),
       body: BlocBuilder<ChartdataBloc, ChartdataState>(
         builder: (context, state) {
-          return state.map(
-            initial: (_) => const Center(
-              child: CircularProgressIndicator(),
-            ),
-            loading: (_) => const Center(
-              child: CircularProgressIndicator(
-                color: Colors.blue,
+          return switch (state) {
+            ChartDataStateInitial() => CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.primary,
               ),
-            ),
-            success: (value) {
-              return _SucessBody(
-                list: value.chartDisplayModelList,
-                startDate: value.startDate,
-              );
-            },
-            failed: (value) {
-              // return _FailedBody();
-              return Center(
-                child: Text(
-                  'Failed',
-                  style: Theme.of(context).textTheme.titleLarge,
+            ChartDataStateLoading() => const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ChartDataStateSuccess(
+              chartDisplayModelList: final chartDisplayModelList,
+              durationsEnum: final durationsEnum,
+              startDate: final startDate,
+            ) =>
+              _SucessBody(list: chartDisplayModelList, startDate: startDate),
+            ChartDataStateFailed(:final cause) => Center(
+                child: Center(
+                  child: Text(
+                    'Failed to load charts: $cause',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                 ),
-              );
-            },
-          );
+              ),
+          };
+
+          // return state.map(
+          //   initial: (_) => const Center(
+          //     child: CircularProgressIndicator(),
+          //   ),
+          //   loading: (_) => const Center(
+          //     child: CircularProgressIndicator(
+          //       color: Colors.blue,
+          //     ),
+          //   ),
+          //   success: (value) {
+          //     return _SucessBody(
+          //       list: value.chartDisplayModelList,
+          //       startDate: value.startDate,
+          //     );
+          //   },
+          //   failed: (value) {
+          //     // return _FailedBody();
+          //     return;
+          //   },
+          // );
         },
       ),
     );
@@ -153,82 +181,94 @@ class _SucessBody extends StatelessWidget {
     } else {
       return BlocBuilder<FilterchartBloc, FilterchartState>(
         builder: (context, state) {
-          return state.maybeMap(
-            orElse: CircularProgressIndicator.new,
-            data: (filterState) {
-              final filteredList = list
-                  .where(
-                    (element) => !filterState.filteredTypes
-                        .contains(element.measurementName),
-                  )
-                  .toList();
-              return Column(
-                children: [
-                  // Chips
-                  SizedBox(
-                    height: SizeConfig.screenHeight! * .1,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        for (final e in list)
-                          Padding(
-                            padding: const EdgeInsets.all(3),
-                            child: FilterChip(
-                              selected: !filterState.filteredTypes
-                                  .contains(e.type.name),
-                              label: Text(
-                                e.type.name,
-                                // style: Theme.of(context).textTheme.bodyText1,
+          return switch (state) {
+            // TODO: Handle this case.
+            FilterchartStateData(
+              :final filteredTypes,
+              :final chartDisplayModelList,
+              :final durationsEnum,
+              :final startDate,
+            ) =>
+              Builder(
+                builder: (context) {
+                  final filteredList = list
+                      .where(
+                        (element) =>
+                            filteredTypes.contains(element.measurementName),
+                      )
+                      .toList();
+                  return Column(
+                    children: [
+                      // Chips
+                      SizedBox(
+                        height: SizeConfig.screenHeight! * .1,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            for (final e in list)
+                              Padding(
+                                padding: const EdgeInsets.all(3),
+                                child: FilterChip(
+                                  selected: filteredTypes.contains(e.type.name),
+                                  label: Text(
+                                    e.type.name,
+                                    // style: Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                  onSelected: (selev) {
+                                    var list = [...filteredTypes];
+                                    if (selev) {
+                                      list = list
+                                          .where((ele) => ele != e.type.name)
+                                          .toList();
+                                      context.read<FilterchartBloc>().add(
+                                            FilterchartEvent.filtering(
+                                              chartDisplayModelList:
+                                                  chartDisplayModelList,
+                                              durationsEnum: durationsEnum,
+                                              startDate: startDate,
+                                              filterString: list,
+                                            ),
+                                          );
+                                    } else {
+                                      context.read<FilterchartBloc>().add(
+                                            FilterchartEvent.filtering(
+                                              chartDisplayModelList:
+                                                  chartDisplayModelList,
+                                              durationsEnum: durationsEnum,
+                                              startDate: startDate,
+                                              filterString: list
+                                                ..add(e.type.name),
+                                            ),
+                                          );
+                                    }
+                                  },
+                                ),
                               ),
-                              onSelected: (selev) {
-                                var list = [...filterState.filteredTypes];
-                                if (selev) {
-                                  list = list
-                                      .where((ele) => ele != e.type.name)
-                                      .toList();
-                                  context.read<FilterchartBloc>().add(
-                                        FilterchartEvent.filtering(
-                                          chartDisplayModelList:
-                                              filterState.chartDisplayModelList,
-                                          durationsEnum:
-                                              filterState.durationsEnum,
-                                          startDate: filterState.startDate,
-                                          filterString: list,
-                                        ),
-                                      );
-                                } else {
-                                  context.read<FilterchartBloc>().add(
-                                        FilterchartEvent.filtering(
-                                          chartDisplayModelList:
-                                              filterState.chartDisplayModelList,
-                                          durationsEnum:
-                                              filterState.durationsEnum,
-                                          startDate: filterState.startDate,
-                                          filterString: list..add(e.type.name),
-                                        ),
-                                      );
-                                }
-                              },
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: filteredList.length,
-                      itemBuilder: (context, index) {
-                        return ChartContainer(
-                          chartDisplayModel: filteredList[index],
-                          startDate: startDate,
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: filteredList.length,
+                          itemBuilder: (context, index) {
+                            return ChartContainer(
+                              chartDisplayModel: filteredList[index],
+                              startDate: startDate,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            FilterchartState() => const CircularProgressIndicator(),
+          };
+
+          // return state.maybeMap(
+          //   orElse: CircularProgressIndicator.new,
+          //   data: (filterState) {},
+          // );
         },
       );
     }
@@ -295,40 +335,49 @@ class ChartContainer extends StatelessWidget {
                 else
                   BlocBuilder<ChartdataBloc, ChartdataState>(
                     builder: (context, state) {
-                      return state.maybeMap(
-                        orElse: SizedBox.shrink,
-                        success: (state) {
-                          return DropdownButton<DurationsEnum>(
-                            value: state.durationsEnum,
-                            icon: Icon(
-                              Icons.arrow_drop_down,
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                            underline: Container(),
-                            onChanged: (value) {
-                              if (value != null) {
-                                context.read<ChartdataBloc>().add(
-                                      ChartdataEvent.fetchData(
-                                        duration: value,
-                                        appPreferences: _appPref.appPreferences,
-                                      ),
-                                    );
-                              }
-                            },
-                            items: DurationsEnum.values.map((e) {
-                              return DropdownMenuItem(
-                                value: e,
-                                child: Text(
-                                  EnumToString.convertToString(
-                                    e,
-                                    camelCase: true,
-                                  ),
+                      return switch (state) {
+                        ChartDataStateSuccess() => Builder(
+                            builder: (context) {
+                              return DropdownButton<DurationsEnum>(
+                                value: state.durationsEnum,
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                 ),
+                                underline: Container(),
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    context.read<ChartdataBloc>().add(
+                                          ChartdataEvent.fetchData(
+                                            duration: value,
+                                            appPreferences:
+                                                _appPref.appPreferences,
+                                          ),
+                                        );
+                                  }
+                                },
+                                items: DurationsEnum.values.map((e) {
+                                  return DropdownMenuItem(
+                                    value: e,
+                                    child: Text(
+                                      EnumToString.convertToString(
+                                        e,
+                                        camelCase: true,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
                               );
-                            }).toList(),
-                          );
-                        },
-                      );
+                            },
+                          ),
+                        ChartdataState() => const SizedBox.shrink(),
+                      };
+
+                      // return state.maybeMap(
+                      //   orElse: SizedBox.shrink,
+                      //   success: (state) {},
+                      // );
                     },
                   ),
               ],

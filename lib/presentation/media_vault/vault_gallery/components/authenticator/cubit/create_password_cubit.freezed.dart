@@ -38,13 +38,14 @@ class $CreatePasswordStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements CreatePasswordState {
-  const _Initial();
+class CreatePasswordStateInitial implements CreatePasswordState {
+  const CreatePasswordStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType &&
+            other is CreatePasswordStateInitial);
   }
 
   @override
@@ -58,13 +59,14 @@ class _Initial implements CreatePasswordState {
 
 /// @nodoc
 
-class _Loading implements CreatePasswordState {
-  const _Loading();
+class CreatePasswordStateLoading implements CreatePasswordState {
+  const CreatePasswordStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is CreatePasswordStateLoading);
   }
 
   @override
@@ -78,13 +80,14 @@ class _Loading implements CreatePasswordState {
 
 /// @nodoc
 
-class _Success implements CreatePasswordState {
-  const _Success();
+class CreatePasswordStateSuccess implements CreatePasswordState {
+  const CreatePasswordStateSuccess();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Success);
+        (other.runtimeType == runtimeType &&
+            other is CreatePasswordStateSuccess);
   }
 
   @override
@@ -98,8 +101,8 @@ class _Success implements CreatePasswordState {
 
 /// @nodoc
 
-class _Failed implements CreatePasswordState {
-  const _Failed(this.message);
+class CreatePasswordStateFailed implements CreatePasswordState {
+  const CreatePasswordStateFailed(this.message);
 
   final String message;
 
@@ -107,14 +110,15 @@ class _Failed implements CreatePasswordState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailedCopyWith<_Failed> get copyWith =>
-      __$FailedCopyWithImpl<_Failed>(this, _$identity);
+  $CreatePasswordStateFailedCopyWith<CreatePasswordStateFailed> get copyWith =>
+      _$CreatePasswordStateFailedCopyWithImpl<CreatePasswordStateFailed>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failed &&
+            other is CreatePasswordStateFailed &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -128,20 +132,22 @@ class _Failed implements CreatePasswordState {
 }
 
 /// @nodoc
-abstract mixin class _$FailedCopyWith<$Res>
+abstract mixin class $CreatePasswordStateFailedCopyWith<$Res>
     implements $CreatePasswordStateCopyWith<$Res> {
-  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) =
-      __$FailedCopyWithImpl;
+  factory $CreatePasswordStateFailedCopyWith(CreatePasswordStateFailed value,
+          $Res Function(CreatePasswordStateFailed) _then) =
+      _$CreatePasswordStateFailedCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
-  __$FailedCopyWithImpl(this._self, this._then);
+class _$CreatePasswordStateFailedCopyWithImpl<$Res>
+    implements $CreatePasswordStateFailedCopyWith<$Res> {
+  _$CreatePasswordStateFailedCopyWithImpl(this._self, this._then);
 
-  final _Failed _self;
-  final $Res Function(_Failed) _then;
+  final CreatePasswordStateFailed _self;
+  final $Res Function(CreatePasswordStateFailed) _then;
 
   /// Create a copy of CreatePasswordState
   /// with the given fields replaced by the non-null parameter values.
@@ -149,7 +155,7 @@ class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
   $Res call({
     Object? message = null,
   }) {
-    return _then(_Failed(
+    return _then(CreatePasswordStateFailed(
       null == message
           ? _self.message
           : message // ignore: cast_nullable_to_non_nullable

@@ -1,12 +1,16 @@
 part of 'auth_initialization_checker_bloc.dart';
 
 @freezed
-abstract class AuthInitializationCheckerState
+sealed class AuthInitializationCheckerState
     with _$AuthInitializationCheckerState {
-  const factory AuthInitializationCheckerState.initial() = _Initial;
+  const factory AuthInitializationCheckerState.initial() =
+      AuthInitializationCheckerStateInitial;
   const factory AuthInitializationCheckerState.notInitialized() =
-      _NotInitialized;
-  const factory AuthInitializationCheckerState.initialized() = _Initialized;
-  const factory AuthInitializationCheckerState.loading() = _Loading;
-  const factory AuthInitializationCheckerState.failed(String message) = _Failed;
+      AuthInitializationCheckerStateNotInitialized;
+  const factory AuthInitializationCheckerState.initialized() =
+      AuthInitializationCheckerStateInitialized;
+  const factory AuthInitializationCheckerState.loading() =
+      AuthInitializationCheckerStateLoading;
+  const factory AuthInitializationCheckerState.failed(String message) =
+      AuthInitializationCheckerStateFailed;
 }

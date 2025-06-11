@@ -38,13 +38,14 @@ class $DeleteMeasurementStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements DeleteMeasurementState {
-  const _Initial();
+class DeleteMeasurementStateInitial implements DeleteMeasurementState {
+  const DeleteMeasurementStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType &&
+            other is DeleteMeasurementStateInitial);
   }
 
   @override
@@ -58,13 +59,14 @@ class _Initial implements DeleteMeasurementState {
 
 /// @nodoc
 
-class _Loading implements DeleteMeasurementState {
-  const _Loading();
+class DeleteMeasurementStateLoading implements DeleteMeasurementState {
+  const DeleteMeasurementStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType &&
+            other is DeleteMeasurementStateLoading);
   }
 
   @override
@@ -78,8 +80,8 @@ class _Loading implements DeleteMeasurementState {
 
 /// @nodoc
 
-class _Deleted implements DeleteMeasurementState {
-  const _Deleted(this.id);
+class DeleteMeasurementStateDeleted implements DeleteMeasurementState {
+  const DeleteMeasurementStateDeleted(this.id);
 
   final String id;
 
@@ -87,14 +89,15 @@ class _Deleted implements DeleteMeasurementState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$DeletedCopyWith<_Deleted> get copyWith =>
-      __$DeletedCopyWithImpl<_Deleted>(this, _$identity);
+  $DeleteMeasurementStateDeletedCopyWith<DeleteMeasurementStateDeleted>
+      get copyWith => _$DeleteMeasurementStateDeletedCopyWithImpl<
+          DeleteMeasurementStateDeleted>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Deleted &&
+            other is DeleteMeasurementStateDeleted &&
             (identical(other.id, id) || other.id == id));
   }
 
@@ -108,20 +111,23 @@ class _Deleted implements DeleteMeasurementState {
 }
 
 /// @nodoc
-abstract mixin class _$DeletedCopyWith<$Res>
+abstract mixin class $DeleteMeasurementStateDeletedCopyWith<$Res>
     implements $DeleteMeasurementStateCopyWith<$Res> {
-  factory _$DeletedCopyWith(_Deleted value, $Res Function(_Deleted) _then) =
-      __$DeletedCopyWithImpl;
+  factory $DeleteMeasurementStateDeletedCopyWith(
+          DeleteMeasurementStateDeleted value,
+          $Res Function(DeleteMeasurementStateDeleted) _then) =
+      _$DeleteMeasurementStateDeletedCopyWithImpl;
   @useResult
   $Res call({String id});
 }
 
 /// @nodoc
-class __$DeletedCopyWithImpl<$Res> implements _$DeletedCopyWith<$Res> {
-  __$DeletedCopyWithImpl(this._self, this._then);
+class _$DeleteMeasurementStateDeletedCopyWithImpl<$Res>
+    implements $DeleteMeasurementStateDeletedCopyWith<$Res> {
+  _$DeleteMeasurementStateDeletedCopyWithImpl(this._self, this._then);
 
-  final _Deleted _self;
-  final $Res Function(_Deleted) _then;
+  final DeleteMeasurementStateDeleted _self;
+  final $Res Function(DeleteMeasurementStateDeleted) _then;
 
   /// Create a copy of DeleteMeasurementState
   /// with the given fields replaced by the non-null parameter values.
@@ -129,7 +135,7 @@ class __$DeletedCopyWithImpl<$Res> implements _$DeletedCopyWith<$Res> {
   $Res call({
     Object? id = null,
   }) {
-    return _then(_Deleted(
+    return _then(DeleteMeasurementStateDeleted(
       null == id
           ? _self.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -140,8 +146,8 @@ class __$DeletedCopyWithImpl<$Res> implements _$DeletedCopyWith<$Res> {
 
 /// @nodoc
 
-class _Error implements DeleteMeasurementState {
-  const _Error(this.message);
+class DeleteMeasurementStateError implements DeleteMeasurementState {
+  const DeleteMeasurementStateError(this.message);
 
   final String message;
 
@@ -149,14 +155,15 @@ class _Error implements DeleteMeasurementState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$ErrorCopyWith<_Error> get copyWith =>
-      __$ErrorCopyWithImpl<_Error>(this, _$identity);
+  $DeleteMeasurementStateErrorCopyWith<DeleteMeasurementStateError>
+      get copyWith => _$DeleteMeasurementStateErrorCopyWithImpl<
+          DeleteMeasurementStateError>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Error &&
+            other is DeleteMeasurementStateError &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -170,20 +177,23 @@ class _Error implements DeleteMeasurementState {
 }
 
 /// @nodoc
-abstract mixin class _$ErrorCopyWith<$Res>
+abstract mixin class $DeleteMeasurementStateErrorCopyWith<$Res>
     implements $DeleteMeasurementStateCopyWith<$Res> {
-  factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) =
-      __$ErrorCopyWithImpl;
+  factory $DeleteMeasurementStateErrorCopyWith(
+          DeleteMeasurementStateError value,
+          $Res Function(DeleteMeasurementStateError) _then) =
+      _$DeleteMeasurementStateErrorCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$ErrorCopyWithImpl<$Res> implements _$ErrorCopyWith<$Res> {
-  __$ErrorCopyWithImpl(this._self, this._then);
+class _$DeleteMeasurementStateErrorCopyWithImpl<$Res>
+    implements $DeleteMeasurementStateErrorCopyWith<$Res> {
+  _$DeleteMeasurementStateErrorCopyWithImpl(this._self, this._then);
 
-  final _Error _self;
-  final $Res Function(_Error) _then;
+  final DeleteMeasurementStateError _self;
+  final $Res Function(DeleteMeasurementStateError) _then;
 
   /// Create a copy of DeleteMeasurementState
   /// with the given fields replaced by the non-null parameter values.
@@ -191,7 +201,7 @@ class __$ErrorCopyWithImpl<$Res> implements _$ErrorCopyWith<$Res> {
   $Res call({
     Object? message = null,
   }) {
-    return _then(_Error(
+    return _then(DeleteMeasurementStateError(
       null == message
           ? _self.message
           : message // ignore: cast_nullable_to_non_nullable

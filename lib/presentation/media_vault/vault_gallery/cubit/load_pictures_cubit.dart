@@ -39,7 +39,7 @@ class LoadPicturesCubit extends Cubit<LoadPicturesState> {
   Future<void> updateList(VaultImage newImageData) async {
     final currentState = state;
     emit(const LoadPicturesState.loading());
-    if (currentState is Loaded) {
+    if (currentState is LoadPicturesStateLoaded) {
       allImages.add(newImageData);
       _filterByDate();
       emit(LoadPicturesState.loaded(allImages));

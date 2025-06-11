@@ -23,21 +23,31 @@ class _InitializeViewState extends State<InitializeView> {
   Widget build(BuildContext context) {
     return BlocListener<CreatePasswordCubit, CreatePasswordState>(
       listener: (context, state) {
-        state.mapOrNull(
-          success: (value) {
+        switch (state) {
+          case CreatePasswordStateSuccess():
             // context
             //     .read<AuthInitializationChecker>()
             //     .add(const AuthInitializationCheckerEvents.checkAuth());
             context
                 .read<AuthGateKeeperBloc>()
                 .add(const AuthGateKeeperEvent.triggerUnAuth());
-          },
-          failed: (value) {
+
+            break;
+
+          case CreatePasswordStateFailed(:final message):
             // Snackbar
             ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(value.message)));
-          },
-        );
+                .showSnackBar(SnackBar(content: Text(message)));
+            break;
+
+          default:
+            break;
+        }
+
+        // state.mapOrNull(
+        //   success: (value) {},
+        //   failed: (value) {},
+        // );
       },
       child: Scaffold(
         body: Padding(

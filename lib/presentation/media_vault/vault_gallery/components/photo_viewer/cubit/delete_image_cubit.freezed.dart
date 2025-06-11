@@ -38,13 +38,13 @@ class $DeleteImageStateCopyWith<$Res> {
 
 /// @nodoc
 
-class _Initial implements DeleteImageState {
-  const _Initial();
+class DeleteImageStateInitial implements DeleteImageState {
+  const DeleteImageStateInitial();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Initial);
+        (other.runtimeType == runtimeType && other is DeleteImageStateInitial);
   }
 
   @override
@@ -58,13 +58,13 @@ class _Initial implements DeleteImageState {
 
 /// @nodoc
 
-class _Loading implements DeleteImageState {
-  const _Loading();
+class DeleteImageStateLoading implements DeleteImageState {
+  const DeleteImageStateLoading();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _Loading);
+        (other.runtimeType == runtimeType && other is DeleteImageStateLoading);
   }
 
   @override
@@ -78,8 +78,8 @@ class _Loading implements DeleteImageState {
 
 /// @nodoc
 
-class _Success implements DeleteImageState {
-  const _Success({required this.deletedItemId});
+class DeleteImageStateSuccess implements DeleteImageState {
+  const DeleteImageStateSuccess({required this.deletedItemId});
 
   final String deletedItemId;
 
@@ -87,14 +87,15 @@ class _Success implements DeleteImageState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$SuccessCopyWith<_Success> get copyWith =>
-      __$SuccessCopyWithImpl<_Success>(this, _$identity);
+  $DeleteImageStateSuccessCopyWith<DeleteImageStateSuccess> get copyWith =>
+      _$DeleteImageStateSuccessCopyWithImpl<DeleteImageStateSuccess>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Success &&
+            other is DeleteImageStateSuccess &&
             (identical(other.deletedItemId, deletedItemId) ||
                 other.deletedItemId == deletedItemId));
   }
@@ -109,20 +110,22 @@ class _Success implements DeleteImageState {
 }
 
 /// @nodoc
-abstract mixin class _$SuccessCopyWith<$Res>
+abstract mixin class $DeleteImageStateSuccessCopyWith<$Res>
     implements $DeleteImageStateCopyWith<$Res> {
-  factory _$SuccessCopyWith(_Success value, $Res Function(_Success) _then) =
-      __$SuccessCopyWithImpl;
+  factory $DeleteImageStateSuccessCopyWith(DeleteImageStateSuccess value,
+          $Res Function(DeleteImageStateSuccess) _then) =
+      _$DeleteImageStateSuccessCopyWithImpl;
   @useResult
   $Res call({String deletedItemId});
 }
 
 /// @nodoc
-class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
-  __$SuccessCopyWithImpl(this._self, this._then);
+class _$DeleteImageStateSuccessCopyWithImpl<$Res>
+    implements $DeleteImageStateSuccessCopyWith<$Res> {
+  _$DeleteImageStateSuccessCopyWithImpl(this._self, this._then);
 
-  final _Success _self;
-  final $Res Function(_Success) _then;
+  final DeleteImageStateSuccess _self;
+  final $Res Function(DeleteImageStateSuccess) _then;
 
   /// Create a copy of DeleteImageState
   /// with the given fields replaced by the non-null parameter values.
@@ -130,7 +133,7 @@ class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
   $Res call({
     Object? deletedItemId = null,
   }) {
-    return _then(_Success(
+    return _then(DeleteImageStateSuccess(
       deletedItemId: null == deletedItemId
           ? _self.deletedItemId
           : deletedItemId // ignore: cast_nullable_to_non_nullable
@@ -141,8 +144,8 @@ class __$SuccessCopyWithImpl<$Res> implements _$SuccessCopyWith<$Res> {
 
 /// @nodoc
 
-class _Failed implements DeleteImageState {
-  const _Failed(this.message);
+class DeleteImageStateFailed implements DeleteImageState {
+  const DeleteImageStateFailed(this.message);
 
   final String message;
 
@@ -150,14 +153,15 @@ class _Failed implements DeleteImageState {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$FailedCopyWith<_Failed> get copyWith =>
-      __$FailedCopyWithImpl<_Failed>(this, _$identity);
+  $DeleteImageStateFailedCopyWith<DeleteImageStateFailed> get copyWith =>
+      _$DeleteImageStateFailedCopyWithImpl<DeleteImageStateFailed>(
+          this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Failed &&
+            other is DeleteImageStateFailed &&
             (identical(other.message, message) || other.message == message));
   }
 
@@ -171,20 +175,22 @@ class _Failed implements DeleteImageState {
 }
 
 /// @nodoc
-abstract mixin class _$FailedCopyWith<$Res>
+abstract mixin class $DeleteImageStateFailedCopyWith<$Res>
     implements $DeleteImageStateCopyWith<$Res> {
-  factory _$FailedCopyWith(_Failed value, $Res Function(_Failed) _then) =
-      __$FailedCopyWithImpl;
+  factory $DeleteImageStateFailedCopyWith(DeleteImageStateFailed value,
+          $Res Function(DeleteImageStateFailed) _then) =
+      _$DeleteImageStateFailedCopyWithImpl;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
-  __$FailedCopyWithImpl(this._self, this._then);
+class _$DeleteImageStateFailedCopyWithImpl<$Res>
+    implements $DeleteImageStateFailedCopyWith<$Res> {
+  _$DeleteImageStateFailedCopyWithImpl(this._self, this._then);
 
-  final _Failed _self;
-  final $Res Function(_Failed) _then;
+  final DeleteImageStateFailed _self;
+  final $Res Function(DeleteImageStateFailed) _then;
 
   /// Create a copy of DeleteImageState
   /// with the given fields replaced by the non-null parameter values.
@@ -192,7 +198,7 @@ class __$FailedCopyWithImpl<$Res> implements _$FailedCopyWith<$Res> {
   $Res call({
     Object? message = null,
   }) {
-    return _then(_Failed(
+    return _then(DeleteImageStateFailed(
       null == message
           ? _self.message
           : message // ignore: cast_nullable_to_non_nullable

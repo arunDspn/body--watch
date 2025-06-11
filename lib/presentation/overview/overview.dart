@@ -1,14 +1,11 @@
 import 'dart:ui';
 
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
-import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
-import 'package:watcha_body/l10n/l10n.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/display_models/measurement_display.dart';
@@ -121,93 +118,133 @@ class OverView extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         child: BlocConsumer<GetallwidgetsdataBloc, GetallwidgetsdataState>(
           listener: (context, state) {
-            state.mapOrNull(
-              success: (value) {
+            switch (state) {
+              case GetallwidgetsdataStateSuccess(:final widgets):
                 context
                     .read<SearchWidgetsBloc>()
-                    .add(SearchWidgetsEvent.addData(list: value.widgets));
-              },
-            );
+                    .add(SearchWidgetsEvent.addData(list: widgets));
+                break;
+
+              default:
+                break;
+            }
+            // state.mapOrNull(
+            //   success: (value) {},
+            // );
           },
           builder: (context, state) {
-            return state.maybeMap(
-              orElse: () {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Icon(
-                          Icons.error,
-                          color: Theme.of(context).colorScheme.error,
-                          size: 45,
-                        ),
-                      ),
-                      Text(
-                        'No You Cant See Me',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(color: Colors.red),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              loading: (value) =>
-                  const Center(child: CircularProgressIndicator()),
-              success: (list) {
-                if (list.widgets.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Icon(
-                            Icons.sentiment_dissatisfied,
-                            color: Colors.grey.shade300,
-                            size: 45,
-                          ),
-                        ),
-                        const Text('No Widgets Added'),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          'Add a widget by clicking + at top right \nto get started',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: FilledButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, AddWidget.routeName);
-                            },
-                            child: const Text('Add Widget'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
-                  return const SearchView();
-                  // return Column(
-                  //   children:
-                  //       list.widgets.map((e) => _WidgetBox(data: e)).toList(),
-                  // );
-                }
-              },
-              failure: (cause) {
-                return Text(cause.cause);
-              },
-            );
+            return switch (state) {
+              GetallwidgetsdataStateInitial() => const _ElseCase(),
+              GetallwidgetsdataStateLoading() => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              GetallwidgetsdataStateSuccess(:final widgets)
+                  when widgets.isEmpty =>
+                const _EmptyWidgetList(),
+              GetallwidgetsdataStateSuccess() => const SearchView(),
+              GetallwidgetsdataStateFailure(:final cause) => Text(cause),
+            };
+
+            // return state.maybeMap(
+            //   orElse: () {
+            //     return _ElseCase();
+            //   },
+            //   loading: (value) =>
+            //       const Center(child: CircularProgressIndicator()),
+            //   success: (list) {
+            //     if (list.widgets.isEmpty) {
+            //       return _EmptyWidgetList();
+            //     } else {
+            //       return const SearchView();
+            //       // return Column(
+            //       //   children:
+            //       //       list.widgets.map((e) => _WidgetBox(data: e)).toList(),
+            //       // );
+            //     }
+            //   },
+            //   failure: (cause) {
+            //     return Text(cause.cause);
+            //   },
+            // );
           },
         ),
+      ),
+    );
+  }
+}
+
+class _EmptyWidgetList extends StatelessWidget {
+  const _EmptyWidgetList({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Icon(
+              Icons.sentiment_dissatisfied,
+              color: Colors.grey.shade300,
+              size: 45,
+            ),
+          ),
+          const Text('No Widgets Added'),
+          const SizedBox(
+            height: 8,
+          ),
+          Text(
+            'Add a widget by clicking + at top right \nto get started',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: FilledButton(
+              onPressed: () {
+                Navigator.pushNamed(context, AddWidget.routeName);
+              },
+              child: const Text('Add Widget'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ElseCase extends StatelessWidget {
+  const _ElseCase({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Icon(
+              Icons.error,
+              color: Theme.of(context).colorScheme.error,
+              size: 45,
+            ),
+          ),
+          Text(
+            'No You Cant See Me',
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge
+                ?.copyWith(color: Colors.red),
+          ),
+        ],
       ),
     );
   }
@@ -227,18 +264,15 @@ class SearchView extends StatelessWidget {
       ),
       body: BlocBuilder<SearchWidgetsBloc, SearchWidgetsState>(
         builder: (context, state) {
-          return state.map(
-            loading: (value) {
-              return const Center(child: CircularProgressIndicator());
-            },
-            loaded: (value) {
-              // return _ReorderableWidgetList(list: value.lists);
-              return WidgetList(list: value.lists);
-            },
-            failed: (value) {
-              return const Text('Utter');
-            },
-          );
+          return switch (state) {
+            SearchWidgetsStateLoading() =>
+              const Center(child: CircularProgressIndicator()),
+            SearchWidgetsStateFailed() => const Text('Utter'),
+            SearchWidgetsStateLoaded(
+              :final lists
+            ) => // return _ReorderableWidgetList(list: value.lists);
+              WidgetList(list: lists),
+          };
         },
       ),
     );
