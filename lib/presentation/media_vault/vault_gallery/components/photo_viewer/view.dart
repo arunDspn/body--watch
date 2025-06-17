@@ -8,6 +8,7 @@ import 'package:watcha_body/data/domain/models/vault_image_model.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/components/data_linked/view/data_linked_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/cubit/delete_image_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
+import 'package:watcha_body/utils/date_custom_formater.dart';
 
 class PhotoViewer extends StatefulWidget {
   const PhotoViewer({
@@ -15,11 +16,13 @@ class PhotoViewer extends StatefulWidget {
     // required this.path,
     required this.images,
     required this.currentIndex,
+    required this.imagePath,
   });
 
   // final String path;
   final List<VaultImage> images;
   final int currentIndex;
+  final String imagePath;
 
   // todo: put it in helper functions
   // 21-10-2023 formater using intel
@@ -41,12 +44,12 @@ class _PhotoViewerState extends State<PhotoViewer> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.black, // Transparent status bar
-        statusBarIconBrightness: Brightness.light, // Dark status bar icons
-      ),
-    );
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   const SystemUiOverlayStyle(
+    //     statusBarColor: Colors.black, // Transparent status bar
+    //     statusBarIconBrightness: Brightness.light, // Dark status bar icons
+    //   ),
+    // );
     return Scaffold(
       body: BlocListener<DeleteImageCubit, DeleteImageState>(
         listener: (context, state) {
@@ -90,7 +93,7 @@ class _PhotoViewerState extends State<PhotoViewer> {
                 builder: (context, index) {
                   return PhotoViewGalleryPageOptions(
                     imageProvider: FileImage(
-                      File(widget.images[index].file),
+                      File('${widget.imagePath}/${widget.images[index].file}'),
                     ),
                     // imageProvider: CustomImageProvider(
                     //   widget.images[index].file,
@@ -138,7 +141,10 @@ class _PhotoViewerState extends State<PhotoViewer> {
                               ),
                             ),
                             Text(
-                              PhotoViewer.formatDateImageViewer(
+                              // PhotoViewer.formatDateImageViewer(
+                              //   widget.images[_currentIndex].date,
+                              // ),
+                              DateCustomFormater.formatDateTimeCompleteVerbose(
                                 widget.images[_currentIndex].date,
                               ),
                               style: const TextStyle(

@@ -143,6 +143,9 @@ class _PhotoThumbnail extends StatelessWidget {
   final List<VaultImage> images;
   @override
   Widget build(BuildContext context) {
+    final thumnailPath = context.read<FolderPath>().thumbnailsPath;
+    final imagePath = context.read<FolderPath>().imagesPath;
+
     return GestureDetector(
       onTap: () {
         Navigator.of(
@@ -159,6 +162,7 @@ class _PhotoThumbnail extends StatelessWidget {
                   builder: (context) {
                     return PhotoViewer(
                       // path: image.path,
+                      imagePath: imagePath,
                       images: images,
                       currentIndex: currentIndex,
                     );
@@ -175,7 +179,7 @@ class _PhotoThumbnail extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(22),
               child: Image.file(
-                File(image.thumbnailFile),
+                File('$thumnailPath/${image.thumbnailFile}'),
                 fit: BoxFit.cover,
                 width: double.infinity,
                 height: double.infinity,

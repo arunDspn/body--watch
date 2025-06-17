@@ -25,9 +25,9 @@ class _InitializeViewState extends State<InitializeView> {
       listener: (context, state) {
         switch (state) {
           case CreatePasswordStateSuccess():
-            // context
-            //     .read<AuthInitializationChecker>()
-            //     .add(const AuthInitializationCheckerEvents.checkAuth());
+            context
+                .read<AuthInitializationChecker>()
+                .add(const AuthInitializationCheckerEvents.checkAuth());
             context
                 .read<AuthGateKeeperBloc>()
                 .add(const AuthGateKeeperEvent.triggerUnAuth());

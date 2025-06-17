@@ -199,8 +199,27 @@ class App extends StatelessWidget {
                   builder: (context, stateTheme) {
                     return DynamicColorBuilder(
                       builder: (lightDynamic, darkDynamic) => MaterialApp(
-                        themeMode: ThemeMode.dark,
-                        darkTheme: ThemeData.dark(),
+                        themeMode: ThemeMode.system,
+                        // darkTheme: ThemeData.dark(
+                        //   useMaterial3: true,
+                        // ).copyWith(
+                        //   colorScheme: darkDynamic,
+                        // ),
+
+                        //dark theme with font family
+                        // darkTheme: ThemeData(
+                        //   // colorScheme: darkDynamic,
+                        //   fontFamily: 'Poppins',
+                        //   useMaterial3: true,
+                        //   brightness: Brightness.dark,
+                        // ),
+
+                        darkTheme: ThemeData.dark().copyWith(
+                          textTheme: ThemeData.dark().textTheme.apply(
+                                fontFamily: 'Poppins',
+                              ),
+                          colorScheme: darkDynamic,
+                        ),
 
                         // theme: AppThemeData.lightTheme,
                         // darkTheme: AppThemeData.darkTheme,

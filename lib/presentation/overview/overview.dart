@@ -212,6 +212,18 @@ class _EmptyWidgetList extends StatelessWidget {
               child: const Text('Add Widget'),
             ),
           ),
+
+          // Settings
+          OutlinedButton.icon(
+            label: const Text('Settings'),
+            icon: Icon(
+              Icons.settings,
+              color: Theme.of(context).colorScheme.tertiary,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
         ],
       ),
     );
@@ -364,11 +376,11 @@ class _SearchBarState extends State<_SearchBar> {
                 // context.read<BodyPictureRepository>().getAllTags();
                 Navigator.push(context, MaterialPageRoute(
                   builder: (context) {
-                    return VaultSection();
+                    return const VaultSection();
                   },
                 ));
               },
-              icon: Icon(Icons.emoji_emotions),
+              icon: const Icon(Icons.emoji_emotions),
             ),
           ],
         ),

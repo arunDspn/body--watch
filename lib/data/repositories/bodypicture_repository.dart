@@ -95,7 +95,7 @@ class BodyPictureRepository implements IBodyPictureFacade {
         '$imagesFolderPath/$orginalFileName',
       );
       final thumbnailFile = File(
-        '$thumbnailFileName/$thumbnailFileName',
+        '$thumbnailsFolderPath/$thumbnailFileName',
       );
 
       // Deleting from directories
@@ -174,12 +174,17 @@ class BodyPictureRepository implements IBodyPictureFacade {
   Future<Either<String, VaultImage>> saveBodyPicture(
     SaveVaultImageModel bodyPicture,
   ) async {
-    try {
-      final imageNameWithPathToSave = imagesFolderPath +
-          _fileNameCreator(bodyPicture.path, bodyPicture.tag);
+    final imageName = _fileNameCreator(bodyPicture.path, bodyPicture.tag);
+    final thumbnailName = _thumbnailFileNameCreator(
+      bodyPicture.path,
+      bodyPicture.tag,
+    );
 
-      final imageThumbnailNameWithPathToSave = thumbnailsFolderPath +
-          _thumbnailFileNameCreator(bodyPicture.path, bodyPicture.tag);
+    try {
+      final imageNameWithPathToSave = '$imagesFolderPath/$imageName';
+
+      final imageThumbnailNameWithPathToSave =
+          '$thumbnailsFolderPath/$thumbnailName';
 
       // Save image and thumbnail in the app's documents directory
       // Create the image file
@@ -208,8 +213,8 @@ class BodyPictureRepository implements IBodyPictureFacade {
       final dbData = VaultImage(
         id: id,
         tag: bodyPicture.tag,
-        file: imageNameWithPathToSave,
-        thumbnailFile: imageThumbnailNameWithPathToSave,
+        file: imageName,
+        thumbnailFile: thumbnailName,
         date: bodyPicture.date,
         note: '',
       );
@@ -230,25 +235,20 @@ class BodyPictureRepository implements IBodyPictureFacade {
 
       return right(dbData);
     } on DatabaseException catch (e) {
+      _deleteImageAndThumbnailByName(imageName, thumbnailName);
       return left(e.toString());
     } catch (e) {
       return left(e.toString());
-    } finally {
-      // _deleteImageAndThumbnailByName(
-      //   imageN,
-      //   imageThumbnailNameWithPathToSave,
-      // )
-      // todo: Implement a way to delete the image and thumbnail if needed
-    }
+    } finally {}
   }
 
-  _deleteImageAndThumbnailByName(
-    String fileNamePath,
-    String thumbnailFileNamePath,
-  ) async {
+  void _deleteImageAndThumbnailByName(
+    String fileName,
+    String thumbnailFileName,
+  ) {
     // Delete both files
-    File(fileNamePath).deleteSync();
-    File(thumbnailFileNamePath).deleteSync();
+    File('$imagesFolderPath/$fileName').deleteSync();
+    File('$thumbnailsFolderPath/$thumbnailFileName').deleteSync();
   }
 
   // _saveFileInTempDirectoryViaPath(String path) async {

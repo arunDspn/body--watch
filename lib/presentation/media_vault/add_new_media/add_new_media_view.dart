@@ -150,7 +150,7 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
                           context: context,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(2000),
-                          lastDate: DateTime(2025),
+                          lastDate: DateTime.now(),
                         ).then((value) {
                           // if not null
                           if (value != null) {

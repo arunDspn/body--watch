@@ -47,7 +47,6 @@ class DatabaseService {
       ('hips'),
       ('calves'),
       ('thighs'),
-      ('butt'),
       ('feet'),
       ('face');
   ''';
@@ -60,7 +59,6 @@ class DatabaseService {
       thumbnail_file TEXT NOT NULL,
       date TEXT NOT NULL,
       tag TEXT NOT NULL,
-      nonce TEXT NOT NULL,
       note TEXT NOT NULL
     );
   ''';
@@ -84,17 +82,17 @@ class DatabaseService {
       version: _databaseVersion,
       onCreate: _onCreateDB,
       onUpgrade: (db, oldVersion, newVersion) {
-        log('NEW VERSION: $newVersion');
-        // new data named pictures
-        if (oldVersion < 4) {
-          db.execute(createPictureTable);
-        }
-        // new data named tags
-        if (oldVersion < 5) {
-          db
-            ..execute(createTagTable)
-            ..execute(insertTagsQuery);
-        }
+        // log('NEW VERSION: $newVersion');
+        // // new data named pictures
+        // if (oldVersion < 4) {
+        //   db.execute(createPictureTable);
+        // }
+        // // new data named tags
+        // if (oldVersion < 5) {
+        //   db
+        //     ..execute(createTagTable)
+        //     ..execute(insertTagsQuery);
+        // }
       },
     );
     return database;

@@ -18,6 +18,7 @@ import 'package:watcha_body/presentation/media_vault/vault_gallery/components/ph
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/back_up_pictures_to_zip_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/lock_gallery_cubit.dart';
+import 'package:watcha_body/utils/folder_path.dart';
 
 part '../add_media_modal.dart';
 part '../bio_lock_view.dart';
