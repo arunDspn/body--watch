@@ -75,9 +75,10 @@ class _MetricsLineGraphState extends State<MetricsLineGraph> {
                                       .derangeifyThreeMonthsToString(
                                     touchedSpots.first.x,
                                   ),
-                                TimeUnit.year => widget.dayToText
-                                    .derangeifyMonthsInYear(
-                                        touchedSpots.first.x),
+                                TimeUnit.year =>
+                                  widget.dayToText.derangeifyMonthsInYear(
+                                    touchedSpots.first.x,
+                                  ),
                               };
 
                               return [

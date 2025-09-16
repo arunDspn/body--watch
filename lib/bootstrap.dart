@@ -10,6 +10,7 @@ import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_windowmanager_plus/flutter_windowmanager_plus.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:watcha_body/constants/app_constants.dart';
@@ -45,6 +46,10 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+
+      await FlutterWindowManagerPlus.addFlags(
+        FlutterWindowManagerPlus.FLAG_SECURE,
+      );
 
       FlutterError.onError = (details) {
         log(details.exceptionAsString(), stackTrace: details.stack);
