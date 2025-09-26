@@ -8,6 +8,7 @@ import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/domain/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
+import 'package:watcha_body/presentation/chart_2/charts_view2.dart';
 import 'package:watcha_body/presentation/display_models/measurement_display.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
@@ -28,6 +29,33 @@ class OverView extends StatelessWidget {
     SizeConfig().init(context);
 
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.settings,
+              color: Theme.of(context).colorScheme.tertiary,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.add,
+              color: Theme.of(context).colorScheme.tertiary,
+            ),
+            onPressed: () {
+              // Navigator.pushNamed(context, AddWidget.routeName);
+              Navigator.push<void>(context, MaterialPageRoute(
+                builder: (context) {
+                  return const ChartsView2();
+                },
+              ));
+            },
+          ),
+        ],
+      ),
       // appBar: AppBar(
       //   elevation: 0,
       //   title: Text(

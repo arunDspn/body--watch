@@ -47,9 +47,9 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
     () async {
       WidgetsFlutterBinding.ensureInitialized();
 
-      await FlutterWindowManagerPlus.addFlags(
-        FlutterWindowManagerPlus.FLAG_SECURE,
-      );
+      // await FlutterWindowManagerPlus.addFlags(
+      //     // FlutterWindowManagerPlus.FLAG_SECURE,
+      //     );
 
       FlutterError.onError = (details) {
         log(details.exceptionAsString(), stackTrace: details.stack);
