@@ -71,7 +71,7 @@ class _ChartsView2State extends State<ChartsView2> {
             children: [
               // Introduction text
               Text(
-                'Phase 4: Data Point Plotting Complete',
+                'Phase 5: Current Period Highlighting Complete',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       color: Colors.green,
                       fontWeight: FontWeight.bold,
@@ -79,7 +79,7 @@ class _ChartsView2State extends State<ChartsView2> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Advanced data positioning implemented with proper date-based positioning, multiple entries per day handling, and linear interpolation for missing data points.',
+                'Enhanced chart with current period highlighting, including special styling for current period data points, X-axis labels, and visual background highlighting for the current time section.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey.shade600,
                     ),

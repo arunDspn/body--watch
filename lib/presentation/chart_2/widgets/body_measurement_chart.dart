@@ -206,6 +206,9 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     String label;
     bool isCurrentPeriod = false;
     final now = DateTime.now();
+    
+    // Check if we're viewing the current period
+    final bool isCurrentViewPeriod = _isCurrentViewPeriod();
 
     switch (_currentFilter) {
       case ChartFilter.week:
@@ -219,9 +222,10 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
         label = _getShortWeekdayName(date.weekday);
 
         // Check if this is today
-        isCurrentPeriod = date.year == now.year &&
-            date.month == now.month &&
-            date.day == now.day;
+        isCurrentPeriod = isCurrentViewPeriod && 
+                         date.year == now.year && 
+                         date.month == now.month && 
+                         date.day == now.day;
         break;
 
       case ChartFilter.month:
@@ -244,11 +248,13 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
         }
 
         // Check if this is the current week
-        final weekStart = now.subtract(Duration(days: now.weekday % 7));
-        final weekEnd = weekStart.add(const Duration(days: 7));
-        isCurrentPeriod =
-            date.isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
-                date.isBefore(weekEnd);
+        if (isCurrentViewPeriod) {
+          final weekStart = now.subtract(Duration(days: now.weekday % 7));
+          final weekEnd = weekStart.add(const Duration(days: 7));
+          isCurrentPeriod =
+              date.isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
+                  date.isBefore(weekEnd);
+        }
         break;
 
       case ChartFilter.threeMonth:
@@ -263,8 +269,9 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
         label = _getShortMonthName(adjustedMonth);
 
         // Check if this is the current month
-        isCurrentPeriod =
-            now.year == _currentPeriod.year && now.month == adjustedMonth;
+        isCurrentPeriod = isCurrentViewPeriod &&
+                        now.year == _currentPeriod.year && 
+                        now.month == adjustedMonth;
         break;
 
       case ChartFilter.year:
@@ -279,20 +286,32 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
         label = _getShortMonthName(adjustedMonth);
 
         // Check if this is the current month or the next one (bi-monthly grouping)
-        isCurrentPeriod = now.year == _currentPeriod.year &&
-            (now.month == adjustedMonth || now.month == adjustedMonth + 1);
+        isCurrentPeriod = isCurrentViewPeriod &&
+                        now.year == _currentPeriod.year &&
+                        (now.month == adjustedMonth || now.month == adjustedMonth + 1);
         break;
     }
 
     return SideTitleWidget(
       meta: meta,
       space: 8,
-      child: Text(
-        label,
-        style: TextStyle(
-          color: isCurrentPeriod ? widget.config.color : Colors.grey.shade700,
-          fontWeight: isCurrentPeriod ? FontWeight.bold : FontWeight.normal,
-          fontSize: 12,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        decoration: isCurrentPeriod ? BoxDecoration(
+          color: widget.config.color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: widget.config.color.withOpacity(0.3),
+            width: 1,
+          ),
+        ) : null,
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isCurrentPeriod ? widget.config.color : Colors.grey.shade700,
+            fontWeight: isCurrentPeriod ? FontWeight.bold : FontWeight.normal,
+            fontSize: 12,
+          ),
         ),
       ),
     );
@@ -387,31 +406,73 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     return groupedPoints;
   }
 
-  /// Check if a date is in the current period
+  /// Check if a date is in the current period based on the current filter
   bool _isInCurrentPeriod(DateTime dateTime) {
+    // Get the current date/time
     final now = DateTime.now();
+    
+    // Normalize the current period based on the viewed period
+    // This ensures highlighting works even when viewing past/future periods
+    final bool isCurrentViewPeriod = _isCurrentViewPeriod();
+    if (!isCurrentViewPeriod) {
+      // If we're not looking at the current period, nothing should be highlighted
+      return false;
+    }
 
     switch (_currentFilter) {
       case ChartFilter.week:
-        // Current day
+        // Current day - highlight today
         return dateTime.year == now.year &&
             dateTime.month == now.month &&
             dateTime.day == now.day;
+            
       case ChartFilter.month:
-        // Current week
+        // Current week - highlight points within the current week
+        // Get start of current week (Sunday)
         final weekStart = now.subtract(Duration(days: now.weekday % 7));
         final weekEnd = weekStart.add(const Duration(days: 7));
-        return dateTime
-                .isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
-            dateTime.isBefore(weekEnd);
+        
+        return dateTime.isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
+               dateTime.isBefore(weekEnd);
+               
       case ChartFilter.threeMonth:
-        // Current month
+        // Current month - highlight points within the current month
         return dateTime.year == now.year && dateTime.month == now.month;
+        
       case ChartFilter.year:
-        // Current quarter
+        // Current quarter - highlight points within the current quarter
         final currentQuarter = (now.month - 1) ~/ 3;
         final dateQuarter = (dateTime.month - 1) ~/ 3;
         return dateTime.year == now.year && dateQuarter == currentQuarter;
+    }
+  }
+  
+  /// Check if the currently viewed period is the current period (today, this month, etc.)
+  bool _isCurrentViewPeriod() {
+    final now = DateTime.now();
+    
+    switch (_currentFilter) {
+      case ChartFilter.week:
+        // Check if current week is being viewed
+        final currentWeekStart = now.subtract(Duration(days: now.weekday % 7));
+        final viewWeekStart = _currentPeriod;
+        return viewWeekStart.year == currentWeekStart.year &&
+               viewWeekStart.month == currentWeekStart.month &&
+               viewWeekStart.day == currentWeekStart.day;
+               
+      case ChartFilter.month:
+        // Check if current month is being viewed
+        return _currentPeriod.year == now.year && _currentPeriod.month == now.month;
+        
+      case ChartFilter.threeMonth:
+        // Check if current quarter is being viewed
+        final currentQuarterStart = DateTime(now.year, ((now.month - 1) ~/ 3) * 3 + 1, 1);
+        return _currentPeriod.year == currentQuarterStart.year &&
+               _currentPeriod.month == currentQuarterStart.month;
+               
+      case ChartFilter.year:
+        // Check if current year is being viewed
+        return _currentPeriod.year == now.year;
     }
   }
 
@@ -693,6 +754,103 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
         return 365.0; // Approximately 1 year
     }
   }
+  
+  /// Build a highlight for the current period section in the chart
+  ExtraLinesData _buildCurrentPeriodHighlight(List<DataPoint> filteredData, double minY, double maxY) {
+    // Only add highlight if we're viewing the current period
+    if (!_isCurrentViewPeriod()) {
+      return ExtraLinesData(extraLinesOnTop: true, horizontalLines: [], verticalLines: []);
+    }
+    
+    final now = DateTime.now();
+    double startX = 0;
+    double endX = 0;
+    
+    // Calculate period start and end dates for positioning
+    DateTime periodStartDate = _currentPeriod;
+    
+    switch (_currentFilter) {
+      case ChartFilter.week:
+        // Highlight today
+        startX = now.difference(periodStartDate).inHours / 24;
+        endX = startX + 1.0; // One day
+        break;
+        
+      case ChartFilter.month:
+        // Highlight current week
+        final weekStart = now.subtract(Duration(days: now.weekday % 7));
+        final weekEnd = weekStart.add(const Duration(days: 7));
+        
+        // Convert to X coordinates
+        startX = weekStart.difference(periodStartDate).inDays.toDouble();
+        if (startX < 0) startX = 0;
+        
+        endX = weekEnd.difference(periodStartDate).inDays.toDouble();
+        if (endX > _getMaxXValue()) endX = _getMaxXValue();
+        break;
+        
+      case ChartFilter.threeMonth:
+        // Highlight current month
+        final monthStart = DateTime(now.year, now.month, 1);
+        final monthEnd = DateTime(now.year, now.month + 1, 1);
+        
+        // Convert to X coordinates (approximate)
+        startX = monthStart.difference(periodStartDate).inDays.toDouble();
+        if (startX < 0) startX = 0;
+        
+        endX = monthEnd.difference(periodStartDate).inDays.toDouble();
+        if (endX > _getMaxXValue()) endX = _getMaxXValue();
+        break;
+        
+      case ChartFilter.year:
+        // Highlight current quarter
+        final quarterStart = DateTime(now.year, ((now.month - 1) ~/ 3) * 3 + 1, 1);
+        final quarterEnd = DateTime(now.year, ((now.month - 1) ~/ 3) * 3 + 4, 1);
+        
+        // Convert to X coordinates
+        startX = quarterStart.difference(periodStartDate).inDays.toDouble();
+        if (startX < 0) startX = 0;
+        
+        endX = quarterEnd.difference(periodStartDate).inDays.toDouble();
+        if (endX > _getMaxXValue()) endX = _getMaxXValue();
+        break;
+    }
+    
+    // Create vertical lines for the current period boundaries
+    final List<VerticalLine> verticalLines = [
+      VerticalLine(
+        x: startX,
+        color: widget.config.color.withOpacity(0.3),
+        strokeWidth: 1,
+        dashArray: [5, 5],
+      ),
+      VerticalLine(
+        x: endX,
+        color: widget.config.color.withOpacity(0.3),
+        strokeWidth: 1,
+        dashArray: [5, 5],
+      ),
+    ];
+    
+    // For the background color, we'll use a series of thin vertical lines
+    // to create the appearance of a shaded area
+    final double step = 0.5;  // Space between vertical lines
+    for (double x = startX; x <= endX; x += step) {
+      verticalLines.add(
+        VerticalLine(
+          x: x,
+          color: widget.config.color.withOpacity(0.03),  // Very light color
+          strokeWidth: step * 0.9,  // Almost fills the space between lines
+        ),
+      );
+    }
+    
+    return ExtraLinesData(
+      extraLinesOnTop: false,
+      horizontalLines: [], 
+      verticalLines: verticalLines,
+    );
+  }
 
   Widget _buildChartArea() {
     final filteredData = _getFilteredData();
@@ -835,12 +993,15 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
                       ? _isInCurrentPeriod(filteredData[index].dateTime)
                       : false;
 
+                  // Emphasize points in current period
+                  final isSelected = _selectedPointIndex == index;
+                  
                   return FlDotCirclePainter(
-                    radius: _selectedPointIndex == index
+                    radius: isSelected
                         ? 6
                         : (isCurrentPoint ? 5 : 3),
-                    color: widget.config.color,
-                    strokeWidth: 2,
+                    color: isCurrentPoint ? widget.config.color : widget.config.color.withOpacity(0.8),
+                    strokeWidth: isCurrentPoint ? 2.5 : 2,
                     strokeColor: Colors.white,
                   );
                 },
@@ -851,6 +1012,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
               ),
             ),
           ],
+          extraLinesData: _buildCurrentPeriodHighlight(filteredData, paddedMinY, paddedMaxY),
         ),
       ),
     );
