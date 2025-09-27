@@ -21,12 +21,27 @@ class _ChartsView2State extends State<ChartsView2> {
       DataPoint(dateTime: now.subtract(const Duration(days: 20)), value: 69.5),
       DataPoint(dateTime: now.subtract(const Duration(days: 18)), value: 69.3),
       DataPoint(dateTime: now.subtract(const Duration(days: 15)), value: 69.0),
-      DataPoint(dateTime: now.subtract(const Duration(days: 12)), value: 68.8),
+      // Multiple entries on the same day (12 days ago)
+      DataPoint(
+          dateTime: now.subtract(const Duration(days: 12, hours: 8)),
+          value: 68.8),
+      DataPoint(
+          dateTime: now.subtract(const Duration(days: 12, hours: 20)),
+          value: 68.6),
       DataPoint(dateTime: now.subtract(const Duration(days: 10)), value: 68.5),
       DataPoint(dateTime: now.subtract(const Duration(days: 8)), value: 68.2),
-      DataPoint(dateTime: now.subtract(const Duration(days: 5)), value: 68.0),
+      // Multiple entries on the same day (5 days ago)
+      DataPoint(
+          dateTime: now.subtract(const Duration(days: 5, hours: 7)),
+          value: 68.0),
+      DataPoint(
+          dateTime: now.subtract(const Duration(days: 5, hours: 19)),
+          value: 67.9),
       DataPoint(dateTime: now.subtract(const Duration(days: 3)), value: 67.8),
-      DataPoint(dateTime: now.subtract(const Duration(days: 1)), value: 67.5),
+      // Gap here to demonstrate interpolation (between day 3 and day 1)
+      DataPoint(
+          dateTime: now.subtract(const Duration(days: 1, hours: 12)),
+          value: 67.5),
       DataPoint(dateTime: now, value: 67.3),
     ];
   }
@@ -56,7 +71,7 @@ class _ChartsView2State extends State<ChartsView2> {
             children: [
               // Introduction text
               Text(
-                'Phase 1: Core Structure Complete',
+                'Phase 4: Data Point Plotting Complete',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       color: Colors.green,
                       fontWeight: FontWeight.bold,
@@ -64,7 +79,7 @@ class _ChartsView2State extends State<ChartsView2> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Basic chart widget with filter tabs and navigation. Chart visualization will be added in Phase 3.',
+                'Advanced data positioning implemented with proper date-based positioning, multiple entries per day handling, and linear interpolation for missing data points.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey.shade600,
                     ),

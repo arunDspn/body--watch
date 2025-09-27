@@ -17,7 +17,7 @@ dependencies:
   enum_to_string: ^2.0.1
   external_path: ^2.2.0
   file_picker: ^10.1.9
-  fl_chart: ^1.0.0
+  fl_chart: ^1.1.1
   flutter:
     sdk: flutter
   flutter_archive: ^6.0.3
