@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -35,6 +34,213 @@ mixin _$PictureTypeFilterModalEvent {
 class $PictureTypeFilterModalEventCopyWith<$Res> {
   $PictureTypeFilterModalEventCopyWith(PictureTypeFilterModalEvent _,
       $Res Function(PictureTypeFilterModalEvent) __);
+}
+
+/// Adds pattern-matching-related methods to [PictureTypeFilterModalEvent].
+extension PictureTypeFilterModalEventPatterns on PictureTypeFilterModalEvent {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_Toggle value)? toggle,
+    TResult Function(_Search value)? search,
+    TResult Function(_Clear value)? clear,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Started() when started != null:
+        return started(_that);
+      case _Toggle() when toggle != null:
+        return toggle(_that);
+      case _Search() when search != null:
+        return search(_that);
+      case _Clear() when clear != null:
+        return clear(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_Toggle value) toggle,
+    required TResult Function(_Search value) search,
+    required TResult Function(_Clear value) clear,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Started():
+        return started(_that);
+      case _Toggle():
+        return toggle(_that);
+      case _Search():
+        return search(_that);
+      case _Clear():
+        return clear(_that);
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Started value)? started,
+    TResult? Function(_Toggle value)? toggle,
+    TResult? Function(_Search value)? search,
+    TResult? Function(_Clear value)? clear,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Started() when started != null:
+        return started(_that);
+      case _Toggle() when toggle != null:
+        return toggle(_that);
+      case _Search() when search != null:
+        return search(_that);
+      case _Clear() when clear != null:
+        return clear(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? started,
+    TResult Function(String type, bool value)? toggle,
+    TResult Function(String query)? search,
+    TResult Function()? clear,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Started() when started != null:
+        return started();
+      case _Toggle() when toggle != null:
+        return toggle(_that.type, _that.value);
+      case _Search() when search != null:
+        return search(_that.query);
+      case _Clear() when clear != null:
+        return clear();
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() started,
+    required TResult Function(String type, bool value) toggle,
+    required TResult Function(String query) search,
+    required TResult Function() clear,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Started():
+        return started();
+      case _Toggle():
+        return toggle(_that.type, _that.value);
+      case _Search():
+        return search(_that.query);
+      case _Clear():
+        return clear();
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? started,
+    TResult? Function(String type, bool value)? toggle,
+    TResult? Function(String query)? search,
+    TResult? Function()? clear,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _Started() when started != null:
+        return started();
+      case _Toggle() when toggle != null:
+        return toggle(_that.type, _that.value);
+      case _Search() when search != null:
+        return search(_that.query);
+      case _Clear() when clear != null:
+        return clear();
+      case _:
+        return null;
+    }
+  }
 }
 
 /// @nodoc
@@ -230,6 +436,198 @@ mixin _$PictureTypeFilterModalState {
 class $PictureTypeFilterModalStateCopyWith<$Res> {
   $PictureTypeFilterModalStateCopyWith(PictureTypeFilterModalState _,
       $Res Function(PictureTypeFilterModalState) __);
+}
+
+/// Adds pattern-matching-related methods to [PictureTypeFilterModalState].
+extension PictureTypeFilterModalStatePatterns on PictureTypeFilterModalState {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(PictureTypeFilterModalStateLoading value)? loading,
+    TResult Function(PictureTypeFilterModalStateFailed value)? failed,
+    TResult Function(PictureTypeFilterModalStateSuccess value)? success,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case PictureTypeFilterModalStateLoading() when loading != null:
+        return loading(_that);
+      case PictureTypeFilterModalStateFailed() when failed != null:
+        return failed(_that);
+      case PictureTypeFilterModalStateSuccess() when success != null:
+        return success(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(PictureTypeFilterModalStateLoading value) loading,
+    required TResult Function(PictureTypeFilterModalStateFailed value) failed,
+    required TResult Function(PictureTypeFilterModalStateSuccess value) success,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case PictureTypeFilterModalStateLoading():
+        return loading(_that);
+      case PictureTypeFilterModalStateFailed():
+        return failed(_that);
+      case PictureTypeFilterModalStateSuccess():
+        return success(_that);
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(PictureTypeFilterModalStateLoading value)? loading,
+    TResult? Function(PictureTypeFilterModalStateFailed value)? failed,
+    TResult? Function(PictureTypeFilterModalStateSuccess value)? success,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case PictureTypeFilterModalStateLoading() when loading != null:
+        return loading(_that);
+      case PictureTypeFilterModalStateFailed() when failed != null:
+        return failed(_that);
+      case PictureTypeFilterModalStateSuccess() when success != null:
+        return success(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loading,
+    TResult Function(String message)? failed,
+    TResult Function(List<String> allTypes, List<String> selectedTypes)?
+        success,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case PictureTypeFilterModalStateLoading() when loading != null:
+        return loading();
+      case PictureTypeFilterModalStateFailed() when failed != null:
+        return failed(_that.message);
+      case PictureTypeFilterModalStateSuccess() when success != null:
+        return success(_that.allTypes, _that.selectedTypes);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loading,
+    required TResult Function(String message) failed,
+    required TResult Function(List<String> allTypes, List<String> selectedTypes)
+        success,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case PictureTypeFilterModalStateLoading():
+        return loading();
+      case PictureTypeFilterModalStateFailed():
+        return failed(_that.message);
+      case PictureTypeFilterModalStateSuccess():
+        return success(_that.allTypes, _that.selectedTypes);
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loading,
+    TResult? Function(String message)? failed,
+    TResult? Function(List<String> allTypes, List<String> selectedTypes)?
+        success,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case PictureTypeFilterModalStateLoading() when loading != null:
+        return loading();
+      case PictureTypeFilterModalStateFailed() when failed != null:
+        return failed(_that.message);
+      case PictureTypeFilterModalStateSuccess() when success != null:
+        return success(_that.allTypes, _that.selectedTypes);
+      case _:
+        return null;
+    }
+  }
 }
 
 /// @nodoc

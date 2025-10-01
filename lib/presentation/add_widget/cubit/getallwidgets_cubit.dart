@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/data/domain/i_measurements.dart';
+import 'package:watcha_body/data/domain/measurement/i_measurements.dart';
+import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart';
 
 part 'getallwidgets_state.dart';
 part 'getallwidgets_cubit.freezed.dart';
@@ -19,10 +20,10 @@ class GetallwidgetsCubit extends Cubit<GetallwidgetsState> {
     _result.fold(
       (l) => emit(GetallwidgetsState.failure(l)),
       (r) {
-        final _remainingWidgets =
-            allWidgets.where((e) => !r.contains(e.name)).toList();
+        // final _remainingWidgets =
+        //     allWidgets.where((e) => !r.contains(e.name)).toList();
 
-        emit(GetallwidgetsState.success(_remainingWidgets));
+        emit(GetallwidgetsState.success(widgets: r));
       },
     );
   }

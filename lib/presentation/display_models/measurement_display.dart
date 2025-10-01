@@ -1,5 +1,5 @@
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/data/domain/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
 
 class LatestMeasurementDisplayModel {
   LatestMeasurementDisplayModel({

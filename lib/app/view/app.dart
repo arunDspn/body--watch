@@ -13,10 +13,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
+import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
+import 'package:watcha_body/data/data_layer/user_preference/user_preference_reposiotry.dart';
 import 'package:watcha_body/data/domain/i_auth_repository.dart';
 import 'package:watcha_body/data/domain/i_bodypicture_facade.dart';
-import 'package:watcha_body/data/domain/i_measurements.dart';
+import 'package:watcha_body/data/domain/measurement/i_measurements.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/data/repositories/local_auth_repository_impl.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
@@ -25,6 +27,8 @@ import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
 import 'package:watcha_body/presentation/app_initializer/app_initer.dart';
+import 'package:watcha_body/presentation/app_initializer/cubit/get_all_metrics/get_all_metric_units_available_cubit.dart';
+import 'package:watcha_body/presentation/app_initializer/cubit/set_user_unit_preferences/set_user_unit_preferences_cubit.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/filter_chart_bloc/filterchart_bloc.dart';
 import 'package:watcha_body/presentation/home/charts/charts.dart';
@@ -34,6 +38,7 @@ import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasu
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media_view.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new_media_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/common/cubits/cubit/get_all_muscle_groups_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/compare_picture_form_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/load_picture_to_compare_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/view/compare_pictures_view.dart';
@@ -104,6 +109,13 @@ class App extends StatelessWidget {
         ),
         RepositoryProvider<IAuthRepository>.value(
           value: authRepository,
+        ),
+
+        // UserPreferenceRepository
+        RepositoryProvider<UserPreferenceRepository>(
+          create: (context) => UserPreferenceRepository(
+            databaseService,
+          ),
         ),
       ],
       child: MultiBlocProvider(
@@ -190,6 +202,13 @@ class App extends StatelessWidget {
               ..add(const AuthGateKeeperEvent.triggerUnAuth()),
             lazy: false,
           ),
+          // Cubit for User Preferences
+          BlocProvider(
+            create: (context) => UserPreferencesCubit(
+              context.read<UserPreferenceRepository>(),
+            )..fetchUserPreferences(1),
+            lazy: false,
+          ),
         ],
         child: Builder(
           builder: (context) {
@@ -271,21 +290,21 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
       return MaterialPageRoute<void>(
         builder: (context) {
           final appPref =
-              context.read<ApppreferencesBloc>().state as SavedAndReady;
+              // context.read<ApppreferencesBloc>().state as SavedAndReady;
+              context.read<UserPreferencesCubit>().state
+                  as UserPreferencesLoaded;
           // Bloc for overview data
-          context.read<GetallwidgetsdataBloc>().add(
-                GetallwidgetsdataEvent.fetchAllData(
-                  appPreferences: appPref.appPreferences,
-                ),
-              );
+          // context.read<GetallwidgetsdataBloc>().add(
+          //       GetallwidgetsdataEvent.fetchAllData(),
+          //     );
 
           // Bloc for chart data
-          context.read<ChartdataBloc>().add(
-                ChartdataEvent.fetchData(
-                  appPreferences: appPref.appPreferences,
-                  duration: DurationsEnum.month1,
-                ),
-              );
+          // context.read<ChartdataBloc>().add(
+          //       ChartdataEvent.fetchData(
+          //         appPreferences: appPref.appPreferences,
+          //         duration: DurationsEnum.month1,
+          //       ),
+          //     );
           return const HomeView();
         },
       );
@@ -332,7 +351,20 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
       );
     case AppIniter.routeName:
       return MaterialPageRoute<void>(
-        builder: (context) => const AppIniter(),
+        builder: (context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => GetAllMetricUnitsAvailableCubit()
+                ..fetchAllMetricUnitsAvailable(),
+            ),
+            BlocProvider(
+              create: (context) => SetUserUnitPreferencesCubit(
+                context.read<UserPreferenceRepository>(),
+              ),
+            ),
+          ],
+          child: const AppIniter(),
+        ),
       );
     // case VaultGalleryView.routeName:
     //   return MaterialPageRoute<void>(
@@ -370,9 +402,18 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
       );
     case AddNewMediaView.routeName:
       return MaterialPageRoute<void>(
-        builder: (context) => BlocProvider(
-          create: (context) =>
-              AddNewMediaCubit(context.read<BodyPictureRepository>()),
+        builder: (context) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) =>
+                  AddNewMediaCubit(context.read<BodyPictureRepository>()),
+            ),
+            BlocProvider(
+              create: (context) => GetAllMuscleGroupsCubit(
+                context.read<MeasurementRepository>(),
+              )..fetchAllMuscleGroups(),
+            ),
+          ],
           child: const AddNewMediaView(),
         ),
       );

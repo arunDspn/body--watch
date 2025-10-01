@@ -1,23 +1,17 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:external_path/external_path.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_archive/flutter_archive.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
-import 'package:watcha_body/data/domain/display_vault_image_model.dart';
 import 'package:watcha_body/data/domain/i_bodypicture_facade.dart';
 import 'package:watcha_body/data/domain/models/compare_images_model.dart';
 import 'package:watcha_body/data/domain/models/save_vault_image_model.dart';
 import 'package:watcha_body/data/domain/models/vault_image_model.dart';
-import 'package:watcha_body/services/cache_service/cache_service.dart';
 
 class BodyPictureRepository implements IBodyPictureFacade {
   BodyPictureRepository({
@@ -345,5 +339,20 @@ class BodyPictureRepository implements IBodyPictureFacade {
     final formatter = DateFormat('yyyyMMdd_HHmmss');
     final timestamp = formatter.format(DateTime.now());
     return '${timestamp}_${tag}_thumbnail.$extension';
+  }
+
+  @override
+  Future<Either<String, List<String>>> getAllMuscleGroups() async {
+    try {
+      final db = await databaseService.database;
+      final result = await db.query('muscle_groups');
+
+      final muscleGroups =
+          result.map((e) => e['muscle_group']! as String).toList();
+
+      return right(muscleGroups);
+    } catch (e) {
+      return left(e.toString());
+    }
   }
 }

@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -34,6 +33,213 @@ mixin _$DeleteMeasurementState {
 class $DeleteMeasurementStateCopyWith<$Res> {
   $DeleteMeasurementStateCopyWith(
       DeleteMeasurementState _, $Res Function(DeleteMeasurementState) __);
+}
+
+/// Adds pattern-matching-related methods to [DeleteMeasurementState].
+extension DeleteMeasurementStatePatterns on DeleteMeasurementState {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(DeleteMeasurementStateInitial value)? initial,
+    TResult Function(DeleteMeasurementStateLoading value)? loading,
+    TResult Function(DeleteMeasurementStateDeleted value)? deleted,
+    TResult Function(DeleteMeasurementStateError value)? error,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case DeleteMeasurementStateInitial() when initial != null:
+        return initial(_that);
+      case DeleteMeasurementStateLoading() when loading != null:
+        return loading(_that);
+      case DeleteMeasurementStateDeleted() when deleted != null:
+        return deleted(_that);
+      case DeleteMeasurementStateError() when error != null:
+        return error(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(DeleteMeasurementStateInitial value) initial,
+    required TResult Function(DeleteMeasurementStateLoading value) loading,
+    required TResult Function(DeleteMeasurementStateDeleted value) deleted,
+    required TResult Function(DeleteMeasurementStateError value) error,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case DeleteMeasurementStateInitial():
+        return initial(_that);
+      case DeleteMeasurementStateLoading():
+        return loading(_that);
+      case DeleteMeasurementStateDeleted():
+        return deleted(_that);
+      case DeleteMeasurementStateError():
+        return error(_that);
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(DeleteMeasurementStateInitial value)? initial,
+    TResult? Function(DeleteMeasurementStateLoading value)? loading,
+    TResult? Function(DeleteMeasurementStateDeleted value)? deleted,
+    TResult? Function(DeleteMeasurementStateError value)? error,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case DeleteMeasurementStateInitial() when initial != null:
+        return initial(_that);
+      case DeleteMeasurementStateLoading() when loading != null:
+        return loading(_that);
+      case DeleteMeasurementStateDeleted() when deleted != null:
+        return deleted(_that);
+      case DeleteMeasurementStateError() when error != null:
+        return error(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(String id)? deleted,
+    TResult Function(String message)? error,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case DeleteMeasurementStateInitial() when initial != null:
+        return initial();
+      case DeleteMeasurementStateLoading() when loading != null:
+        return loading();
+      case DeleteMeasurementStateDeleted() when deleted != null:
+        return deleted(_that.id);
+      case DeleteMeasurementStateError() when error != null:
+        return error(_that.message);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(String id) deleted,
+    required TResult Function(String message) error,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case DeleteMeasurementStateInitial():
+        return initial();
+      case DeleteMeasurementStateLoading():
+        return loading();
+      case DeleteMeasurementStateDeleted():
+        return deleted(_that.id);
+      case DeleteMeasurementStateError():
+        return error(_that.message);
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(String id)? deleted,
+    TResult? Function(String message)? error,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case DeleteMeasurementStateInitial() when initial != null:
+        return initial();
+      case DeleteMeasurementStateLoading() when loading != null:
+        return loading();
+      case DeleteMeasurementStateDeleted() when deleted != null:
+        return deleted(_that.id);
+      case DeleteMeasurementStateError() when error != null:
+        return error(_that.message);
+      case _:
+        return null;
+    }
+  }
 }
 
 /// @nodoc

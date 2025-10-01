@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/data/domain/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/delete_measurement_cubit.dart';
@@ -399,14 +399,14 @@ class DataView extends StatelessWidget {
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            showModalBottomSheet<void>(
-                                              context: context,
-                                              builder: (context) {
-                                                return AddDataModal.add(
-                                                  type: measurementType,
-                                                );
-                                              },
-                                            );
+                                            // showModalBottomSheet<void>(
+                                            //   context: context,
+                                            //   builder: (context) {
+                                            //     return AddDataModal.add(
+                                            //       type: measurementType,
+                                            //     );
+                                            //   },
+                                            // );
                                           },
                                           child: const Text(
                                             'Add',
@@ -532,20 +532,20 @@ class _TableCell extends StatelessWidget {
 
                 print('Edit selected');
 
-                showModalBottomSheet<void>(
-                  context: context,
-                  builder: (context) {
-                    return BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                      child: AddDataModal.edit(
-                        type: measurementTypeFromString(measurement.type)!,
-                        addedDate: measurement.date,
-                        addedValue: measurement.value,
-                        addedId: measurement.id,
-                      ),
-                    );
-                  },
-                );
+                // showModalBottomSheet<void>(
+                //   context: context,
+                //   builder: (context) {
+                //     return BackdropFilter(
+                //       filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                //       child: AddDataModal.edit(
+                //         type: measurementTypeFromString(measurement.type)!,
+                //         addedDate: measurement.date,
+                //         addedValue: measurement.value,
+                //         addedId: measurement.id,
+                //       ),
+                //     );
+                //   },
+                // );
               } else if (value == 'delete') {
                 context
                     .read<DeleteMeasurementCubit>()

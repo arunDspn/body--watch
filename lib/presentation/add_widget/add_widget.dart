@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
+import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
@@ -77,7 +78,7 @@ class AddWidget extends StatelessWidget {
                                 itemCount: widgets.length,
                                 itemBuilder: (context, index) {
                                   return _Boxes(
-                                    type: widgets[index],
+                                    target: widgets[index],
                                   );
                                 },
                               ),
@@ -99,10 +100,10 @@ class AddWidget extends StatelessWidget {
 class _Boxes extends StatelessWidget {
   const _Boxes({
     Key? key,
-    required this.type,
+    required this.target,
   }) : super(key: key);
 
-  final MeasurementType type;
+  final MeasurementTargetModel target;
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +115,7 @@ class _Boxes extends StatelessWidget {
             return BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
               child: AddDataModal(
-                type: type,
+                type: target,
               ),
             );
           },
@@ -131,7 +132,7 @@ class _Boxes extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              type.name,
+              target.name,
               style: Theme.of(context)
                   .textTheme
                   .titleLarge

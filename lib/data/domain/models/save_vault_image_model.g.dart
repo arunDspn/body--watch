@@ -11,6 +11,9 @@ _SaveVaultImageModel _$SaveVaultImageModelFromJson(Map<String, dynamic> json) =>
       tag: json['tag'] as String,
       path: json['path'] as String,
       date: DateTime.parse(json['date'] as String),
+      muscleGroup: (json['muscleGroup'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$SaveVaultImageModelToJson(
@@ -19,4 +22,5 @@ Map<String, dynamic> _$SaveVaultImageModelToJson(
       'tag': instance.tag,
       'path': instance.path,
       'date': instance.date.toIso8601String(),
+      'muscleGroup': instance.muscleGroup,
     };

@@ -21,27 +21,37 @@ const Map<String, LengthUnit> lengthMap = {
 };
 
 class AppPreferences {
-  AppPreferences(
-    this.weightUnit,
-    this.lengthUnit,
-    this.lang,
-  );
+  AppPreferences({
+    required this.weightUnit,
+    required this.lengthUnit,
+    required this.heightUnit,
+    this.lang = 'en',
+  });
 
-  final WeightUnit weightUnit;
-  final LengthUnit lengthUnit;
+  final String? weightUnit;
+  final String? lengthUnit;
+  final String? heightUnit;
   final String lang;
 
-  String get weightUnitString => EnumToString.convertToString(weightUnit);
-  String get lengthUnitString => EnumToString.convertToString(lengthUnit);
+  // String get weightUnitString => EnumToString.convertToString(weightUnit);
+  // String get lengthUnitString => EnumToString.convertToString(lengthUnit);
+  // String get heightUnitString => EnumToString.convertToString(heightUnit);
 
   AppPreferences copyWith({
-    WeightUnit? weightUnit,
-    LengthUnit? lengthUnit,
+    String? weightUnit,
+    String? lengthUnit,
+    String? heightUnit,
     String? lang,
   }) =>
       AppPreferences(
-        weightUnit ?? this.weightUnit,
-        lengthUnit ?? this.lengthUnit,
-        lang ?? this.lang,
+        // weightUnit ?? this.weightUnit,
+        // lengthUnit ?? this.lengthUnit,
+        // heightUnit ?? this.heightUnit,
+        // lang ?? this.lang,
+
+        weightUnit: weightUnit ?? this.weightUnit,
+        lengthUnit: lengthUnit ?? this.lengthUnit,
+        heightUnit: heightUnit ?? this.heightUnit,
+        lang: lang ?? this.lang,
       );
 }

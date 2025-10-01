@@ -3,13 +3,15 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i6;
+import 'dart:async' as _i5;
 
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i5;
 import 'package:watcha_body/data/data_layer/database_service.dart' as _i2;
-import 'package:watcha_body/data/domain/models/pmeasurement.dart' as _i7;
+import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart'
+    as _i6;
+import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart'
+    as _i7;
 import 'package:watcha_body/data/domain/models/two_dates_record_model.dart'
     as _i8;
 import 'package:watcha_body/data/repositories/measurement_repository.dart'
@@ -69,24 +71,15 @@ class MockMeasurementRepository extends _i1.Mock
       ) as _i2.DatabaseService);
 
   @override
-  String get lastestQueryBard1 => (super.noSuchMethod(
-        Invocation.getter(#lastestQueryBard1),
-        returnValue: _i5.dummyValue<String>(
-          this,
-          Invocation.getter(#lastestQueryBard1),
-        ),
-      ) as String);
-
-  @override
-  _i6.Future<_i3.Either<String, _i3.Unit>> createMeasurement(
-          {required _i7.Measurement? measurement}) =>
+  _i5.Future<_i3.Either<String, _i3.Unit>> createMeasurement(
+          {required _i6.Measurement? measurement}) =>
       (super.noSuchMethod(
         Invocation.method(
           #createMeasurement,
           [],
           {#measurement: measurement},
         ),
-        returnValue: _i6.Future<_i3.Either<String, _i3.Unit>>.value(
+        returnValue: _i5.Future<_i3.Either<String, _i3.Unit>>.value(
             _FakeEither_1<String, _i3.Unit>(
           this,
           Invocation.method(
@@ -95,17 +88,17 @@ class MockMeasurementRepository extends _i1.Mock
             {#measurement: measurement},
           ),
         )),
-      ) as _i6.Future<_i3.Either<String, _i3.Unit>>);
+      ) as _i5.Future<_i3.Either<String, _i3.Unit>>);
 
   @override
-  _i6.Future<_i3.Either<String, _i3.Unit>> deleteAllData({String? id}) =>
+  _i5.Future<_i3.Either<String, _i3.Unit>> deleteAllData({String? id}) =>
       (super.noSuchMethod(
         Invocation.method(
           #deleteAllData,
           [],
           {#id: id},
         ),
-        returnValue: _i6.Future<_i3.Either<String, _i3.Unit>>.value(
+        returnValue: _i5.Future<_i3.Either<String, _i3.Unit>>.value(
             _FakeEither_1<String, _i3.Unit>(
           this,
           Invocation.method(
@@ -114,85 +107,36 @@ class MockMeasurementRepository extends _i1.Mock
             {#id: id},
           ),
         )),
-      ) as _i6.Future<_i3.Either<String, _i3.Unit>>);
+      ) as _i5.Future<_i3.Either<String, _i3.Unit>>);
 
   @override
-  _i6.Future<_i3.Either<String, List<_i7.Measurement>>> getDetailsByDate({
-    required String? preferredWeightUnit,
-    required String? preferredLengthUnit,
-    DateTime? startDate,
-    DateTime? endDate,
-    String? type,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getDetailsByDate,
-          [],
-          {
-            #preferredWeightUnit: preferredWeightUnit,
-            #preferredLengthUnit: preferredLengthUnit,
-            #startDate: startDate,
-            #endDate: endDate,
-            #type: type,
-          },
-        ),
-        returnValue:
-            _i6.Future<_i3.Either<String, List<_i7.Measurement>>>.value(
-                _FakeEither_1<String, List<_i7.Measurement>>(
-          this,
-          Invocation.method(
-            #getDetailsByDate,
-            [],
-            {
-              #preferredWeightUnit: preferredWeightUnit,
-              #preferredLengthUnit: preferredLengthUnit,
-              #startDate: startDate,
-              #endDate: endDate,
-              #type: type,
-            },
-          ),
-        )),
-      ) as _i6.Future<_i3.Either<String, List<_i7.Measurement>>>);
-
-  @override
-  _i6.Future<_i3.Either<String, List<_i7.Measurement>>> getLatestDetails({
-    required String? preferredWeightUnit,
-    required String? preferredLengthUnit,
-  }) =>
+  _i5.Future<_i3.Either<String, List<_i6.Measurement>>> getLatestDetails() =>
       (super.noSuchMethod(
         Invocation.method(
           #getLatestDetails,
           [],
-          {
-            #preferredWeightUnit: preferredWeightUnit,
-            #preferredLengthUnit: preferredLengthUnit,
-          },
         ),
         returnValue:
-            _i6.Future<_i3.Either<String, List<_i7.Measurement>>>.value(
-                _FakeEither_1<String, List<_i7.Measurement>>(
+            _i5.Future<_i3.Either<String, List<_i6.Measurement>>>.value(
+                _FakeEither_1<String, List<_i6.Measurement>>(
           this,
           Invocation.method(
             #getLatestDetails,
             [],
-            {
-              #preferredWeightUnit: preferredWeightUnit,
-              #preferredLengthUnit: preferredLengthUnit,
-            },
           ),
         )),
-      ) as _i6.Future<_i3.Either<String, List<_i7.Measurement>>>);
+      ) as _i5.Future<_i3.Either<String, List<_i6.Measurement>>>);
 
   @override
-  _i6.Future<_i3.Either<String, _i3.Unit>> updateMeasurement(
-          {required _i7.Measurement? measurement}) =>
+  _i5.Future<_i3.Either<String, _i3.Unit>> updateMeasurement(
+          {required _i6.Measurement? measurement}) =>
       (super.noSuchMethod(
         Invocation.method(
           #updateMeasurement,
           [],
           {#measurement: measurement},
         ),
-        returnValue: _i6.Future<_i3.Either<String, _i3.Unit>>.value(
+        returnValue: _i5.Future<_i3.Either<String, _i3.Unit>>.value(
             _FakeEither_1<String, _i3.Unit>(
           this,
           Invocation.method(
@@ -201,33 +145,35 @@ class MockMeasurementRepository extends _i1.Mock
             {#measurement: measurement},
           ),
         )),
-      ) as _i6.Future<_i3.Either<String, _i3.Unit>>);
+      ) as _i5.Future<_i3.Either<String, _i3.Unit>>);
 
   @override
-  _i6.Future<_i3.Either<String, List<String>>> getAddedTypes() =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getAddedTypes,
-          [],
-        ),
-        returnValue: _i6.Future<_i3.Either<String, List<String>>>.value(
-            _FakeEither_1<String, List<String>>(
-          this,
-          Invocation.method(
-            #getAddedTypes,
-            [],
-          ),
-        )),
-      ) as _i6.Future<_i3.Either<String, List<String>>>);
+  _i5.Future<_i3.Either<String, List<_i7.MeasurementTargetModel>>>
+      getAddedTypes() => (super.noSuchMethod(
+            Invocation.method(
+              #getAddedTypes,
+              [],
+            ),
+            returnValue: _i5.Future<
+                    _i3.Either<String, List<_i7.MeasurementTargetModel>>>.value(
+                _FakeEither_1<String, List<_i7.MeasurementTargetModel>>(
+              this,
+              Invocation.method(
+                #getAddedTypes,
+                [],
+              ),
+            )),
+          ) as _i5
+              .Future<_i3.Either<String, List<_i7.MeasurementTargetModel>>>);
 
   @override
-  _i6.Future<_i3.Either<String, String>> backupDatabase() =>
+  _i5.Future<_i3.Either<String, String>> backupDatabase() =>
       (super.noSuchMethod(
         Invocation.method(
           #backupDatabase,
           [],
         ),
-        returnValue: _i6.Future<_i3.Either<String, String>>.value(
+        returnValue: _i5.Future<_i3.Either<String, String>>.value(
             _FakeEither_1<String, String>(
           this,
           Invocation.method(
@@ -235,10 +181,10 @@ class MockMeasurementRepository extends _i1.Mock
             [],
           ),
         )),
-      ) as _i6.Future<_i3.Either<String, String>>);
+      ) as _i5.Future<_i3.Either<String, String>>);
 
   @override
-  _i6.Future<_i3.Either<String, _i3.Unit>> restoreDatabase({
+  _i5.Future<_i3.Either<String, _i3.Unit>> restoreDatabase({
     bool? merge = false,
     required String? stringifiedDatas,
   }) =>
@@ -251,7 +197,7 @@ class MockMeasurementRepository extends _i1.Mock
             #stringifiedDatas: stringifiedDatas,
           },
         ),
-        returnValue: _i6.Future<_i3.Either<String, _i3.Unit>>.value(
+        returnValue: _i5.Future<_i3.Either<String, _i3.Unit>>.value(
             _FakeEither_1<String, _i3.Unit>(
           this,
           Invocation.method(
@@ -263,10 +209,10 @@ class MockMeasurementRepository extends _i1.Mock
             },
           ),
         )),
-      ) as _i6.Future<_i3.Either<String, _i3.Unit>>);
+      ) as _i5.Future<_i3.Either<String, _i3.Unit>>);
 
   @override
-  _i6.Future<_i3.Either<String, _i3.Unit>> deleteMeasurement(
+  _i5.Future<_i3.Either<String, _i3.Unit>> deleteMeasurement(
           {required String? id}) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -274,7 +220,7 @@ class MockMeasurementRepository extends _i1.Mock
           [],
           {#id: id},
         ),
-        returnValue: _i6.Future<_i3.Either<String, _i3.Unit>>.value(
+        returnValue: _i5.Future<_i3.Either<String, _i3.Unit>>.value(
             _FakeEither_1<String, _i3.Unit>(
           this,
           Invocation.method(
@@ -283,10 +229,10 @@ class MockMeasurementRepository extends _i1.Mock
             {#id: id},
           ),
         )),
-      ) as _i6.Future<_i3.Either<String, _i3.Unit>>);
+      ) as _i5.Future<_i3.Either<String, _i3.Unit>>);
 
   @override
-  _i6.Future<_i3.Either<String, List<_i7.Measurement>>>
+  _i5.Future<_i3.Either<String, List<_i6.Measurement>>>
       getAllMeasurementsByDate({required DateTime? date}) =>
           (super.noSuchMethod(
             Invocation.method(
@@ -295,8 +241,8 @@ class MockMeasurementRepository extends _i1.Mock
               {#date: date},
             ),
             returnValue:
-                _i6.Future<_i3.Either<String, List<_i7.Measurement>>>.value(
-                    _FakeEither_1<String, List<_i7.Measurement>>(
+                _i5.Future<_i3.Either<String, List<_i6.Measurement>>>.value(
+                    _FakeEither_1<String, List<_i6.Measurement>>(
               this,
               Invocation.method(
                 #getAllMeasurementsByDate,
@@ -304,10 +250,10 @@ class MockMeasurementRepository extends _i1.Mock
                 {#date: date},
               ),
             )),
-          ) as _i6.Future<_i3.Either<String, List<_i7.Measurement>>>);
+          ) as _i5.Future<_i3.Either<String, List<_i6.Measurement>>>);
 
   @override
-  _i6.Future<_i3.Either<String, List<_i8.TwoDatesRecord>>>
+  _i5.Future<_i3.Either<String, List<_i8.TwoDatesRecord>>>
       getAllRecordsByTwoDates({
     required DateTime? dateOne,
     required DateTime? dateTwo,
@@ -322,7 +268,7 @@ class MockMeasurementRepository extends _i1.Mock
               },
             ),
             returnValue:
-                _i6.Future<_i3.Either<String, List<_i8.TwoDatesRecord>>>.value(
+                _i5.Future<_i3.Either<String, List<_i8.TwoDatesRecord>>>.value(
                     _FakeEither_1<String, List<_i8.TwoDatesRecord>>(
               this,
               Invocation.method(
@@ -334,5 +280,55 @@ class MockMeasurementRepository extends _i1.Mock
                 },
               ),
             )),
-          ) as _i6.Future<_i3.Either<String, List<_i8.TwoDatesRecord>>>);
+          ) as _i5.Future<_i3.Either<String, List<_i8.TwoDatesRecord>>>);
+
+  @override
+  _i5.Future<_i3.Either<String, List<String>>> getAllMeasurementItems() =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllMeasurementItems,
+          [],
+        ),
+        returnValue: _i5.Future<_i3.Either<String, List<String>>>.value(
+            _FakeEither_1<String, List<String>>(
+          this,
+          Invocation.method(
+            #getAllMeasurementItems,
+            [],
+          ),
+        )),
+      ) as _i5.Future<_i3.Either<String, List<String>>>);
+
+  @override
+  _i5.Future<_i3.Either<String, List<_i6.Measurement>>>
+      getMeasurementItemDataByDateRange({
+    required DateTime? startDate,
+    required DateTime? endDate,
+    required int? measurementItemId,
+  }) =>
+          (super.noSuchMethod(
+            Invocation.method(
+              #getMeasurementItemDataByDateRange,
+              [],
+              {
+                #startDate: startDate,
+                #endDate: endDate,
+                #measurementItemId: measurementItemId,
+              },
+            ),
+            returnValue:
+                _i5.Future<_i3.Either<String, List<_i6.Measurement>>>.value(
+                    _FakeEither_1<String, List<_i6.Measurement>>(
+              this,
+              Invocation.method(
+                #getMeasurementItemDataByDateRange,
+                [],
+                {
+                  #startDate: startDate,
+                  #endDate: endDate,
+                  #measurementItemId: measurementItemId,
+                },
+              ),
+            )),
+          ) as _i5.Future<_i3.Either<String, List<_i6.Measurement>>>);
 }

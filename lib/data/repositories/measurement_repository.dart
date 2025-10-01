@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
-import 'package:watcha_body/data/domain/i_measurements.dart';
-import 'package:watcha_body/data/domain/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement/i_measurements.dart';
+import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart';
+import 'package:watcha_body/data/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/data/domain/models/two_dates_record_model.dart';
 
 class MeasurementRepository extends IMeasurementsFacade {
@@ -12,82 +15,85 @@ class MeasurementRepository extends IMeasurementsFacade {
 
   final DatabaseService databaseService;
 
-  static const latestDetailsQuery = '''
-    WITH ranked AS
-    (SELECT id, value, date, type, unit,row_number() 
-    OVER (PARTITION BY type ORDER BY date DESC) AS rn
-    FROM measurements)
+  // static const _latestDetailsQuery = '''
+  //   WITH ranked AS
+  //   (SELECT id, value, date, type, unit,row_number()
+  //   OVER (PARTITION BY type ORDER BY date DESC) AS rn
+  //   FROM measurements)
+  //   SELECT id, value, date, type, unit
+  //   FROM ranked
+  //   WHERE rn <= 2
+  //   ORDER BY type, date DESC;
+  //   ''';
+
+  final _lastestQueryBard1 = '''
     SELECT id, value, date, type, unit
-    FROM ranked
-    WHERE rn <= 2
+    FROM (
+      SELECT id, value, date, type, unit,
+        DENSE_RANK() OVER (PARTITION BY type ORDER BY date DESC) AS rank
+      FROM measurements
+    ) AS ranked
+    WHERE rank <= 2
     ORDER BY type, date DESC;
-    ''';
+  ''';
 
-  final lastestQueryBard1 = '''
-SELECT id, value, date, type, unit
-FROM (
-  SELECT id, value, date, type, unit,
-    DENSE_RANK() OVER (PARTITION BY type ORDER BY date DESC) AS rank
-  FROM measurements
-) AS ranked
-WHERE rank <= 2
-ORDER BY type, date DESC;
-
-
-''';
   @override
   Future<Either<String, Unit>> createMeasurement({
     required Measurement measurement,
   }) async {
-    try {
-      await databaseService.insert(
-        map: measurement.toMap(),
-      );
-      return const Right(unit);
-    } catch (e) {
-      return Left(e.toString());
-    }
+    // try {
+    //   await databaseService.insert(
+    //     map: measurement.toMap(),
+    //   );
+    //   return const Right(unit);
+    // } catch (e) {
+    //   return Left(e.toString());
+    // }
+    throw UnimplementedError();
   }
 
   @override
   Future<Either<String, Unit>> deleteAllData({
     String? id,
   }) async {
-    try {
-      await databaseService.delete(
-        id: id,
-      );
-      return const Right(unit);
-    } catch (e) {
-      return Left(e.toString());
-    }
+    // try {
+    //   await databaseService.delete(
+    //     id: id,
+    //   );
+    //   return const Right(unit);
+    // } catch (e) {
+    //   return Left(e.toString());
+    // }
+    throw UnimplementedError();
   }
 
-  @override
-  Future<Either<String, List<Measurement>>> getDetailsByDate({
-    required String preferredWeightUnit,
-    required String preferredLengthUnit,
-    DateTime? startDate,
-    DateTime? endDate,
-    String? type,
-  }) async {
-    try {
-      final _data = await databaseService.getData(
-        startDate: startDate,
-        endDate: endDate,
-        type: type,
-      );
-      final _dData = _data.map(Measurement.fromMap).toList();
-      final _fixedData = _convertToPreferredUnits(
-        _dData,
-        preferredWeightUnit,
-        preferredLengthUnit,
-      );
-      return Right(_fixedData);
-    } catch (e) {
-      return Left(e.toString());
-    }
-  }
+  // @override
+  // Future<Either<String, List<Measurement>>> getMeasurementItemDataByDateRange({
+  //   required DateTime startDate,
+  //   required DateTime endDate,
+  //   required int measurementItemId,
+  //   required String preferredWeightUnit,
+  //   required String preferredLengthUnit,
+  // }) async {
+  //   throw UnimplementedError();
+
+  //   // try {
+  //   //   final _data = await databaseService.getData(
+  //   //     startDate: startDate,
+  //   //     endDate: endDate,
+  //   //     type: type,
+  //   //   );
+  //   //   final _dData = _data.map(Measurement.fromMap).toList();
+  //   //   final _fixedData = _convertToPreferredUnits(
+  //   //     _dData,
+  //   //     preferredWeightUnit,
+  //   //     preferredLengthUnit,
+  //   //   );
+  //   //   return Right(_fixedData);
+  //   // } catch (e) {
+  //   //   return Left(e.toString());
+  //   // }
+  // }
 
   double _convertInchToCm(double inch) => (inch * 2.54).toFixedOfTwo();
   double _convertCmToInch(double cm) => (cm / 2.54).toFixedOfTwo();
@@ -95,23 +101,26 @@ ORDER BY type, date DESC;
   double _convertKgToPound(double kg) => (kg * 2.20462262).toFixedOfTwo();
 
   @override
-  Future<Either<String, List<Measurement>>> getLatestDetails({
-    required String preferredWeightUnit,
-    required String preferredLengthUnit,
-  }) async {
-    try {
-      final _db = await databaseService.database;
-      final _data = await _db.rawQuery(lastestQueryBard1);
-      final _dData = _data.map(Measurement.fromMap).toList();
-      final _fixedData = _convertToPreferredUnits(
-        _dData,
-        preferredWeightUnit,
-        preferredLengthUnit,
-      );
-      return Right(_fixedData);
-    } catch (e) {
-      return Left(e.toString());
-    }
+  Future<Either<String, List<Measurement>>> getLatestDetails() async {
+    // try {
+    // //   final _db = await databaseService.database;
+    // //   final _data = await _db.rawQuery(_lastestQueryBard1);
+    // //   final _dData = _data.map(Measurement.fromMap).toList();
+    // //   final _fixedData = _convertToPreferredUnits(
+    // //     _dData,
+    // //     preferredWeightUnit,
+    // //     preferredLengthUnit,
+    // //   );
+    // //   return Right(_fixedData);
+    // // } catch (e) {
+    // //   return Left(e.toString());
+    // // }
+
+    // throw UnimplementedError();
+    // } catch (e) {
+    //   return Left(e.toString());
+    // }
+    throw UnimplementedError();
   }
 
   List<Measurement> _convertToPreferredUnits(
@@ -150,39 +159,112 @@ ORDER BY type, date DESC;
   Future<Either<String, Unit>> updateMeasurement({
     required Measurement measurement,
   }) async {
-    try {
-      await databaseService.update(
-        map: measurement.toMap(),
-      );
-      return const Right(unit);
-    } catch (e) {
-      return Left(e.toString());
-    }
+    // try {
+    //   await databaseService.update(
+    //     map: measurement.toMap(),
+    //   );
+    //   return const Right(unit);
+    // } catch (e) {
+    //   return Left(e.toString());
+    // }
+    throw UnimplementedError();
   }
 
   @override
-  Future<Either<String, List<String>>> getAddedTypes() async {
+  Future<Either<String, List<MeasurementTargetModel>>> getAddedTypes() async {
     try {
       final _db = await databaseService.database;
-      final _data =
-          await _db.rawQuery('SELECT DISTINCT(type) from measurements');
+      // final _data =
+      //     await _db.rawQuery('SELECT DISTINCT(type) from measurements');
 
-      final _dData = _data.map((e) => e['type']! as String).toList();
+      /**
+       * SELECT 
+  mt.*,
+  m.code as metric_code,
+  m.base_unit,
+  mu.unit,
+  mu.to_base_factor
+FROM measurement_targets mt
+JOIN target_metrics tm ON tm.target_id = mt.id
+JOIN metrics m ON m.id = tm.metric_id
+JOIN metric_units mu ON mu.metric_id = m.id
+ORDER BY mt.display_order;
+       */
+      final _data = await _db.rawQuery('''
+        SELECT 
+          mt.*,
+          m.code as metric_code,
+          m.base_unit,
+          mu.unit,
+          mu.to_base_factor
+        FROM ${DatabaseService.measurementTargetsTable} mt
+        JOIN ${DatabaseService.targetMetricsTable} tm ON tm.target_id = mt.id
+        JOIN ${DatabaseService.metricsTable} m ON m.id = tm.metric_id
+        JOIN ${DatabaseService.metricUnitsTable} mu ON mu.metric_id = m.id
+        ORDER BY mt.display_order;
+      ''');
+
+      log(_data.toString());
+
+      final _dData = _transformUnitsToNestedStructureInTarget(_data);
       return Right(_dData);
     } catch (e) {
       return Left(e.toString());
     }
   }
 
+  List<MeasurementTargetModel> _transformUnitsToNestedStructureInTarget(
+    List<Map<String, dynamic>> flatResults,
+  ) {
+    // Group by id
+    final grouped = groupBy<Map<String, dynamic>, int>(
+      flatResults,
+      (row) => row['id'] as int,
+    );
+
+    // Transform each group into a Target object
+    final targets = grouped.entries.map((entry) {
+      final id = entry.key;
+      final rows = entry.value;
+
+      // Take common fields from first row
+      final firstRow = rows.first;
+
+      // Create units list from all rows in this group
+      final units = rows.map((row) {
+        return MetricUnitsModel(
+          unit: row['unit'] as String,
+          // toBaseFactor: (row['to_base_factor'] as num).toDouble(),
+          // baseUnit: row['base_unit'] as String,
+          code: row['code'] as String,
+        );
+      }).toList();
+
+      return MeasurementTargetModel(
+        id: id,
+        name: firstRow['name'] as String,
+        code: firstRow['code'] as String,
+        type: firstRow['type'] as String,
+        category: firstRow['category'] as String,
+        displayOrder: firstRow['display_order'] as int,
+        // metricCode: firstRow['metric_code'] as String,
+        units: units,
+      );
+    }).toList();
+
+    return targets;
+  }
+
   @override
   Future<Either<String, String>> backupDatabase() async {
-    try {
-      final _data = await databaseService.getData();
-      final _jsonData = const JsonEncoder().convert(_data);
-      return Right(_jsonData);
-    } catch (e) {
-      return Left(e.toString());
-    }
+    // try {
+    //   final _data = await databaseService.getData();
+    //   final _jsonData = const JsonEncoder().convert(_data);
+    //   return Right(_jsonData);
+    // } catch (e) {
+    //   return Left(e.toString());
+    // }
+    throw UnimplementedError();
   }
 
   @override
@@ -190,33 +272,37 @@ ORDER BY type, date DESC;
     bool merge = false,
     required String stringifiedDatas,
   }) async {
-    try {
-      //
-      final dynamic _datas = const JsonDecoder().convert(stringifiedDatas);
-      // as List<Map<String, dynamic>>;
-      // Merge or delete all data and insert new data
-      if (!merge) {
-        await databaseService.delete();
-      }
-      await databaseService.restoreData(
-        datas: _datas,
-      );
-      return const Right(unit);
-    } catch (e) {
-      return Left(e.toString());
-    }
+    // try {
+    //   //
+    //   final dynamic _datas = const JsonDecoder().convert(stringifiedDatas);
+    //   // as List<Map<String, dynamic>>;
+    //   // Merge or delete all data and insert new data
+    //   if (!merge) {
+    //     await databaseService.delete();
+    //   }
+    //   await databaseService.restoreData(
+    //     datas: _datas,
+    //   );
+    //   return const Right(unit);
+    // } catch (e) {
+    //   return Left(e.toString());
+    // }
+
+    throw UnimplementedError();
   }
 
   @override
   Future<Either<String, Unit>> deleteMeasurement({required String id}) async {
-    try {
-      await databaseService.delete(
-        id: id,
-      );
-      return const Right(unit);
-    } catch (e) {
-      return Left(e.toString());
-    }
+    // try {
+    //   await databaseService.delete(
+    //     id: id,
+    //   );
+    //   return const Right(unit);
+    // } catch (e) {
+    //   return Left(e.toString());
+    // }
+
+    throw UnimplementedError();
   }
 
   @override
@@ -335,6 +421,28 @@ ORDER BY type, date DESC;
     } catch (exception) {
       return left(exception.toString());
     }
+  }
+
+  @override
+  Future<Either<String, List<String>>> getAllMeasurementItems() async {
+    try {
+      final db = await databaseService.database;
+      final result = await db.query('', columns: ['name']);
+      final muscleGroups = result.map((e) => e['name'] as String).toList();
+      return Right(muscleGroups);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, List<Measurement>>> getMeasurementItemDataByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required int measurementItemId,
+  }) {
+    // TODO: implement getMeasurementItemDataByDateRange
+    throw UnimplementedError();
   }
 }
 

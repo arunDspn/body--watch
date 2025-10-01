@@ -30,8 +30,9 @@ class ApppreferencesBloc
         appPreferences: final appPreferences,
       ) =>
         <String, dynamic>{
-          'weightUnit': EnumToString.convertToString(appPreferences.weightUnit),
-          'lengthUnit': EnumToString.convertToString(appPreferences.lengthUnit),
+          'weightUnit': appPreferences.weightUnit,
+          'lengthUnit': appPreferences.lengthUnit,
+          'heightUnit': appPreferences.heightUnit,
           'lang': appPreferences.lang,
         },
       ApppreferencesState() => null,
@@ -57,17 +58,22 @@ class ApppreferencesBloc
     } else {
       return ApppreferencesState.savedAndReady(
         appPreferences: AppPreferences(
-          EnumToString.fromString<WeightUnit>(
-                WeightUnit.values,
-                json['weightUnit'] as String,
-              ) ??
-              WeightUnit.kg,
-          EnumToString.fromString<LengthUnit>(
-                LengthUnit.values,
-                json['lengthUnit'] as String,
-              ) ??
-              LengthUnit.cm,
-          json['lang'] as String,
+          weightUnit: json['weightUnit'] as String?,
+          lengthUnit: json['lengthUnit'] as String?,
+          heightUnit: json['heightUnit'] as String?,
+
+          lang: json['lang'] as String? ?? 'en',
+          // EnumToString.fromString<WeightUnit>(
+          //       WeightUnit.values,
+          //       json['weightUnit'] as String,
+          //     ) ??
+          //     WeightUnit.kg,
+          // EnumToString.fromString<LengthUnit>(
+          //       LengthUnit.values,
+          //       json['lengthUnit'] as String,
+          //     ) ??
+          //     LengthUnit.cm,
+          // json['lang'] as String,
         ),
       );
     }
@@ -83,5 +89,5 @@ class ApppreferencesBloc
   // }
 }
 
-final AppPreferences intialappPreferences =
-    AppPreferences(WeightUnit.kg, LengthUnit.inch, 'en');
+// final AppPreferences intialappPreferences =
+//     AppPreferences(WeightUnit.kg, LengthUnit.inch, 'en');

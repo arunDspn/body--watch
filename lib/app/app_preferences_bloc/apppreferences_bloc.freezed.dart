@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -73,6 +72,163 @@ class _$ApppreferencesEventCopyWithImpl<$Res>
           : appPreferences // ignore: cast_nullable_to_non_nullable
               as AppPreferences,
     ));
+  }
+}
+
+/// Adds pattern-matching-related methods to [ApppreferencesEvent].
+extension ApppreferencesEventPatterns on ApppreferencesEvent {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_UpdatePreferences value)? updatePreferences,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _UpdatePreferences() when updatePreferences != null:
+        return updatePreferences(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_UpdatePreferences value) updatePreferences,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _UpdatePreferences():
+        return updatePreferences(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_UpdatePreferences value)? updatePreferences,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _UpdatePreferences() when updatePreferences != null:
+        return updatePreferences(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(AppPreferences appPreferences)? updatePreferences,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _UpdatePreferences() when updatePreferences != null:
+        return updatePreferences(_that.appPreferences);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(AppPreferences appPreferences) updatePreferences,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _UpdatePreferences():
+        return updatePreferences(_that.appPreferences);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(AppPreferences appPreferences)? updatePreferences,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _UpdatePreferences() when updatePreferences != null:
+        return updatePreferences(_that.appPreferences);
+      case _:
+        return null;
+    }
   }
 }
 
@@ -166,6 +322,181 @@ mixin _$ApppreferencesState {
 class $ApppreferencesStateCopyWith<$Res> {
   $ApppreferencesStateCopyWith(
       ApppreferencesState _, $Res Function(ApppreferencesState) __);
+}
+
+/// Adds pattern-matching-related methods to [ApppreferencesState].
+extension ApppreferencesStatePatterns on ApppreferencesState {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SavedAndReady value)? savedAndReady,
+    TResult Function(NotSavedOrReady value)? notSavedOrReady,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case SavedAndReady() when savedAndReady != null:
+        return savedAndReady(_that);
+      case NotSavedOrReady() when notSavedOrReady != null:
+        return notSavedOrReady(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SavedAndReady value) savedAndReady,
+    required TResult Function(NotSavedOrReady value) notSavedOrReady,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case SavedAndReady():
+        return savedAndReady(_that);
+      case NotSavedOrReady():
+        return notSavedOrReady(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SavedAndReady value)? savedAndReady,
+    TResult? Function(NotSavedOrReady value)? notSavedOrReady,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case SavedAndReady() when savedAndReady != null:
+        return savedAndReady(_that);
+      case NotSavedOrReady() when notSavedOrReady != null:
+        return notSavedOrReady(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(AppPreferences appPreferences)? savedAndReady,
+    TResult Function()? notSavedOrReady,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case SavedAndReady() when savedAndReady != null:
+        return savedAndReady(_that.appPreferences);
+      case NotSavedOrReady() when notSavedOrReady != null:
+        return notSavedOrReady();
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(AppPreferences appPreferences) savedAndReady,
+    required TResult Function() notSavedOrReady,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case SavedAndReady():
+        return savedAndReady(_that.appPreferences);
+      case NotSavedOrReady():
+        return notSavedOrReady();
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(AppPreferences appPreferences)? savedAndReady,
+    TResult? Function()? notSavedOrReady,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case SavedAndReady() when savedAndReady != null:
+        return savedAndReady(_that.appPreferences);
+      case NotSavedOrReady() when notSavedOrReady != null:
+        return notSavedOrReady();
+      case _:
+        return null;
+    }
+  }
 }
 
 /// @nodoc

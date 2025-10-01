@@ -321,14 +321,14 @@ class ChartContainer extends StatelessWidget {
                 if (!withLimiter)
                   TextButton(
                     onPressed: () {
-                      showModalBottomSheet<void>(
-                        context: context,
-                        builder: (context) {
-                          return AddDataModal.add(
-                            type: chartDisplayModel.type,
-                          );
-                        },
-                      );
+                      // showModalBottomSheet<void>(
+                      //   context: context,
+                      //   builder: (context) {
+                      //     return AddDataModal.add(
+                      //       type: chartDisplayModel.type,
+                      //     );
+                      //   },
+                      // );
                     },
                     child: const Text('Add'),
                   )

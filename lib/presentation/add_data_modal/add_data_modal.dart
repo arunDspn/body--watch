@@ -5,7 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/data/domain/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart';
+import 'package:watcha_body/data/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
@@ -15,16 +17,16 @@ class AddDataModal extends StatefulWidget {
   const AddDataModal({
     Key? key,
     required this.type,
-    this.add = false,
+    this.isAdd = false,
   })  : addedId = null,
         addedDate = null,
         addedValue = null,
         super(key: key);
 
-  const AddDataModal.add({
+  const AddDataModal.isAdd({
     Key? key,
     required this.type,
-    this.add = true,
+    this.isAdd = true,
   })  : addedId = null,
         addedDate = null,
         addedValue = null,
@@ -36,11 +38,11 @@ class AddDataModal extends StatefulWidget {
     required this.addedDate,
     required this.addedValue,
     required this.addedId,
-    this.add = true,
+    this.isAdd = true,
   }) : super(key: key);
 
-  final MeasurementType type;
-  final bool add;
+  final MeasurementTargetModel type;
+  final bool isAdd;
   final DateTime? addedDate;
   final double? addedValue;
   final String? addedId;
@@ -189,6 +191,8 @@ class _AddDataModalState extends State<AddDataModal> {
                   ),
                 ],
               ),
+
+              // Form
               Theme(
                 data: Theme.of(context).copyWith(
                   inputDecorationTheme: const InputDecorationTheme(
@@ -214,9 +218,27 @@ class _AddDataModalState extends State<AddDataModal> {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                measurementUnit,
-                                style: Theme.of(context).textTheme.bodyLarge,
+                              DropdownButton<String>(
+                                value: measurementUnit,
+                                onChanged: (String? newValue) {
+                                  if (newValue != null) {
+                                    setState(() {
+                                      measurementUnit = newValue;
+                                    });
+                                  }
+                                },
+                                items: widget.type.units
+                                    .map<DropdownMenuItem<String>>(
+                                        (MetricUnitsModel value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value.unit,
+                                    child: Text(
+                                      value.unit,
+                                      style:
+                                          Theme.of(context).textTheme.bodyLarge,
+                                    ),
+                                  );
+                                }).toList(),
                               ),
                               const Spacer(),
                               SizedBox(

@@ -566,30 +566,30 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
             //   ),
             // ),
 
-            Center(
-              child: SegmentedButton<WeightUnit>(
-                segments: WeightUnit.values
-                    .map(
-                      (e) => ButtonSegment(
-                        value: e,
-                        label: Text(e.name),
-                      ),
-                    )
-                    .toList(),
-                selected: {currentValue},
-                onSelectionChanged: (p0) {
-                  context.read<ApppreferencesBloc>().add(
-                        ApppreferencesEvent.updatePreferences(
-                          appPreferences: AppPreferences(
-                            p0.first,
-                            widget.appPreferences.lengthUnit,
-                            widget.appPreferences.lang,
-                          ),
-                        ),
-                      );
-                },
-              ),
-            ),
+            // Center(
+            //   child: SegmentedButton<WeightUnit>(
+            //     segments: WeightUnit.values
+            //         .map(
+            //           (e) => ButtonSegment(
+            //             value: e,
+            //             label: Text(e.name),
+            //           ),
+            //         )
+            //         .toList(),
+            //     selected: {currentValue},
+            //     onSelectionChanged: (p0) {
+            //       context.read<ApppreferencesBloc>().add(
+            //             ApppreferencesEvent.updatePreferences(
+            //               appPreferences: AppPreferences(
+            //                 p0.first,
+            //                 widget.appPreferences.lengthUnit,
+            //                 widget.appPreferences.lang,
+            //               ),
+            //             ),
+            //           );
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -707,81 +707,81 @@ class _LengthChoiceChipState extends State<LengthChoiceChip> {
                     fontWeight: FontWeight.w600,
                   ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(4),
-              // child: Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //   children: List.generate(LengthUnit.values.length, (index) {
-              //     return ChoiceChip(
-              //       label: Padding(
-              //         padding: const EdgeInsets.all(4),
-              //         child: Text(
-              //           EnumToString.convertToString(LengthUnit.values[index]),
-              //           style: const TextStyle(
-              //             // fontSize: 14,
-              //             fontWeight: FontWeight.bold,
-              //           ),
-              //         ),
-              //       ),
-              //       // backgroundColor: Colors.red.shade100,
-              //       // selectedColor: Colors.blueAccent,
-              //       selectedColor:
-              //           Theme.of(context).colorScheme.secondaryContainer,
-              //       // backgroundColor:
-              //       //     Theme.of(context).colorScheme.onInverseSurface,
-              //       elevation: 0,
-              //       pressElevation: 0,
-              //       selected: currentValue == LengthUnit.values[index],
-              //       // labelStyle: TextStyle(
-              //       //   color: currentValue == LengthUnit.values[index]
-              //       //       ? Colors.white
-              //       //       : Colors.blueAccent,
-              //       // ),
-              //       labelStyle: TextStyle(
-              //         color: currentValue == LengthUnit.values[index]
-              //             ? Theme.of(context).colorScheme.onSecondaryContainer
-              //             : Theme.of(context).colorScheme.primary,
-              //       ),
-              //       onSelected: (value) {
-              //         context.read<ApppreferencesBloc>().add(
-              //               ApppreferencesEvent.updatePreferences(
-              //                 appPreferences: AppPreferences(
-              //                   widget.appPreferences.weightUnit,
-              //                   LengthUnit.values[index],
-              //                   widget.appPreferences.lang,
-              //                 ),
-              //               ),
-              //             );
-              //       },
-              //     );
-              //   }),
-              // ),
+            // Padding(
+            //   padding: const EdgeInsets.all(4),
+            //   // child: Row(
+            //   //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   //   children: List.generate(LengthUnit.values.length, (index) {
+            //   //     return ChoiceChip(
+            //   //       label: Padding(
+            //   //         padding: const EdgeInsets.all(4),
+            //   //         child: Text(
+            //   //           EnumToString.convertToString(LengthUnit.values[index]),
+            //   //           style: const TextStyle(
+            //   //             // fontSize: 14,
+            //   //             fontWeight: FontWeight.bold,
+            //   //           ),
+            //   //         ),
+            //   //       ),
+            //   //       // backgroundColor: Colors.red.shade100,
+            //   //       // selectedColor: Colors.blueAccent,
+            //   //       selectedColor:
+            //   //           Theme.of(context).colorScheme.secondaryContainer,
+            //   //       // backgroundColor:
+            //   //       //     Theme.of(context).colorScheme.onInverseSurface,
+            //   //       elevation: 0,
+            //   //       pressElevation: 0,
+            //   //       selected: currentValue == LengthUnit.values[index],
+            //   //       // labelStyle: TextStyle(
+            //   //       //   color: currentValue == LengthUnit.values[index]
+            //   //       //       ? Colors.white
+            //   //       //       : Colors.blueAccent,
+            //   //       // ),
+            //   //       labelStyle: TextStyle(
+            //   //         color: currentValue == LengthUnit.values[index]
+            //   //             ? Theme.of(context).colorScheme.onSecondaryContainer
+            //   //             : Theme.of(context).colorScheme.primary,
+            //   //       ),
+            //   //       onSelected: (value) {
+            //   //         context.read<ApppreferencesBloc>().add(
+            //   //               ApppreferencesEvent.updatePreferences(
+            //   //                 appPreferences: AppPreferences(
+            //   //                   widget.appPreferences.weightUnit,
+            //   //                   LengthUnit.values[index],
+            //   //                   widget.appPreferences.lang,
+            //   //                 ),
+            //   //               ),
+            //   //             );
+            //   //       },
+            //   //     );
+            //   //   }),
+            //   // ),
 
-              child: Center(
-                child: SegmentedButton<LengthUnit>(
-                  segments: LengthUnit.values
-                      .map(
-                        (e) => ButtonSegment(
-                          value: e,
-                          label: Text(e.name),
-                        ),
-                      )
-                      .toList(),
-                  selected: {currentValue},
-                  onSelectionChanged: (p0) {
-                    context.read<ApppreferencesBloc>().add(
-                          ApppreferencesEvent.updatePreferences(
-                            appPreferences: AppPreferences(
-                              widget.appPreferences.weightUnit,
-                              p0.first,
-                              widget.appPreferences.lang,
-                            ),
-                          ),
-                        );
-                  },
-                ),
-              ),
-            ),
+            //   child: Center(
+            //     child: SegmentedButton<LengthUnit>(
+            //       segments: LengthUnit.values
+            //           .map(
+            //             (e) => ButtonSegment(
+            //               value: e,
+            //               label: Text(e.name),
+            //             ),
+            //           )
+            //           .toList(),
+            //       selected: {currentValue},
+            //       onSelectionChanged: (p0) {
+            //         context.read<ApppreferencesBloc>().add(
+            //               ApppreferencesEvent.updatePreferences(
+            //                 appPreferences: AppPreferences(
+            //                   widget.appPreferences.weightUnit,
+            //                   p0.first,
+            //                   widget.appPreferences.lang,
+            //                 ),
+            //               ),
+            //             );
+            //       },
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -923,15 +923,15 @@ class _LanguageSelectorState extends State<LanguageSelector> {
               setState(() {
                 _currentLocale = value!;
               });
-              context.read<ApppreferencesBloc>().add(
-                    ApppreferencesEvent.updatePreferences(
-                      appPreferences: AppPreferences(
-                        widget.appPreferences.weightUnit,
-                        widget.appPreferences.lengthUnit,
-                        _currentLocale.toString().split('.').last,
-                      ),
-                    ),
-                  );
+              // context.read<ApppreferencesBloc>().add(
+              //       ApppreferencesEvent.updatePreferences(
+              //         appPreferences: AppPreferences(
+              //           widget.appPreferences.weightUnit,
+              //           widget.appPreferences.lengthUnit,
+              //           _currentLocale.toString().split('.').last,
+              //         ),
+              //       ),
+              //     );
             },
           ),
         ],

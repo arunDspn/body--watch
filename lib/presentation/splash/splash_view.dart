@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
+import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
 import 'package:watcha_body/presentation/app_initializer/app_initer.dart';
 import 'package:watcha_body/presentation/home/home.dart';
 
@@ -11,21 +12,59 @@ class SplashView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        switch (context.read<ApppreferencesBloc>().state) {
-          case SavedAndReady():
-            Navigator.of(context).pushReplacementNamed(HomeView.routeName);
-            break;
-          default:
-            Navigator.of(context).pushReplacementNamed(AppIniter.routeName);
-            break;
-        }
-      },
-    );
+    // WidgetsBinding.instance.addPostFrameCallback(
+    //   (_) {
+    //     switch (context.read<ApppreferencesBloc>().state) {
+    //       case SavedAndReady():
+    //         Navigator.of(context).pushReplacementNamed(HomeView.routeName);
+    //         break;
+    //       default:
+    //         Navigator.of(context).pushReplacementNamed(AppIniter.routeName);
+    //         break;
+    //     }
+    //   },
+    // );
 
-    return const Scaffold(
-      body: Center(child: Text('Splash')),
+    // WidgetsBinding.instance.addPostFrameCallback(
+    //   (_) {
+    //     switch (context.read<UserPreferencesCubit>().state) {
+    //       case UserPreferencesLoaded():
+    //         Navigator.of(context).pushReplacementNamed(HomeView.routeName);
+    //         break;
+    //       case UserPreferencesLoading():
+    //         // Still loading, do nothing or show a loading indicator
+    //         break;
+    //       default:
+    //         Navigator.of(context).pushReplacementNamed(AppIniter.routeName);
+    //         break;
+    //     }
+    //   },
+    // );
+
+    return Scaffold(
+      body: BlocListener<UserPreferencesCubit, UserPreferencesState>(
+        listener: (context, state) {
+          state.maybeMap(
+            empty: (value) {
+              Navigator.of(context).pushReplacementNamed(AppIniter.routeName);
+            },
+            loading: (value) {
+              // Still loading, do nothing or show a loading indicator
+            },
+            loaded: (_) {
+              Navigator.of(context).pushReplacementNamed(HomeView.routeName);
+            },
+            orElse: () {},
+            error: (value) {
+              // Show snackbar
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(value.message)),
+              );
+            },
+          );
+        },
+        child: Center(child: Text('Splash')),
+      ),
     );
   }
 }

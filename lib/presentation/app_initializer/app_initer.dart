@@ -3,11 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
+import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
+import 'package:watcha_body/data/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
+import 'package:watcha_body/data/domain/user_preferences/models/user_unit_preferences_entity.dart';
 import 'package:watcha_body/l10n/arb/app_localizations.dart';
-import 'package:watcha_body/l10n/l10n.dart';
+import 'package:watcha_body/presentation/app_initializer/cubit/get_all_metrics/get_all_metric_units_available_cubit.dart';
+import 'package:watcha_body/presentation/app_initializer/cubit/set_user_unit_preferences/set_user_unit_preferences_cubit.dart';
+import 'package:watcha_body/presentation/common_widgets/reusable_segmented_button.dart';
 import 'package:watcha_body/presentation/home/home.dart';
 import 'package:watcha_body/presentation/settings/settings_view.dart';
+
 import 'package:watcha_body/size_config.dart';
 
 class AppIniter extends StatefulWidget {
@@ -20,25 +26,25 @@ class AppIniter extends StatefulWidget {
 }
 
 class _AppIniterState extends State<AppIniter> {
-  WeightUnit? _selectedWeight;
-  LengthUnit? _selectedLength;
   String? _selectedLanguage;
+  Map<String, dynamic> dynamicStates = {};
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     void _updateAppPreferences() {
-      final appPreferences = AppPreferences(
-        _selectedWeight!,
-        _selectedLength!,
-        'en',
-      );
-      context.read<ApppreferencesBloc>().add(
-            ApppreferencesEvent.updatePreferences(
-              appPreferences: appPreferences,
-            ),
-          );
-      Navigator.pushReplacementNamed(context, HomeView.routeName);
+      // final appPreferences = AppPreferences(
+      //   weightUnit: 1,
+      //   lengthUnit: 1,
+      //   heightUnit: 1,
+      //   lang: 'en',
+      // );
+      // context.read<ApppreferencesBloc>().add(
+      //       ApppreferencesEvent.updatePreferences(
+      //         appPreferences: appPreferences,
+      //       ),
+      //     );
+      // Navigator.pushReplacementNamed(context, HomeView.routeName);
     }
 
     return Scaffold(
@@ -46,53 +52,143 @@ class _AppIniterState extends State<AppIniter> {
         title: const Text('Choose your Defaults'),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(5),
-        child: Column(
-          children: [
-            // Text(
-            //   'Choose your Defaults',
-            //   style: Theme.of(context).textTheme.displaySmall,
-            // ),
-            // const SizedBox(height: 20),
-            // const LanguageSelector(),
-            // const SizedBox(height: 15),
-            WeightChoiceChip(
-              onSelected: (weightUnit) {
-                setState(() {
-                  _selectedWeight = weightUnit;
-                });
-              },
-            ),
-            const SizedBox(height: 15),
-            LengthChoiceChip(
-              onSelected: (lengthUnit) {
-                setState(() {
-                  _selectedLength = lengthUnit;
-                });
-              },
-            ),
-            const SizedBox(height: 15),
-            // const ThemeChoiceChip(),
-            const Spacer(),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: FilledButton(
-                // shape: RoundedRectangleBorder(
-                //   borderRadius: BorderRadius.circular(25),
-                // ),
-                // minWidth: SizeConfig.screenWidth! * 0.7,
-                // color: kPrimaryColorInLight,
-                // disabledColor: Colors.grey,
-                onPressed: (_selectedLength != null && _selectedWeight != null)
-                    ? _updateAppPreferences
-                    : null,
-                child: const Text(
-                  'Continue',
+      body: BlocListener<SetUserUnitPreferencesCubit,
+          SetUserUnitPreferencesState>(
+        listener: (context, state) {
+          state.whenOrNull(
+            error: (message) {
+              // Snackbar
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Error: $message'),
                 ),
-              ),
-            ),
-          ],
+              );
+            },
+            loading: () {},
+            success: () {
+              // Navigate to HomeView and remove all previous routes
+              // Navigator.pushNamedAndRemoveUntil(
+              //   context,
+              //   HomeView.routeName,
+              //   (route) => false,
+              // );
+              // Snackbar
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Preferences saved successfully!'),
+                ),
+              );
+            },
+          );
+        },
+        child: Center(
+          child: BlocConsumer<GetAllMetricUnitsAvailableCubit,
+              GetAllMetricUnitsAvailableState>(
+            listener: (context, state) {
+              state.whenOrNull(
+                loaded: (metricUnits) {
+                  // Initialize dynamicStates with null values for each metric type
+                  // to ensure user makes a selection for each
+                  if (dynamicStates.isEmpty) {
+                    metricUnits!.forEach(
+                      (key, value) {
+                        dynamicStates[key] = null;
+                      },
+                    );
+                  }
+                },
+              );
+            },
+            builder: (context, state) {
+              return state.when(
+                error: (message) {
+                  return Center(
+                    child: Text('Error: $message'),
+                  );
+                },
+                initial: () {
+                  return const Center(
+                    child: Text('Initializing...'),
+                  );
+                },
+                loading: () {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+                loaded: (metricUnits) {
+                  return Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Column(
+                            children: metricUnits!.keys.map((e) {
+                              return ReusableSegmentedButton<MetricUnitsModel>(
+                                sectionName: e,
+                                items: metricUnits[e]!,
+                                getLabel: (item) {
+                                  return item.unit;
+                                },
+                                onSelectionChanged: (selection) {
+                                  setState(() {
+                                    dynamicStates[e] = selection?.unit;
+                                  });
+                                },
+                              );
+                            }).toList(),
+                          ),
+                          const SizedBox(height: 15),
+                          Padding(
+                            padding: const EdgeInsets.all(18),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: FilledButton(
+                                onPressed: dynamicStates.values
+                                        .any((element) => element == null)
+                                    ? null
+                                    : () {
+                                        // convert dynamicStates to UserPreferencesEntity
+                                        final userPreferences =
+                                            <UserUnitPreferencesEntity>[];
+                                        dynamicStates.forEach((key, value) {
+                                          final pref =
+                                              UserUnitPreferencesEntity(
+                                            userId: 1,
+                                            metricCode: metricUnits[key]!
+                                                .firstWhere(
+                                                  (element) =>
+                                                      element.unit == value,
+                                                )
+                                                .code,
+                                            preferredUnit: value,
+                                          );
+
+                                          userPreferences.add(pref);
+                                        });
+
+                                        // Save to database
+                                        context
+                                            .read<SetUserUnitPreferencesCubit>()
+                                            .setUserUnitPreferences(
+                                              userUnitPreferences:
+                                                  userPreferences,
+                                            );
+                                      },
+                                child: const Text(
+                                  'Continue',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );

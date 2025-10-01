@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
@@ -16,7 +15,7 @@ class GetallwidgetsdataBloc
       : super(const GetallwidgetsdataState.initial()) {
     on<GetallwidgetsdataEvent>((event, emit) async {
       switch (event) {
-        case _FetchAllData(appPreferences: final appPreferences):
+        case _FetchAllData():
           emit(const GetallwidgetsdataState.loading());
           final _addedWidgets = await measurementRepository.getAddedTypes();
 
@@ -34,15 +33,16 @@ class GetallwidgetsdataBloc
               );
 
               final _allDetailsresult =
-                  await measurementRepository.getDetailsByDate(
-                preferredWeightUnit: EnumToString.convertToString(
-                  appPreferences.weightUnit,
-                ),
-                preferredLengthUnit: EnumToString.convertToString(
-                  appPreferences.lengthUnit,
-                ),
+                  await measurementRepository.getMeasurementItemDataByDateRange(
+                // preferredWeightUnit: EnumToString.convertToString(
+                //   appPreferences.weightUnit,
+                // ),
+                // preferredLengthUnit: EnumToString.convertToString(
+                //   appPreferences.lengthUnit,
+                // ),
                 startDate: currentDate,
                 endDate: endDate,
+                measurementItemId: -1, // all types
               );
 
               //TODO: I think we can directly groupby the widget type

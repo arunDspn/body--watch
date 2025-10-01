@@ -1,25 +1,22 @@
 import 'package:dartz/dartz.dart';
-import 'package:watcha_body/data/domain/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/data/domain/models/two_dates_record_model.dart';
 
 abstract class IMeasurementsFacade {
-  /// Will return a list of [Measurement]s
-  /// It contains all types that added in table
-  Future<Either<String, List<Measurement>>> getLatestDetails({
-    required String preferredWeightUnit,
-    required String preferredLengthUnit,
-  });
+  /// Will return a list of each latest Measurement from
+  /// all added Measurement Targets
+  /// Used in Home Screen -- Overview Section
+  Future<Either<String, List<Measurement>>> getLatestDetails();
 
   /// Will return a list of [Measurement]s
   /// It contains all types ex: Chest, Waist, etc.. that added in table
   /// startDate and endDate are optional
   /// if its empty all data will be returned
-  Future<Either<String, List<Measurement>>> getDetailsByDate({
-    required String preferredWeightUnit,
-    required String preferredLengthUnit,
-    DateTime? startDate,
-    DateTime? endDate,
-    String? type,
+  Future<Either<String, List<Measurement>>> getMeasurementItemDataByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required int measurementItemId,
   });
 
   /// Creates a new [Measurement]
@@ -47,7 +44,7 @@ abstract class IMeasurementsFacade {
   /// Returns List of Types added in table as String
   /// Use this filter it with All Types available from App Binary
   /// To get remaining types
-  Future<Either<String, List<String>>> getAddedTypes();
+  Future<Either<String, List<MeasurementTargetModel>>> getAddedTypes();
 
   Future<Either<String, String>> backupDatabase();
 
@@ -67,4 +64,7 @@ abstract class IMeasurementsFacade {
     required DateTime dateOne,
     required DateTime dateTwo,
   });
+
+  /// Get all measurement items
+  Future<Either<String, List<String>>> getAllMeasurementItems();
 }

@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/data/domain/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/chart_2/charts_view2.dart';
@@ -47,11 +47,13 @@ class OverView extends StatelessWidget {
             ),
             onPressed: () {
               // Navigator.pushNamed(context, AddWidget.routeName);
-              Navigator.push<void>(context, MaterialPageRoute(
-                builder: (context) {
-                  return const ChartsView2();
-                },
-              ));
+              // Navigator.push<void>(context, MaterialPageRoute(
+              //   builder: (context) {
+              //     return const ChartsView2();
+              //   },
+              // ));
+
+              Navigator.pushNamed(context, AddWidget.routeName);
             },
           ),
         ],
@@ -515,18 +517,18 @@ class _WidgetBoxState extends State<_WidgetBox> {
 
   @override
   Widget build(BuildContext context) {
-    late String _unit;
+    late String _unit = '';
     final _preferences =
         (context.watch<ApppreferencesBloc>().state as SavedAndReady)
             .appPreferences;
 
-    if (widget.data.name is LengthMeasurementType) {
-      _unit = _preferences.lengthUnitString;
-    } else if (widget.data.name is WeightMeasurementType) {
-      _unit = _preferences.weightUnitString;
-    } else {
-      _unit = '%';
-    }
+    // if (widget.data.name is LengthMeasurementType) {
+    //   _unit = _preferences.lengthUnitString;
+    // } else if (widget.data.name is WeightMeasurementType) {
+    //   _unit = _preferences.weightUnitString;
+    // } else {
+    //   _unit = '%';
+    // }
 
     final minValue = widget.data.lastThreeMonths.reduce(
       (value, element) => value.value < element.value ? value : element,
@@ -666,17 +668,17 @@ class _WidgetBoxState extends State<_WidgetBox> {
                     children: [
                       IconButton(
                         onPressed: () {
-                          showModalBottomSheet<void>(
-                            context: context,
-                            builder: (context) {
-                              return BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                                child: AddDataModal.add(
-                                  type: widget.data.name,
-                                ),
-                              );
-                            },
-                          );
+                          // showModalBottomSheet<void>(
+                          //   context: context,
+                          //   builder: (context) {
+                          //     return BackdropFilter(
+                          //       filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                          //       child: AddDataModal.add(
+                          //         type: widget.data.name,
+                          //       ),
+                          //     );
+                          //   },
+                          // );
                         },
                         icon: Icon(
                           Icons.add,

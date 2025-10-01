@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/data/domain/models/save_vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
+import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/components/tag_dropdown/tag_dropdown.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new_media_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/common/cubits/cubit/get_all_muscle_groups_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/gallery_view/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 
@@ -34,6 +36,8 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
 
   // Form key
   final _formKey = GlobalKey<FormState>();
+
+  final _muscleGroups = <String>{};
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +196,50 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
                       ),
                     ),
 
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+                    // Muscle group selection chips
+                    BlocBuilder<GetAllMuscleGroupsCubit,
+                        GetAllMuscleGroupsState>(
+                      builder: (context, state) {
+                        return state.when(
+                          initial: () {
+                            return const CircularProgressIndicator();
+                          },
+                          loading: () {
+                            return const CircularProgressIndicator();
+                          },
+                          failure: (cause) {
+                            return Text('Failed to load widgets: $cause');
+                          },
+                          success: (widgets) {
+                            return Wrap(
+                              spacing: 8.0,
+                              children: widgets.map((widget) {
+                                final isSelected =
+                                    _muscleGroups.contains(widget);
+                                return FilterChip(
+                                  label: Text(widget),
+                                  selected: isSelected,
+                                  onSelected: (selected) {
+                                    setState(() {
+                                      if (selected) {
+                                        _muscleGroups.add(widget);
+                                      } else {
+                                        _muscleGroups.remove(widget);
+                                      }
+                                    });
+                                  },
+                                );
+                              }).toList(),
+                            );
+                          },
+                        );
+                      },
+                    ),
+
                     // Date picker in yyyy-mm-dd format
                     // SizedBox(
                     //   width: double.infinity,
@@ -286,6 +334,7 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
               tag: tag,
               path: imagePath,
               date: date!,
+              muscleGroup: [],
             );
             context.read<AddNewMediaCubit>().saveMedia(image);
           }

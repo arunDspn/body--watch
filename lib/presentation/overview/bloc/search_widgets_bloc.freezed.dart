@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -34,6 +33,181 @@ mixin _$SearchWidgetsEvent {
 class $SearchWidgetsEventCopyWith<$Res> {
   $SearchWidgetsEventCopyWith(
       SearchWidgetsEvent _, $Res Function(SearchWidgetsEvent) __);
+}
+
+/// Adds pattern-matching-related methods to [SearchWidgetsEvent].
+extension SearchWidgetsEventPatterns on SearchWidgetsEvent {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_AddData value)? addData,
+    TResult Function(_KeyChanged value)? keyChanged,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _AddData() when addData != null:
+        return addData(_that);
+      case _KeyChanged() when keyChanged != null:
+        return keyChanged(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_AddData value) addData,
+    required TResult Function(_KeyChanged value) keyChanged,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _AddData():
+        return addData(_that);
+      case _KeyChanged():
+        return keyChanged(_that);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_AddData value)? addData,
+    TResult? Function(_KeyChanged value)? keyChanged,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _AddData() when addData != null:
+        return addData(_that);
+      case _KeyChanged() when keyChanged != null:
+        return keyChanged(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(List<LatestMeasurementDisplayModel> list)? addData,
+    TResult Function(String key)? keyChanged,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _AddData() when addData != null:
+        return addData(_that.list);
+      case _KeyChanged() when keyChanged != null:
+        return keyChanged(_that.key);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(List<LatestMeasurementDisplayModel> list) addData,
+    required TResult Function(String key) keyChanged,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _AddData():
+        return addData(_that.list);
+      case _KeyChanged():
+        return keyChanged(_that.key);
+      case _:
+        throw StateError('Unexpected subclass');
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(List<LatestMeasurementDisplayModel> list)? addData,
+    TResult? Function(String key)? keyChanged,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case _AddData() when addData != null:
+        return addData(_that.list);
+      case _KeyChanged() when keyChanged != null:
+        return keyChanged(_that.key);
+      case _:
+        return null;
+    }
+  }
 }
 
 /// @nodoc
@@ -189,6 +363,195 @@ mixin _$SearchWidgetsState {
 class $SearchWidgetsStateCopyWith<$Res> {
   $SearchWidgetsStateCopyWith(
       SearchWidgetsState _, $Res Function(SearchWidgetsState) __);
+}
+
+/// Adds pattern-matching-related methods to [SearchWidgetsState].
+extension SearchWidgetsStatePatterns on SearchWidgetsState {
+  /// A variant of `map` that fallback to returning `orElse`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SearchWidgetsStateLoading value)? loading,
+    TResult Function(SearchWidgetsStateLoaded value)? loaded,
+    TResult Function(SearchWidgetsStateFailed value)? failed,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case SearchWidgetsStateLoading() when loading != null:
+        return loading(_that);
+      case SearchWidgetsStateLoaded() when loaded != null:
+        return loaded(_that);
+      case SearchWidgetsStateFailed() when failed != null:
+        return failed(_that);
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// Callbacks receives the raw object, upcasted.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case final Subclass2 value:
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SearchWidgetsStateLoading value) loading,
+    required TResult Function(SearchWidgetsStateLoaded value) loaded,
+    required TResult Function(SearchWidgetsStateFailed value) failed,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case SearchWidgetsStateLoading():
+        return loading(_that);
+      case SearchWidgetsStateLoaded():
+        return loaded(_that);
+      case SearchWidgetsStateFailed():
+        return failed(_that);
+    }
+  }
+
+  /// A variant of `map` that fallback to returning `null`.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case final Subclass value:
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SearchWidgetsStateLoading value)? loading,
+    TResult? Function(SearchWidgetsStateLoaded value)? loaded,
+    TResult? Function(SearchWidgetsStateFailed value)? failed,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case SearchWidgetsStateLoading() when loading != null:
+        return loading(_that);
+      case SearchWidgetsStateLoaded() when loaded != null:
+        return loaded(_that);
+      case SearchWidgetsStateFailed() when failed != null:
+        return failed(_that);
+      case _:
+        return null;
+    }
+  }
+
+  /// A variant of `when` that fallback to an `orElse` callback.
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return orElse();
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? loading,
+    TResult Function(List<LatestMeasurementDisplayModel> lists)? loaded,
+    TResult Function()? failed,
+    required TResult orElse(),
+  }) {
+    final _that = this;
+    switch (_that) {
+      case SearchWidgetsStateLoading() when loading != null:
+        return loading();
+      case SearchWidgetsStateLoaded() when loaded != null:
+        return loaded(_that.lists);
+      case SearchWidgetsStateFailed() when failed != null:
+        return failed();
+      case _:
+        return orElse();
+    }
+  }
+
+  /// A `switch`-like method, using callbacks.
+  ///
+  /// As opposed to `map`, this offers destructuring.
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case Subclass2(:final field2):
+  ///     return ...;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() loading,
+    required TResult Function(List<LatestMeasurementDisplayModel> lists) loaded,
+    required TResult Function() failed,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case SearchWidgetsStateLoading():
+        return loading();
+      case SearchWidgetsStateLoaded():
+        return loaded(_that.lists);
+      case SearchWidgetsStateFailed():
+        return failed();
+    }
+  }
+
+  /// A variant of `when` that fallback to returning `null`
+  ///
+  /// It is equivalent to doing:
+  /// ```dart
+  /// switch (sealedClass) {
+  ///   case Subclass(:final field):
+  ///     return ...;
+  ///   case _:
+  ///     return null;
+  /// }
+  /// ```
+
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? loading,
+    TResult? Function(List<LatestMeasurementDisplayModel> lists)? loaded,
+    TResult? Function()? failed,
+  }) {
+    final _that = this;
+    switch (_that) {
+      case SearchWidgetsStateLoading() when loading != null:
+        return loading();
+      case SearchWidgetsStateLoaded() when loaded != null:
+        return loaded(_that.lists);
+      case SearchWidgetsStateFailed() when failed != null:
+        return failed();
+      case _:
+        return null;
+    }
+  }
 }
 
 /// @nodoc

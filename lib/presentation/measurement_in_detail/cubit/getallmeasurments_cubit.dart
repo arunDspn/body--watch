@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
-import 'package:watcha_body/data/domain/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 
 part 'getallmeasurments_state.dart';
@@ -24,14 +24,18 @@ class GetSingleMeasurmentsDetailsCubit
   }) async {
     emit(const GetSingleMeasurmentsDetailsState.loading());
 
-    final _result = await measurementRepository.getDetailsByDate(
-      type: type,
-      preferredWeightUnit: EnumToString.convertToString(
-        appPreferences.weightUnit,
-      ),
-      preferredLengthUnit: EnumToString.convertToString(
-        appPreferences.lengthUnit,
-      ),
+    final _result =
+        await measurementRepository.getMeasurementItemDataByDateRange(
+      endDate: DateTime.now(),
+      startDate: DateTime.now().subtract(const Duration(days: 7)),
+      measurementItemId: -1,
+      // type: type,
+      // preferredWeightUnit: EnumToString.convertToString(
+      //   appPreferences.weightUnit,
+      // ),
+      // preferredLengthUnit: EnumToString.convertToString(
+      //   appPreferences.lengthUnit,
+      // ),
       // startDate: enumToStartDate(durationsEnum),
     );
 
