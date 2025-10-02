@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
+import 'package:watcha_body/data/domain/measurement/models/measurement_model.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/presentation/display_models/measurement_display.dart';
@@ -17,56 +19,67 @@ class GetallwidgetsdataBloc
       switch (event) {
         case _FetchAllData():
           emit(const GetallwidgetsdataState.loading());
-          final _addedWidgets = await measurementRepository.getAddedTypes();
 
-          // emit(const GetallwidgetsdataState.success([]));
-
-          await _addedWidgets.fold(
-            (l) {
-              emit(GetallwidgetsdataState.failure(l));
-            },
-            (addedWidgets) async {
-              final currentDate = DateTime.now();
-              final endDate = DateTime(
-                currentDate.year,
-                currentDate.month - 2,
-              );
-
-              final _allDetailsresult =
-                  await measurementRepository.getMeasurementItemDataByDateRange(
-                // preferredWeightUnit: EnumToString.convertToString(
-                //   appPreferences.weightUnit,
-                // ),
-                // preferredLengthUnit: EnumToString.convertToString(
-                //   appPreferences.lengthUnit,
-                // ),
-                startDate: currentDate,
-                endDate: endDate,
-                measurementItemId: -1, // all types
-              );
-
-              //TODO: I think we can directly groupby the widget type
-              _allDetailsresult.fold(
-                (l) => emit(GetallwidgetsdataState.failure(l)),
-                (allDetails) {
-                  final _allDetails = <LatestMeasurementDisplayModel>[];
-                  for (final e in addedWidgets) {
-                    final _measurement = allDetails
-                        .where((element) => element.type == e)
-                        .toList();
-                    final _measurementDisplay =
-                        LatestMeasurementDisplayModel.fromMeasurementList(
-                      measurement: _measurement,
-                      startDate: currentDate,
-                      endDate: endDate,
-                    );
-                    _allDetails.add(_measurementDisplay);
-                  }
-                  emit(GetallwidgetsdataState.success(_allDetails));
-                },
-              );
-            },
+          final data = await measurementRepository.getLatestThreeMeasurements();
+          data.fold(
+            (l) => emit(GetallwidgetsdataState.failure(l)),
+            (r) => emit(
+              GetallwidgetsdataState.success(
+                widgets: r,
+              ),
+            ),
           );
+
+        // final _addedWidgets = await measurementRepository.getAddedTypes();
+
+        // emit(const GetallwidgetsdataState.success([]));
+
+        // await _addedWidgets.fold(
+        //   (l) {
+        //     emit(GetallwidgetsdataState.failure(l));
+        //   },
+        //   (addedWidgets) async {
+        //     final currentDate = DateTime.now();
+        //     final endDate = DateTime(
+        //       currentDate.year,
+        //       currentDate.month - 2,
+        //     );
+
+        //     final _allDetailsresult =
+        //         await measurementRepository.getMeasurementItemDataByDateRange(
+        //       // preferredWeightUnit: EnumToString.convertToString(
+        //       //   appPreferences.weightUnit,
+        //       // ),
+        //       // preferredLengthUnit: EnumToString.convertToString(
+        //       //   appPreferences.lengthUnit,
+        //       // ),
+        //       startDate: currentDate,
+        //       endDate: endDate,
+        //       measurementItemId: -1, // all types
+        //     );
+
+        //TODO: I think we can directly groupby the widget type
+        // _allDetailsresult.fold(
+        //   (l) => emit(GetallwidgetsdataState.failure(l)),
+        //   (allDetails) {
+        //     final _allDetails = <LatestMeasurementDisplayModel>[];
+        //     for (final e in addedWidgets) {
+        //       final _measurement = allDetails
+        //           .where((element) => element.type == e)
+        //           .toList();
+        //       final _measurementDisplay =
+        //           LatestMeasurementDisplayModel.fromMeasurementList(
+        //         measurement: _measurement,
+        //         startDate: currentDate,
+        //         endDate: endDate,
+        //       );
+        //       _allDetails.add(_measurementDisplay);
+        //     }
+        //     emit(GetallwidgetsdataState.success(_allDetails));
+        //   },
+        // );
+        // },
+        // );
       }
 
       // await event.map(

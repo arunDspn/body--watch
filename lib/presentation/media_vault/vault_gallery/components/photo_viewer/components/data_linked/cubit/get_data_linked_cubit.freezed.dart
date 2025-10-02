@@ -155,7 +155,7 @@ extension GetDataLinkedStatePatterns on GetDataLinkedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<Measurement> dataLinked)? loaded,
+    TResult Function(List<MeasurementEntity> dataLinked)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -191,7 +191,7 @@ extension GetDataLinkedStatePatterns on GetDataLinkedState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<Measurement> dataLinked) loaded,
+    required TResult Function(List<MeasurementEntity> dataLinked) loaded,
     required TResult Function(String message) error,
   }) {
     final _that = this;
@@ -223,7 +223,7 @@ extension GetDataLinkedStatePatterns on GetDataLinkedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<Measurement> dataLinked)? loaded,
+    TResult? Function(List<MeasurementEntity> dataLinked)? loaded,
     TResult? Function(String message)? error,
   }) {
     final _that = this;
@@ -287,11 +287,12 @@ class GetDataLinkedStateLoading implements GetDataLinkedState {
 /// @nodoc
 
 class GetDataLinkedStateLoaded implements GetDataLinkedState {
-  const GetDataLinkedStateLoaded({required final List<Measurement> dataLinked})
+  const GetDataLinkedStateLoaded(
+      {required final List<MeasurementEntity> dataLinked})
       : _dataLinked = dataLinked;
 
-  final List<Measurement> _dataLinked;
-  List<Measurement> get dataLinked {
+  final List<MeasurementEntity> _dataLinked;
+  List<MeasurementEntity> get dataLinked {
     if (_dataLinked is EqualUnmodifiableListView) return _dataLinked;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_dataLinked);
@@ -331,7 +332,7 @@ abstract mixin class $GetDataLinkedStateLoadedCopyWith<$Res>
           $Res Function(GetDataLinkedStateLoaded) _then) =
       _$GetDataLinkedStateLoadedCopyWithImpl;
   @useResult
-  $Res call({List<Measurement> dataLinked});
+  $Res call({List<MeasurementEntity> dataLinked});
 }
 
 /// @nodoc
@@ -352,7 +353,7 @@ class _$GetDataLinkedStateLoadedCopyWithImpl<$Res>
       dataLinked: null == dataLinked
           ? _self._dataLinked
           : dataLinked // ignore: cast_nullable_to_non_nullable
-              as List<Measurement>,
+              as List<MeasurementEntity>,
     ));
   }
 }

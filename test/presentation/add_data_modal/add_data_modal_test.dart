@@ -15,7 +15,7 @@ void main() {
           home: Builder(
             builder: (context) {
               SizeConfig().init(context);
-              return const AddDataModal(
+              return const AddorEditMeasurementTargetModal(
                 type: MeasurementType(name: 'mas'),
               );
             },

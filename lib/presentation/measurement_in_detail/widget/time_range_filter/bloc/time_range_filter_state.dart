@@ -5,11 +5,11 @@ sealed class TimeRangeFilterState with _$TimeRangeFilterState {
   const factory TimeRangeFilterState.state({
     required DateTime startDate,
     required DateTime endDate,
-    required List<Measurement> filteredMeasurements,
+    required List<MeasurementEntity> filteredMeasurements,
     required TimeUnit timeUnit,
     required bool nextable,
-    required Measurement? previousMeasurement,
-    required Measurement? nextMeasurement,
+    required MeasurementEntity? previousMeasurement,
+    required MeasurementEntity? nextMeasurement,
   }) = TimeRangeFilterStateState;
   const factory TimeRangeFilterState.loading() = TimeRangeFilterStateLoading;
 }

@@ -20,7 +20,8 @@ class DatabaseService {
   static const String userSettingsTable = 'user_settings';
 
   /// All measurement data will be stored in this table
-  static const String tableName = 'measurements';
+  // TODO: change table name to measurementsData
+  static const String measurementsDataTable = 'measurements';
 
   /// metrics table
   /// stores base metrics with their standard unit
@@ -136,7 +137,7 @@ class DatabaseService {
     CREATE TABLE $measurementTargetsTable (
       "id" INTEGER,
       "name" TEXT NOT NULL UNIQUE,
-      "code" TEXT NOT NULL UNIQUE,
+      "code" TEXT NOT NULL UNIQUE, -- e.g., 'weight', 'height', 'chest', 'waist' from metrics table
       "type" TEXT NOT NULL CHECK(type IN ('muscle', 'body')),
       "category" TEXT NOT NULL,
       "display_order" INTEGER NOT NULL DEFAULT 0,

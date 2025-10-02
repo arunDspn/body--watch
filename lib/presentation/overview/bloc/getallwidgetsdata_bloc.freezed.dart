@@ -14,65 +14,25 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$GetallwidgetsdataEvent {
-  AppPreferences get appPreferences;
-
-  /// Create a copy of GetallwidgetsdataEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $GetallwidgetsdataEventCopyWith<GetallwidgetsdataEvent> get copyWith =>
-      _$GetallwidgetsdataEventCopyWithImpl<GetallwidgetsdataEvent>(
-          this as GetallwidgetsdataEvent, _$identity);
-
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is GetallwidgetsdataEvent &&
-            (identical(other.appPreferences, appPreferences) ||
-                other.appPreferences == appPreferences));
+        (other.runtimeType == runtimeType && other is GetallwidgetsdataEvent);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, appPreferences);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   String toString() {
-    return 'GetallwidgetsdataEvent(appPreferences: $appPreferences)';
+    return 'GetallwidgetsdataEvent()';
   }
 }
 
 /// @nodoc
-abstract mixin class $GetallwidgetsdataEventCopyWith<$Res> {
-  factory $GetallwidgetsdataEventCopyWith(GetallwidgetsdataEvent value,
-          $Res Function(GetallwidgetsdataEvent) _then) =
-      _$GetallwidgetsdataEventCopyWithImpl;
-  @useResult
-  $Res call({AppPreferences appPreferences});
-}
-
-/// @nodoc
-class _$GetallwidgetsdataEventCopyWithImpl<$Res>
-    implements $GetallwidgetsdataEventCopyWith<$Res> {
-  _$GetallwidgetsdataEventCopyWithImpl(this._self, this._then);
-
-  final GetallwidgetsdataEvent _self;
-  final $Res Function(GetallwidgetsdataEvent) _then;
-
-  /// Create a copy of GetallwidgetsdataEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? appPreferences = null,
-  }) {
-    return _then(_self.copyWith(
-      appPreferences: null == appPreferences
-          ? _self.appPreferences
-          : appPreferences // ignore: cast_nullable_to_non_nullable
-              as AppPreferences,
-    ));
-  }
+class $GetallwidgetsdataEventCopyWith<$Res> {
+  $GetallwidgetsdataEventCopyWith(
+      GetallwidgetsdataEvent _, $Res Function(GetallwidgetsdataEvent) __);
 }
 
 /// Adds pattern-matching-related methods to [GetallwidgetsdataEvent].
@@ -168,13 +128,13 @@ extension GetallwidgetsdataEventPatterns on GetallwidgetsdataEvent {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(AppPreferences appPreferences)? fetchAllData,
+    TResult Function()? fetchAllData,
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _FetchAllData() when fetchAllData != null:
-        return fetchAllData(_that.appPreferences);
+        return fetchAllData();
       case _:
         return orElse();
     }
@@ -195,12 +155,12 @@ extension GetallwidgetsdataEventPatterns on GetallwidgetsdataEvent {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(AppPreferences appPreferences) fetchAllData,
+    required TResult Function() fetchAllData,
   }) {
     final _that = this;
     switch (_that) {
       case _FetchAllData():
-        return fetchAllData(_that.appPreferences);
+        return fetchAllData();
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -220,12 +180,12 @@ extension GetallwidgetsdataEventPatterns on GetallwidgetsdataEvent {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(AppPreferences appPreferences)? fetchAllData,
+    TResult? Function()? fetchAllData,
   }) {
     final _that = this;
     switch (_that) {
       case _FetchAllData() when fetchAllData != null:
-        return fetchAllData(_that.appPreferences);
+        return fetchAllData();
       case _:
         return null;
     }
@@ -235,69 +195,20 @@ extension GetallwidgetsdataEventPatterns on GetallwidgetsdataEvent {
 /// @nodoc
 
 class _FetchAllData implements GetallwidgetsdataEvent {
-  const _FetchAllData({required this.appPreferences});
-
-  @override
-  final AppPreferences appPreferences;
-
-  /// Create a copy of GetallwidgetsdataEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$FetchAllDataCopyWith<_FetchAllData> get copyWith =>
-      __$FetchAllDataCopyWithImpl<_FetchAllData>(this, _$identity);
+  const _FetchAllData();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _FetchAllData &&
-            (identical(other.appPreferences, appPreferences) ||
-                other.appPreferences == appPreferences));
+        (other.runtimeType == runtimeType && other is _FetchAllData);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, appPreferences);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   String toString() {
-    return 'GetallwidgetsdataEvent.fetchAllData(appPreferences: $appPreferences)';
-  }
-}
-
-/// @nodoc
-abstract mixin class _$FetchAllDataCopyWith<$Res>
-    implements $GetallwidgetsdataEventCopyWith<$Res> {
-  factory _$FetchAllDataCopyWith(
-          _FetchAllData value, $Res Function(_FetchAllData) _then) =
-      __$FetchAllDataCopyWithImpl;
-  @override
-  @useResult
-  $Res call({AppPreferences appPreferences});
-}
-
-/// @nodoc
-class __$FetchAllDataCopyWithImpl<$Res>
-    implements _$FetchAllDataCopyWith<$Res> {
-  __$FetchAllDataCopyWithImpl(this._self, this._then);
-
-  final _FetchAllData _self;
-  final $Res Function(_FetchAllData) _then;
-
-  /// Create a copy of GetallwidgetsdataEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? appPreferences = null,
-  }) {
-    return _then(_FetchAllData(
-      appPreferences: null == appPreferences
-          ? _self.appPreferences
-          : appPreferences // ignore: cast_nullable_to_non_nullable
-              as AppPreferences,
-    ));
+    return 'GetallwidgetsdataEvent.fetchAllData()';
   }
 }
 
@@ -445,7 +356,7 @@ extension GetallwidgetsdataStatePatterns on GetallwidgetsdataState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failure,
-    TResult Function(List<LatestMeasurementDisplayModel> widgets)? success,
+    TResult Function(Map<String, List<MeasurementModel>> widgets)? success,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -481,7 +392,7 @@ extension GetallwidgetsdataStatePatterns on GetallwidgetsdataState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String cause) failure,
-    required TResult Function(List<LatestMeasurementDisplayModel> widgets)
+    required TResult Function(Map<String, List<MeasurementModel>> widgets)
         success,
   }) {
     final _that = this;
@@ -514,7 +425,7 @@ extension GetallwidgetsdataStatePatterns on GetallwidgetsdataState {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(String cause)? failure,
-    TResult? Function(List<LatestMeasurementDisplayModel> widgets)? success,
+    TResult? Function(Map<String, List<MeasurementModel>> widgets)? success,
   }) {
     final _that = this;
     switch (_that) {
@@ -644,14 +555,14 @@ class _$GetallwidgetsdataStateFailureCopyWithImpl<$Res>
 
 class GetallwidgetsdataStateSuccess implements GetallwidgetsdataState {
   const GetallwidgetsdataStateSuccess(
-      final List<LatestMeasurementDisplayModel> widgets)
+      {required final Map<String, List<MeasurementModel>> widgets})
       : _widgets = widgets;
 
-  final List<LatestMeasurementDisplayModel> _widgets;
-  List<LatestMeasurementDisplayModel> get widgets {
-    if (_widgets is EqualUnmodifiableListView) return _widgets;
+  final Map<String, List<MeasurementModel>> _widgets;
+  Map<String, List<MeasurementModel>> get widgets {
+    if (_widgets is EqualUnmodifiableMapView) return _widgets;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_widgets);
+    return EqualUnmodifiableMapView(_widgets);
   }
 
   /// Create a copy of GetallwidgetsdataState
@@ -688,7 +599,7 @@ abstract mixin class $GetallwidgetsdataStateSuccessCopyWith<$Res>
           $Res Function(GetallwidgetsdataStateSuccess) _then) =
       _$GetallwidgetsdataStateSuccessCopyWithImpl;
   @useResult
-  $Res call({List<LatestMeasurementDisplayModel> widgets});
+  $Res call({Map<String, List<MeasurementModel>> widgets});
 }
 
 /// @nodoc
@@ -706,10 +617,10 @@ class _$GetallwidgetsdataStateSuccessCopyWithImpl<$Res>
     Object? widgets = null,
   }) {
     return _then(GetallwidgetsdataStateSuccess(
-      null == widgets
+      widgets: null == widgets
           ? _self._widgets
           : widgets // ignore: cast_nullable_to_non_nullable
-              as List<LatestMeasurementDisplayModel>,
+              as Map<String, List<MeasurementModel>>,
     ));
   }
 }

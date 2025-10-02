@@ -1,11 +1,14 @@
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
+import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
+import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
+import 'package:watcha_body/data/domain/measurement/models/measurement_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/chart_2/charts_view2.dart';
@@ -150,9 +153,9 @@ class OverView extends StatelessWidget {
           listener: (context, state) {
             switch (state) {
               case GetallwidgetsdataStateSuccess(:final widgets):
-                context
-                    .read<SearchWidgetsBloc>()
-                    .add(SearchWidgetsEvent.addData(list: widgets));
+                // context
+                //     .read<SearchWidgetsBloc>()
+                //     .add(SearchWidgetsEvent.addData(list: widgets));
                 break;
 
               default:
@@ -171,7 +174,9 @@ class OverView extends StatelessWidget {
               GetallwidgetsdataStateSuccess(:final widgets)
                   when widgets.isEmpty =>
                 const _EmptyWidgetList(),
-              GetallwidgetsdataStateSuccess() => const SearchView(),
+              GetallwidgetsdataStateSuccess(:final widgets) => SearchView(
+                  widgets: widgets,
+                ),
               GetallwidgetsdataStateFailure(:final cause) => Text(cause),
             };
 
@@ -295,26 +300,36 @@ class _ElseCase extends StatelessWidget {
 class SearchView extends StatelessWidget {
   const SearchView({
     super.key,
+    required this.widgets,
   });
+
+  final Map<String, List<MeasurementModel>> widgets;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(120),
-        child: _SearchBar(),
-      ),
-      body: BlocBuilder<SearchWidgetsBloc, SearchWidgetsState>(
-        builder: (context, state) {
-          return switch (state) {
-            SearchWidgetsStateLoading() =>
-              const Center(child: CircularProgressIndicator()),
-            SearchWidgetsStateFailed() => const Text('Utter'),
-            SearchWidgetsStateLoaded(
-              :final lists
-            ) => // return _ReorderableWidgetList(list: value.lists);
-              WidgetList(list: lists),
-          };
+      // appBar: const PreferredSize(
+      //   preferredSize: Size.fromHeight(120),
+      //   child: _SearchBar(),
+      // ),
+      // body: BlocBuilder<SearchWidgetsBloc, SearchWidgetsState>(
+      //   builder: (context, state) {
+      //     return switch (state) {
+      //       SearchWidgetsStateLoading() =>
+      //         const Center(child: CircularProgressIndicator()),
+      //       SearchWidgetsStateFailed() => const Text('Utter'),
+      //       SearchWidgetsStateLoaded(
+      //         :final lists
+      //       ) => // return _ReorderableWidgetList(list: value.lists);
+      //         WidgetList(list: lists),
+      //     };
+      //   },
+      body: ListView.builder(
+        itemCount: widgets.keys.length,
+        itemBuilder: (context, index) {
+          final widget = widgets[widgets.keys.elementAt(index)];
+          return _WidgetBox(
+              key: Key(widget!.first.id.toString()), data: widget);
         },
       ),
     );
@@ -422,7 +437,7 @@ class _SearchBarState extends State<_SearchBar> {
 class WidgetList extends StatelessWidget {
   const WidgetList({super.key, required this.list});
 
-  final List<LatestMeasurementDisplayModel> list;
+  final List<MeasurementModel> list;
 
   @override
   Widget build(BuildContext context) {
@@ -430,55 +445,55 @@ class WidgetList extends StatelessWidget {
       itemCount: list.length,
       itemBuilder: (context, index) {
         return _WidgetBox(
-          key: Key('${list[index].name.name}box'),
-          data: list[index],
+          key: Key(list.hashCode.toString()),
+          data: list,
         );
       },
     );
   }
 }
 
-class _ReorderableWidgetList extends StatefulWidget {
-  const _ReorderableWidgetList({
-    required this.list,
-  });
-  final List<LatestMeasurementDisplayModel> list;
+// class _ReorderableWidgetList extends StatefulWidget {
+//   const _ReorderableWidgetList({
+//     required this.list,
+//   });
+//   final List<LatestMeasurementDisplayModel> list;
 
-  @override
-  State<_ReorderableWidgetList> createState() => _ReorderableWidgetListState();
-}
+//   @override
+//   State<_ReorderableWidgetList> createState() => _ReorderableWidgetListState();
+// }
 
-class _ReorderableWidgetListState extends State<_ReorderableWidgetList> {
-  late List<LatestMeasurementDisplayModel> reorderList;
+// class _ReorderableWidgetListState extends State<_ReorderableWidgetList> {
+//   late List<LatestMeasurementDisplayModel> reorderList;
 
-  @override
-  void initState() {
-    reorderList = [...widget.list];
-    super.initState();
-  }
+//   @override
+//   void initState() {
+//     reorderList = [...widget.list];
+//     super.initState();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return ReorderableListView.builder(
-      onReorder: (oldIndex, newIndex) {
-        setState(() {
-          if (oldIndex < newIndex) {
-            newIndex -= 1;
-          }
-          final item = reorderList.removeAt(oldIndex);
-          reorderList.insert(newIndex, item);
-        });
-      },
-      itemCount: reorderList.length,
-      itemBuilder: (context, index) {
-        return _WidgetBox(
-          key: Key('${reorderList[index].name.name}box'),
-          data: reorderList[index],
-        );
-      },
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return ReorderableListView.builder(
+//       onReorder: (oldIndex, newIndex) {
+//         setState(() {
+//           if (oldIndex < newIndex) {
+//             newIndex -= 1;
+//           }
+//           final item = reorderList.removeAt(oldIndex);
+//           reorderList.insert(newIndex, item);
+//         });
+//       },
+//       itemCount: reorderList.length,
+//       itemBuilder: (context, index) {
+//         return _WidgetBox(
+//           key: Key('${reorderList[index].name.name}box'),
+//           data: reorderList[index],
+//         );
+//       },
+//     );
+//   }
+// }
 
 class _WidgetBox extends StatefulWidget {
   const _WidgetBox({
@@ -486,7 +501,7 @@ class _WidgetBox extends StatefulWidget {
     required this.data,
   }) : super(key: key);
 
-  final LatestMeasurementDisplayModel data;
+  final List<MeasurementModel> data;
 
   @override
   State<_WidgetBox> createState() => _WidgetBoxState();
@@ -517,10 +532,10 @@ class _WidgetBoxState extends State<_WidgetBox> {
 
   @override
   Widget build(BuildContext context) {
-    late String _unit = '';
-    final _preferences =
-        (context.watch<ApppreferencesBloc>().state as SavedAndReady)
-            .appPreferences;
+    // late String _unit = '';
+    // // final _preferences =
+    // //     (context.watch<ApppreferencesBloc>().state as SavedAndReady)
+    // //         .appPreferences;
 
     // if (widget.data.name is LengthMeasurementType) {
     //   _unit = _preferences.lengthUnitString;
@@ -530,25 +545,38 @@ class _WidgetBoxState extends State<_WidgetBox> {
     //   _unit = '%';
     // }
 
-    final minValue = widget.data.lastThreeMonths.reduce(
+    final minValue = widget.data.reduce(
       (value, element) => value.value < element.value ? value : element,
     );
 
-    final maxValue = widget.data.lastThreeMonths.reduce(
+    final maxValue = widget.data.reduce(
       (value, element) => value.value > element.value ? value : element,
     );
 
     print('rebinfing ------  box');
 
+    final latestData = widget.data.first;
+
+    final delta =
+        widget.data.length > 1 ? latestData.value - widget.data[1].value : null;
+
+    final pref =
+        (context.read<UserPreferencesCubit>().state as UserPreferencesLoaded)
+            .preferences;
+
+    final metricCode = pref.firstWhereOrNull(
+      (element) => element.metricCode == widget.data.last.metricCode,
+    );
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: GestureDetector(
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            MeasurementInDetail.routeName,
-            arguments: widget.data.name,
-          );
+          // Navigator.pushNamed(
+          //   context,
+          //   MeasurementInDetail.routeName,
+          //   arguments: widget.data.,
+          // );
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
@@ -571,7 +599,7 @@ class _WidgetBoxState extends State<_WidgetBox> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: '${widget.data.name.name} · ',
+                              text: '${latestData.targetName} · ',
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall
@@ -580,14 +608,14 @@ class _WidgetBoxState extends State<_WidgetBox> {
                                   ),
                             ),
                             TextSpan(
-                              text: '${widget.data.latest.value} ',
+                              text: '${latestData.value} ',
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall
                                   ?.copyWith(fontWeight: FontWeight.w600),
                             ),
                             TextSpan(
-                              text: _unit,
+                              text: metricCode!.preferredUnit,
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineMedium!
@@ -629,31 +657,28 @@ class _WidgetBoxState extends State<_WidgetBox> {
                         child: Padding(
                           padding: const EdgeInsets.all(5),
                           child: Text(
-                            lastMeasurementDayFormatter
-                                .format(widget.data.latest.date),
+                            lastMeasurementDayFormatter.format(latestData.date),
                             style: Theme.of(context).textTheme.titleMedium,
                             textAlign: TextAlign.left,
                           ),
                         ),
                       ),
-                      if (widget.data.delta != null)
+                      if (delta != null)
                         Row(
                           children: [
                             Align(
                               alignment: Alignment.topLeft,
                               child: Icon(
-                                widget.data.delta! < 0
+                                delta < 0
                                     ? Icons.arrow_drop_down
                                     : Icons.arrow_drop_up,
-                                color: widget.data.delta! < 0
-                                    ? Colors.red
-                                    : Colors.green,
+                                color: delta < 0 ? Colors.red : Colors.green,
                               ),
                             ),
                             Align(
                               alignment: Alignment.topLeft,
                               child: Text(
-                                '${widget.data.delta!.toStringAsFixed(1)} than ${formatDate(widget.data.previous!)}',
+                                '${delta!.toStringAsFixed(1)} than ${formatDate(widget.data[1].date)}',
                                 style: Theme.of(context).textTheme.titleSmall,
                                 textAlign: TextAlign.left,
                               ),
@@ -717,12 +742,8 @@ class _WidgetBoxState extends State<_WidgetBox> {
               // ),
               if (isExpanded)
                 _ExtraDetails(
-                  key: Key('${widget.data.name.name}extraData'),
-                  lastMeasurementDayFormatter: lastMeasurementDayFormatter,
+                  key: Key(widget.data.hashCode.toString()),
                   data: widget.data,
-                  minValue: minValue,
-                  maxValue: maxValue,
-                  unit: _unit,
                 ),
             ],
           ),
@@ -732,24 +753,285 @@ class _WidgetBoxState extends State<_WidgetBox> {
   }
 }
 
+// class _WidgetBox extends StatefulWidget {
+//   const _WidgetBox({
+//     required Key key,
+//     required this.data,
+//   }) : super(key: key);
+
+//   final LatestMeasurementDisplayModel data;
+
+//   @override
+//   State<_WidgetBox> createState() => _WidgetBoxState();
+// }
+
+// class _WidgetBoxState extends State<_WidgetBox> {
+//   final DateFormat formatter = DateFormat('yyyy-MM-dd');
+
+//   final DateFormat lastMeasurementDayFormatter = DateFormat('d MMM');
+
+//   bool isExpanded = false;
+
+//   String formatDate(DateTime date) {
+//     final today = DateTime.now();
+//     final differenceInDays = today.difference(date).inDays;
+
+//     if (differenceInDays == 0) {
+//       return 'Today';
+//     } else if (differenceInDays == 1) {
+//       return 'Yesterday';
+//     } else if (differenceInDays >= 2 && differenceInDays <= 12) {
+//       return '$differenceInDays days ago';
+//     } else {
+//       final formatter = DateFormat('d MMM yyyy');
+//       return formatter.format(date);
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     late String _unit = '';
+//     final _preferences =
+//         (context.watch<ApppreferencesBloc>().state as SavedAndReady)
+//             .appPreferences;
+
+//     // if (widget.data.name is LengthMeasurementType) {
+//     //   _unit = _preferences.lengthUnitString;
+//     // } else if (widget.data.name is WeightMeasurementType) {
+//     //   _unit = _preferences.weightUnitString;
+//     // } else {
+//     //   _unit = '%';
+//     // }
+
+//     final minValue = widget.data.lastThreeMonths.reduce(
+//       (value, element) => value.value < element.value ? value : element,
+//     );
+
+//     final maxValue = widget.data.lastThreeMonths.reduce(
+//       (value, element) => value.value > element.value ? value : element,
+//     );
+
+//     print('rebinfing ------  box');
+
+//     return Padding(
+//       padding: const EdgeInsets.all(8),
+//       child: GestureDetector(
+//         onTap: () {
+//           Navigator.pushNamed(
+//             context,
+//             MeasurementInDetail.routeName,
+//             arguments: widget.data.name,
+//           );
+//         },
+//         child: Container(
+//           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+//           decoration: BoxDecoration(
+//             borderRadius: const BorderRadius.all(
+//               Radius.circular(12),
+//             ),
+//             color: Theme.of(context).colorScheme.primaryContainer,
+//           ),
+//           width: double.infinity,
+//           child: Column(
+//             children: [
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       RichText(
+//                         text: TextSpan(
+//                           children: [
+//                             TextSpan(
+//                               text: '${widget.data.name.name} · ',
+//                               style: Theme.of(context)
+//                                   .textTheme
+//                                   .headlineSmall
+//                                   ?.copyWith(
+//                                     fontWeight: FontWeight.w600,
+//                                   ),
+//                             ),
+//                             TextSpan(
+//                               text: '${widget.data.latest.value} ',
+//                               style: Theme.of(context)
+//                                   .textTheme
+//                                   .headlineSmall
+//                                   ?.copyWith(fontWeight: FontWeight.w600),
+//                             ),
+//                             TextSpan(
+//                               text: _unit,
+//                               style: Theme.of(context)
+//                                   .textTheme
+//                                   .headlineMedium!
+//                                   .copyWith(
+//                                     fontSize: getProportionateScreenWidth(18),
+//                                   ),
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                       // Align(
+//                       //   alignment: Alignment.topLeft,
+//                       //   child: Row(
+//                       //     crossAxisAlignment: CrossAxisAlignment.end,
+//                       //     children: [
+//                       //       Text(
+//                       //         '${data.name.name} : ${data.latest.value} ',
+//                       //         style: Theme.of(context)
+//                       //             .textTheme
+//                       //             .headlineSmall
+//                       //             ?.copyWith(fontWeight: FontWeight.w600),
+//                       //         textAlign: TextAlign.center,
+//                       //       ),
+//                       //       Text(
+//                       //         _unit,
+//                       //         style: Theme.of(context)
+//                       //             .textTheme
+//                       //             .headlineMedium!
+//                       //             .copyWith(
+//                       //               fontSize: getProportionateScreenWidth(18),
+//                       //             ),
+//                       //         textAlign: TextAlign.center,
+//                       //       ),
+//                       //     ],
+//                       //   ),
+//                       // ),
+//                       Align(
+//                         alignment: Alignment.topLeft,
+//                         child: Padding(
+//                           padding: const EdgeInsets.all(5),
+//                           child: Text(
+//                             lastMeasurementDayFormatter
+//                                 .format(widget.data.latest.date),
+//                             style: Theme.of(context).textTheme.titleMedium,
+//                             textAlign: TextAlign.left,
+//                           ),
+//                         ),
+//                       ),
+//                       if (widget.data.delta != null)
+//                         Row(
+//                           children: [
+//                             Align(
+//                               alignment: Alignment.topLeft,
+//                               child: Icon(
+//                                 widget.data.delta! < 0
+//                                     ? Icons.arrow_drop_down
+//                                     : Icons.arrow_drop_up,
+//                                 color: widget.data.delta! < 0
+//                                     ? Colors.red
+//                                     : Colors.green,
+//                               ),
+//                             ),
+//                             Align(
+//                               alignment: Alignment.topLeft,
+//                               child: Text(
+//                                 '${widget.data.delta!.toStringAsFixed(1)} than ${formatDate(widget.data.previous!)}',
+//                                 style: Theme.of(context).textTheme.titleSmall,
+//                                 textAlign: TextAlign.left,
+//                               ),
+//                             ),
+//                           ],
+//                         )
+//                       else
+//                         const Text('No previous data'),
+//                     ],
+//                   ),
+//                   Column(
+//                     children: [
+//                       IconButton(
+//                         onPressed: () {
+//                           // showModalBottomSheet<void>(
+//                           //   context: context,
+//                           //   builder: (context) {
+//                           //     return BackdropFilter(
+//                           //       filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+//                           //       child: AddDataModal.add(
+//                           //         type: widget.data.name,
+//                           //       ),
+//                           //     );
+//                           //   },
+//                           // );
+//                         },
+//                         icon: Icon(
+//                           Icons.add,
+//                           color: Theme.of(context).colorScheme.primary,
+//                           size: getProportionateScreenHeight(30),
+//                         ),
+//                       ),
+//                       IconButton(
+//                         onPressed: () {
+//                           setState(() {
+//                             isExpanded = !isExpanded;
+//                           });
+//                         },
+//                         icon: Icon(
+//                           !isExpanded
+//                               ? Icons.expand_more_outlined
+//                               : Icons.expand_less_outlined,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//               // Row(
+//               //   children: [
+//               //     const Spacer(),
+//               //     IconButton(
+//               //       onPressed: () {
+//               //         setState(() {
+//               //           isExpanded = !isExpanded;
+//               //         });
+//               //       },
+//               //       icon: const Icon(Icons.expand_circle_down),
+//               //     ),
+//               //   ],
+//               // ),
+//               // if (isExpanded)
+//               //   _ExtraDetails(
+//               //     key: Key('${widget.data.name.name}extraData'),
+//               //     lastMeasurementDayFormatter: lastMeasurementDayFormatter,
+//               //     data: widget.data,
+//               //     minValue: minValue,
+//               //     maxValue: maxValue,
+//               //     unit: _unit,
+//               //   ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 class _ExtraDetails extends StatelessWidget {
   const _ExtraDetails({
     required super.key,
-    required this.lastMeasurementDayFormatter,
     required this.data,
-    required this.minValue,
-    required this.maxValue,
-    required String unit,
-  }) : _unit = unit;
+  });
 
-  final DateFormat lastMeasurementDayFormatter;
-  final LatestMeasurementDisplayModel data;
-  final Measurement minValue;
-  final Measurement maxValue;
-  final String _unit;
+  final List<MeasurementModel> data;
 
   @override
   Widget build(BuildContext context) {
+    final lastMeasurementDayFormatter = DateFormat('d MMM');
+    final startDate = data.first.date;
+    final endDate = data.last.date;
+    final minValue = data.reduce(
+      (value, element) => value.value < element.value ? value : element,
+    );
+    final maxValue = data.reduce(
+      (value, element) => value.value > element.value ? value : element,
+    );
+
+    final pref =
+        (context.read<UserPreferencesCubit>().state as UserPreferencesLoaded)
+            .preferences;
+
+    final metricCode = pref.firstWhereOrNull(
+      (element) => element.metricCode == data.last.metricCode,
+    );
     print('rebuiling ---- extra det');
     return Column(
       children: [
@@ -781,7 +1063,7 @@ class _ExtraDetails extends StatelessWidget {
                     children: [
                       TextSpan(
                         text:
-                            '${lastMeasurementDayFormatter.format(data.startDate)} - ${lastMeasurementDayFormatter.format(data.endDate)}\n',
+                            '${lastMeasurementDayFormatter.format(startDate)} - ${lastMeasurementDayFormatter.format(endDate)}\n',
                         style:
                             Theme.of(context).textTheme.labelMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
@@ -796,7 +1078,8 @@ class _ExtraDetails extends StatelessWidget {
                       //       ?.copyWith(fontWeight: FontWeight.w600),
                       // ),
                       TextSpan(
-                        text: '${minValue.value} - ${maxValue.value} $_unit',
+                        text:
+                            '${minValue.value} - ${maxValue.value} ${metricCode!.preferredUnit}\n',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: Theme.of(context).colorScheme.onSurface,
                             ),
@@ -814,20 +1097,20 @@ class _ExtraDetails extends StatelessWidget {
               width: 22,
               // width: 6,
             ),
-            Expanded(
-              child: OverviewMetricsLineGraph(
-                key: Key('${data.name.name}overviewGraph'),
-                filteredMeasurements: data.lastThreeMonths,
-                startDate: data.startDate,
-                endDate: data.endDate,
-                previousMeasurement: null,
-                dayToText: DayToText(
-                  startDate: data.endDate,
-                  endDate: data.startDate,
-                  timeUnit: TimeUnit.threeMonth,
-                ),
-              ),
-            ),
+            // Expanded(
+            //   child: OverviewMetricsLineGraph(
+            //     // key: Key('${data.name.name}overviewGraph'),
+            //     filteredMeasurements: data,
+            //     startDate: startDate,
+            //     endDate: endDate,
+            //     previousMeasurement: null,
+            //     dayToText: DayToText(
+            //       startDate: endDate,
+            //       endDate: startDate,
+            //       timeUnit: TimeUnit.threeMonth,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ],

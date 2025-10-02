@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/delete_measurement_cubit.dart';
@@ -49,11 +49,11 @@ class MeasurementInDetail extends StatelessWidget {
                   ),
                 );
                 // Updating Widgets
-                context.read<GetallwidgetsdataBloc>().add(
-                      GetallwidgetsdataEvent.fetchAllData(
-                        appPreferences: appPref.appPreferences,
-                      ),
-                    );
+                // context.read<GetallwidgetsdataBloc>().add(
+                //       GetallwidgetsdataEvent.fetchAllData(
+                //         appPreferences: appPref.appPreferences,
+                //       ),
+                //     );
                 break;
               case DeleteMeasurementStateError(:final message):
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -78,11 +78,11 @@ class MeasurementInDetail extends StatelessWidget {
                       appPreferences: appPref.appPreferences,
                       // durationsEnum: value.durationsEnum,
                     );
-                context.read<GetallwidgetsdataBloc>().add(
-                      GetallwidgetsdataEvent.fetchAllData(
-                        appPreferences: appPref.appPreferences,
-                      ),
-                    );
+                // context.read<GetallwidgetsdataBloc>().add(
+                //       GetallwidgetsdataEvent.fetchAllData(
+                //         appPreferences: appPref.appPreferences,
+                //       ),
+                //     );
                 break;
               default:
                 // This is the default case, which should never be reached.
@@ -189,7 +189,7 @@ class _MeasurementList extends StatelessWidget {
     // required this.startDate,
   }) : super(key: key);
 
-  final List<Measurement> measurementList;
+  final List<MeasurementEntity> measurementList;
   final MeasurementType measurementType;
   // final DateTime startDate;
 
@@ -280,7 +280,7 @@ class DataView extends StatelessWidget {
     required this.timeUnit,
   });
 
-  final List<Measurement> measurementList;
+  final List<MeasurementEntity> measurementList;
   final MeasurementType measurementType;
   final TimeUnit timeUnit;
 
@@ -498,7 +498,7 @@ class _TableCell extends StatelessWidget {
     required this.measurement,
   }) : super(key: key);
 
-  final Measurement measurement;
+  final MeasurementEntity measurement;
 
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
 
@@ -547,9 +547,9 @@ class _TableCell extends StatelessWidget {
                 //   },
                 // );
               } else if (value == 'delete') {
-                context
-                    .read<DeleteMeasurementCubit>()
-                    .delete(id: measurement.id!);
+                // context
+                //     .read<DeleteMeasurementCubit>()
+                //     .delete(id: measurement.id!);
               }
             },
             itemBuilder: (BuildContext context) {

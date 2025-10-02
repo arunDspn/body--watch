@@ -3,9 +3,11 @@ import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/domain/measurement/i_measurements.dart';
-import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
+import 'package:watcha_body/data/domain/measurement/models/measurement_model.dart';
 import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/data/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/data/domain/models/two_dates_record_model.dart';
@@ -39,17 +41,19 @@ class MeasurementRepository extends IMeasurementsFacade {
 
   @override
   Future<Either<String, Unit>> createMeasurement({
-    required Measurement measurement,
+    required MeasurementEntity measurement,
   }) async {
-    // try {
-    //   await databaseService.insert(
-    //     map: measurement.toMap(),
-    //   );
-    //   return const Right(unit);
-    // } catch (e) {
-    //   return Left(e.toString());
-    // }
-    throw UnimplementedError();
+    try {
+      final db = await databaseService.database;
+      await db.insert(
+        DatabaseService.measurementsDataTable,
+        measurement.toJson()..remove('id'),
+        conflictAlgorithm: ConflictAlgorithm.abort,
+      );
+      return const Right(unit);
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 
   @override
@@ -101,7 +105,7 @@ class MeasurementRepository extends IMeasurementsFacade {
   double _convertKgToPound(double kg) => (kg * 2.20462262).toFixedOfTwo();
 
   @override
-  Future<Either<String, List<Measurement>>> getLatestDetails() async {
+  Future<Either<String, List<MeasurementEntity>>> getLatestDetails() async {
     // try {
     // //   final _db = await databaseService.database;
     // //   final _data = await _db.rawQuery(_lastestQueryBard1);
@@ -123,41 +127,43 @@ class MeasurementRepository extends IMeasurementsFacade {
     throw UnimplementedError();
   }
 
-  List<Measurement> _convertToPreferredUnits(
-    List<Measurement> measurements,
+  List<MeasurementEntity> _convertToPreferredUnits(
+    List<MeasurementEntity> measurements,
     String preferredWeightUnit,
     String preferredLengthUnit,
   ) {
-    return measurements.map((e) {
-      if (e.unit == 'inch' || e.unit == 'cm') {
-        if (e.unit != preferredLengthUnit) {
-          if (preferredLengthUnit == 'inch') {
-            return e.copyWith(value: _convertCmToInch(e.value));
-          } else {
-            return e.copyWith(value: _convertInchToCm(e.value));
-          }
-          // e.copyWith(unit: preferredLengthUnit);
-        }
-        return e;
-      } else if (e.unit == 'kg' || e.unit == 'lbs') {
-        if (e.unit != preferredWeightUnit) {
-          if (preferredWeightUnit == 'kg') {
-            return e.copyWith(value: _convertPoundToKg(e.value));
-          } else {
-            return e.copyWith(value: _convertKgToPound(e.value));
-          }
-          // e.copyWith(unit: preferredWeightUnit);
-        }
-        return e;
-      } else {
-        return e;
-      }
-    }).toList();
+    // return measurements.map((e) {
+    //   if (e.unit == 'inch' || e.unit == 'cm') {
+    //     if (e.unit != preferredLengthUnit) {
+    //       if (preferredLengthUnit == 'inch') {
+    //         return e.copyWith(value: _convertCmToInch(e.value));
+    //       } else {
+    //         return e.copyWith(value: _convertInchToCm(e.value));
+    //       }
+    //       // e.copyWith(unit: preferredLengthUnit);
+    //     }
+    //     return e;
+    //   } else if (e.unit == 'kg' || e.unit == 'lbs') {
+    //     if (e.unit != preferredWeightUnit) {
+    //       if (preferredWeightUnit == 'kg') {
+    //         return e.copyWith(value: _convertPoundToKg(e.value));
+    //       } else {
+    //         return e.copyWith(value: _convertKgToPound(e.value));
+    //       }
+    //       // e.copyWith(unit: preferredWeightUnit);
+    //     }
+    //     return e;
+    //   } else {
+    //     return e;
+    //   }
+    // }).toList();
+
+    throw UnimplementedError();
   }
 
   @override
   Future<Either<String, Unit>> updateMeasurement({
-    required Measurement measurement,
+    required MeasurementEntity measurement,
   }) async {
     // try {
     //   await databaseService.update(
@@ -306,7 +312,7 @@ ORDER BY mt.display_order;
   }
 
   @override
-  Future<Either<String, List<Measurement>>> getAllMeasurementsByDate({
+  Future<Either<String, List<MeasurementEntity>>> getAllMeasurementsByDate({
     required DateTime date,
   }) async {
     try {
@@ -331,8 +337,9 @@ ORDER BY mt.display_order;
       ''',
         whereArgs,
       );
-      final _dData = result.map(Measurement.fromMap).toList();
-      return Right(_dData);
+      // final _dData = result.map(MeasurementEntity.fromMap).toList();
+      // return Right(_dData);
+      throw UnimplementedError();
     } catch (e) {
       return Left(e.toString());
     }
@@ -399,23 +406,24 @@ ORDER BY mt.display_order;
         ],
       );
 
-      final dataOne = resultOne.map(Measurement.fromMap).toList();
-      final dataTwo = resultTwo.map(Measurement.fromMap).toList();
+      throw UnimplementedError();
+      // final dataOne = resultOne.map(MeasurementEntity.fromMap).toList();
+      // final dataTwo = resultTwo.map(MeasurementEntity.fromMap).toList();
 
-      var namesSet = dataOne.map((e) => e.type).toSet();
-      namesSet = namesSet.union(dataTwo.map((e) => e.type).toSet());
+      // var namesSet = dataOne.map((e) => e.type).toSet();
+      // namesSet = namesSet.union(dataTwo.map((e) => e.type).toSet());
 
-      final data = namesSet.map((e) {
-        return TwoDatesRecord(
-          name: e,
-          data1:
-              dataOne.firstWhereOrNull((element) => element.type == e)?.value,
-          data2:
-              dataTwo.firstWhereOrNull((element) => element.type == e)?.value,
-        );
-      }).toList();
+      // final data = namesSet.map((e) {
+      //   return TwoDatesRecord(
+      //     name: e,
+      //     data1:
+      //         dataOne.firstWhereOrNull((element) => element.type == e)?.value,
+      //     data2:
+      //         dataTwo.firstWhereOrNull((element) => element.type == e)?.value,
+      //   );
+      // }).toList();
 
-      return Right(data);
+      // return Right(data);
 
       // return right(result.map(TwoDatesRecord.fromJson).toList());
     } catch (exception) {
@@ -436,13 +444,67 @@ ORDER BY mt.display_order;
   }
 
   @override
-  Future<Either<String, List<Measurement>>> getMeasurementItemDataByDateRange({
+  Future<Either<String, List<MeasurementEntity>>>
+      getMeasurementItemDataByDateRange({
     required DateTime startDate,
     required DateTime endDate,
     required int measurementItemId,
   }) {
     // TODO: implement getMeasurementItemDataByDateRange
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<String, Map<String, List<MeasurementModel>>>>
+      getLatestThreeMeasurements({
+    int userId = 1,
+  }) async {
+    try {
+      final db = await databaseService.database;
+      final result = await db.rawQuery(
+        '''
+SELECT 
+  m.id,
+  m.value,
+  m.date,
+  m.notes,
+  m.target_id,
+  m.created_at,
+  m.updated_at,
+  mt.name as target_name,
+  mt.type,
+  met.code as metric_code,
+  met.base_unit
+FROM (
+  SELECT 
+    *,
+    ROW_NUMBER() OVER (PARTITION BY target_id ORDER BY date DESC, id DESC) as rn
+  FROM measurements
+  WHERE user_id = ?
+) m
+INNER JOIN measurement_targets mt ON m.target_id = mt.id
+INNER JOIN target_metrics tm ON mt.id = tm.target_id
+INNER JOIN metrics met ON tm.metric_id = met.id
+WHERE m.rn <= 3
+ORDER BY m.target_id, m.date DESC
+          ''',
+        [userId],
+      );
+      final _dData = result.map(MeasurementModel.fromJson).toList();
+
+      final groupedData = <String, List<MeasurementModel>>{};
+      for (final measurement in _dData) {
+        final type = measurement.targetName;
+        if (groupedData.containsKey(type)) {
+          groupedData[type]!.add(measurement);
+        } else {
+          groupedData[type] = [measurement];
+        }
+      }
+      return Right(groupedData);
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 }
 

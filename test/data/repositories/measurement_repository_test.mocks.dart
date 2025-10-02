@@ -8,8 +8,10 @@ import 'dart:async' as _i5;
 import 'package:dartz/dartz.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:watcha_body/data/data_layer/database_service.dart' as _i2;
-import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart'
+import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart'
     as _i6;
+import 'package:watcha_body/data/domain/measurement/models/measurement_model.dart'
+    as _i9;
 import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart'
     as _i7;
 import 'package:watcha_body/data/domain/models/two_dates_record_model.dart'
@@ -72,7 +74,7 @@ class MockMeasurementRepository extends _i1.Mock
 
   @override
   _i5.Future<_i3.Either<String, _i3.Unit>> createMeasurement(
-          {required _i6.Measurement? measurement}) =>
+          {required _i6.MeasurementEntity? measurement}) =>
       (super.noSuchMethod(
         Invocation.method(
           #createMeasurement,
@@ -110,26 +112,26 @@ class MockMeasurementRepository extends _i1.Mock
       ) as _i5.Future<_i3.Either<String, _i3.Unit>>);
 
   @override
-  _i5.Future<_i3.Either<String, List<_i6.Measurement>>> getLatestDetails() =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getLatestDetails,
-          [],
-        ),
-        returnValue:
-            _i5.Future<_i3.Either<String, List<_i6.Measurement>>>.value(
-                _FakeEither_1<String, List<_i6.Measurement>>(
-          this,
-          Invocation.method(
-            #getLatestDetails,
-            [],
-          ),
-        )),
-      ) as _i5.Future<_i3.Either<String, List<_i6.Measurement>>>);
+  _i5.Future<_i3.Either<String, List<_i6.MeasurementEntity>>>
+      getLatestDetails() => (super.noSuchMethod(
+            Invocation.method(
+              #getLatestDetails,
+              [],
+            ),
+            returnValue: _i5
+                .Future<_i3.Either<String, List<_i6.MeasurementEntity>>>.value(
+                _FakeEither_1<String, List<_i6.MeasurementEntity>>(
+              this,
+              Invocation.method(
+                #getLatestDetails,
+                [],
+              ),
+            )),
+          ) as _i5.Future<_i3.Either<String, List<_i6.MeasurementEntity>>>);
 
   @override
   _i5.Future<_i3.Either<String, _i3.Unit>> updateMeasurement(
-          {required _i6.Measurement? measurement}) =>
+          {required _i6.MeasurementEntity? measurement}) =>
       (super.noSuchMethod(
         Invocation.method(
           #updateMeasurement,
@@ -232,25 +234,26 @@ class MockMeasurementRepository extends _i1.Mock
       ) as _i5.Future<_i3.Either<String, _i3.Unit>>);
 
   @override
-  _i5.Future<_i3.Either<String, List<_i6.Measurement>>>
-      getAllMeasurementsByDate({required DateTime? date}) =>
-          (super.noSuchMethod(
-            Invocation.method(
-              #getAllMeasurementsByDate,
-              [],
-              {#date: date},
-            ),
-            returnValue:
-                _i5.Future<_i3.Either<String, List<_i6.Measurement>>>.value(
-                    _FakeEither_1<String, List<_i6.Measurement>>(
-              this,
-              Invocation.method(
-                #getAllMeasurementsByDate,
-                [],
-                {#date: date},
-              ),
-            )),
-          ) as _i5.Future<_i3.Either<String, List<_i6.Measurement>>>);
+  _i5.Future<
+      _i3.Either<String, List<_i6.MeasurementEntity>>> getAllMeasurementsByDate(
+          {required DateTime? date}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllMeasurementsByDate,
+          [],
+          {#date: date},
+        ),
+        returnValue:
+            _i5.Future<_i3.Either<String, List<_i6.MeasurementEntity>>>.value(
+                _FakeEither_1<String, List<_i6.MeasurementEntity>>(
+          this,
+          Invocation.method(
+            #getAllMeasurementsByDate,
+            [],
+            {#date: date},
+          ),
+        )),
+      ) as _i5.Future<_i3.Either<String, List<_i6.MeasurementEntity>>>);
 
   @override
   _i5.Future<_i3.Either<String, List<_i8.TwoDatesRecord>>>
@@ -300,7 +303,7 @@ class MockMeasurementRepository extends _i1.Mock
       ) as _i5.Future<_i3.Either<String, List<String>>>);
 
   @override
-  _i5.Future<_i3.Either<String, List<_i6.Measurement>>>
+  _i5.Future<_i3.Either<String, List<_i6.MeasurementEntity>>>
       getMeasurementItemDataByDateRange({
     required DateTime? startDate,
     required DateTime? endDate,
@@ -316,9 +319,9 @@ class MockMeasurementRepository extends _i1.Mock
                 #measurementItemId: measurementItemId,
               },
             ),
-            returnValue:
-                _i5.Future<_i3.Either<String, List<_i6.Measurement>>>.value(
-                    _FakeEither_1<String, List<_i6.Measurement>>(
+            returnValue: _i5
+                .Future<_i3.Either<String, List<_i6.MeasurementEntity>>>.value(
+                _FakeEither_1<String, List<_i6.MeasurementEntity>>(
               this,
               Invocation.method(
                 #getMeasurementItemDataByDateRange,
@@ -330,5 +333,27 @@ class MockMeasurementRepository extends _i1.Mock
                 },
               ),
             )),
-          ) as _i5.Future<_i3.Either<String, List<_i6.Measurement>>>);
+          ) as _i5.Future<_i3.Either<String, List<_i6.MeasurementEntity>>>);
+
+  @override
+  _i5.Future<_i3.Either<String, Map<String, List<_i9.MeasurementModel>>>>
+      getLatestThreeMeasurements({int? userId = 1}) => (super.noSuchMethod(
+            Invocation.method(
+              #getLatestThreeMeasurements,
+              [],
+              {#userId: userId},
+            ),
+            returnValue: _i5.Future<
+                    _i3.Either<String,
+                        Map<String, List<_i9.MeasurementModel>>>>.value(
+                _FakeEither_1<String, Map<String, List<_i9.MeasurementModel>>>(
+              this,
+              Invocation.method(
+                #getLatestThreeMeasurements,
+                [],
+                {#userId: userId},
+              ),
+            )),
+          ) as _i5.Future<
+              _i3.Either<String, Map<String, List<_i9.MeasurementModel>>>>);
 }

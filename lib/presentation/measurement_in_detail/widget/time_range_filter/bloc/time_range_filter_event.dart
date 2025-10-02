@@ -12,6 +12,6 @@ sealed class TimeRangeFilterEvent with _$TimeRangeFilterEvent {
       // List<Measurement> allMeasurements,
       ) = _CurrentRange;
   const factory TimeRangeFilterEvent.updateData({
-    required List<Measurement> newMeasurementList,
+    required List<MeasurementEntity> newMeasurementList,
   }) = _UpdateData;
 }

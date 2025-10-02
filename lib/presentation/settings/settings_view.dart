@@ -103,19 +103,19 @@ class SettingsView extends StatelessWidget {
                         );
 
                         // Update Chart and Overview
-                        context.read<GetallwidgetsdataBloc>().add(
-                              GetallwidgetsdataEvent.fetchAllData(
-                                appPreferences:
-                                    (state as SavedAndReady).appPreferences,
-                              ),
-                            );
+                        // context.read<GetallwidgetsdataBloc>().add(
+                        //       GetallwidgetsdataEvent.fetchAllData(
+                        //         appPreferences:
+                        //             (state as SavedAndReady).appPreferences,
+                        //       ),
+                        //     );
 
-                        context.read<ChartdataBloc>().add(
-                              ChartdataEvent.fetchData(
-                                appPreferences: state.appPreferences,
-                                duration: DurationsEnum.month1,
-                              ),
-                            );
+                        // context.read<ChartdataBloc>().add(
+                        //       ChartdataEvent.fetchData(
+                        //         appPreferences: state.appPreferences,
+                        //         duration: DurationsEnum.month1,
+                        //       ),
+                        //     );
                         break;
                       case BackupRestoreDataStateFailed(msg: final s):
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -136,19 +136,19 @@ class SettingsView extends StatelessWidget {
                         break;
                       case DeleteAllDataStateSuccess():
                         // Update Chart and Overview
-                        context.read<GetallwidgetsdataBloc>().add(
-                              GetallwidgetsdataEvent.fetchAllData(
-                                appPreferences:
-                                    (state as SavedAndReady).appPreferences,
-                              ),
-                            );
+                        // context.read<GetallwidgetsdataBloc>().add(
+                        //       GetallwidgetsdataEvent.fetchAllData(
+                        //         appPreferences:
+                        //             (state as SavedAndReady).appPreferences,
+                        //       ),
+                        //     );
 
-                        context.read<ChartdataBloc>().add(
-                              ChartdataEvent.fetchData(
-                                appPreferences: state.appPreferences,
-                                duration: DurationsEnum.month1,
-                              ),
-                            );
+                        // context.read<ChartdataBloc>().add(
+                        //       ChartdataEvent.fetchData(
+                        //         appPreferences: state.appPreferences,
+                        //         duration: DurationsEnum.month1,
+                        //       ),
+                        //     );
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Success'),

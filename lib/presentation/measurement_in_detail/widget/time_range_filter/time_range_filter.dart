@@ -61,7 +61,8 @@ class TimeRangeFilterInputStepper extends StatelessWidget {
                       .value
                       .toStringAsFixed(0);
 
-                  final unit = filteredMeasurements.first.unit;
+                  // final unit = filteredMeasurements.first.unit;
+                  final unit = '';
 
                   // min = min + unit;
                   min = '$min $unit';

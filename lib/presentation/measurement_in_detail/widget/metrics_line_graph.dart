@@ -1,6 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
 
@@ -15,12 +15,12 @@ class MetricsLineGraph extends StatefulWidget {
     this.nextMeasurement,
   });
 
-  final List<Measurement> filteredMeasurements;
+  final List<MeasurementEntity> filteredMeasurements;
   final DateTime startDate;
   final DateTime endDate;
   final DayToText dayToText;
-  final Measurement? previousMeasurement;
-  final Measurement? nextMeasurement;
+  final MeasurementEntity? previousMeasurement;
+  final MeasurementEntity? nextMeasurement;
 
   @override
   State<MetricsLineGraph> createState() => _MetricsLineGraphState();
@@ -254,10 +254,10 @@ double getWeekOfMonth(DateTime date) {
 Future<List<FlSpot>> genDataConcurrently({
   required DateTime startDate,
   required DateTime endDate,
-  required List<Measurement> list,
+  required List<MeasurementEntity> list,
   required TimeUnit timeUnit,
-  required Measurement? previousMeasurement,
-  required Measurement? nextMeasurement,
+  required MeasurementEntity? previousMeasurement,
+  required MeasurementEntity? nextMeasurement,
   required DayToText dayToText,
 }) async {
   // return compute(genDataCompute, {

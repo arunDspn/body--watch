@@ -11,7 +11,7 @@ sealed class GetSingleMeasurmentsDetailsState
     required String cause,
   }) = GetSingleMeasurmentsDetailsStateFailed;
   const factory GetSingleMeasurmentsDetailsState.success({
-    required List<Measurement> list,
+    required List<MeasurementEntity> list,
     // required DurationsEnum durationsEnum,
     // required DateTime startDate,
   }) = AllMeasurementsLoaded;

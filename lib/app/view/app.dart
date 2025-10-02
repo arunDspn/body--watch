@@ -289,14 +289,14 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
     case HomeView.routeName:
       return MaterialPageRoute<void>(
         builder: (context) {
-          final appPref =
-              // context.read<ApppreferencesBloc>().state as SavedAndReady;
-              context.read<UserPreferencesCubit>().state
-                  as UserPreferencesLoaded;
+          // final appPref =
+          //     // context.read<ApppreferencesBloc>().state as SavedAndReady;
+          //     context.read<UserPreferencesCubit>().state
+          //         as UserPreferencesLoaded;
           // Bloc for overview data
-          // context.read<GetallwidgetsdataBloc>().add(
-          //       GetallwidgetsdataEvent.fetchAllData(),
-          //     );
+          context.read<GetallwidgetsdataBloc>().add(
+                const GetallwidgetsdataEvent.fetchAllData(),
+              );
 
           // Bloc for chart data
           // context.read<ChartdataBloc>().add(

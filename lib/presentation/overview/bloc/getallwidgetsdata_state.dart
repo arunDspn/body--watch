@@ -8,7 +8,7 @@ sealed class GetallwidgetsdataState with _$GetallwidgetsdataState {
       GetallwidgetsdataStateLoading;
   const factory GetallwidgetsdataState.failure(String cause) =
       GetallwidgetsdataStateFailure;
-  const factory GetallwidgetsdataState.success(
-          List<LatestMeasurementDisplayModel> widgets) =
-      GetallwidgetsdataStateSuccess;
+  const factory GetallwidgetsdataState.success({
+    required Map<String, List<MeasurementModel>> widgets,
+  }) = GetallwidgetsdataStateSuccess;
 }

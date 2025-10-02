@@ -1,5 +1,5 @@
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
 
 class ChartDisplayModel {
   ChartDisplayModel({
@@ -10,7 +10,7 @@ class ChartDisplayModel {
   });
 
   factory ChartDisplayModel.fromMeasurementList({
-    required List<Measurement> measurement,
+    required List<MeasurementEntity> measurement,
     required String name,
   }) {
     return ChartDisplayModel(

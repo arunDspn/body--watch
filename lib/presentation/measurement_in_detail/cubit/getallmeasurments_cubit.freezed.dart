@@ -161,7 +161,7 @@ extension GetSingleMeasurmentsDetailsStatePatterns
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(String cause)? failed,
-    TResult Function(List<Measurement> list)? success,
+    TResult Function(List<MeasurementEntity> list)? success,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -197,7 +197,7 @@ extension GetSingleMeasurmentsDetailsStatePatterns
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(String cause) failed,
-    required TResult Function(List<Measurement> list) success,
+    required TResult Function(List<MeasurementEntity> list) success,
   }) {
     final _that = this;
     switch (_that) {
@@ -229,7 +229,7 @@ extension GetSingleMeasurmentsDetailsStatePatterns
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(String cause)? failed,
-    TResult? Function(List<Measurement> list)? success,
+    TResult? Function(List<MeasurementEntity> list)? success,
   }) {
     final _that = this;
     switch (_that) {
@@ -362,11 +362,11 @@ class _$GetSingleMeasurmentsDetailsStateFailedCopyWithImpl<$Res>
 /// @nodoc
 
 class AllMeasurementsLoaded implements GetSingleMeasurmentsDetailsState {
-  const AllMeasurementsLoaded({required final List<Measurement> list})
+  const AllMeasurementsLoaded({required final List<MeasurementEntity> list})
       : _list = list;
 
-  final List<Measurement> _list;
-  List<Measurement> get list {
+  final List<MeasurementEntity> _list;
+  List<MeasurementEntity> get list {
     if (_list is EqualUnmodifiableListView) return _list;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_list);
@@ -405,7 +405,7 @@ abstract mixin class $AllMeasurementsLoadedCopyWith<$Res>
           $Res Function(AllMeasurementsLoaded) _then) =
       _$AllMeasurementsLoadedCopyWithImpl;
   @useResult
-  $Res call({List<Measurement> list});
+  $Res call({List<MeasurementEntity> list});
 }
 
 /// @nodoc
@@ -426,7 +426,7 @@ class _$AllMeasurementsLoadedCopyWithImpl<$Res>
       list: null == list
           ? _self._list
           : list // ignore: cast_nullable_to_non_nullable
-              as List<Measurement>,
+              as List<MeasurementEntity>,
     ));
   }
 }

@@ -156,7 +156,7 @@ extension TimeRangeFilterEventPatterns on TimeRangeFilterEvent {
     TResult Function()? nextRange,
     TResult Function()? previousRange,
     TResult Function()? currentRange,
-    TResult Function(List<Measurement> newMeasurementList)? updateData,
+    TResult Function(List<MeasurementEntity> newMeasurementList)? updateData,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -192,7 +192,8 @@ extension TimeRangeFilterEventPatterns on TimeRangeFilterEvent {
     required TResult Function() nextRange,
     required TResult Function() previousRange,
     required TResult Function() currentRange,
-    required TResult Function(List<Measurement> newMeasurementList) updateData,
+    required TResult Function(List<MeasurementEntity> newMeasurementList)
+        updateData,
   }) {
     final _that = this;
     switch (_that) {
@@ -224,7 +225,7 @@ extension TimeRangeFilterEventPatterns on TimeRangeFilterEvent {
     TResult? Function()? nextRange,
     TResult? Function()? previousRange,
     TResult? Function()? currentRange,
-    TResult? Function(List<Measurement> newMeasurementList)? updateData,
+    TResult? Function(List<MeasurementEntity> newMeasurementList)? updateData,
   }) {
     final _that = this;
     switch (_that) {
@@ -305,11 +306,11 @@ class _CurrentRange implements TimeRangeFilterEvent {
 /// @nodoc
 
 class _UpdateData implements TimeRangeFilterEvent {
-  const _UpdateData({required final List<Measurement> newMeasurementList})
+  const _UpdateData({required final List<MeasurementEntity> newMeasurementList})
       : _newMeasurementList = newMeasurementList;
 
-  final List<Measurement> _newMeasurementList;
-  List<Measurement> get newMeasurementList {
+  final List<MeasurementEntity> _newMeasurementList;
+  List<MeasurementEntity> get newMeasurementList {
     if (_newMeasurementList is EqualUnmodifiableListView)
       return _newMeasurementList;
     // ignore: implicit_dynamic_type
@@ -349,7 +350,7 @@ abstract mixin class _$UpdateDataCopyWith<$Res>
           _UpdateData value, $Res Function(_UpdateData) _then) =
       __$UpdateDataCopyWithImpl;
   @useResult
-  $Res call({List<Measurement> newMeasurementList});
+  $Res call({List<MeasurementEntity> newMeasurementList});
 }
 
 /// @nodoc
@@ -369,7 +370,7 @@ class __$UpdateDataCopyWithImpl<$Res> implements _$UpdateDataCopyWith<$Res> {
       newMeasurementList: null == newMeasurementList
           ? _self._newMeasurementList
           : newMeasurementList // ignore: cast_nullable_to_non_nullable
-              as List<Measurement>,
+              as List<MeasurementEntity>,
     ));
   }
 }
@@ -500,11 +501,11 @@ extension TimeRangeFilterStatePatterns on TimeRangeFilterState {
     TResult Function(
             DateTime startDate,
             DateTime endDate,
-            List<Measurement> filteredMeasurements,
+            List<MeasurementEntity> filteredMeasurements,
             TimeUnit timeUnit,
             bool nextable,
-            Measurement? previousMeasurement,
-            Measurement? nextMeasurement)?
+            MeasurementEntity? previousMeasurement,
+            MeasurementEntity? nextMeasurement)?
         state,
     TResult Function()? loading,
     required TResult orElse(),
@@ -545,11 +546,11 @@ extension TimeRangeFilterStatePatterns on TimeRangeFilterState {
     required TResult Function(
             DateTime startDate,
             DateTime endDate,
-            List<Measurement> filteredMeasurements,
+            List<MeasurementEntity> filteredMeasurements,
             TimeUnit timeUnit,
             bool nextable,
-            Measurement? previousMeasurement,
-            Measurement? nextMeasurement)
+            MeasurementEntity? previousMeasurement,
+            MeasurementEntity? nextMeasurement)
         state,
     required TResult Function() loading,
   }) {
@@ -586,11 +587,11 @@ extension TimeRangeFilterStatePatterns on TimeRangeFilterState {
     TResult? Function(
             DateTime startDate,
             DateTime endDate,
-            List<Measurement> filteredMeasurements,
+            List<MeasurementEntity> filteredMeasurements,
             TimeUnit timeUnit,
             bool nextable,
-            Measurement? previousMeasurement,
-            Measurement? nextMeasurement)?
+            MeasurementEntity? previousMeasurement,
+            MeasurementEntity? nextMeasurement)?
         state,
     TResult? Function()? loading,
   }) {
@@ -619,7 +620,7 @@ class TimeRangeFilterStateState implements TimeRangeFilterState {
   const TimeRangeFilterStateState(
       {required this.startDate,
       required this.endDate,
-      required final List<Measurement> filteredMeasurements,
+      required final List<MeasurementEntity> filteredMeasurements,
       required this.timeUnit,
       required this.nextable,
       required this.previousMeasurement,
@@ -628,8 +629,8 @@ class TimeRangeFilterStateState implements TimeRangeFilterState {
 
   final DateTime startDate;
   final DateTime endDate;
-  final List<Measurement> _filteredMeasurements;
-  List<Measurement> get filteredMeasurements {
+  final List<MeasurementEntity> _filteredMeasurements;
+  List<MeasurementEntity> get filteredMeasurements {
     if (_filteredMeasurements is EqualUnmodifiableListView)
       return _filteredMeasurements;
     // ignore: implicit_dynamic_type
@@ -638,8 +639,8 @@ class TimeRangeFilterStateState implements TimeRangeFilterState {
 
   final TimeUnit timeUnit;
   final bool nextable;
-  final Measurement? previousMeasurement;
-  final Measurement? nextMeasurement;
+  final MeasurementEntity? previousMeasurement;
+  final MeasurementEntity? nextMeasurement;
 
   /// Create a copy of TimeRangeFilterState
   /// with the given fields replaced by the non-null parameter values.
@@ -696,11 +697,14 @@ abstract mixin class $TimeRangeFilterStateStateCopyWith<$Res>
   $Res call(
       {DateTime startDate,
       DateTime endDate,
-      List<Measurement> filteredMeasurements,
+      List<MeasurementEntity> filteredMeasurements,
       TimeUnit timeUnit,
       bool nextable,
-      Measurement? previousMeasurement,
-      Measurement? nextMeasurement});
+      MeasurementEntity? previousMeasurement,
+      MeasurementEntity? nextMeasurement});
+
+  $MeasurementEntityCopyWith<$Res>? get previousMeasurement;
+  $MeasurementEntityCopyWith<$Res>? get nextMeasurement;
 }
 
 /// @nodoc
@@ -735,7 +739,7 @@ class _$TimeRangeFilterStateStateCopyWithImpl<$Res>
       filteredMeasurements: null == filteredMeasurements
           ? _self._filteredMeasurements
           : filteredMeasurements // ignore: cast_nullable_to_non_nullable
-              as List<Measurement>,
+              as List<MeasurementEntity>,
       timeUnit: null == timeUnit
           ? _self.timeUnit
           : timeUnit // ignore: cast_nullable_to_non_nullable
@@ -747,12 +751,41 @@ class _$TimeRangeFilterStateStateCopyWithImpl<$Res>
       previousMeasurement: freezed == previousMeasurement
           ? _self.previousMeasurement
           : previousMeasurement // ignore: cast_nullable_to_non_nullable
-              as Measurement?,
+              as MeasurementEntity?,
       nextMeasurement: freezed == nextMeasurement
           ? _self.nextMeasurement
           : nextMeasurement // ignore: cast_nullable_to_non_nullable
-              as Measurement?,
+              as MeasurementEntity?,
     ));
+  }
+
+  /// Create a copy of TimeRangeFilterState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $MeasurementEntityCopyWith<$Res>? get previousMeasurement {
+    if (_self.previousMeasurement == null) {
+      return null;
+    }
+
+    return $MeasurementEntityCopyWith<$Res>(_self.previousMeasurement!,
+        (value) {
+      return _then(_self.copyWith(previousMeasurement: value));
+    });
+  }
+
+  /// Create a copy of TimeRangeFilterState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $MeasurementEntityCopyWith<$Res>? get nextMeasurement {
+    if (_self.nextMeasurement == null) {
+      return null;
+    }
+
+    return $MeasurementEntityCopyWith<$Res>(_self.nextMeasurement!, (value) {
+      return _then(_self.copyWith(nextMeasurement: value));
+    });
   }
 }
 

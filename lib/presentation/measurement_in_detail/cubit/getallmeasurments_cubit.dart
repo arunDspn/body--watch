@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
-import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 
 part 'getallmeasurments_state.dart';
@@ -55,21 +55,21 @@ class GetSingleMeasurmentsDetailsCubit
   void reloadList(String id) {
     final previousState = state;
     emit(const GetSingleMeasurmentsDetailsState.loading());
-    if (previousState is AllMeasurementsLoaded) {
-      final list =
-          previousState.list.where((element) => element.id != id).toList();
-      // emit(
-      //   previousState.copyWith(
-      //     list: list,
-      //   ),
-      // );
-      emit(
-        GetSingleMeasurmentsDetailsState.success(
-          list: list,
-          // durationsEnum: previousState.durationsEnum,
-          // startDate: previousState.startDate,
-        ),
-      );
-    }
+    // if (previousState is AllMeasurementsLoaded) {
+    //   final list =
+    //       previousState.list.where((element) => element.id != id).toList();
+    //   // emit(
+    //   //   previousState.copyWith(
+    //   //     list: list,
+    //   //   ),
+    //   // );
+    //   emit(
+    //     GetSingleMeasurmentsDetailsState.success(
+    //       list: list,
+    //       // durationsEnum: previousState.durationsEnum,
+    //       // startDate: previousState.startDate,
+    //     ),
+    //   );
+    // }
   }
 }

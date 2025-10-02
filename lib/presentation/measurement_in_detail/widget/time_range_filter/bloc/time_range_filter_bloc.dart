@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/data/domain/measurement/models/pmeasurement.dart';
+import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
 import 'package:watcha_body/services/time_range_service/time_range_service.dart';
 
@@ -28,8 +28,8 @@ class TimeRangeFilterBloc
             );
 
             final (
-              Measurement? nextMeasurement,
-              Measurement? previousMeasurement
+              MeasurementEntity? nextMeasurement,
+              MeasurementEntity? previousMeasurement
             ) = getPreviousAndNextMeasurements(
               startDate: range.startDate,
               endDate: range.endDate,
@@ -71,8 +71,8 @@ class TimeRangeFilterBloc
               date,
             );
             final (
-              Measurement? nextMeasurement,
-              Measurement? previousMeasurement
+              MeasurementEntity? nextMeasurement,
+              MeasurementEntity? previousMeasurement
             ) = getPreviousAndNextMeasurements(
               startDate: range.startDate,
               endDate: range.endDate,
@@ -112,8 +112,8 @@ class TimeRangeFilterBloc
               date,
             );
             final (
-              Measurement? nextMeasurement,
-              Measurement? previousMeasurement
+              MeasurementEntity? nextMeasurement,
+              MeasurementEntity? previousMeasurement
             ) = getPreviousAndNextMeasurements(
               startDate: range.startDate,
               endDate: range.endDate,
@@ -174,12 +174,12 @@ class TimeRangeFilterBloc
   }
   final TimeUnit timeUnit;
   final TimeRangeService timeRangeService;
-  List<Measurement> allMeasurements;
+  List<MeasurementEntity> allMeasurements;
 
-  List<Measurement> filterMeasurements({
+  List<MeasurementEntity> filterMeasurements({
     required DateTime startDate,
     required DateTime endDate,
-    required List<Measurement> allMeasurements,
+    required List<MeasurementEntity> allMeasurements,
   }) {
     return allMeasurements
         .where(
@@ -192,12 +192,12 @@ class TimeRangeFilterBloc
         .toList();
   }
 
-  (Measurement?, Measurement?) getPreviousAndNextMeasurements({
+  (MeasurementEntity?, MeasurementEntity?) getPreviousAndNextMeasurements({
     required DateTime startDate,
     required DateTime endDate,
   }) {
-    Measurement? previousMeasurement;
-    Measurement? nextMeasurement;
+    MeasurementEntity? previousMeasurement;
+    MeasurementEntity? nextMeasurement;
 
     previousMeasurement = allMeasurements.lastWhereOrNull(
       (element) => element.date.isBefore(startDate),
