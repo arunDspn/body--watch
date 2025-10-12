@@ -11,6 +11,7 @@ abstract class MeasurementTargetModel with _$MeasurementTargetModel {
     required String code,
     required String type,
     required String category,
+    @JsonKey(name: 'metric_code') required String metricCode,
     @JsonKey(name: 'display_order') required int displayOrder,
     required List<MetricUnitsModel> units,
   }) = _MeasurementTargetModel;

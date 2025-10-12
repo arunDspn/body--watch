@@ -240,7 +240,7 @@ ORDER BY mt.display_order;
       final units = rows.map((row) {
         return MetricUnitsModel(
           unit: row['unit'] as String,
-          // toBaseFactor: (row['to_base_factor'] as num).toDouble(),
+          toBaseFactor: (row['to_base_factor'] as num).toDouble(),
           // baseUnit: row['base_unit'] as String,
           code: row['code'] as String,
         );
@@ -253,7 +253,7 @@ ORDER BY mt.display_order;
         type: firstRow['type'] as String,
         category: firstRow['category'] as String,
         displayOrder: firstRow['display_order'] as int,
-        // metricCode: firstRow['metric_code'] as String,
+        metricCode: firstRow['metric_code'] as String,
         units: units,
       );
     }).toList();

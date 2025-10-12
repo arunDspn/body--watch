@@ -16,6 +16,8 @@ T _$identity<T>(T value) => value;
 mixin _$MetricUnitsModel {
   String get unit;
   String get code;
+  @JsonKey(name: 'to_base_factor')
+  double get toBaseFactor;
 
   /// Create a copy of MetricUnitsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -34,16 +36,18 @@ mixin _$MetricUnitsModel {
         (other.runtimeType == runtimeType &&
             other is MetricUnitsModel &&
             (identical(other.unit, unit) || other.unit == unit) &&
-            (identical(other.code, code) || other.code == code));
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.toBaseFactor, toBaseFactor) ||
+                other.toBaseFactor == toBaseFactor));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, unit, code);
+  int get hashCode => Object.hash(runtimeType, unit, code, toBaseFactor);
 
   @override
   String toString() {
-    return 'MetricUnitsModel(unit: $unit, code: $code)';
+    return 'MetricUnitsModel(unit: $unit, code: $code, toBaseFactor: $toBaseFactor)';
   }
 }
 
@@ -53,7 +57,10 @@ abstract mixin class $MetricUnitsModelCopyWith<$Res> {
           MetricUnitsModel value, $Res Function(MetricUnitsModel) _then) =
       _$MetricUnitsModelCopyWithImpl;
   @useResult
-  $Res call({String unit, String code});
+  $Res call(
+      {String unit,
+      String code,
+      @JsonKey(name: 'to_base_factor') double toBaseFactor});
 }
 
 /// @nodoc
@@ -71,6 +78,7 @@ class _$MetricUnitsModelCopyWithImpl<$Res>
   $Res call({
     Object? unit = null,
     Object? code = null,
+    Object? toBaseFactor = null,
   }) {
     return _then(_self.copyWith(
       unit: null == unit
@@ -81,6 +89,10 @@ class _$MetricUnitsModelCopyWithImpl<$Res>
           ? _self.code
           : code // ignore: cast_nullable_to_non_nullable
               as String,
+      toBaseFactor: null == toBaseFactor
+          ? _self.toBaseFactor
+          : toBaseFactor // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -178,13 +190,15 @@ extension MetricUnitsModelPatterns on MetricUnitsModel {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String unit, String code)? $default, {
+    TResult Function(String unit, String code,
+            @JsonKey(name: 'to_base_factor') double toBaseFactor)?
+        $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _MetricUnitsModel() when $default != null:
-        return $default(_that.unit, _that.code);
+        return $default(_that.unit, _that.code, _that.toBaseFactor);
       case _:
         return orElse();
     }
@@ -205,12 +219,14 @@ extension MetricUnitsModelPatterns on MetricUnitsModel {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(String unit, String code) $default,
+    TResult Function(String unit, String code,
+            @JsonKey(name: 'to_base_factor') double toBaseFactor)
+        $default,
   ) {
     final _that = this;
     switch (_that) {
       case _MetricUnitsModel():
-        return $default(_that.unit, _that.code);
+        return $default(_that.unit, _that.code, _that.toBaseFactor);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -230,12 +246,14 @@ extension MetricUnitsModelPatterns on MetricUnitsModel {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String unit, String code)? $default,
+    TResult? Function(String unit, String code,
+            @JsonKey(name: 'to_base_factor') double toBaseFactor)?
+        $default,
   ) {
     final _that = this;
     switch (_that) {
       case _MetricUnitsModel() when $default != null:
-        return $default(_that.unit, _that.code);
+        return $default(_that.unit, _that.code, _that.toBaseFactor);
       case _:
         return null;
     }
@@ -245,7 +263,10 @@ extension MetricUnitsModelPatterns on MetricUnitsModel {
 /// @nodoc
 @JsonSerializable()
 class _MetricUnitsModel implements MetricUnitsModel {
-  const _MetricUnitsModel({required this.unit, required this.code});
+  const _MetricUnitsModel(
+      {required this.unit,
+      required this.code,
+      @JsonKey(name: 'to_base_factor') required this.toBaseFactor});
   factory _MetricUnitsModel.fromJson(Map<String, dynamic> json) =>
       _$MetricUnitsModelFromJson(json);
 
@@ -253,6 +274,9 @@ class _MetricUnitsModel implements MetricUnitsModel {
   final String unit;
   @override
   final String code;
+  @override
+  @JsonKey(name: 'to_base_factor')
+  final double toBaseFactor;
 
   /// Create a copy of MetricUnitsModel
   /// with the given fields replaced by the non-null parameter values.
@@ -275,16 +299,18 @@ class _MetricUnitsModel implements MetricUnitsModel {
         (other.runtimeType == runtimeType &&
             other is _MetricUnitsModel &&
             (identical(other.unit, unit) || other.unit == unit) &&
-            (identical(other.code, code) || other.code == code));
+            (identical(other.code, code) || other.code == code) &&
+            (identical(other.toBaseFactor, toBaseFactor) ||
+                other.toBaseFactor == toBaseFactor));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, unit, code);
+  int get hashCode => Object.hash(runtimeType, unit, code, toBaseFactor);
 
   @override
   String toString() {
-    return 'MetricUnitsModel(unit: $unit, code: $code)';
+    return 'MetricUnitsModel(unit: $unit, code: $code, toBaseFactor: $toBaseFactor)';
   }
 }
 
@@ -296,7 +322,10 @@ abstract mixin class _$MetricUnitsModelCopyWith<$Res>
       __$MetricUnitsModelCopyWithImpl;
   @override
   @useResult
-  $Res call({String unit, String code});
+  $Res call(
+      {String unit,
+      String code,
+      @JsonKey(name: 'to_base_factor') double toBaseFactor});
 }
 
 /// @nodoc
@@ -314,6 +343,7 @@ class __$MetricUnitsModelCopyWithImpl<$Res>
   $Res call({
     Object? unit = null,
     Object? code = null,
+    Object? toBaseFactor = null,
   }) {
     return _then(_MetricUnitsModel(
       unit: null == unit
@@ -324,6 +354,10 @@ class __$MetricUnitsModelCopyWithImpl<$Res>
           ? _self.code
           : code // ignore: cast_nullable_to_non_nullable
               as String,
+      toBaseFactor: null == toBaseFactor
+          ? _self.toBaseFactor
+          : toBaseFactor // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }

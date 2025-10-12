@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
@@ -114,7 +113,7 @@ class _Boxes extends StatelessWidget {
           builder: (context) {
             return BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              child: AddorEditMeasurementTargetModal(
+              child: AddorEditMeasurementTargetModal.add(
                 type: target,
               ),
             );

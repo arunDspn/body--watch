@@ -21,6 +21,8 @@ abstract class MeasurementModel with _$MeasurementModel {
 
     /// Foreign key to the measurement target
     @JsonKey(name: 'target_id') required int targetId,
+
+    /// Timestamps
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
   }) = _MeasurementModel;

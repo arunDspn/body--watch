@@ -31,6 +31,8 @@ mixin _$MeasurementModel {
   /// Foreign key to the measurement target
   @JsonKey(name: 'target_id')
   int get targetId;
+
+  /// Timestamps
   @JsonKey(name: 'created_at')
   DateTime get createdAt;
   @JsonKey(name: 'updated_at')
@@ -430,6 +432,8 @@ class _MeasurementModel implements MeasurementModel {
   @override
   @JsonKey(name: 'target_id')
   final int targetId;
+
+  /// Timestamps
   @override
   @JsonKey(name: 'created_at')
   final DateTime createdAt;

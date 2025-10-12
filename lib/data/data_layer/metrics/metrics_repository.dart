@@ -34,6 +34,7 @@ class MetricsRepository implements IMetricsRepository {
             (e) => MetricUnitsModel(
               unit: e['unit'] as String,
               code: e['code'] as String,
+              toBaseFactor: e['to_base_factor'] as double,
             ),
           )
           .toList();

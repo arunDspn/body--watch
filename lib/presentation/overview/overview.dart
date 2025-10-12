@@ -11,6 +11,7 @@ import 'package:watcha_body/data/domain/measurement/models/measurement_entity.da
 import 'package:watcha_body/data/domain/measurement/models/measurement_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
+import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
 import 'package:watcha_body/presentation/chart_2/charts_view2.dart';
 import 'package:watcha_body/presentation/display_models/measurement_display.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
@@ -608,7 +609,8 @@ class _WidgetBoxState extends State<_WidgetBox> {
                                   ),
                             ),
                             TextSpan(
-                              text: '${latestData.value} ',
+                              text:
+                                  '${latestData.value / metricCode!.toBaseFactor} ',
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall
@@ -693,17 +695,28 @@ class _WidgetBoxState extends State<_WidgetBox> {
                     children: [
                       IconButton(
                         onPressed: () {
-                          // showModalBottomSheet<void>(
-                          //   context: context,
-                          //   builder: (context) {
-                          //     return BackdropFilter(
-                          //       filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                          //       child: AddDataModal.add(
-                          //         type: widget.data.name,
-                          //       ),
-                          //     );
-                          //   },
-                          // );
+                          final targets = (context
+                                  .read<GetallwidgetsCubit>()
+                                  .state as GetAllWidgetSuccess)
+                              .widgets;
+                          final target = targets.firstWhere(
+                            (element) => element.id == latestData.targetId,
+                          );
+                          showModalBottomSheet<void>(
+                            context: context,
+                            builder: (context) {
+                              return BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                                child: AddorEditMeasurementTargetModal.edit(
+                                  type: target,
+                                  addedId: latestData.id,
+                                  addedValue: latestData.value,
+                                  addedDate: latestData.date,
+                                  notes: latestData.notes,
+                                ),
+                              );
+                            },
+                          );
                         },
                         icon: Icon(
                           Icons.add,

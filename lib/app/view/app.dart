@@ -209,6 +209,13 @@ class App extends StatelessWidget {
             )..fetchUserPreferences(1),
             lazy: false,
           ),
+
+          BlocProvider<GetallwidgetsCubit>(
+            create: (context) => GetallwidgetsCubit(
+              context.read<MeasurementRepository>(),
+            )..fetch(),
+            lazy: false,
+          ),
         ],
         child: Builder(
           builder: (context) {
@@ -337,12 +344,7 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
     case AddWidget.routeName:
       return MaterialPageRoute<void>(
         builder: (context) {
-          return BlocProvider<GetallwidgetsCubit>(
-            create: (context) => GetallwidgetsCubit(
-              context.read<MeasurementRepository>(),
-            )..fetch(),
-            child: const AddWidget(),
-          );
+          return const AddWidget();
         },
       );
     case SettingsView.routeName:

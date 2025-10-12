@@ -14,6 +14,7 @@ _MeasurementTargetModel _$MeasurementTargetModelFromJson(
       code: json['code'] as String,
       type: json['type'] as String,
       category: json['category'] as String,
+      metricCode: json['metric_code'] as String,
       displayOrder: (json['display_order'] as num).toInt(),
       units: (json['units'] as List<dynamic>)
           .map((e) => MetricUnitsModel.fromJson(e as Map<String, dynamic>))
@@ -28,6 +29,7 @@ Map<String, dynamic> _$MeasurementTargetModelToJson(
       'code': instance.code,
       'type': instance.type,
       'category': instance.category,
+      'metric_code': instance.metricCode,
       'display_order': instance.displayOrder,
       'units': instance.units,
     };

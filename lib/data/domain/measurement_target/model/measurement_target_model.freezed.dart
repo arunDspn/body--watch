@@ -19,6 +19,8 @@ mixin _$MeasurementTargetModel {
   String get code;
   String get type;
   String get category;
+  @JsonKey(name: 'metric_code')
+  String get metricCode;
   @JsonKey(name: 'display_order')
   int get displayOrder;
   List<MetricUnitsModel> get units;
@@ -45,6 +47,8 @@ mixin _$MeasurementTargetModel {
             (identical(other.type, type) || other.type == type) &&
             (identical(other.category, category) ||
                 other.category == category) &&
+            (identical(other.metricCode, metricCode) ||
+                other.metricCode == metricCode) &&
             (identical(other.displayOrder, displayOrder) ||
                 other.displayOrder == displayOrder) &&
             const DeepCollectionEquality().equals(other.units, units));
@@ -53,11 +57,11 @@ mixin _$MeasurementTargetModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, code, type, category,
-      displayOrder, const DeepCollectionEquality().hash(units));
+      metricCode, displayOrder, const DeepCollectionEquality().hash(units));
 
   @override
   String toString() {
-    return 'MeasurementTargetModel(id: $id, name: $name, code: $code, type: $type, category: $category, displayOrder: $displayOrder, units: $units)';
+    return 'MeasurementTargetModel(id: $id, name: $name, code: $code, type: $type, category: $category, metricCode: $metricCode, displayOrder: $displayOrder, units: $units)';
   }
 }
 
@@ -73,6 +77,7 @@ abstract mixin class $MeasurementTargetModelCopyWith<$Res> {
       String code,
       String type,
       String category,
+      @JsonKey(name: 'metric_code') String metricCode,
       @JsonKey(name: 'display_order') int displayOrder,
       List<MetricUnitsModel> units});
 }
@@ -95,6 +100,7 @@ class _$MeasurementTargetModelCopyWithImpl<$Res>
     Object? code = null,
     Object? type = null,
     Object? category = null,
+    Object? metricCode = null,
     Object? displayOrder = null,
     Object? units = null,
   }) {
@@ -118,6 +124,10 @@ class _$MeasurementTargetModelCopyWithImpl<$Res>
       category: null == category
           ? _self.category
           : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      metricCode: null == metricCode
+          ? _self.metricCode
+          : metricCode // ignore: cast_nullable_to_non_nullable
               as String,
       displayOrder: null == displayOrder
           ? _self.displayOrder
@@ -230,6 +240,7 @@ extension MeasurementTargetModelPatterns on MeasurementTargetModel {
             String code,
             String type,
             String category,
+            @JsonKey(name: 'metric_code') String metricCode,
             @JsonKey(name: 'display_order') int displayOrder,
             List<MetricUnitsModel> units)?
         $default, {
@@ -239,7 +250,7 @@ extension MeasurementTargetModelPatterns on MeasurementTargetModel {
     switch (_that) {
       case _MeasurementTargetModel() when $default != null:
         return $default(_that.id, _that.name, _that.code, _that.type,
-            _that.category, _that.displayOrder, _that.units);
+            _that.category, _that.metricCode, _that.displayOrder, _that.units);
       case _:
         return orElse();
     }
@@ -266,6 +277,7 @@ extension MeasurementTargetModelPatterns on MeasurementTargetModel {
             String code,
             String type,
             String category,
+            @JsonKey(name: 'metric_code') String metricCode,
             @JsonKey(name: 'display_order') int displayOrder,
             List<MetricUnitsModel> units)
         $default,
@@ -274,7 +286,7 @@ extension MeasurementTargetModelPatterns on MeasurementTargetModel {
     switch (_that) {
       case _MeasurementTargetModel():
         return $default(_that.id, _that.name, _that.code, _that.type,
-            _that.category, _that.displayOrder, _that.units);
+            _that.category, _that.metricCode, _that.displayOrder, _that.units);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -300,6 +312,7 @@ extension MeasurementTargetModelPatterns on MeasurementTargetModel {
             String code,
             String type,
             String category,
+            @JsonKey(name: 'metric_code') String metricCode,
             @JsonKey(name: 'display_order') int displayOrder,
             List<MetricUnitsModel> units)?
         $default,
@@ -308,7 +321,7 @@ extension MeasurementTargetModelPatterns on MeasurementTargetModel {
     switch (_that) {
       case _MeasurementTargetModel() when $default != null:
         return $default(_that.id, _that.name, _that.code, _that.type,
-            _that.category, _that.displayOrder, _that.units);
+            _that.category, _that.metricCode, _that.displayOrder, _that.units);
       case _:
         return null;
     }
@@ -324,6 +337,7 @@ class _MeasurementTargetModel extends MeasurementTargetModel {
       required this.code,
       required this.type,
       required this.category,
+      @JsonKey(name: 'metric_code') required this.metricCode,
       @JsonKey(name: 'display_order') required this.displayOrder,
       required final List<MetricUnitsModel> units})
       : _units = units,
@@ -341,6 +355,9 @@ class _MeasurementTargetModel extends MeasurementTargetModel {
   final String type;
   @override
   final String category;
+  @override
+  @JsonKey(name: 'metric_code')
+  final String metricCode;
   @override
   @JsonKey(name: 'display_order')
   final int displayOrder;
@@ -379,6 +396,8 @@ class _MeasurementTargetModel extends MeasurementTargetModel {
             (identical(other.type, type) || other.type == type) &&
             (identical(other.category, category) ||
                 other.category == category) &&
+            (identical(other.metricCode, metricCode) ||
+                other.metricCode == metricCode) &&
             (identical(other.displayOrder, displayOrder) ||
                 other.displayOrder == displayOrder) &&
             const DeepCollectionEquality().equals(other._units, _units));
@@ -387,11 +406,11 @@ class _MeasurementTargetModel extends MeasurementTargetModel {
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, code, type, category,
-      displayOrder, const DeepCollectionEquality().hash(_units));
+      metricCode, displayOrder, const DeepCollectionEquality().hash(_units));
 
   @override
   String toString() {
-    return 'MeasurementTargetModel(id: $id, name: $name, code: $code, type: $type, category: $category, displayOrder: $displayOrder, units: $units)';
+    return 'MeasurementTargetModel(id: $id, name: $name, code: $code, type: $type, category: $category, metricCode: $metricCode, displayOrder: $displayOrder, units: $units)';
   }
 }
 
@@ -409,6 +428,7 @@ abstract mixin class _$MeasurementTargetModelCopyWith<$Res>
       String code,
       String type,
       String category,
+      @JsonKey(name: 'metric_code') String metricCode,
       @JsonKey(name: 'display_order') int displayOrder,
       List<MetricUnitsModel> units});
 }
@@ -431,6 +451,7 @@ class __$MeasurementTargetModelCopyWithImpl<$Res>
     Object? code = null,
     Object? type = null,
     Object? category = null,
+    Object? metricCode = null,
     Object? displayOrder = null,
     Object? units = null,
   }) {
@@ -454,6 +475,10 @@ class __$MeasurementTargetModelCopyWithImpl<$Res>
       category: null == category
           ? _self.category
           : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      metricCode: null == metricCode
+          ? _self.metricCode
+          : metricCode // ignore: cast_nullable_to_non_nullable
               as String,
       displayOrder: null == displayOrder
           ? _self.displayOrder
