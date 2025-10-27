@@ -60,6 +60,21 @@ class OverView extends StatelessWidget {
               Navigator.pushNamed(context, AddWidget.routeName);
             },
           ),
+          //
+          IconButton(
+            onPressed: () {
+              // context.read<BodyPictureRepository>().getAllTags();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return ChartsView2();
+                  },
+                ),
+              );
+            },
+            icon: const Icon(Icons.emoji_emotions),
+          ),
         ],
       ),
       // appBar: AppBar(

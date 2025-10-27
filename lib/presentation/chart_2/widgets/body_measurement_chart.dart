@@ -173,11 +173,11 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     return range / 5;
   }
 
-  /// Format date for tooltip display
+  /// Format date for tooltip display in 'Sep 16' format
   String _formatDate(DateTime date) {
-    final day = date.day.toString();
     final month = _getShortMonthName(date.month);
-    return '$day $month';
+    final day = date.day.toString();
+    return '$month $day';
   }
 
   /// Get short month name (3 letters)
@@ -229,43 +229,69 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
         break;
 
       case ChartFilter.month:
-        // For month view, show week markers or specific dates
-        // Only show a few labels to avoid crowding
-        if (value % 7 != 0 && value < 28) {
+        // Get days in the month
+        final daysInMonth =
+            DateTime(_currentPeriod.year, _currentPeriod.month + 1, 0).day;
+
+        // The value represents the day position in the month (0-based from start)
+        // We need to show labels at specific day numbers: 7, 14, 21, 28
+        final weeklyDayNumbers = [7, 14, 21, 28];
+
+        // Find the closest day number to the current value
+        // value represents days from start of month (0 = day 1, 6 = day 7, etc.)
+        int? matchedDay;
+        for (final dayNum in weeklyDayNumbers) {
+          // dayNum - 1 because value is 0-based (value 6 = day 7)
+          if ((value - (dayNum - 1)).abs() < 0.5 && dayNum <= daysInMonth) {
+            matchedDay = dayNum;
+            break;
+          }
+        }
+
+        // If we're not close to any of our target days, don't show label
+        if (matchedDay == null) {
           return const SizedBox.shrink();
         }
 
-        final daysIntoMonth = value.toInt();
-        final date = DateTime(
-            _currentPeriod.year, _currentPeriod.month, 1 + daysIntoMonth);
+        // Get the short month name
+        final shortMonth = _getShortMonthName(_currentPeriod.month);
 
-        if (daysIntoMonth == 0) {
-          // First day of month
-          label = '${date.day} ${_getShortMonthName(date.month)}';
-        } else {
-          // Other week markers
-          label = '${date.day}';
-        }
+        // Format as "7 Sep", "14 Sep", "21 Sep", "28 Sep"
+        label = '$matchedDay $shortMonth';
 
         // Check if this is the current week
         if (isCurrentViewPeriod) {
           final weekStart = now.subtract(Duration(days: now.weekday % 7));
           final weekEnd = weekStart.add(const Duration(days: 7));
+
+          final date =
+              DateTime(_currentPeriod.year, _currentPeriod.month, matchedDay);
+
           isCurrentPeriod =
               date.isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
                   date.isBefore(weekEnd);
         }
         break;
-
       case ChartFilter.threeMonth:
-        // For 3-month view, show month labels
-        final monthOffset = (value / 30).floor(); // Approximate month positions
-        if (monthOffset < 0 || monthOffset > 2) {
+        // For 3-month view, show month labels more precisely
+        // The quarter will span approximately 90 days (3 months)
+        // Each month should be roughly 30 days apart
+
+        // Calculate which month we're in (0, 1, or 2) within the quarter
+        final totalDays = _getMaxXValue();
+        final daysPerMonth = totalDays / 3;
+        final monthPosition = value / daysPerMonth;
+        final monthIndex = monthPosition.floor();
+
+        // Only show labels at the start of each month
+        if ((value - (monthIndex * daysPerMonth)).abs() > 2) {
           return const SizedBox.shrink();
         }
 
-        final month = _currentPeriod.month + monthOffset;
-        final adjustedMonth = month > 12 ? month - 12 : month;
+        // Calculate the actual month number (1-12)
+        final month = _currentPeriod.month + monthIndex;
+        final adjustedMonth =
+            ((month - 1) % 12) + 1; // Handle wrap-around to next year
         label = _getShortMonthName(adjustedMonth);
 
         // Check if this is the current month
@@ -275,20 +301,47 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
         break;
 
       case ChartFilter.year:
-        // For year view, show bi-monthly labels
-        final monthOffset = (value / 30).floor(); // Approximate month positions
-        if (monthOffset < 0 || monthOffset > 11 || monthOffset % 2 != 0) {
+        // For year view, show a label for every month:
+        // Odd-numbered months (Jan=1, Mar=3, etc.) show month name
+        // Even-numbered months (Feb=2, Apr=4, etc.) show a dash "-"
+
+        // Calculate position based on days from start of year
+        // Average days per month = 365/12 ≈ 30.42 days
+        final daysPerMonth = _getMaxXValue() / 12.0;
+
+        // Determine which month this value falls into (0-11)
+        final monthIndex = (value / daysPerMonth).round();
+
+        // Check if we're within the range for showing a month label
+        // We want to show label if we're within half a month of a month boundary
+        final expectedPosition = monthIndex * daysPerMonth;
+        final distance = (value - expectedPosition).abs();
+
+        if (distance > daysPerMonth / 2 || monthIndex < 0 || monthIndex > 11) {
           return const SizedBox.shrink();
         }
 
-        final month = _currentPeriod.month + monthOffset;
-        final adjustedMonth = month > 12 ? month - 12 : month;
-        label = _getShortMonthName(adjustedMonth);
+        // Calculate actual calendar month (1-12)
+        // monthIndex goes from 0-11, representing months within the year view
+        final calendarMonth =
+            ((monthIndex + _currentPeriod.month - 1) % 12) + 1;
 
-        // Check if this is the current month or the next one (bi-monthly grouping)
+        // For odd months (1, 3, 5, 7, 9, 11), show the month name
+        // For even months (2, 4, 6, 8, 10, 12), show a dash "-"
+        if (calendarMonth % 2 == 1) {
+          // Odd month - show month name (Jan, Mar, May, Jul, Sep, Nov)
+          label = _getShortMonthName(calendarMonth);
+        } else {
+          // Even month - show dash (Feb, Apr, Jun, Aug, Oct, Dec)
+          label = '-';
+        }
+
+        // Check if this is the current quarter
+        final currentQuarter = (now.month - 1) ~/ 3;
+        final labelQuarter = (calendarMonth - 1) ~/ 3;
         isCurrentPeriod = isCurrentViewPeriod &&
             now.year == _currentPeriod.year &&
-            (now.month == adjustedMonth || now.month == adjustedMonth + 1);
+            currentQuarter == labelQuarter;
         break;
     }
 
@@ -951,7 +1004,18 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
           minY: paddedMinY,
           maxY: paddedMaxY,
           lineTouchData: LineTouchData(
+            enabled: true,
             touchTooltipData: LineTouchTooltipData(
+              getTooltipColor: (touchedSpot) => Colors.white,
+              tooltipPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 8,
+              ),
+              tooltipMargin: 12,
+              tooltipBorder: BorderSide(
+                color: widget.config.color.withOpacity(0.3),
+                width: 1.5,
+              ),
               getTooltipItems: (spots) {
                 return spots.map((spot) {
                   // Find the closest data point to this spot
@@ -959,12 +1023,20 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
                       _findClosestDataPoint(spot, filteredData);
                   if (closestPointIndex != -1) {
                     final dataPoint = filteredData[closestPointIndex];
+                    // Format as "84 kg - Sep 16" according to spec
+                    final valueText =
+                        '${dataPoint.value} ${widget.config.unit}';
+                    final dateText = _formatDate(dataPoint.dateTime);
+
                     return LineTooltipItem(
-                      '${dataPoint.value} ${widget.config.unit}\n${_formatDate(dataPoint.dateTime)}',
+                      '$valueText - $dateText',
                       TextStyle(
                         color: widget.config.color,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                        letterSpacing: 0.2,
                       ),
+                      textAlign: TextAlign.center,
                     );
                   }
                   return null;
@@ -973,6 +1045,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
             ),
             touchCallback: (event, touchResponse) {
               if (event is FlTapUpEvent) {
+                // Handle tap on data point
                 if (touchResponse?.lineBarSpots != null &&
                     touchResponse!.lineBarSpots!.isNotEmpty) {
                   final spot = touchResponse.lineBarSpots!.first;
@@ -980,11 +1053,19 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
                       _findClosestDataPoint(spot, filteredData);
                   _selectDataPoint(closestPointIndex);
                 } else {
+                  // Tap outside - deselect
                   _selectDataPoint(null);
                 }
+              } else if (event is FlLongPressEnd || event is FlPanEndEvent) {
+                // Clear selection when user stops interacting
+                setState(() {
+                  _selectedPointIndex = null;
+                });
               }
             },
             handleBuiltInTouches: true,
+            // Enable touch threshold for better tap detection
+            touchSpotThreshold: 20,
           ),
           lineBarsData: [
             LineChartBarData(
@@ -1002,15 +1083,35 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
                       ? _isInCurrentPeriod(filteredData[index].dateTime)
                       : false;
 
-                  // Emphasize points in current period
+                  // Check if this point is selected
                   final isSelected = _selectedPointIndex == index;
 
+                  // Determine dot appearance based on state
+                  double radius;
+                  Color dotColor;
+                  double strokeWidth;
+
+                  if (isSelected) {
+                    // Selected point - largest and most prominent
+                    radius = 7;
+                    dotColor = widget.config.color;
+                    strokeWidth = 3;
+                  } else if (isCurrentPoint) {
+                    // Current period point - emphasized
+                    radius = 5;
+                    dotColor = widget.config.color;
+                    strokeWidth = 2.5;
+                  } else {
+                    // Regular point - smaller and slightly transparent
+                    radius = 3.5;
+                    dotColor = widget.config.color.withOpacity(0.85);
+                    strokeWidth = 2;
+                  }
+
                   return FlDotCirclePainter(
-                    radius: isSelected ? 6 : (isCurrentPoint ? 5 : 3),
-                    color: isCurrentPoint
-                        ? widget.config.color
-                        : widget.config.color.withOpacity(0.8),
-                    strokeWidth: isCurrentPoint ? 2.5 : 2,
+                    radius: radius,
+                    color: dotColor,
+                    strokeWidth: strokeWidth,
                     strokeColor: Colors.white,
                   );
                 },

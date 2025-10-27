@@ -71,7 +71,7 @@ class _ChartsView2State extends State<ChartsView2> {
             children: [
               // Introduction text
               Text(
-                'Phase 5: Current Period Highlighting Complete',
+                'Phase 6: Interactions & Tooltips Complete',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       color: Colors.green,
                       fontWeight: FontWeight.bold,
@@ -79,7 +79,7 @@ class _ChartsView2State extends State<ChartsView2> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Enhanced chart with current period highlighting, including special styling for current period data points, X-axis labels, and visual background highlighting for the current time section.',
+                'Enhanced tooltip display with \"Value - Date\" format, improved tap feedback with visual selection, better touch handling, and custom tooltip styling.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey.shade600,
                     ),
