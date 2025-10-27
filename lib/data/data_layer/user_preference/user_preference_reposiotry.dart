@@ -48,9 +48,14 @@ class UserPreferenceRepository implements IUserPreferencesRepository {
   }
 
   @override
-  Future<void> updatePreference(UserUnitPreferencesEntity preference) {
-    // TODO: implement updatePreference
-    throw UnimplementedError();
+  Future<void> updateAPreference(UserUnitPreferencesEntity preference) async {
+    final db = await _databaseService.database;
+    await db.update(
+      DatabaseService.userUnitPreferencesTable,
+      preference.toJson(),
+      where: 'user_id = ? AND metric_code = ?',
+      whereArgs: [preference.userId, preference.metricCode],
+    );
   }
 
   @override

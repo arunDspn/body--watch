@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:watcha_body/data/domain/user_preferences/i_user_preferences_repository.dart';
 import 'package:watcha_body/data/domain/user_preferences/models/user_unit_preference_model.dart';
+import 'package:watcha_body/data/domain/user_preferences/models/user_unit_preferences_entity.dart';
 
 part 'user_preferences_state.dart';
 part 'user_preferences_cubit.freezed.dart';
@@ -40,6 +41,35 @@ class UserPreferencesCubit extends Cubit<UserPreferencesState> {
     } catch (e) {
       // emit(const UserPreferencesState.error('Failed to update preferences'));
       emit(const UserPreferencesState.initial());
+    }
+  }
+
+  Future<void> updateSinglePreference(
+    UserUnitPreferenceModel preference,
+    int userId,
+  ) async {
+    final currentState = state as UserPreferencesLoaded;
+    emit(const UserPreferencesState.loading());
+    try {
+      final userPrefEntity = UserUnitPreferencesEntity(
+        userId: userId,
+        metricCode: preference.metricCode,
+        preferredUnit: preference.preferredUnit,
+      );
+
+      await _repository.updateAPreference(userPrefEntity);
+
+      // Update the item in state by metric_code
+
+      final newPrefsList = currentState.preferences.map((e) {
+        if (e.metricCode == preference.metricCode) {
+          return preference;
+        }
+        return e;
+      }).toList();
+      emit(UserPreferencesState.loaded(preferences: newPrefsList));
+    } catch (e) {
+      emit(UserPreferencesState.error(e.toString()));
     }
   }
 }

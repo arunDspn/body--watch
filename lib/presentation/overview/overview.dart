@@ -325,12 +325,18 @@ class SearchView extends StatelessWidget {
       //         WidgetList(list: lists),
       //     };
       //   },
-      body: ListView.builder(
-        itemCount: widgets.keys.length,
-        itemBuilder: (context, index) {
-          final widget = widgets[widgets.keys.elementAt(index)];
-          return _WidgetBox(
-              key: Key(widget!.first.id.toString()), data: widget);
+      body: BlocBuilder<UserPreferencesCubit, UserPreferencesState>(
+        builder: (context, state) {
+          return ListView.builder(
+            itemCount: widgets.keys.length,
+            itemBuilder: (context, index) {
+              final widget = widgets[widgets.keys.elementAt(index)];
+              return _WidgetBox(
+                key: Key(widget!.first.id.toString()),
+                data: widget,
+              );
+            },
+          );
         },
       ),
     );
@@ -420,11 +426,14 @@ class _SearchBarState extends State<_SearchBar> {
             IconButton(
               onPressed: () {
                 // context.read<BodyPictureRepository>().getAllTags();
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return const VaultSection();
-                  },
-                ));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const VaultSection();
+                    },
+                  ),
+                );
               },
               icon: const Icon(Icons.emoji_emotions),
             ),
@@ -442,12 +451,25 @@ class WidgetList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: list.length,
-      itemBuilder: (context, index) {
-        return _WidgetBox(
-          key: Key(list.hashCode.toString()),
-          data: list,
+    return BlocBuilder<UserPreferencesCubit, UserPreferencesState>(
+      builder: (context, state) {
+        return state.maybeWhen(
+          orElse: () {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+          loaded: (preferences) {
+            return ListView.builder(
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                return _WidgetBox(
+                  key: Key(list.hashCode.toString()),
+                  data: list,
+                );
+              },
+            );
+          },
         );
       },
     );
@@ -1045,6 +1067,7 @@ class _ExtraDetails extends StatelessWidget {
     final metricCode = pref.firstWhereOrNull(
       (element) => element.metricCode == data.last.metricCode,
     );
+
     print('rebuiling ---- extra det');
     return Column(
       children: [
@@ -1092,7 +1115,7 @@ class _ExtraDetails extends StatelessWidget {
                       // ),
                       TextSpan(
                         text:
-                            '${minValue.value} - ${maxValue.value} ${metricCode!.preferredUnit}\n',
+                            '${minValue.value / metricCode!.toBaseFactor} - ${maxValue.value / metricCode.toBaseFactor} ${metricCode.preferredUnit}\n',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: Theme.of(context).colorScheme.onSurface,
                             ),

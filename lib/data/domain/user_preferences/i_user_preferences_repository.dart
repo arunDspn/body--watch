@@ -14,7 +14,7 @@ abstract class IUserPreferencesRepository {
   Future<void> setAllPreferences(List<UserUnitPreferencesEntity> preferences);
 
   /// Update a specific preference
-  Future<void> updatePreference(UserUnitPreferencesEntity preference);
+  Future<void> updateAPreference(UserUnitPreferencesEntity preference);
 
   /// User Settings
 }

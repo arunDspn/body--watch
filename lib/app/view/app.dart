@@ -216,6 +216,16 @@ class App extends StatelessWidget {
             )..fetch(),
             lazy: false,
           ),
+
+          BlocProvider(
+            create: (context) => GetAllMetricUnitsAvailableCubit()
+              ..fetchAllMetricUnitsAvailable(),
+          ),
+          BlocProvider(
+            create: (context) => SetUserUnitPreferencesCubit(
+              context.read<UserPreferenceRepository>(),
+            ),
+          ),
         ],
         child: Builder(
           builder: (context) {
@@ -354,17 +364,7 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
     case AppIniter.routeName:
       return MaterialPageRoute<void>(
         builder: (context) => MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (context) => GetAllMetricUnitsAvailableCubit()
-                ..fetchAllMetricUnitsAvailable(),
-            ),
-            BlocProvider(
-              create: (context) => SetUserUnitPreferencesCubit(
-                context.read<UserPreferenceRepository>(),
-              ),
-            ),
-          ],
+          providers: [],
           child: const AppIniter(),
         ),
       );

@@ -1,17 +1,22 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
+import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
+import 'package:watcha_body/data/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/data/domain/models/app_preferences.dart';
+import 'package:watcha_body/data/domain/user_preferences/models/user_unit_preference_model.dart';
 import 'package:watcha_body/l10n/arb/app_localizations.dart';
-import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
+import 'package:watcha_body/presentation/app_initializer/cubit/get_all_metrics/get_all_metric_units_available_cubit.dart';
+import 'package:watcha_body/presentation/common_widgets/reusable_segmented_button.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/gallery_view/vault_gallery_view.dart';
-import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/settings/cubits/backup_restore_cubit/backup_data_cubit.dart';
 import 'package:watcha_body/presentation/settings/cubits/delete_all_data_cubit/delete_all_data_cubit.dart';
 
@@ -58,6 +63,9 @@ class SettingsView extends StatelessWidget {
       );
     }
 
+    final userPref =
+        (context.watch<UserPreferencesCubit>().state as UserPreferencesLoaded)
+            .preferences;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -202,18 +210,63 @@ class SettingsView extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    LanguageSelector(
-                      appPreferences: (state as SavedAndReady).appPreferences,
-                    ),
-                    WeightChoiceChip(
-                      appPreferences: state.appPreferences,
-                    ),
-                    LengthChoiceChip(
-                      appPreferences: state.appPreferences,
-                    ),
+                    // LanguageSelector(
+                    //   appPreferences: (state as SavedAndReady).appPreferences,
+                    // ),
+                    // WeightChoiceChip(
+                    //   appPreferences: state.appPreferences,
+                    // ),
+                    // LengthChoiceChip(
+                    //   appPreferences: state.appPreferences,
+                    // ),
                     // ThemeChoiceChip(
                     //   appTheme: context.read<AppthemeBloc>().state,
                     // ),
+                    BlocBuilder<GetAllMetricUnitsAvailableCubit,
+                        GetAllMetricUnitsAvailableState>(
+                      builder: (context, state) {
+                        return state.maybeWhen(
+                          orElse: () {
+                            return const SizedBox.shrink();
+                          },
+                          loaded: (allUnits) {
+                            return Column(
+                              children: allUnits!.keys.map((e) {
+                                return ReusableSegmentedButton<
+                                    MetricUnitsModel>(
+                                  selectedItem: allUnits[e]!.firstWhereOrNull(
+                                    (metricUnitElement) =>
+                                        metricUnitElement.unit ==
+                                        userPref.firstWhere(
+                                          (prefElement) {
+                                            return prefElement.metricCode ==
+                                                allUnits[e]!.first.code;
+                                          },
+                                        ).preferredUnit,
+                                  ),
+                                  sectionName: e,
+                                  items: allUnits[e]!,
+                                  getLabel: (item) => item.unit,
+                                  onSelectionChanged: (selection) {
+                                    context
+                                        .read<UserPreferencesCubit>()
+                                        .updateSinglePreference(
+                                          UserUnitPreferenceModel(
+                                            metricCode: allUnits[e]!.first.code,
+                                            toBaseFactor:
+                                                selection!.toBaseFactor,
+                                            preferredUnit: selection.unit,
+                                          ),
+                                          1,
+                                        );
+                                  },
+                                );
+                              }).toList(),
+                            );
+                          },
+                        );
+                      },
+                    ),
                     const RestoreOrBackup(),
                     SettingsChildContainer(
                       child: TextButton(
