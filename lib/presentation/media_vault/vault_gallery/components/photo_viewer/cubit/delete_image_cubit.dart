@@ -11,7 +11,7 @@ class DeleteImageCubit extends Cubit<DeleteImageState> {
 
   final BodyPictureRepository bodyPictureRepository;
 
-  Future<void> delete(String id) async {
+  Future<void> delete(int id) async {
     final result = await bodyPictureRepository.deleteBodyPicture(id);
 
     result.fold(

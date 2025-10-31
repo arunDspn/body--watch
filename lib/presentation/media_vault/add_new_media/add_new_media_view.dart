@@ -1,13 +1,20 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:multi_dropdown/multi_dropdown.dart';
+import 'package:watcha_body/data/domain/body_picture/models/image_tag_model.dart';
+import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/data/domain/models/save_vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/add_new_media/components/custom_drop_down/custom_drop_down.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/components/tag_dropdown/tag_dropdown.dart';
+import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new_image_tag_cubit/add_new_image_tag_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new_media_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/image_tag_cubit/get_all_image_tags_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/common/cubits/cubit/get_all_muscle_groups_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/gallery_view/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
@@ -23,7 +30,7 @@ class AddNewMediaView extends StatefulWidget {
 
 class _AddNewMediaViewState extends State<AddNewMediaView> {
   // Tag
-  String tag = '';
+  ImageTagModel? tag;
 
   //  Datetime
   DateTime? date;
@@ -37,7 +44,10 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
   // Form key
   final _formKey = GlobalKey<FormState>();
 
-  final _muscleGroups = <String>{};
+  final _muscleGroups = <MeasurementTargetModel>{};
+
+  // Note
+  String note = '';
 
   @override
   Widget build(BuildContext context) {
@@ -47,278 +57,331 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
-        child: BlocListener<AddNewMediaCubit, AddNewMediaState>(
-          listener: (context, state) {
-            switch (state) {
-              case AddNewMediaStateInitial():
-                break;
-              case AddNewMediaStateLoading():
-                // dialog box of loading
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    return const AlertDialog(
-                      title: Center(
-                        child: CircularProgressIndicator(),
-                      ),
+        child: BlocBuilder<GetallwidgetsCubit, GetallwidgetsState>(
+          builder: (context, measurementTargetState) {
+            return measurementTargetState.when(
+              initial: () {
+                return const Text('No invokation');
+              },
+              loading: () {
+                return const CircularProgressIndicator();
+              },
+              failure: (cause) {
+                return Text(cause);
+              },
+              success: (muscleGroups) {
+                final dropDownTargetItems = muscleGroups.map(
+                  (e) {
+                    return DropdownItem<MeasurementTargetModel>(
+                      value: e,
+                      label: e.name,
                     );
                   },
-                );
-                break;
-
-              case AddNewMediaStateSuccess(:final savedImage):
-                Navigator.of(context).pop();
-                context.read<LoadPicturesCubit>().updateList(savedImage);
-                // context
-                //     .read<FilteredGalleryImagesCubit>()
-                //     .updateList(s.savedImage);
-                Navigator.pop(context);
-                break;
-              case AddNewMediaStateFailure(:final failure):
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(failure),
-                  ),
-                );
-                break;
-            }
-          },
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TagsDropdown(
-                      context.read<BodyPictureRepository>(),
-                      (tag) {
-                        setState(() {
-                          this.tag = tag;
-                        });
-                      },
-                    ),
-                    // DropDownTextField(
-                    //   dropDownList: [
-                    //     DropDownValueModel(
-                    //       name: 'Front',
-                    //       toolTipMsg: 'Front',
-                    //       value: 'front',
-                    //     ),
-                    //     DropDownValueModel(
-                    //       name: 'Back',
-                    //       toolTipMsg: 'Back',
-                    //       value: 'back',
-                    //     ),
-                    //   ],
-                    //   enableSearch: true,
-                    //   onChanged: (value) {
-                    //     print(value);
-                    //   },
-                    //   validator: (value) {
-                    //     if (value == null) {
-                    //       return "Required field";
-                    //     } else {
-                    //       return null;
-                    //     }
-                    //   },
-                    // ),
-
-                    // dropdown menu contains front and back
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   child: DropdownButton<String>(
-                    //     items: const [
-                    //       DropdownMenuItem(
-                    //         value: 'front',
-                    //         child: Text('Front'),
-                    //       ),
-                    //       DropdownMenuItem(
-                    //         value: 'back',
-                    //         child: Text('Back'),
-                    //       ),
-                    //     ],
-                    //     onChanged: (value) {},
-                    //   ),
-                    // ),
-                    // height 20
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    // TextField
-                    GestureDetector(
-                      onTap: () {
-                        // show date picker
-                        showDatePicker(
+                ).toList();
+                return BlocListener<AddNewMediaCubit, AddNewMediaState>(
+                  listener: (context, state) {
+                    switch (state) {
+                      case AddNewMediaStateInitial():
+                        break;
+                      case AddNewMediaStateLoading():
+                        // dialog box of loading
+                        showDialog(
                           context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime.now(),
-                        ).then((value) {
-                          // if not null
-                          if (value != null) {
-                            // set date
-                            setState(() {
-                              date = value;
-                            });
-                          }
-                        });
-                      },
-                      child: AbsorbPointer(
-                        child: TextFormField(
-                          controller: TextEditingController(
-                            text: date != null ? _formatter.format(date!) : '',
-                          ),
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(14),
+                          builder: (context) {
+                            return const AlertDialog(
+                              title: Center(
+                                child: CircularProgressIndicator(),
                               ),
-                            ),
-                            hintText: 'Measurement Date',
-                            suffixIcon: Icon(
-                              date == null
-                                  ? Icons.radio_button_unchecked
-                                  : Icons.radio_button_checked,
-                            ),
-                            prefixIcon:
-                                const Icon(Icons.calendar_month_outlined),
-                          ),
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter date';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(
-                      height: 20,
-                    ),
-
-                    // Muscle group selection chips
-                    BlocBuilder<GetAllMuscleGroupsCubit,
-                        GetAllMuscleGroupsState>(
-                      builder: (context, state) {
-                        return state.when(
-                          initial: () {
-                            return const CircularProgressIndicator();
-                          },
-                          loading: () {
-                            return const CircularProgressIndicator();
-                          },
-                          failure: (cause) {
-                            return Text('Failed to load widgets: $cause');
-                          },
-                          success: (widgets) {
-                            return Wrap(
-                              spacing: 8.0,
-                              children: widgets.map((widget) {
-                                final isSelected =
-                                    _muscleGroups.contains(widget);
-                                return FilterChip(
-                                  label: Text(widget),
-                                  selected: isSelected,
-                                  onSelected: (selected) {
-                                    setState(() {
-                                      if (selected) {
-                                        _muscleGroups.add(widget);
-                                      } else {
-                                        _muscleGroups.remove(widget);
-                                      }
-                                    });
-                                  },
-                                );
-                              }).toList(),
                             );
                           },
                         );
-                      },
-                    ),
+                        break;
 
-                    // Date picker in yyyy-mm-dd format
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   child: ElevatedButton(
-                    //     onPressed: () {
-                    //       // show date picker
-                    //       showDatePicker(
-                    //         context: context,
-                    //         initialDate: DateTime.now(),
-                    //         firstDate: DateTime(2000),
-                    //         lastDate: DateTime(2025),
-                    //       ).then((value) {
-                    //         // if not null
-                    //         if (value != null) {
-                    //           // set date
-                    //           setState(() {
-                    //             date = value;
-                    //           });
-                    //         }
-                    //       });
-                    //     },
-                    //     child: const Text('Select Date'),
-                    //   ),
-                    // ),
+                      case AddNewMediaStateSuccess(:final savedImage):
+                        Navigator.of(context).pop();
+                        context
+                            .read<LoadPicturesCubit>()
+                            .updateList(savedImage);
+                        // context
+                        //     .read<FilteredGalleryImagesCubit>()
+                        //     .updateList(s.savedImage);
+                        Navigator.pop(context);
+                        break;
+                      case AddNewMediaStateFailure(:final failure):
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(failure),
+                          ),
+                        );
+                        break;
+                    }
+                  },
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            // TagsDropdown(
+                            //   context.read<BodyPictureRepository>(),
+                            //   (tag) {
+                            //     setState(() {
+                            //       this.tag = tag;
+                            //     });
+                            //   },
+                            // ),
 
-                    // IMage view
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    MeasurementPictureSelectorFormField(
-                      builder: (field) {
-                        return _MeasurementPictureSelector(field);
-                      },
-                      onSaved: (newValue) {
-                        if (newValue != null) {
-                          setState(() {
-                            imagePath = newValue;
-                          });
-                        }
-                      },
-                      initialValue: '',
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please select an image';
-                        }
-                        return null;
-                      },
-                    ),
-                    // Spacer(),
+                            Center(
+                              child: BlocBuilder<GetAllImageTagsCubit,
+                                  GetAllImageTagsState>(
+                                builder: (context, state) {
+                                  return state.when(
+                                    initial: () => const SizedBox.shrink(),
+                                    loading: () =>
+                                        const CircularProgressIndicator(),
+                                    error: (cause) => Text('Error: $cause'),
+                                    loaded: (tags) {
+                                      return BlocListener<AddNewImageTagCubit,
+                                          AddNewImageTagState>(
+                                        listener: (context, state) {
+                                          state.when(
+                                            initial: () {},
+                                            loading: () {},
+                                            success: (newTag) {
+                                              // add the new tag to the list
+                                              // tags.add(newTag);
+                                              context
+                                                  .read<GetAllImageTagsCubit>()
+                                                  .refreshImageTags();
+                                              setState(() {
+                                                tag = newTag;
+                                              });
+                                            },
+                                            error: (message) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(message),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: CustomDropDown<ImageTagModel>(
+                                          selectedItem: tag,
+                                          items: tags,
+                                          hintText: 'Select or Add Tag',
+                                          displayBuilder: (item) {
+                                            return item.tag;
+                                          },
+                                          onItemSelected: (item) {
+                                            setState(() {
+                                              tag = item;
+                                            });
+                                          },
+                                          onAddNewItem: (item) {
+                                            context
+                                                .read<AddNewImageTagCubit>()
+                                                .addImageTag(item);
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
 
-                    // FilledButton.icon(
-                    //   onPressed: () {
-                    //     final image = VaultImage(
-                    //       tag: tag,
-                    //       path: imagePath,
-                    //       date: date!,
-                    //     );
-                    //     // toast with image details
-                    //     ScaffoldMessenger.of(context).showSnackBar(
-                    //       SnackBar(
-                    //         content: Text(
-                    //           image.toString(),
-                    //         ),
-                    //       ),
-                    //     );
+                            const SizedBox(
+                              height: 20,
+                            ),
 
-                    //     context.read<AddNewMediaCubit>().saveMedia(image);
-                    //   },
-                    //   icon: const Icon(Icons.image),
-                    //   label: const Text('Save'),
-                    // ),
-                    const SizedBox(
-                      height: 20,
+                            // TextField -- Measurement Date
+                            GestureDetector(
+                              onTap: () {
+                                // show date picker
+                                showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime.now(),
+                                ).then((value) {
+                                  // if not null
+                                  if (value != null) {
+                                    // set date
+                                    setState(() {
+                                      date = value;
+                                    });
+                                  }
+                                });
+                              },
+                              child: AbsorbPointer(
+                                child: TextFormField(
+                                  controller: TextEditingController(
+                                    text: date != null
+                                        ? _formatter.format(date!)
+                                        : '',
+                                  ),
+                                  decoration: InputDecoration(
+                                    border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(14),
+                                      ),
+                                    ),
+                                    hintText: 'Measurement Date',
+                                    suffixIcon: Icon(
+                                      date == null
+                                          ? Icons.radio_button_unchecked
+                                          : Icons.radio_button_checked,
+                                    ),
+                                    prefixIcon: const Icon(
+                                      Icons.calendar_month_outlined,
+                                    ),
+                                  ),
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter date';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(
+                              height: 20,
+                            ),
+
+                            // Muscle group selection chips
+                            MultiDropdown<MeasurementTargetModel>(
+                              items: dropDownTargetItems,
+                              // controller: controller,
+                              searchEnabled: true,
+                              // chipDecoration: const ChipDecoration(
+                              //   backgroundColor: Colors.yellow,
+                              //   wrap: true,
+                              //   runSpacing: 2,
+                              //   spacing: 10,
+                              // ),
+                              fieldDecoration: FieldDecoration(
+                                hintText: 'Measurement Target Groups',
+                                hintStyle:
+                                    const TextStyle(color: Colors.black87),
+                                prefixIcon: const Icon(
+                                  Icons.sports_gymnastics_outlined,
+                                ),
+                                showClearIcon: false,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide:
+                                      const BorderSide(color: Colors.grey),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ),
+                              dropdownDecoration: const DropdownDecoration(
+                                marginTop: 2,
+                                maxHeight: 600,
+                                header: Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    'Select Muscle Groups',
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              dropdownItemDecoration: DropdownItemDecoration(
+                                selectedIcon: const Icon(
+                                  Icons.check_box,
+                                  color: Colors.green,
+                                ),
+                                disabledIcon: Icon(
+                                  Icons.lock,
+                                  color: Colors.grey.shade300,
+                                ),
+                              ),
+                              // validator: (value) {},
+                              onSelectionChange: (selectedItems) {
+                                // debugPrint('OnSelectionChange: $selectedItems');
+                                _muscleGroups
+                                  ..clear()
+                                  ..addAll(selectedItems);
+                              },
+                            ),
+
+                            // Picture Notes
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(14),
+                                  ),
+                                ),
+                                hintText: 'Notes',
+                                prefixIcon: const Icon(
+                                  Icons.note_add_outlined,
+                                ),
+                              ),
+                              maxLines: 3,
+                              onChanged: (value) {
+                                setState(() {
+                                  note = value;
+                                });
+                              },
+                            ),
+
+                            // IMage view
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            MeasurementPictureSelectorFormField(
+                              builder: (field) {
+                                return _MeasurementPictureSelector(field);
+                              },
+                              onSaved: (newValue) {
+                                if (newValue != null) {
+                                  setState(() {
+                                    imagePath = newValue;
+                                  });
+                                }
+                              },
+                              initialValue: '',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please select an image';
+                                }
+                                return null;
+                              },
+                            ),
+                            // Spacer(),
+
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -329,14 +392,15 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
         ),
         icon: const Icon(Icons.image),
         onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            final image = SaveVaultImageModel(
-              tag: tag,
-              path: imagePath,
-              date: date!,
-              muscleGroup: [],
-            );
-            context.read<AddNewMediaCubit>().saveMedia(image);
+          if (_formKey.currentState!.validate() && tag != null) {
+            context.read<AddNewMediaCubit>().saveMedia(
+                  date: date!,
+                  tag: tag!.tag,
+                  path: imagePath,
+                  targets: _muscleGroups.map((e) => e.id).toList(),
+                  tagId: tag!.id,
+                  note: note,
+                );
           }
         },
       ),
@@ -396,8 +460,35 @@ class _MeasurementPictureSelector extends StatelessWidget {
               height: MediaQuery.of(context).size.width * 0.9,
               // width: MediaQuery.of(context).size.width * 0.9,
               child: formState.value == null || formState.value == ''
-                  ? const Center(
-                      child: Text('Add an Image'),
+                  ? SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.add_photo_alternate_outlined,
+                            size: 64,
+                            color: Colors.grey.shade600,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Add an Image',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Tap to select from camera or gallery',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ],
+                      ),
                     )
                   : Image.file(
                       File(formState.value!),

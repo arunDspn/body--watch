@@ -155,7 +155,7 @@ extension AddNewMediaStatePatterns on AddNewMediaState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(VaultImage savedImage)? success,
+    TResult Function(VaultImageModel savedImage)? success,
     TResult Function(String failure)? failure,
     required TResult orElse(),
   }) {
@@ -191,7 +191,7 @@ extension AddNewMediaStatePatterns on AddNewMediaState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(VaultImage savedImage) success,
+    required TResult Function(VaultImageModel savedImage) success,
     required TResult Function(String failure) failure,
   }) {
     final _that = this;
@@ -223,7 +223,7 @@ extension AddNewMediaStatePatterns on AddNewMediaState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(VaultImage savedImage)? success,
+    TResult? Function(VaultImageModel savedImage)? success,
     TResult? Function(String failure)? failure,
   }) {
     final _that = this;
@@ -287,7 +287,7 @@ class AddNewMediaStateLoading implements AddNewMediaState {
 class AddNewMediaStateSuccess implements AddNewMediaState {
   const AddNewMediaStateSuccess({required this.savedImage});
 
-  final VaultImage savedImage;
+  final VaultImageModel savedImage;
 
   /// Create a copy of AddNewMediaState
   /// with the given fields replaced by the non-null parameter values.
@@ -322,9 +322,9 @@ abstract mixin class $AddNewMediaStateSuccessCopyWith<$Res>
           $Res Function(AddNewMediaStateSuccess) _then) =
       _$AddNewMediaStateSuccessCopyWithImpl;
   @useResult
-  $Res call({VaultImage savedImage});
+  $Res call({VaultImageModel savedImage});
 
-  $VaultImageCopyWith<$Res> get savedImage;
+  $VaultImageModelCopyWith<$Res> get savedImage;
 }
 
 /// @nodoc
@@ -345,7 +345,7 @@ class _$AddNewMediaStateSuccessCopyWithImpl<$Res>
       savedImage: null == savedImage
           ? _self.savedImage
           : savedImage // ignore: cast_nullable_to_non_nullable
-              as VaultImage,
+              as VaultImageModel,
     ));
   }
 
@@ -353,8 +353,8 @@ class _$AddNewMediaStateSuccessCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $VaultImageCopyWith<$Res> get savedImage {
-    return $VaultImageCopyWith<$Res>(_self.savedImage, (value) {
+  $VaultImageModelCopyWith<$Res> get savedImage {
+    return $VaultImageModelCopyWith<$Res>(_self.savedImage, (value) {
       return _then(_self.copyWith(savedImage: value));
     });
   }

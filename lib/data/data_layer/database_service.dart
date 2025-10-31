@@ -20,8 +20,7 @@ class DatabaseService {
   static const String userSettingsTable = 'user_settings';
 
   /// All measurement data will be stored in this table
-  // TODO: change table name to measurementsData
-  static const String measurementsDataTable = 'measurements';
+  static const String measurementsDataTable = 'measurementsData';
 
   /// metrics table
   /// stores base metrics with their standard unit
@@ -54,6 +53,10 @@ class DatabaseService {
   /// pictures table
   /// This table stores all pictures for measurements
   static const String picturesTable = 'pictures';
+
+  /// picture targets table
+  /// This table stores the targets associated with each picture
+  static const String pictureTargetsTable = 'picture_targets';
 
   /// Database name
   static const String _databaseName = 'database.db';
@@ -245,7 +248,7 @@ class DatabaseService {
 
   /// Create measurements table - stores user measurements
   static const String _createMeasurementTable = '''
-    CREATE TABLE "measurements" (
+    CREATE TABLE $measurementsDataTable (
       "id"	INTEGER,
       "user_id" INTEGER NOT NULL,
       "value"	REAL NOT NULL CHECK (value > 0),
@@ -263,7 +266,7 @@ class DatabaseService {
   static const String _createTagTable = '''
     CREATE TABLE IF NOT EXISTS $tagsTable (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      tag TEXT NOT NULL
+      tag TEXT NOT NULL UNIQUE
     );
   ''';
 
@@ -271,32 +274,38 @@ class DatabaseService {
   // chest, back, legs, arms, shoulders, abs, neck, waist, hips, calves, thighs,
   // butt, feet, face,
   static const String _insertTagsQuery = '''
-    INSERT INTO $tagsTable (tag)
+    INSERT OR IGNORE INTO $tagsTable (tag)
     VALUES
-      ('chest'),
-      ('back'),
-      ('legs'),
-      ('arms'),
-      ('shoulders'),
-      ('abs'),
-      ('neck'),
-      ('waist'),
-      ('hips'),
-      ('calves'),
-      ('thighs'),
-      ('feet'),
-      ('face');
+      ('double chin'),
+      ('love handles'),
+      ('muffin top'),
+      ('six pack'),
+      ('bingo wings'),
+      ('saddle bags'),
+      ('turkey neck');
   ''';
 
   // Pictures Table
   static const _createPictureTable = '''
     CREATE TABLE IF NOT EXISTS $picturesTable (
-      id TEXT PRIMARY KEY NOT NULL UNIQUE,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       file TEXT NOT NULL,
       thumbnail_file TEXT NOT NULL,
       date TEXT NOT NULL,
-      tag TEXT NOT NULL,
-      note TEXT NOT NULL
+      tag_id INTEGER NOT NULL,
+      note TEXT,
+      FOREIGN KEY(tag_id) REFERENCES $tagsTable(id)
+    );
+  ''';
+
+  // Picture Targets Junction Table (many-to-many relationship)
+  static const String _createPictureTargetsTable = '''
+    CREATE TABLE IF NOT EXISTS $pictureTargetsTable (
+      picture_id INTEGER NOT NULL,
+      target_id INTEGER NOT NULL,
+      PRIMARY KEY(picture_id, target_id),
+      FOREIGN KEY(picture_id) REFERENCES $picturesTable(id) ON DELETE CASCADE,
+      FOREIGN KEY(target_id) REFERENCES $measurementTargetsTable(id) ON DELETE CASCADE
     );
   ''';
 
@@ -347,6 +356,7 @@ class DatabaseService {
     await db.execute(_createMeasurementTable);
     await db.execute(_createTagTable);
     await db.execute(_createPictureTable);
+    await db.execute(_createPictureTargetsTable);
 
     // Seed reference data
     await db.execute(_insertMetrics);

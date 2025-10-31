@@ -17,7 +17,7 @@ import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.da
 import 'package:watcha_body/data/data_layer/database_service.dart';
 import 'package:watcha_body/data/data_layer/user_preference/user_preference_reposiotry.dart';
 import 'package:watcha_body/data/domain/i_auth_repository.dart';
-import 'package:watcha_body/data/domain/i_bodypicture_facade.dart';
+import 'package:watcha_body/data/domain/body_picture/i_bodypicture_facade.dart';
 import 'package:watcha_body/data/domain/measurement/i_measurements.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/data/repositories/local_auth_repository_impl.dart';
@@ -37,7 +37,9 @@ import 'package:watcha_body/presentation/measurement_in_detail/cubit/delete_meas
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/getallmeasurments_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media_view.dart';
+import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new_image_tag_cubit/add_new_image_tag_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/add_new_media_cubit.dart';
+import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/image_tag_cubit/get_all_image_tags_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/common/cubits/cubit/get_all_muscle_groups_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/compare_picture_form_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/load_picture_to_compare_cubit.dart';
@@ -226,6 +228,17 @@ class App extends StatelessWidget {
               context.read<UserPreferenceRepository>(),
             ),
           ),
+          // Image Tag Cubit can be added here if needed globally
+          BlocProvider(
+            create: (context) => GetAllImageTagsCubit(
+              bodyPictureRepository: context.read<BodyPictureRepository>(),
+            )..getAllImageTags(),
+          ),
+          BlocProvider(
+            create: (context) => AddNewImageTagCubit(
+              bodyPictureRepository: context.read<BodyPictureRepository>(),
+            ),
+          ),
         ],
         child: Builder(
           builder: (context) {
@@ -363,10 +376,7 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
       );
     case AppIniter.routeName:
       return MaterialPageRoute<void>(
-        builder: (context) => MultiBlocProvider(
-          providers: [],
-          child: const AppIniter(),
-        ),
+        builder: (context) => const AppIniter(),
       );
     // case VaultGalleryView.routeName:
     //   return MaterialPageRoute<void>(

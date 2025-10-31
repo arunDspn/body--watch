@@ -10,7 +10,7 @@ sealed class PictureTypeFilterModalState with _$PictureTypeFilterModalState {
   }) = PictureTypeFilterModalStateFailed;
   // success
   const factory PictureTypeFilterModalState.success({
-    required List<String> allTypes,
-    required List<String> selectedTypes,
+    required List<ImageTagModel> allTypes,
+    required List<ImageTagModel> selectedTypes,
   }) = PictureTypeFilterModalStateSuccess;
 }

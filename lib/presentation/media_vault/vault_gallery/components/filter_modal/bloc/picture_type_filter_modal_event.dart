@@ -5,7 +5,7 @@ sealed class PictureTypeFilterModalEvent with _$PictureTypeFilterModalEvent {
   const factory PictureTypeFilterModalEvent.started() = _Started;
   // toggle
   const factory PictureTypeFilterModalEvent.toggle({
-    required String type,
+    required ImageTagModel type,
     required bool value,
   }) = _Toggle;
   // search

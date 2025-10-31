@@ -6,16 +6,17 @@ part 'vault_image_model.g.dart';
 
 /// This is used for translation of db records
 @freezed
-abstract class VaultImage with _$VaultImage {
-  const factory VaultImage({
-    required String id,
+abstract class VaultImageModel with _$VaultImageModel {
+  const factory VaultImageModel({
+    required int id,
     required String tag,
+    required List<String> targets,
     required String file,
     @JsonKey(name: 'thumbnail_file') required String thumbnailFile,
     required DateTime date,
     required String note,
-  }) = _VaultImage;
+  }) = _VaultImageModel;
 
-  factory VaultImage.fromJson(Map<String, dynamic> json) =>
-      _$VaultImageFromJson(json);
+  factory VaultImageModel.fromJson(Map<String, dynamic> json) =>
+      _$VaultImageModelFromJson(json);
 }

@@ -155,7 +155,7 @@ extension PictureTypeFilterModalEventPatterns on PictureTypeFilterModalEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? started,
-    TResult Function(String type, bool value)? toggle,
+    TResult Function(ImageTagModel type, bool value)? toggle,
     TResult Function(String query)? search,
     TResult Function()? clear,
     required TResult orElse(),
@@ -191,7 +191,7 @@ extension PictureTypeFilterModalEventPatterns on PictureTypeFilterModalEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() started,
-    required TResult Function(String type, bool value) toggle,
+    required TResult Function(ImageTagModel type, bool value) toggle,
     required TResult Function(String query) search,
     required TResult Function() clear,
   }) {
@@ -223,7 +223,7 @@ extension PictureTypeFilterModalEventPatterns on PictureTypeFilterModalEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? started,
-    TResult? Function(String type, bool value)? toggle,
+    TResult? Function(ImageTagModel type, bool value)? toggle,
     TResult? Function(String query)? search,
     TResult? Function()? clear,
   }) {
@@ -268,7 +268,7 @@ class _Started implements PictureTypeFilterModalEvent {
 class _Toggle implements PictureTypeFilterModalEvent {
   const _Toggle({required this.type, required this.value});
 
-  final String type;
+  final ImageTagModel type;
   final bool value;
 
   /// Create a copy of PictureTypeFilterModalEvent
@@ -302,7 +302,9 @@ abstract mixin class _$ToggleCopyWith<$Res>
   factory _$ToggleCopyWith(_Toggle value, $Res Function(_Toggle) _then) =
       __$ToggleCopyWithImpl;
   @useResult
-  $Res call({String type, bool value});
+  $Res call({ImageTagModel type, bool value});
+
+  $ImageTagModelCopyWith<$Res> get type;
 }
 
 /// @nodoc
@@ -323,12 +325,22 @@ class __$ToggleCopyWithImpl<$Res> implements _$ToggleCopyWith<$Res> {
       type: null == type
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
-              as String,
+              as ImageTagModel,
       value: null == value
           ? _self.value
           : value // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
+  }
+
+  /// Create a copy of PictureTypeFilterModalEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ImageTagModelCopyWith<$Res> get type {
+    return $ImageTagModelCopyWith<$Res>(_self.type, (value) {
+      return _then(_self.copyWith(type: value));
+    });
   }
 }
 
@@ -549,7 +561,8 @@ extension PictureTypeFilterModalStatePatterns on PictureTypeFilterModalState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(String message)? failed,
-    TResult Function(List<String> allTypes, List<String> selectedTypes)?
+    TResult Function(
+            List<ImageTagModel> allTypes, List<ImageTagModel> selectedTypes)?
         success,
     required TResult orElse(),
   }) {
@@ -583,7 +596,8 @@ extension PictureTypeFilterModalStatePatterns on PictureTypeFilterModalState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(String message) failed,
-    required TResult Function(List<String> allTypes, List<String> selectedTypes)
+    required TResult Function(
+            List<ImageTagModel> allTypes, List<ImageTagModel> selectedTypes)
         success,
   }) {
     final _that = this;
@@ -613,7 +627,8 @@ extension PictureTypeFilterModalStatePatterns on PictureTypeFilterModalState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(String message)? failed,
-    TResult? Function(List<String> allTypes, List<String> selectedTypes)?
+    TResult? Function(
+            List<ImageTagModel> allTypes, List<ImageTagModel> selectedTypes)?
         success,
   }) {
     final _that = this;
@@ -723,20 +738,20 @@ class _$PictureTypeFilterModalStateFailedCopyWithImpl<$Res>
 class PictureTypeFilterModalStateSuccess
     implements PictureTypeFilterModalState {
   const PictureTypeFilterModalStateSuccess(
-      {required final List<String> allTypes,
-      required final List<String> selectedTypes})
+      {required final List<ImageTagModel> allTypes,
+      required final List<ImageTagModel> selectedTypes})
       : _allTypes = allTypes,
         _selectedTypes = selectedTypes;
 
-  final List<String> _allTypes;
-  List<String> get allTypes {
+  final List<ImageTagModel> _allTypes;
+  List<ImageTagModel> get allTypes {
     if (_allTypes is EqualUnmodifiableListView) return _allTypes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_allTypes);
   }
 
-  final List<String> _selectedTypes;
-  List<String> get selectedTypes {
+  final List<ImageTagModel> _selectedTypes;
+  List<ImageTagModel> get selectedTypes {
     if (_selectedTypes is EqualUnmodifiableListView) return _selectedTypes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_selectedTypes);
@@ -781,7 +796,7 @@ abstract mixin class $PictureTypeFilterModalStateSuccessCopyWith<$Res>
           $Res Function(PictureTypeFilterModalStateSuccess) _then) =
       _$PictureTypeFilterModalStateSuccessCopyWithImpl;
   @useResult
-  $Res call({List<String> allTypes, List<String> selectedTypes});
+  $Res call({List<ImageTagModel> allTypes, List<ImageTagModel> selectedTypes});
 }
 
 /// @nodoc
@@ -803,11 +818,11 @@ class _$PictureTypeFilterModalStateSuccessCopyWithImpl<$Res>
       allTypes: null == allTypes
           ? _self._allTypes
           : allTypes // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<ImageTagModel>,
       selectedTypes: null == selectedTypes
           ? _self._selectedTypes
           : selectedTypes // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<ImageTagModel>,
     ));
   }
 }

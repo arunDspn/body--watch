@@ -2,16 +2,18 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:uuid/uuid.dart';
 import 'package:watcha_body/data/data_layer/database_service.dart';
-import 'package:watcha_body/data/domain/i_bodypicture_facade.dart';
+import 'package:watcha_body/data/domain/body_picture/i_bodypicture_facade.dart';
+import 'package:watcha_body/data/domain/body_picture/models/image_tag_model.dart';
+import 'package:watcha_body/data/domain/body_picture/models/save_vault_image_request.dart';
+import 'package:watcha_body/data/domain/body_picture/models/vault_image_entity.dart';
 import 'package:watcha_body/data/domain/models/compare_images_model.dart';
-import 'package:watcha_body/data/domain/models/save_vault_image_model.dart';
-import 'package:watcha_body/data/domain/models/vault_image_model.dart';
+import 'package:watcha_body/data/domain/body_picture/models/vault_image_model.dart';
 
 class BodyPictureRepository implements IBodyPictureFacade {
   BodyPictureRepository({
@@ -25,11 +27,27 @@ class BodyPictureRepository implements IBodyPictureFacade {
   final String thumbnailsFolderPath;
 
   @override
-  Future<Either<String, String>> addTag(String tag) async {
+  Future<Either<String, ImageTagModel>> addTag(String tag) async {
     try {
-      final query = 'INSERT INTO tags (tag) VALUES ("$tag")';
       final db = await databaseService.database;
-      await db.execute(query);
+      final id = await db.insert(DatabaseService.tagsTable, {'tag': tag});
+      final insertedTag = ImageTagModel(id: id, tag: tag);
+      return right(insertedTag);
+    } on Exception catch (e) {
+      return left(e.toString());
+    }
+  }
+
+  /// Get Single Tag by ID
+  Future<Either<String, ImageTagModel>> getTagById(int id) async {
+    try {
+      final query = 'SELECT * FROM ${DatabaseService.tagsTable} WHERE id = $id';
+      final db = await databaseService.database;
+      final result = await db.rawQuery(query);
+      if (result.isEmpty) {
+        return left('No tag found for the given id');
+      }
+      final tag = ImageTagModel.fromJson(result.first);
       return right(tag);
     } on Exception catch (e) {
       return left(e.toString());
@@ -71,16 +89,47 @@ class BodyPictureRepository implements IBodyPictureFacade {
   }
 
   @override
-  Future<Either<String, void>> deleteBodyPicture(String id) async {
+  Future<Either<String, void>> deleteBodyPicture(int id) async {
     try {
       final db = await databaseService.database;
-      final itemDetailsRawData =
-          await db.query('pictures', where: 'id = ?', whereArgs: [id]);
+      final itemDetailsRawData = await db.rawQuery(
+        '''
+          SELECT 
+            p.id,
+            p.file,
+            p.thumbnail_file,
+            p.date,
+            p.note,
+            t.tag,
+            GROUP_CONCAT(mt.name) as targets
+          FROM pictures p
+          INNER JOIN tags t ON p.tag_id = t.id
+          LEFT JOIN picture_targets pt ON p.id = pt.picture_id
+          LEFT JOIN ${DatabaseService.measurementTargetsTable} mt ON pt.target_id = mt.id
+          WHERE p.id = ?
+          GROUP BY p.id
+        ''',
+        [id],
+      );
 
       if (itemDetailsRawData.isEmpty) {
         return left('No ID found');
       }
-      final itemDetails = VaultImage.fromJson(itemDetailsRawData.first);
+
+      final row = itemDetailsRawData.first;
+      final targets = row['targets'] != null
+          ? (row['targets'] as String).split(',')
+          : <String>[];
+
+      final itemDetails = VaultImageModel(
+        id: row['id'] as int,
+        tag: row['tag'] as String,
+        targets: targets,
+        file: row['file'] as String,
+        thumbnailFile: row['thumbnail_file'] as String,
+        date: DateTime.parse(row['date'] as String),
+        note: row['note'] as String,
+      );
 
       final orginalFileName = itemDetails.file;
       final thumbnailFileName = itemDetails.thumbnailFile;
@@ -115,15 +164,44 @@ class BodyPictureRepository implements IBodyPictureFacade {
   }
 
   @override
-  Future<Either<String, List<VaultImage>>> getAllBodyPictures() async {
+  Future<Either<String, List<VaultImageModel>>> getAllBodyPictures() async {
     try {
       final db = await databaseService.database;
 
-      final data = await db.query(
-        'pictures',
+      final data = await db.rawQuery(
+        '''
+          SELECT 
+            p.id,
+            p.file,
+            p.thumbnail_file,
+            p.date,
+            p.note,
+            t.tag,
+            GROUP_CONCAT(mt.name) as targets
+          FROM pictures p
+          INNER JOIN tags t ON p.tag_id = t.id
+          LEFT JOIN picture_targets pt ON p.id = pt.picture_id
+          LEFT JOIN ${DatabaseService.measurementTargetsTable} mt ON pt.target_id = mt.id
+          GROUP BY p.id
+          ORDER BY p.date DESC
+        ''',
       );
 
-      final dataList = data.map(VaultImage.fromJson).toList();
+      final dataList = data.map((row) {
+        final targets = row['targets'] != null
+            ? (row['targets']! as String).split(',')
+            : <String>[];
+
+        return VaultImageModel(
+          id: row['id']! as int,
+          tag: row['tag']! as String,
+          targets: targets,
+          file: row['file']! as String,
+          thumbnailFile: row['thumbnail_file']! as String,
+          date: DateTime.parse(row['date']! as String),
+          note: row['note']! as String,
+        );
+      }).toList();
 
       return right(dataList);
     } catch (e) {
@@ -132,14 +210,14 @@ class BodyPictureRepository implements IBodyPictureFacade {
   }
 
   @override
-  Future<Either<String, List<String>>> getAllTags() async {
+  Future<Either<String, List<ImageTagModel>>> getAllTags() async {
     const query = 'SELECT *  FROM tags';
     final db = await databaseService.database;
     final result = await db.rawQuery(query);
 
     // result is list of {id: 1, tag: chest}
     // return list of tags
-    final tags = result.map((e) => e['tag']! as String).toList();
+    final tags = result.map(ImageTagModel.fromJson).toList();
 
     log(tags.toString());
 
@@ -147,13 +225,58 @@ class BodyPictureRepository implements IBodyPictureFacade {
   }
 
   @override
-  Future<Either<String, VaultImage>> getBodyPictureById(int id) {
-    // TODO: implement getBodyPictureById
-    throw UnimplementedError();
+  Future<Either<String, VaultImageModel>> getBodyPictureById(int id) async {
+    try {
+      final db = await databaseService.database;
+
+      final result = await db.rawQuery(
+        '''
+          SELECT 
+            p.id,
+            p.file,
+            p.thumbnail_file,
+            p.date,
+            p.note,
+            t.tag,
+            GROUP_CONCAT(mt.name) as targets
+          FROM pictures p
+          INNER JOIN ${DatabaseService.tagsTable} t ON p.tag_id = t.id
+          LEFT JOIN ${DatabaseService.pictureTargetsTable} pt ON p.id = pt.picture_id
+          LEFT JOIN ${DatabaseService.measurementTargetsTable} mt ON pt.target_id = mt.id
+          WHERE p.id = ?
+          GROUP BY p.id
+        ''',
+        [id],
+      );
+
+      if (result.isEmpty) {
+        return left('No picture found for the given id');
+      }
+
+      final row = result.first;
+      final targets = row['targets'] != null
+          ? (row['targets']! as String).split(',')
+          : <String>[];
+
+      final bodyPicture = VaultImageModel(
+        id: row['id']! as int,
+        tag: row['tag']! as String,
+        targets: targets,
+        file: row['file']! as String,
+        thumbnailFile: row['thumbnail_file']! as String,
+        date: DateTime.parse(row['date']! as String),
+        note: row['note']! as String,
+      );
+
+      return right(bodyPicture);
+    } catch (e) {
+      return left(e.toString());
+    }
   }
 
   @override
-  Future<Either<String, List<VaultImage>>> getBodyPicturesByTag(String tag) {
+  Future<Either<String, List<VaultImageModel>>> getBodyPicturesByTag(
+      String tag) {
     // TODO: implement getBodyPicturesByTag
     throw UnimplementedError();
   }
@@ -165,13 +288,13 @@ class BodyPictureRepository implements IBodyPictureFacade {
   }
 
   @override
-  Future<Either<String, VaultImage>> saveBodyPicture(
-    SaveVaultImageModel bodyPicture,
+  Future<Either<String, VaultImageModel>> saveBodyPicture(
+    SaveVaultImageRequest request,
   ) async {
-    final imageName = _fileNameCreator(bodyPicture.path, bodyPicture.tag);
+    final imageName = _fileNameCreator(request.path, request.tag);
     final thumbnailName = _thumbnailFileNameCreator(
-      bodyPicture.path,
-      bodyPicture.tag,
+      request.path,
+      request.tag,
     );
 
     try {
@@ -183,16 +306,19 @@ class BodyPictureRepository implements IBodyPictureFacade {
       // Save image and thumbnail in the app's documents directory
       // Create the image file
       final imageFile = File(imageNameWithPathToSave);
-      await imageFile.writeAsBytes(File(bodyPicture.path).readAsBytesSync());
+      await imageFile.writeAsBytes(File(request.path).readAsBytesSync());
 
       final thumbnailBytes = await FlutterImageCompress.compressWithFile(
-        bodyPicture.path,
+        request.path,
         minWidth: 400,
         minHeight: 400,
         quality: 94,
       );
 
       if (thumbnailBytes == null) {
+        // Delete the saved image file if thumbnail creation fails
+        await imageFile.delete();
+
         return left('Image compression failed');
       }
 
@@ -202,32 +328,47 @@ class BodyPictureRepository implements IBodyPictureFacade {
         thumbnailBytes,
       );
 
-      final id = const Uuid().v1();
-
-      final dbData = VaultImage(
-        id: id,
-        tag: bodyPicture.tag,
+      final dbData = VaultImageEntity(
+        tagId: request.tagId,
         file: imageName,
         thumbnailFile: thumbnailName,
-        date: bodyPicture.date,
-        note: '',
+        date: request.date,
+        note: request.note,
       );
 
-      // final uiData = DisplayVaultImageModel(
-      //   id: id,
-      //   tag: bodyPicture.tag,
-      //   file: encryptedFile.path,
-      //   thumbnailData: thumbnailImageBytes,
-      //   date: bodyPicture.date,
-      //   nonce: baseCodedNonce,
-      // );
       final db = await databaseService.database;
 
-      final result = await db.insert('pictures', dbData.toJson());
+      // Insert picture - SQLite will auto-generate the ID
+      final pictureId = await db.insert(
+        DatabaseService.picturesTable,
+        dbData.toJson(),
+      );
 
-      //todo: check result and handle result
+      // If muscle targets are provided, insert them into the junction table
+      for (final targetId in request.targets) {
+        await db.insert(DatabaseService.pictureTargetsTable, {
+          'picture_id': pictureId,
+          'target_id': targetId,
+        });
+      }
 
-      return right(dbData);
+      // Fetch the inserted data to return as model
+      final insertedData = await getBodyPictureById(pictureId);
+
+      return insertedData;
+
+      // insertedData.fold(
+      //   (l) => null,
+      //   (r) => log('Inserted Data fetched successfully: ${r.id}'),
+      // );
+
+      // if (insertedData.isLeft()) {
+      //   // If fetching the inserted data fails, delete the created files
+      //   _deleteImageAndThumbnailByName(imageName, thumbnailName);
+      //   return left('Error when fetching inserted Data');
+      // }
+
+      // return right(insertedData);
     } on DatabaseException catch (e) {
       _deleteImageAndThumbnailByName(imageName, thumbnailName);
       return left(e.toString());
@@ -251,7 +392,8 @@ class BodyPictureRepository implements IBodyPictureFacade {
   // }
 
   @override
-  Future<Either<String, VaultImage>> updateBodyPicture(VaultImage bodyPicture) {
+  Future<Either<String, VaultImageModel>> updateBodyPicture(
+      VaultImageModel bodyPicture) {
     // TODO: implement updateBodyPicture
     throw UnimplementedError();
   }
@@ -264,18 +406,78 @@ class BodyPictureRepository implements IBodyPictureFacade {
   }) async {
     try {
       final db = await databaseService.database;
-      final firstResult = await db.query(
-        'pictures',
-        where: 'tag = ? AND STRFTIME("%Y-%m-%d", date) = ?',
-        whereArgs: [tag, firstdate.toIso8601String().substring(0, 10)],
+
+      final firstResult = await db.rawQuery(
+        '''
+          SELECT 
+            p.id,
+            p.file,
+            p.thumbnail_file,
+            p.date,
+            p.note,
+            t.tag,
+            GROUP_CONCAT(mt.name) as targets
+          FROM pictures p
+          INNER JOIN tags t ON p.tag_id = t.id
+          LEFT JOIN picture_targets pt ON p.id = pt.picture_id
+          LEFT JOIN ${DatabaseService.measurementTargetsTable} mt ON pt.target_id = mt.id
+          WHERE t.tag = ? AND STRFTIME("%Y-%m-%d", p.date) = ?
+          GROUP BY p.id
+        ''',
+        [tag, firstdate.toIso8601String().substring(0, 10)],
       );
-      final secondResult = await db.query(
-        'pictures',
-        where: 'tag = ? AND STRFTIME("%Y-%m-%d", date) = ?',
-        whereArgs: [tag, seconddate.toIso8601String().substring(0, 10)],
+
+      final secondResult = await db.rawQuery(
+        '''
+          SELECT 
+            p.id,
+            p.file,
+            p.thumbnail_file,
+            p.date,
+            p.note,
+            t.tag,
+            GROUP_CONCAT(mt.name) as targets
+          FROM pictures p
+          INNER JOIN tags t ON p.tag_id = t.id
+          LEFT JOIN picture_targets pt ON p.id = pt.picture_id
+          LEFT JOIN ${DatabaseService.measurementTargetsTable} mt ON pt.target_id = mt.id
+          WHERE t.tag = ? AND STRFTIME("%Y-%m-%d", p.date) = ?
+          GROUP BY p.id
+        ''',
+        [tag, seconddate.toIso8601String().substring(0, 10)],
       );
-      final firstImagesSet = firstResult.map(VaultImage.fromJson).toList();
-      final secondImagesSet = secondResult.map(VaultImage.fromJson).toList();
+
+      final firstImagesSet = firstResult.map((row) {
+        final targets = row['targets'] != null
+            ? (row['targets'] as String).split(',')
+            : <String>[];
+
+        return VaultImageModel(
+          id: row['id'] as int,
+          tag: row['tag'] as String,
+          targets: targets,
+          file: row['file'] as String,
+          thumbnailFile: row['thumbnail_file'] as String,
+          date: DateTime.parse(row['date'] as String),
+          note: row['note'] as String,
+        );
+      }).toList();
+
+      final secondImagesSet = secondResult.map((row) {
+        final targets = row['targets'] != null
+            ? (row['targets'] as String).split(',')
+            : <String>[];
+
+        return VaultImageModel(
+          id: row['id'] as int,
+          tag: row['tag'] as String,
+          targets: targets,
+          file: row['file'] as String,
+          thumbnailFile: row['thumbnail_file'] as String,
+          date: DateTime.parse(row['date'] as String),
+          note: row['note'] as String,
+        );
+      }).toList();
 
       final firstImages = firstImagesSet
           .map(
@@ -341,7 +543,6 @@ class BodyPictureRepository implements IBodyPictureFacade {
     return '${timestamp}_${tag}_thumbnail.$extension';
   }
 
-  @override
   Future<Either<String, List<String>>> getAllMuscleGroups() async {
     try {
       final db = await databaseService.database;

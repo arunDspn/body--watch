@@ -28,7 +28,7 @@ class TagDropDownMenuController extends ChangeNotifier {
       state = TagDropDownMenuStateError(l);
       notifyListeners();
     }, (r) {
-      state = TagDropDownMenuStateLoaded(tags: r);
+      // state = TagDropDownMenuStateLoaded(tags: r);
       notifyListeners();
     });
   }

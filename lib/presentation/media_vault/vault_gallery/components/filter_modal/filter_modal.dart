@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:watcha_body/data/domain/body_picture/models/image_tag_model.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/filter_modal/bloc/picture_type_filter_modal_bloc.dart';
 
 class FilterModal extends StatelessWidget {
@@ -55,8 +56,8 @@ class FilterModal extends StatelessWidget {
                     child: Text('Failed'),
                   ),
                 PictureTypeFilterModalStateSuccess(
-                  allTypes: final List<String> allTypes,
-                  selectedTypes: final List<String> selectedTypes,
+                  allTypes: final List<ImageTagModel> allTypes,
+                  selectedTypes: final List<ImageTagModel> selectedTypes,
                 ) =>
                   Builder(
                     builder: (context) {
@@ -71,7 +72,7 @@ class FilterModal extends StatelessWidget {
                             itemCount: list.length,
                             itemBuilder: (context, index) {
                               return CheckboxListTile(
-                                title: Text(list[index]),
+                                title: Text(list[index].tag),
                                 selected: selected.contains(list[index]),
                                 value: selected.contains(list[index]),
                                 controlAffinity:

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'vault_image_model.dart';
+part of 'save_vault_image_request.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,100 +13,111 @@ part of 'vault_image_model.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$VaultImage {
-  String get id;
+mixin _$SaveVaultImageRequest {
+  /// Tag ID associated with the image
+  int get tagId;
+
+  /// Tag associated with the image
   String get tag;
-  String get file;
-  @JsonKey(name: 'thumbnail_file')
-  String get thumbnailFile;
+
+  /// Targets (muscle groups) associated with the image
+  List<int> get targets;
+
+  /// Path where the image is stored in the device
+  String get path;
+
+  /// Date when the image was taken
   DateTime get date;
+
+  /// Note associated with the image
   String get note;
 
-  /// Create a copy of VaultImage
+  /// Create a copy of SaveVaultImageRequest
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  $VaultImageCopyWith<VaultImage> get copyWith =>
-      _$VaultImageCopyWithImpl<VaultImage>(this as VaultImage, _$identity);
+  $SaveVaultImageRequestCopyWith<SaveVaultImageRequest> get copyWith =>
+      _$SaveVaultImageRequestCopyWithImpl<SaveVaultImageRequest>(
+          this as SaveVaultImageRequest, _$identity);
 
-  /// Serializes this VaultImage to a JSON map.
+  /// Serializes this SaveVaultImageRequest to a JSON map.
   Map<String, dynamic> toJson();
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is VaultImage &&
-            (identical(other.id, id) || other.id == id) &&
+            other is SaveVaultImageRequest &&
+            (identical(other.tagId, tagId) || other.tagId == tagId) &&
             (identical(other.tag, tag) || other.tag == tag) &&
-            (identical(other.file, file) || other.file == file) &&
-            (identical(other.thumbnailFile, thumbnailFile) ||
-                other.thumbnailFile == thumbnailFile) &&
+            const DeepCollectionEquality().equals(other.targets, targets) &&
+            (identical(other.path, path) || other.path == path) &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.note, note) || other.note == note));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, tag, file, thumbnailFile, date, note);
+  int get hashCode => Object.hash(runtimeType, tagId, tag,
+      const DeepCollectionEquality().hash(targets), path, date, note);
 
   @override
   String toString() {
-    return 'VaultImage(id: $id, tag: $tag, file: $file, thumbnailFile: $thumbnailFile, date: $date, note: $note)';
+    return 'SaveVaultImageRequest(tagId: $tagId, tag: $tag, targets: $targets, path: $path, date: $date, note: $note)';
   }
 }
 
 /// @nodoc
-abstract mixin class $VaultImageCopyWith<$Res> {
-  factory $VaultImageCopyWith(
-          VaultImage value, $Res Function(VaultImage) _then) =
-      _$VaultImageCopyWithImpl;
+abstract mixin class $SaveVaultImageRequestCopyWith<$Res> {
+  factory $SaveVaultImageRequestCopyWith(SaveVaultImageRequest value,
+          $Res Function(SaveVaultImageRequest) _then) =
+      _$SaveVaultImageRequestCopyWithImpl;
   @useResult
   $Res call(
-      {String id,
+      {int tagId,
       String tag,
-      String file,
-      @JsonKey(name: 'thumbnail_file') String thumbnailFile,
+      List<int> targets,
+      String path,
       DateTime date,
       String note});
 }
 
 /// @nodoc
-class _$VaultImageCopyWithImpl<$Res> implements $VaultImageCopyWith<$Res> {
-  _$VaultImageCopyWithImpl(this._self, this._then);
+class _$SaveVaultImageRequestCopyWithImpl<$Res>
+    implements $SaveVaultImageRequestCopyWith<$Res> {
+  _$SaveVaultImageRequestCopyWithImpl(this._self, this._then);
 
-  final VaultImage _self;
-  final $Res Function(VaultImage) _then;
+  final SaveVaultImageRequest _self;
+  final $Res Function(SaveVaultImageRequest) _then;
 
-  /// Create a copy of VaultImage
+  /// Create a copy of SaveVaultImageRequest
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? tagId = null,
     Object? tag = null,
-    Object? file = null,
-    Object? thumbnailFile = null,
+    Object? targets = null,
+    Object? path = null,
     Object? date = null,
     Object? note = null,
   }) {
     return _then(_self.copyWith(
-      id: null == id
-          ? _self.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
+      tagId: null == tagId
+          ? _self.tagId
+          : tagId // ignore: cast_nullable_to_non_nullable
+              as int,
       tag: null == tag
           ? _self.tag
           : tag // ignore: cast_nullable_to_non_nullable
               as String,
-      file: null == file
-          ? _self.file
-          : file // ignore: cast_nullable_to_non_nullable
-              as String,
-      thumbnailFile: null == thumbnailFile
-          ? _self.thumbnailFile
-          : thumbnailFile // ignore: cast_nullable_to_non_nullable
+      targets: null == targets
+          ? _self.targets
+          : targets // ignore: cast_nullable_to_non_nullable
+              as List<int>,
+      path: null == path
+          ? _self.path
+          : path // ignore: cast_nullable_to_non_nullable
               as String,
       date: null == date
           ? _self.date
@@ -120,8 +131,8 @@ class _$VaultImageCopyWithImpl<$Res> implements $VaultImageCopyWith<$Res> {
   }
 }
 
-/// Adds pattern-matching-related methods to [VaultImage].
-extension VaultImagePatterns on VaultImage {
+/// Adds pattern-matching-related methods to [SaveVaultImageRequest].
+extension SaveVaultImageRequestPatterns on SaveVaultImageRequest {
   /// A variant of `map` that fallback to returning `orElse`.
   ///
   /// It is equivalent to doing:
@@ -136,12 +147,12 @@ extension VaultImagePatterns on VaultImage {
 
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>(
-    TResult Function(_VaultImage value)? $default, {
+    TResult Function(_SaveVaultImageRequest value)? $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _VaultImage() when $default != null:
+      case _SaveVaultImageRequest() when $default != null:
         return $default(_that);
       case _:
         return orElse();
@@ -163,11 +174,11 @@ extension VaultImagePatterns on VaultImage {
 
   @optionalTypeArgs
   TResult map<TResult extends Object?>(
-    TResult Function(_VaultImage value) $default,
+    TResult Function(_SaveVaultImageRequest value) $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _VaultImage():
+      case _SaveVaultImageRequest():
         return $default(_that);
       case _:
         throw StateError('Unexpected subclass');
@@ -188,11 +199,11 @@ extension VaultImagePatterns on VaultImage {
 
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_VaultImage value)? $default,
+    TResult? Function(_SaveVaultImageRequest value)? $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _VaultImage() when $default != null:
+      case _SaveVaultImageRequest() when $default != null:
         return $default(_that);
       case _:
         return null;
@@ -213,20 +224,15 @@ extension VaultImagePatterns on VaultImage {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(
-            String id,
-            String tag,
-            String file,
-            @JsonKey(name: 'thumbnail_file') String thumbnailFile,
-            DateTime date,
-            String note)?
+    TResult Function(int tagId, String tag, List<int> targets, String path,
+            DateTime date, String note)?
         $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
-      case _VaultImage() when $default != null:
-        return $default(_that.id, _that.tag, _that.file, _that.thumbnailFile,
+      case _SaveVaultImageRequest() when $default != null:
+        return $default(_that.tagId, _that.tag, _that.targets, _that.path,
             _that.date, _that.note);
       case _:
         return orElse();
@@ -248,19 +254,14 @@ extension VaultImagePatterns on VaultImage {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(
-            String id,
-            String tag,
-            String file,
-            @JsonKey(name: 'thumbnail_file') String thumbnailFile,
-            DateTime date,
-            String note)
+    TResult Function(int tagId, String tag, List<int> targets, String path,
+            DateTime date, String note)
         $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _VaultImage():
-        return $default(_that.id, _that.tag, _that.file, _that.thumbnailFile,
+      case _SaveVaultImageRequest():
+        return $default(_that.tagId, _that.tag, _that.targets, _that.path,
             _that.date, _that.note);
       case _:
         throw StateError('Unexpected subclass');
@@ -281,19 +282,14 @@ extension VaultImagePatterns on VaultImage {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(
-            String id,
-            String tag,
-            String file,
-            @JsonKey(name: 'thumbnail_file') String thumbnailFile,
-            DateTime date,
-            String note)?
+    TResult? Function(int tagId, String tag, List<int> targets, String path,
+            DateTime date, String note)?
         $default,
   ) {
     final _that = this;
     switch (_that) {
-      case _VaultImage() when $default != null:
-        return $default(_that.id, _that.tag, _that.file, _that.thumbnailFile,
+      case _SaveVaultImageRequest() when $default != null:
+        return $default(_that.tagId, _that.tag, _that.targets, _that.path,
             _that.date, _that.note);
       case _:
         return null;
@@ -303,42 +299,61 @@ extension VaultImagePatterns on VaultImage {
 
 /// @nodoc
 @JsonSerializable()
-class _VaultImage implements VaultImage {
-  const _VaultImage(
-      {required this.id,
+class _SaveVaultImageRequest implements SaveVaultImageRequest {
+  const _SaveVaultImageRequest(
+      {required this.tagId,
       required this.tag,
-      required this.file,
-      @JsonKey(name: 'thumbnail_file') required this.thumbnailFile,
+      required final List<int> targets,
+      required this.path,
       required this.date,
-      required this.note});
-  factory _VaultImage.fromJson(Map<String, dynamic> json) =>
-      _$VaultImageFromJson(json);
+      required this.note})
+      : _targets = targets;
+  factory _SaveVaultImageRequest.fromJson(Map<String, dynamic> json) =>
+      _$SaveVaultImageRequestFromJson(json);
 
+  /// Tag ID associated with the image
   @override
-  final String id;
+  final int tagId;
+
+  /// Tag associated with the image
   @override
   final String tag;
+
+  /// Targets (muscle groups) associated with the image
+  final List<int> _targets;
+
+  /// Targets (muscle groups) associated with the image
   @override
-  final String file;
+  List<int> get targets {
+    if (_targets is EqualUnmodifiableListView) return _targets;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_targets);
+  }
+
+  /// Path where the image is stored in the device
   @override
-  @JsonKey(name: 'thumbnail_file')
-  final String thumbnailFile;
+  final String path;
+
+  /// Date when the image was taken
   @override
   final DateTime date;
+
+  /// Note associated with the image
   @override
   final String note;
 
-  /// Create a copy of VaultImage
+  /// Create a copy of SaveVaultImageRequest
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
-  _$VaultImageCopyWith<_VaultImage> get copyWith =>
-      __$VaultImageCopyWithImpl<_VaultImage>(this, _$identity);
+  _$SaveVaultImageRequestCopyWith<_SaveVaultImageRequest> get copyWith =>
+      __$SaveVaultImageRequestCopyWithImpl<_SaveVaultImageRequest>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$VaultImageToJson(
+    return _$SaveVaultImageRequestToJson(
       this,
     );
   }
@@ -347,79 +362,79 @@ class _VaultImage implements VaultImage {
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _VaultImage &&
-            (identical(other.id, id) || other.id == id) &&
+            other is _SaveVaultImageRequest &&
+            (identical(other.tagId, tagId) || other.tagId == tagId) &&
             (identical(other.tag, tag) || other.tag == tag) &&
-            (identical(other.file, file) || other.file == file) &&
-            (identical(other.thumbnailFile, thumbnailFile) ||
-                other.thumbnailFile == thumbnailFile) &&
+            const DeepCollectionEquality().equals(other._targets, _targets) &&
+            (identical(other.path, path) || other.path == path) &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.note, note) || other.note == note));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, tag, file, thumbnailFile, date, note);
+  int get hashCode => Object.hash(runtimeType, tagId, tag,
+      const DeepCollectionEquality().hash(_targets), path, date, note);
 
   @override
   String toString() {
-    return 'VaultImage(id: $id, tag: $tag, file: $file, thumbnailFile: $thumbnailFile, date: $date, note: $note)';
+    return 'SaveVaultImageRequest(tagId: $tagId, tag: $tag, targets: $targets, path: $path, date: $date, note: $note)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$VaultImageCopyWith<$Res>
-    implements $VaultImageCopyWith<$Res> {
-  factory _$VaultImageCopyWith(
-          _VaultImage value, $Res Function(_VaultImage) _then) =
-      __$VaultImageCopyWithImpl;
+abstract mixin class _$SaveVaultImageRequestCopyWith<$Res>
+    implements $SaveVaultImageRequestCopyWith<$Res> {
+  factory _$SaveVaultImageRequestCopyWith(_SaveVaultImageRequest value,
+          $Res Function(_SaveVaultImageRequest) _then) =
+      __$SaveVaultImageRequestCopyWithImpl;
   @override
   @useResult
   $Res call(
-      {String id,
+      {int tagId,
       String tag,
-      String file,
-      @JsonKey(name: 'thumbnail_file') String thumbnailFile,
+      List<int> targets,
+      String path,
       DateTime date,
       String note});
 }
 
 /// @nodoc
-class __$VaultImageCopyWithImpl<$Res> implements _$VaultImageCopyWith<$Res> {
-  __$VaultImageCopyWithImpl(this._self, this._then);
+class __$SaveVaultImageRequestCopyWithImpl<$Res>
+    implements _$SaveVaultImageRequestCopyWith<$Res> {
+  __$SaveVaultImageRequestCopyWithImpl(this._self, this._then);
 
-  final _VaultImage _self;
-  final $Res Function(_VaultImage) _then;
+  final _SaveVaultImageRequest _self;
+  final $Res Function(_SaveVaultImageRequest) _then;
 
-  /// Create a copy of VaultImage
+  /// Create a copy of SaveVaultImageRequest
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? id = null,
+    Object? tagId = null,
     Object? tag = null,
-    Object? file = null,
-    Object? thumbnailFile = null,
+    Object? targets = null,
+    Object? path = null,
     Object? date = null,
     Object? note = null,
   }) {
-    return _then(_VaultImage(
-      id: null == id
-          ? _self.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
+    return _then(_SaveVaultImageRequest(
+      tagId: null == tagId
+          ? _self.tagId
+          : tagId // ignore: cast_nullable_to_non_nullable
+              as int,
       tag: null == tag
           ? _self.tag
           : tag // ignore: cast_nullable_to_non_nullable
               as String,
-      file: null == file
-          ? _self.file
-          : file // ignore: cast_nullable_to_non_nullable
-              as String,
-      thumbnailFile: null == thumbnailFile
-          ? _self.thumbnailFile
-          : thumbnailFile // ignore: cast_nullable_to_non_nullable
+      targets: null == targets
+          ? _self._targets
+          : targets // ignore: cast_nullable_to_non_nullable
+              as List<int>,
+      path: null == path
+          ? _self.path
+          : path // ignore: cast_nullable_to_non_nullable
               as String,
       date: null == date
           ? _self.date

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:watcha_body/data/domain/body_picture/models/image_tag_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 
 part 'picture_type_filter_modal_event.dart';
@@ -26,7 +27,6 @@ class PictureTypeFilterModalBloc
               );
             },
           );
-
         case _Toggle(:final type):
           if (state is PictureTypeFilterModalStateSuccess) {
             final currentState = state as PictureTypeFilterModalStateSuccess;

@@ -463,30 +463,30 @@ ORDER BY mt.display_order;
       final db = await databaseService.database;
       final result = await db.rawQuery(
         '''
-SELECT 
-  m.id,
-  m.value,
-  m.date,
-  m.notes,
-  m.target_id,
-  m.created_at,
-  m.updated_at,
-  mt.name as target_name,
-  mt.type,
-  met.code as metric_code,
-  met.base_unit
-FROM (
-  SELECT 
-    *,
-    ROW_NUMBER() OVER (PARTITION BY target_id ORDER BY date DESC, id DESC) as rn
-  FROM measurements
-  WHERE user_id = ?
-) m
-INNER JOIN measurement_targets mt ON m.target_id = mt.id
-INNER JOIN target_metrics tm ON mt.id = tm.target_id
-INNER JOIN metrics met ON tm.metric_id = met.id
-WHERE m.rn <= 3
-ORDER BY m.target_id, m.date DESC
+            SELECT 
+              m.id,
+              m.value,
+              m.date,
+              m.notes,
+              m.target_id,
+              m.created_at,
+              m.updated_at,
+              mt.name as target_name,
+              mt.type,
+              met.code as metric_code,
+              met.base_unit
+            FROM (
+              SELECT 
+                *,
+                ROW_NUMBER() OVER (PARTITION BY target_id ORDER BY date DESC, id DESC) as rn
+              FROM ${DatabaseService.measurementsDataTable}
+              WHERE user_id = ?
+            ) m
+            INNER JOIN ${DatabaseService.measurementTargetsTable} mt ON m.target_id = mt.id
+            INNER JOIN ${DatabaseService.targetMetricsTable} tm ON mt.id = tm.target_id
+            INNER JOIN ${DatabaseService.metricsTable} met ON tm.metric_id = met.id
+            WHERE m.rn <= 3
+            ORDER BY m.target_id, m.date DESC
           ''',
         [userId],
       );

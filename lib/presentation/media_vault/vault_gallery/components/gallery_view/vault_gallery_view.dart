@@ -6,7 +6,7 @@ import 'package:grouped_scroll_view/grouped_scroll_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-import 'package:watcha_body/data/domain/models/vault_image_model.dart';
+import 'package:watcha_body/data/domain/body_picture/models/vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/add_new_media_view.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/view/compare_pictures_view.dart';
@@ -131,14 +131,17 @@ class VaultGalleryView extends StatelessWidget {
                                   builder: (context) {
                                     // Filtering inside the UI
                                     // TODO: Is that Good
-                                    var filteredImages = <VaultImage>[];
+                                    var filteredImages = <VaultImageModel>[];
                                     if (selectedTypes.isEmpty) {
                                       filteredImages = pictures;
                                     } else {
                                       filteredImages = pictures
                                           .where(
                                             (element) => selectedTypes
-                                                .contains(element.tag),
+                                                .map(
+                                                  (e) => e.tag,
+                                                )
+                                                .contains(element.id),
                                           )
                                           .toList();
                                     }

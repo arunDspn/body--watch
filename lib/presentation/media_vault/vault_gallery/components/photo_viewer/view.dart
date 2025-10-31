@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:watcha_body/data/domain/models/vault_image_model.dart';
+import 'package:watcha_body/data/domain/body_picture/models/vault_image_model.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/components/data_linked/view/data_linked_view.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/cubit/delete_image_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
@@ -20,7 +19,7 @@ class PhotoViewer extends StatefulWidget {
   });
 
   // final String path;
-  final List<VaultImage> images;
+  final List<VaultImageModel> images;
   final int currentIndex;
   final String imagePath;
 

@@ -4,7 +4,7 @@ part of 'delete_image_cubit.dart';
 sealed class DeleteImageState with _$DeleteImageState {
   const factory DeleteImageState.initial() = DeleteImageStateInitial;
   const factory DeleteImageState.loading() = DeleteImageStateLoading;
-  const factory DeleteImageState.success({required String deletedItemId}) =
+  const factory DeleteImageState.success({required int deletedItemId}) =
       DeleteImageStateSuccess;
   const factory DeleteImageState.failed(String message) =
       DeleteImageStateFailed;

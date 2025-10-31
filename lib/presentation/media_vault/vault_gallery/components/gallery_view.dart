@@ -3,7 +3,7 @@ part of 'gallery_view/vault_gallery_view.dart';
 class _GalleryView extends StatelessWidget {
   const _GalleryView({required this.filteredImages});
 
-  final List<VaultImage> filteredImages;
+  final List<VaultImageModel> filteredImages;
 
   // formated date to like 25 dec 2023 using intl package
   String formatDate(DateTime date) {
@@ -65,7 +65,7 @@ class _GalleryView extends StatelessWidget {
 
             //
             Expanded(
-              child: GroupedScrollView<VaultImage, String>.grid(
+              child: GroupedScrollView<VaultImageModel, String>.grid(
                 data: filteredImages,
                 itemBuilder: (context, item) {
                   return _PhotoThumbnail(
@@ -139,8 +139,8 @@ class _PhotoThumbnail extends StatelessWidget {
     required this.image,
     required this.images,
   });
-  final VaultImage image;
-  final List<VaultImage> images;
+  final VaultImageModel image;
+  final List<VaultImageModel> images;
   @override
   Widget build(BuildContext context) {
     final thumnailPath = context.read<FolderPath>().thumbnailsPath;

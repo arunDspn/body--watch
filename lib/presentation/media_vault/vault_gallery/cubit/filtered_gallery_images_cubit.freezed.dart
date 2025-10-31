@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$FilteredGalleryImagesState {
-  List<VaultImage> get galleryImages;
+  List<VaultImageModel> get galleryImages;
 
   /// Create a copy of FilteredGalleryImagesState
   /// with the given fields replaced by the non-null parameter values.
@@ -50,7 +50,7 @@ abstract mixin class $FilteredGalleryImagesStateCopyWith<$Res> {
           $Res Function(FilteredGalleryImagesState) _then) =
       _$FilteredGalleryImagesStateCopyWithImpl;
   @useResult
-  $Res call({List<VaultImage> galleryImages});
+  $Res call({List<VaultImageModel> galleryImages});
 }
 
 /// @nodoc
@@ -72,7 +72,7 @@ class _$FilteredGalleryImagesStateCopyWithImpl<$Res>
       galleryImages: null == galleryImages
           ? _self.galleryImages
           : galleryImages // ignore: cast_nullable_to_non_nullable
-              as List<VaultImage>,
+              as List<VaultImageModel>,
     ));
   }
 }
@@ -170,7 +170,7 @@ extension FilteredGalleryImagesStatePatterns on FilteredGalleryImagesState {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(List<VaultImage> galleryImages)? data,
+    TResult Function(List<VaultImageModel> galleryImages)? data,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -197,7 +197,7 @@ extension FilteredGalleryImagesStatePatterns on FilteredGalleryImagesState {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(List<VaultImage> galleryImages) data,
+    required TResult Function(List<VaultImageModel> galleryImages) data,
   }) {
     final _that = this;
     switch (_that) {
@@ -222,7 +222,7 @@ extension FilteredGalleryImagesStatePatterns on FilteredGalleryImagesState {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(List<VaultImage> galleryImages)? data,
+    TResult? Function(List<VaultImageModel> galleryImages)? data,
   }) {
     final _that = this;
     switch (_that) {
@@ -238,12 +238,12 @@ extension FilteredGalleryImagesStatePatterns on FilteredGalleryImagesState {
 
 class FilteredGalleryImagesData implements FilteredGalleryImagesState {
   const FilteredGalleryImagesData(
-      {required final List<VaultImage> galleryImages})
+      {required final List<VaultImageModel> galleryImages})
       : _galleryImages = galleryImages;
 
-  final List<VaultImage> _galleryImages;
+  final List<VaultImageModel> _galleryImages;
   @override
-  List<VaultImage> get galleryImages {
+  List<VaultImageModel> get galleryImages {
     if (_galleryImages is EqualUnmodifiableListView) return _galleryImages;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_galleryImages);
@@ -285,7 +285,7 @@ abstract mixin class $FilteredGalleryImagesDataCopyWith<$Res>
       _$FilteredGalleryImagesDataCopyWithImpl;
   @override
   @useResult
-  $Res call({List<VaultImage> galleryImages});
+  $Res call({List<VaultImageModel> galleryImages});
 }
 
 /// @nodoc
@@ -307,7 +307,7 @@ class _$FilteredGalleryImagesDataCopyWithImpl<$Res>
       galleryImages: null == galleryImages
           ? _self._galleryImages
           : galleryImages // ignore: cast_nullable_to_non_nullable
-              as List<VaultImage>,
+              as List<VaultImageModel>,
     ));
   }
 }

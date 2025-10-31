@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/data/domain/models/vault_image_model.dart';
+import 'package:watcha_body/data/domain/body_picture/models/vault_image_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 
 part 'load_pictures_state.dart';
@@ -12,7 +12,7 @@ class LoadPicturesCubit extends Cubit<LoadPicturesState> {
 
   final BodyPictureRepository bodyPictureRepository;
 
-  List<VaultImage> allImages = [];
+  List<VaultImageModel> allImages = [];
 
   void _filterByDate() {
     allImages.sort((a, b) => b.date.compareTo(a.date));
@@ -36,7 +36,7 @@ class LoadPicturesCubit extends Cubit<LoadPicturesState> {
     emit(const LoadPicturesState.loading());
   }
 
-  Future<void> updateList(VaultImage newImageData) async {
+  Future<void> updateList(VaultImageModel newImageData) async {
     final currentState = state;
     emit(const LoadPicturesState.loading());
     if (currentState is LoadPicturesStateLoaded) {
@@ -73,7 +73,7 @@ class LoadPicturesCubit extends Cubit<LoadPicturesState> {
   //     },
   //   );
   // }
-  Future<void> updateListAfterDelete(String id) async {
+  Future<void> updateListAfterDelete(int id) async {
     emit(const LoadPicturesState.loading());
     allImages.removeWhere((element) => element.id == id);
     emit(LoadPicturesState.loaded(allImages));

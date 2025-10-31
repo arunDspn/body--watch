@@ -145,7 +145,7 @@ extension LoadPicturesStatePatterns on LoadPicturesState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(List<VaultImage> pictures)? loaded,
+    TResult Function(List<VaultImageModel> pictures)? loaded,
     TResult Function(String message)? failed,
     required TResult orElse(),
   }) {
@@ -178,7 +178,7 @@ extension LoadPicturesStatePatterns on LoadPicturesState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(List<VaultImage> pictures) loaded,
+    required TResult Function(List<VaultImageModel> pictures) loaded,
     required TResult Function(String message) failed,
   }) {
     final _that = this;
@@ -207,7 +207,7 @@ extension LoadPicturesStatePatterns on LoadPicturesState {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
-    TResult? Function(List<VaultImage> pictures)? loaded,
+    TResult? Function(List<VaultImageModel> pictures)? loaded,
     TResult? Function(String message)? failed,
   }) {
     final _that = this;
@@ -247,11 +247,11 @@ class LoadPicturesStateLoading implements LoadPicturesState {
 /// @nodoc
 
 class LoadPicturesStateLoaded implements LoadPicturesState {
-  const LoadPicturesStateLoaded(final List<VaultImage> pictures)
+  const LoadPicturesStateLoaded(final List<VaultImageModel> pictures)
       : _pictures = pictures;
 
-  final List<VaultImage> _pictures;
-  List<VaultImage> get pictures {
+  final List<VaultImageModel> _pictures;
+  List<VaultImageModel> get pictures {
     if (_pictures is EqualUnmodifiableListView) return _pictures;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_pictures);
@@ -290,7 +290,7 @@ abstract mixin class $LoadPicturesStateLoadedCopyWith<$Res>
           $Res Function(LoadPicturesStateLoaded) _then) =
       _$LoadPicturesStateLoadedCopyWithImpl;
   @useResult
-  $Res call({List<VaultImage> pictures});
+  $Res call({List<VaultImageModel> pictures});
 }
 
 /// @nodoc
@@ -311,7 +311,7 @@ class _$LoadPicturesStateLoadedCopyWithImpl<$Res>
       null == pictures
           ? _self._pictures
           : pictures // ignore: cast_nullable_to_non_nullable
-              as List<VaultImage>,
+              as List<VaultImageModel>,
     ));
   }
 }

@@ -155,7 +155,7 @@ extension DeleteImageStatePatterns on DeleteImageState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(String deletedItemId)? success,
+    TResult Function(int deletedItemId)? success,
     TResult Function(String message)? failed,
     required TResult orElse(),
   }) {
@@ -191,7 +191,7 @@ extension DeleteImageStatePatterns on DeleteImageState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(String deletedItemId) success,
+    required TResult Function(int deletedItemId) success,
     required TResult Function(String message) failed,
   }) {
     final _that = this;
@@ -223,7 +223,7 @@ extension DeleteImageStatePatterns on DeleteImageState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(String deletedItemId)? success,
+    TResult? Function(int deletedItemId)? success,
     TResult? Function(String message)? failed,
   }) {
     final _that = this;
@@ -287,7 +287,7 @@ class DeleteImageStateLoading implements DeleteImageState {
 class DeleteImageStateSuccess implements DeleteImageState {
   const DeleteImageStateSuccess({required this.deletedItemId});
 
-  final String deletedItemId;
+  final int deletedItemId;
 
   /// Create a copy of DeleteImageState
   /// with the given fields replaced by the non-null parameter values.
@@ -322,7 +322,7 @@ abstract mixin class $DeleteImageStateSuccessCopyWith<$Res>
           $Res Function(DeleteImageStateSuccess) _then) =
       _$DeleteImageStateSuccessCopyWithImpl;
   @useResult
-  $Res call({String deletedItemId});
+  $Res call({int deletedItemId});
 }
 
 /// @nodoc
@@ -343,7 +343,7 @@ class _$DeleteImageStateSuccessCopyWithImpl<$Res>
       deletedItemId: null == deletedItemId
           ? _self.deletedItemId
           : deletedItemId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
     ));
   }
 }
