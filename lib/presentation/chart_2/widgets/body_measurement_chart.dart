@@ -19,11 +19,17 @@ class BodyMeasurementChart extends StatefulWidget {
   State<BodyMeasurementChart> createState() => _BodyMeasurementChartState();
 }
 
-class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
+class _BodyMeasurementChartState extends State<BodyMeasurementChart>
+    with SingleTickerProviderStateMixin {
   // State variables for chart management
   late ChartFilter _currentFilter;
   late DateTime _currentPeriod;
   int? _selectedPointIndex;
+
+  // Animation controller for smooth transitions
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -31,16 +37,44 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     _currentFilter = widget.defaultFilter;
     _currentPeriod = _calculateCurrentPeriod();
     _selectedPointIndex = null;
+
+    // Initialize animation controller
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+
+    _scaleAnimation = Tween<double>(begin: 0.95, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+    // Start initial animation
+    _animationController.forward();
   }
 
   @override
   void didUpdateWidget(BodyMeasurementChart oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Reset period if data changed
+    // Reset period if data changed and trigger animation
     if (oldWidget.data != widget.data) {
       _currentPeriod = _calculateCurrentPeriod();
       _selectedPointIndex = null;
+      _animationController.forward(from: 0.0);
     }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   /// Calculate the current period based on the selected filter and current date
@@ -71,6 +105,8 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
       _currentPeriod = _calculateCurrentPeriod();
       _selectedPointIndex = null; // Clear selection when changing filters
     });
+    // Trigger smooth animation on filter change
+    _animationController.forward(from: 0.0);
   }
 
   /// Navigate to previous or next period
@@ -89,6 +125,8 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
           : _getPreviousPeriod(_currentPeriod, _currentFilter);
       _selectedPointIndex = null; // Clear selection when navigating
     });
+    // Trigger smooth animation on navigation
+    _animationController.forward(from: 0.0);
   }
 
   /// Get the next period based on current filter
@@ -731,31 +769,52 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Title
-          Text(
-            widget.config.title,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title
+              Text(
+                widget.config.title,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+
+              // Filter tabs
+              _buildFilterTabs(),
+              const SizedBox(height: 16),
+
+              // Navigation and date display
+              _buildNavigationRow(),
+              const SizedBox(height: 16),
+
+              // Chart area with animation
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: SlideTransition(
+                      position: Tween<Offset>(
+                        begin: const Offset(0.0, 0.05),
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    ),
+                  );
+                },
+                child: _buildChartArea(),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-
-          // Filter tabs (placeholder)
-          _buildFilterTabs(),
-          const SizedBox(height: 16),
-
-          // Navigation and date display (placeholder)
-          _buildNavigationRow(),
-          const SizedBox(height: 16),
-
-          // Chart area (placeholder)
-          _buildChartArea(),
-        ],
+        ),
       ),
     );
   }
@@ -764,27 +823,57 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     return Container(
       height: 48,
       decoration: BoxDecoration(
+        color: Colors.grey.shade50,
         border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: ChartFilter.values.map((filter) {
           final isSelected = filter == _currentFilter;
           return Expanded(
-            child: GestureDetector(
-              onTap: () => _changeFilter(filter),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: isSelected ? widget.config.color : Colors.transparent,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Center(
-                  child: Text(
-                    filter.displayName,
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.grey.shade700,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => _changeFilter(filter),
+                  borderRadius: BorderRadius.circular(6),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                    decoration: BoxDecoration(
+                      color:
+                          isSelected ? widget.config.color : Colors.transparent,
+                      borderRadius: BorderRadius.circular(6),
+                      boxShadow: isSelected
+                          ? [
+                              BoxShadow(
+                                color: widget.config.color.withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ]
+                          : null,
+                    ),
+                    child: Center(
+                      child: AnimatedDefaultTextStyle(
+                        duration: const Duration(milliseconds: 200),
+                        style: TextStyle(
+                          color:
+                              isSelected ? Colors.white : Colors.grey.shade700,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontSize: isSelected ? 14 : 13,
+                        ),
+                        child: Text(filter.displayName),
+                      ),
                     ),
                   ),
                 ),
@@ -803,24 +892,60 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        IconButton(
-          onPressed: canGoPrevious ? () => _navigatePeriod(false) : null,
-          icon: Icon(
-            Icons.chevron_left,
-            color: canGoPrevious ? null : Colors.grey.shade400,
+        Material(
+          color: Colors.transparent,
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 200),
+            opacity: canGoPrevious ? 1.0 : 0.4,
+            child: IconButton(
+              onPressed: canGoPrevious ? () => _navigatePeriod(false) : null,
+              icon: Icon(
+                Icons.chevron_left,
+                color: canGoPrevious
+                    ? Theme.of(context).iconTheme.color
+                    : Colors.grey.shade400,
+              ),
+            ),
           ),
         ),
-        Text(
-          _getPeriodDisplayText(),
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: ScaleTransition(
+                scale: Tween<double>(begin: 0.8, end: 1.0).animate(
+                  CurvedAnimation(
+                    parent: animation,
+                    curve: Curves.easeOut,
+                  ),
+                ),
+                child: child,
               ),
+            );
+          },
+          child: Text(
+            _getPeriodDisplayText(),
+            key: ValueKey<String>(_getPeriodDisplayText()),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
         ),
-        IconButton(
-          onPressed: canGoNext ? () => _navigatePeriod(true) : null,
-          icon: Icon(
-            Icons.chevron_right,
-            color: canGoNext ? null : Colors.grey.shade400,
+        Material(
+          color: Colors.transparent,
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 200),
+            opacity: canGoNext ? 1.0 : 0.4,
+            child: IconButton(
+              onPressed: canGoNext ? () => _navigatePeriod(true) : null,
+              icon: Icon(
+                Icons.chevron_right,
+                color: canGoNext
+                    ? Theme.of(context).iconTheme.color
+                    : Colors.grey.shade400,
+              ),
+            ),
           ),
         ),
       ],
@@ -888,8 +1013,16 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     return Container(
       height: 300,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
+        color: Colors.white,
+        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
       child: LineChart(
@@ -900,8 +1033,9 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
             horizontalInterval: _calculateInterval(minY, maxY),
             getDrawingHorizontalLine: (value) {
               return FlLine(
-                color: Colors.grey.shade300,
+                color: Colors.grey.shade200,
                 strokeWidth: 1,
+                dashArray: [5, 5],
               );
             },
           ),
@@ -1223,8 +1357,16 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     return Container(
       height: 300,
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
+        color: Colors.white,
+        border: Border.all(color: Colors.grey.shade200),
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
       child: LineChart(
@@ -1235,8 +1377,9 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
             horizontalInterval: _calculateInterval(paddedMinY, paddedMaxY),
             getDrawingHorizontalLine: (value) {
               return FlLine(
-                color: Colors.grey.shade300,
+                color: Colors.grey.shade200,
                 strokeWidth: 1,
+                dashArray: [5, 5],
               );
             },
           ),
@@ -1344,10 +1487,18 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
             LineChartBarData(
               spots: _generateSpots(filteredData),
               isCurved: true,
-              curveSmoothness: 0.2,
+              curveSmoothness: 0.35,
               color: widget.config.color,
-              barWidth: 2,
+              barWidth: 2.5,
               isStrokeCapRound: true,
+              gradient: LinearGradient(
+                colors: [
+                  widget.config.color.withOpacity(0.8),
+                  widget.config.color,
+                ],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
               dotData: FlDotData(
                 show: true,
                 getDotPainter: (spot, percent, barData, index) {

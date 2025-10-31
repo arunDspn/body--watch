@@ -71,7 +71,7 @@ class _ChartsView2State extends State<ChartsView2> {
             children: [
               // Introduction text
               Text(
-                'Phase 7: Empty States & Edge Cases Complete',
+                'Phase 8: Animations & Polish Complete',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       color: Colors.green,
                       fontWeight: FontWeight.bold,
@@ -79,7 +79,7 @@ class _ChartsView2State extends State<ChartsView2> {
               ),
               const SizedBox(height: 8),
               Text(
-                '10-year navigation limit from latest data entry, proper empty chart display with axes and grid lines, navigation boundary checks with disabled buttons, single data point handling, and various edge case protections.',
+                'Smooth animations on filter changes and navigation (400ms fade/scale), enhanced filter tabs with InkWell ripple effects and shadows, polished navigation with animated opacity transitions, improved chart styling with rounded corners, subtle shadows, and dashed grid lines, gradient line styling with increased smoothness (0.35), and performance-optimized animations using SingleTickerProvider.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey.shade600,
                     ),
