@@ -71,7 +71,7 @@ class _ChartsView2State extends State<ChartsView2> {
             children: [
               // Introduction text
               Text(
-                'Phase 6: Interactions & Tooltips Complete',
+                'Phase 7: Empty States & Edge Cases Complete',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       color: Colors.green,
                       fontWeight: FontWeight.bold,
@@ -79,7 +79,7 @@ class _ChartsView2State extends State<ChartsView2> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Enhanced tooltip display with \"Value - Date\" format, improved tap feedback with visual selection, better touch handling, and custom tooltip styling.',
+                '10-year navigation limit from latest data entry, proper empty chart display with axes and grid lines, navigation boundary checks with disabled buttons, single data point handling, and various edge case protections.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.grey.shade600,
                     ),

@@ -75,6 +75,14 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
 
   /// Navigate to previous or next period
   void _navigatePeriod(bool isNext) {
+    // Check if navigation is allowed
+    if (isNext && !_canNavigateNext()) {
+      return; // Can't navigate to future
+    }
+    if (!isNext && !_canNavigatePrevious()) {
+      return; // Can't navigate beyond 10 years back
+    }
+
     setState(() {
       _currentPeriod = isNext
           ? _getNextPeriod(_currentPeriod, _currentFilter)
@@ -116,6 +124,55 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     setState(() {
       _selectedPointIndex = index;
     });
+  }
+
+  /// Get the latest data entry date, or current date if no data
+  DateTime _getLatestDataDate() {
+    if (widget.data.isEmpty) {
+      return DateTime.now();
+    }
+    return widget.data
+        .map((point) => point.dateTime)
+        .reduce((a, b) => a.isAfter(b) ? a : b);
+  }
+
+  /// Check if we can navigate to the next period
+  /// Navigation is limited to current date (can't navigate to future)
+  bool _canNavigateNext() {
+    final now = DateTime.now();
+    final nextPeriod = _getNextPeriod(_currentPeriod, _currentFilter);
+
+    switch (_currentFilter) {
+      case ChartFilter.week:
+        // Can navigate if next week start is before or equal to today
+        return !nextPeriod.isAfter(now);
+      case ChartFilter.month:
+        // Can navigate if next month is before or equal to current month
+        return nextPeriod.year < now.year ||
+            (nextPeriod.year == now.year && nextPeriod.month <= now.month);
+      case ChartFilter.threeMonth:
+        // Can navigate if next quarter start is before or equal to now
+        return nextPeriod.year < now.year ||
+            (nextPeriod.year == now.year && nextPeriod.month <= now.month);
+      case ChartFilter.year:
+        // Can navigate if next year is before or equal to current year
+        return nextPeriod.year <= now.year;
+    }
+  }
+
+  /// Check if we can navigate to the previous period
+  /// Navigation is limited to 10 years back from latest data entry
+  bool _canNavigatePrevious() {
+    final latestDate = _getLatestDataDate();
+    final tenYearsAgo = DateTime(
+      latestDate.year - 10,
+      latestDate.month,
+      latestDate.day,
+    );
+    final prevPeriod = _getPreviousPeriod(_currentPeriod, _currentFilter);
+
+    // Check if previous period would be before 10 years ago
+    return !prevPeriod.isBefore(tenYearsAgo);
   }
 
   /// Get data points filtered by the current period and filter
@@ -740,12 +797,18 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
   }
 
   Widget _buildNavigationRow() {
+    final canGoPrevious = _canNavigatePrevious();
+    final canGoNext = _canNavigateNext();
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
-          onPressed: () => _navigatePeriod(false),
-          icon: const Icon(Icons.chevron_left),
+          onPressed: canGoPrevious ? () => _navigatePeriod(false) : null,
+          icon: Icon(
+            Icons.chevron_left,
+            color: canGoPrevious ? null : Colors.grey.shade400,
+          ),
         ),
         Text(
           _getPeriodDisplayText(),
@@ -754,8 +817,11 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
               ),
         ),
         IconButton(
-          onPressed: () => _navigatePeriod(true),
-          icon: const Icon(Icons.chevron_right),
+          onPressed: canGoNext ? () => _navigatePeriod(true) : null,
+          icon: Icon(
+            Icons.chevron_right,
+            color: canGoNext ? null : Colors.grey.shade400,
+          ),
         ),
       ],
     );
@@ -811,6 +877,223 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
       case ChartFilter.year:
         return 365.0; // Approximately 1 year
     }
+  }
+
+  /// Build empty chart showing only axes and grid lines (no data message)
+  Widget _buildEmptyChart() {
+    // Use a reasonable Y-axis range for empty chart
+    final minY = 0.0;
+    final maxY = 100.0;
+
+    return Container(
+      height: 300,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+      child: LineChart(
+        LineChartData(
+          gridData: FlGridData(
+            show: widget.config.showGridLines,
+            drawVerticalLine: false,
+            horizontalInterval: _calculateInterval(minY, maxY),
+            getDrawingHorizontalLine: (value) {
+              return FlLine(
+                color: Colors.grey.shade300,
+                strokeWidth: 1,
+              );
+            },
+          ),
+          titlesData: FlTitlesData(
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) =>
+                    _buildBottomTitleWidgets(value, meta, []),
+                reservedSize: 30,
+              ),
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) =>
+                    _buildLeftTitleWidgets(value, meta),
+                reservedSize: 45,
+                interval: _calculateInterval(minY, maxY),
+              ),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+          ),
+          borderData: FlBorderData(
+            show: true,
+            border: Border(
+              bottom: BorderSide(color: Colors.grey.shade300),
+              left: BorderSide(color: Colors.grey.shade300),
+            ),
+          ),
+          minX: 0,
+          maxX: _getMaxXValue(),
+          minY: minY,
+          maxY: maxY,
+          lineTouchData: LineTouchData(enabled: false),
+          lineBarsData: [], // No data to display
+        ),
+      ),
+    );
+  }
+
+  /// Build chart for single data point with special handling
+  Widget _buildSinglePointChart(List<DataPoint> filteredData) {
+    final dataPoint = filteredData.first;
+
+    // Create a small range around the single point for better visualization
+    final value = dataPoint.value;
+    final minY = value - (value * 0.1).abs() - 1;
+    final maxY = value + (value * 0.1).abs() + 1;
+
+    // Calculate position for the single point
+    DateTime startDate;
+    DateTime endDate;
+
+    switch (_currentFilter) {
+      case ChartFilter.week:
+        startDate = _currentPeriod;
+        endDate = _currentPeriod.add(const Duration(days: 7));
+        break;
+      case ChartFilter.month:
+        startDate = _currentPeriod;
+        endDate = DateTime(_currentPeriod.year, _currentPeriod.month + 1, 1);
+        break;
+      case ChartFilter.threeMonth:
+        startDate = _currentPeriod;
+        endDate = DateTime(_currentPeriod.year, _currentPeriod.month + 3, 1);
+        break;
+      case ChartFilter.year:
+        startDate = _currentPeriod;
+        endDate = DateTime(_currentPeriod.year + 1, 1, 1);
+        break;
+    }
+
+    final x = _calculateXPosition(dataPoint.dateTime, startDate, endDate);
+
+    return Container(
+      height: 300,
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+      child: LineChart(
+        LineChartData(
+          gridData: FlGridData(
+            show: widget.config.showGridLines,
+            drawVerticalLine: false,
+            horizontalInterval: _calculateInterval(minY, maxY),
+            getDrawingHorizontalLine: (value) {
+              return FlLine(
+                color: Colors.grey.shade300,
+                strokeWidth: 1,
+              );
+            },
+          ),
+          titlesData: FlTitlesData(
+            bottomTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) =>
+                    _buildBottomTitleWidgets(value, meta, filteredData),
+                reservedSize: 30,
+              ),
+            ),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) =>
+                    _buildLeftTitleWidgets(value, meta),
+                reservedSize: 45,
+                interval: _calculateInterval(minY, maxY),
+              ),
+            ),
+            rightTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+            topTitles: const AxisTitles(
+              sideTitles: SideTitles(showTitles: false),
+            ),
+          ),
+          borderData: FlBorderData(
+            show: true,
+            border: Border(
+              bottom: BorderSide(color: Colors.grey.shade300),
+              left: BorderSide(color: Colors.grey.shade300),
+            ),
+          ),
+          minX: 0,
+          maxX: _getMaxXValue(),
+          minY: minY,
+          maxY: maxY,
+          lineTouchData: LineTouchData(
+            enabled: true,
+            touchTooltipData: LineTouchTooltipData(
+              getTooltipColor: (touchedSpot) => Colors.white,
+              tooltipPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 8,
+              ),
+              tooltipMargin: 12,
+              tooltipBorder: BorderSide(
+                color: widget.config.color.withOpacity(0.3),
+                width: 1.5,
+              ),
+              getTooltipItems: (spots) {
+                return spots.map((spot) {
+                  final valueText = '${dataPoint.value} ${widget.config.unit}';
+                  final dateText = _formatDate(dataPoint.dateTime);
+
+                  return LineTooltipItem(
+                    '$valueText - $dateText',
+                    TextStyle(
+                      color: widget.config.color,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      letterSpacing: 0.2,
+                    ),
+                    textAlign: TextAlign.center,
+                  );
+                }).toList();
+              },
+            ),
+            handleBuiltInTouches: true,
+            touchSpotThreshold: 20,
+          ),
+          lineBarsData: [
+            LineChartBarData(
+              spots: [FlSpot(x, value)],
+              isCurved: false,
+              color: widget.config.color,
+              barWidth: 2,
+              dotData: FlDotData(
+                show: true,
+                getDotPainter: (spot, percent, barData, index) {
+                  return FlDotCirclePainter(
+                    radius: 6,
+                    color: widget.config.color,
+                    strokeWidth: 2.5,
+                    strokeColor: Colors.white,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   /// Build a highlight for the current period section in the chart
@@ -917,24 +1200,14 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
   Widget _buildChartArea() {
     final filteredData = _getFilteredData();
 
-    // If no data, show empty state
+    // If no data, show empty chart with axes and grid lines (no message)
     if (filteredData.isEmpty) {
-      return Container(
-        height: 300,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Center(
-          child: Text(
-            'No data available for this period',
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 16,
-            ),
-          ),
-        ),
-      );
+      return _buildEmptyChart();
+    }
+
+    // Handle single data point edge case
+    if (filteredData.length == 1) {
+      return _buildSinglePointChart(filteredData);
     }
 
     // Get min and max values for Y-axis scaling
