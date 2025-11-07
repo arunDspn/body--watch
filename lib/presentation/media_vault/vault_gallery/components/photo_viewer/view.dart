@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:watcha_body/data/domain/body_picture/models/vault_image_model.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/components/data_linked/view/data_linked_view.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/components/picture_notes/picture_notes_modal.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/photo_viewer/cubit/delete_image_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
 import 'package:watcha_body/utils/date_custom_formater.dart';
@@ -168,6 +169,26 @@ class _PhotoViewerState extends State<PhotoViewer> {
                           },
                           icon: const Icon(
                             Icons.dataset_linked,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+
+                        IconButton(
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              showDragHandle: true,
+                              builder: (context) {
+                                return PictureNotesModal(
+                                  notes:
+                                      widget.images[widget.currentIndex].note,
+                                );
+                              },
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.info_outline,
                             color: Colors.white,
                           ),
                         ),
