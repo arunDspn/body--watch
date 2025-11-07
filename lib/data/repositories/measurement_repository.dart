@@ -312,7 +312,7 @@ ORDER BY mt.display_order;
   }
 
   @override
-  Future<Either<String, List<MeasurementEntity>>> getAllMeasurementsByDate({
+  Future<Either<String, List<MeasurementModel>>> getAllMeasurementsByDate({
     required DateTime date,
   }) async {
     try {
@@ -325,26 +325,46 @@ ORDER BY mt.display_order;
       //     stringDate,
       //   ],
       // );
+
       final formattedDate =
           date.toIso8601String().substring(0, 10); // Extract YYYY-MM-DD
       final whereArgs = [formattedDate];
 
       final result = await _db.rawQuery(
         '''
-      SELECT *
-      FROM measurements
-      WHERE STRFTIME('%Y-%m-%d', date) = ?
-      ''',
+            SELECT 
+              m.id,
+              m.value,
+              m.date,
+              m.notes,
+              m.target_id,
+              m.created_at,
+              m.updated_at,
+              mt.name as target_name,
+              mt.type,
+              met.code as metric_code,
+              met.base_unit
+            FROM (
+              SELECT 
+                *,
+                ROW_NUMBER() OVER (PARTITION BY target_id ORDER BY date DESC, id DESC) as rn
+              FROM ${DatabaseService.measurementsDataTable}
+              WHERE user_id = 1 AND STRFTIME("%Y-%m-%d", date) = ?
+
+            ) m
+            INNER JOIN ${DatabaseService.measurementTargetsTable} mt ON m.target_id = mt.id
+            INNER JOIN ${DatabaseService.targetMetricsTable} tm ON mt.id = tm.target_id
+            INNER JOIN ${DatabaseService.metricsTable} met ON tm.metric_id = met.id
+            ORDER BY m.target_id, m.date DESC
+          ''',
         whereArgs,
       );
-      // final _dData = result.map(MeasurementEntity.fromMap).toList();
-      // return Right(_dData);
-      throw UnimplementedError();
+
+      final _dData = result.map(MeasurementModel.fromJson).toList();
+      return Right(_dData);
     } catch (e) {
       return Left(e.toString());
     }
-    // TODO: implement getAllMeasurementsByDate
-    // throw UnimplementedError();
   }
 
   @override

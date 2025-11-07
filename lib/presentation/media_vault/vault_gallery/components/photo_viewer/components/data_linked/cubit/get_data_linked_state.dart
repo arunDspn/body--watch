@@ -5,7 +5,7 @@ sealed class GetDataLinkedState with _$GetDataLinkedState {
   const factory GetDataLinkedState.initial() = GetDataLinkedStateInitial;
   const factory GetDataLinkedState.loading() = GetDataLinkedStateLoading;
   const factory GetDataLinkedState.loaded({
-    required List<MeasurementEntity> dataLinked,
+    required List<MeasurementModel> dataLinked,
   }) = GetDataLinkedStateLoaded;
   const factory GetDataLinkedState.error({
     required String message,

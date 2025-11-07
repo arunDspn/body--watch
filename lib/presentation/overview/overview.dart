@@ -22,6 +22,7 @@ import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.da
 import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
 import 'package:watcha_body/presentation/overview/widgets/overview_chart.dart';
 import 'package:watcha_body/size_config.dart';
+import 'package:watcha_body/utils/value_to_pref_value.dart';
 
 class OverView extends StatelessWidget {
   const OverView({Key? key}) : super(key: key);
@@ -647,7 +648,7 @@ class _WidgetBoxState extends State<_WidgetBox> {
                             ),
                             TextSpan(
                               text:
-                                  '${latestData.value / metricCode!.toBaseFactor} ',
+                                  '${UserMetricHelper.convertToUserPref(value: latestData.value, metricCode: metricCode!.metricCode, context: context)} ',
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall

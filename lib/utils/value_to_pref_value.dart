@@ -9,6 +9,7 @@ class UserMetricHelper {
     required String metricCode,
     int decimalPlaces = 2,
     required BuildContext context,
+    bool showUnit = false,
   }) {
     // Get user preferred units from context
 
@@ -27,7 +28,8 @@ class UserMetricHelper {
 
     // Convert the value based on the preferred unit
 
-    return (value / preference.toBaseFactor).toStringAsFixed(decimalPlaces);
+    return (value / preference.toBaseFactor).toStringAsFixed(decimalPlaces) +
+        (showUnit ? ' ${preference.preferredUnit}' : '');
   }
 
   /// Convert user preferred value to base unit value

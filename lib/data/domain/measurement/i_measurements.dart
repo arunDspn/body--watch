@@ -63,7 +63,7 @@ abstract class IMeasurementsFacade {
 
   /// Returns List of [MeasurementEntity]s
   /// It contains  all types ex: Chest, Waist, etc.. that added in table
-  Future<Either<String, List<MeasurementEntity>>> getAllMeasurementsByDate({
+  Future<Either<String, List<MeasurementModel>>> getAllMeasurementsByDate({
     required DateTime date,
   });
 
