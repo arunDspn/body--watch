@@ -12,7 +12,7 @@ dependencies:
   collection: ^1.17.2
   d_chart: ^3.0.0
   dartz: ^0.10.1
-  dropdown_textfield: ^1.0.8
+  dropdown_textfield: ^1.2.0
   dynamic_color: ^1.6.8
   enum_to_string: ^2.0.1
   external_path: ^2.2.0

@@ -234,7 +234,7 @@ class DatabaseService {
   /// Link targets with their supported metrics
   static const String _insertTargetMetrics = '''
     -- Link body measurements with their specific metrics
-    INSERT INTO target_metrics (target_id, metric_id)
+    INSERT INTO $targetMetricsTable (target_id, metric_id)
     SELECT t.id, m.id
     FROM measurement_targets t
     CROSS JOIN metrics m

@@ -17,7 +17,7 @@ abstract class MeasurementModel with _$MeasurementModel {
 
     /// Measurement type, e.g., "body", "fitness"
     required String type,
-    required String notes,
+    @JsonKey(name: '') String? notes,
 
     /// Foreign key to the measurement target
     @JsonKey(name: 'target_id') required int targetId,

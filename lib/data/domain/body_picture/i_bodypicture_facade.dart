@@ -38,11 +38,12 @@ abstract interface class IBodyPictureFacade {
 
   /// Get all body pictures with a tag
   Future<Either<String, List<VaultImageModel>>> getBodyPicturesByTag(
-      String tag);
+    String tag,
+  );
 
   /// Get a body picture by tag and date
   Future<Either<String, CompareImagesModel>> getBodyPicturesByTagAndTwoDate({
-    required String tag,
+    required int tag,
     required DateTime firstdate,
     required DateTime seconddate,
   });

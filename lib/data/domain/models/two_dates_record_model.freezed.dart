@@ -14,9 +14,12 @@ T _$identity<T>(T value) => value;
 
 /// @nodoc
 mixin _$TwoDatesRecord {
-  String get name;
+// Target name
+  String get name; // First date value
   double? get data1;
+  String? get metricCode1; // Second date value
   double? get data2;
+  String? get metricCode2;
 
   /// Create a copy of TwoDatesRecord
   /// with the given fields replaced by the non-null parameter values.
@@ -36,16 +39,21 @@ mixin _$TwoDatesRecord {
             other is TwoDatesRecord &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.data1, data1) || other.data1 == data1) &&
-            (identical(other.data2, data2) || other.data2 == data2));
+            (identical(other.metricCode1, metricCode1) ||
+                other.metricCode1 == metricCode1) &&
+            (identical(other.data2, data2) || other.data2 == data2) &&
+            (identical(other.metricCode2, metricCode2) ||
+                other.metricCode2 == metricCode2));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, name, data1, data2);
+  int get hashCode =>
+      Object.hash(runtimeType, name, data1, metricCode1, data2, metricCode2);
 
   @override
   String toString() {
-    return 'TwoDatesRecord(name: $name, data1: $data1, data2: $data2)';
+    return 'TwoDatesRecord(name: $name, data1: $data1, metricCode1: $metricCode1, data2: $data2, metricCode2: $metricCode2)';
   }
 }
 
@@ -55,7 +63,12 @@ abstract mixin class $TwoDatesRecordCopyWith<$Res> {
           TwoDatesRecord value, $Res Function(TwoDatesRecord) _then) =
       _$TwoDatesRecordCopyWithImpl;
   @useResult
-  $Res call({String name, double? data1, double? data2});
+  $Res call(
+      {String name,
+      double? data1,
+      String? metricCode1,
+      double? data2,
+      String? metricCode2});
 }
 
 /// @nodoc
@@ -73,7 +86,9 @@ class _$TwoDatesRecordCopyWithImpl<$Res>
   $Res call({
     Object? name = null,
     Object? data1 = freezed,
+    Object? metricCode1 = freezed,
     Object? data2 = freezed,
+    Object? metricCode2 = freezed,
   }) {
     return _then(_self.copyWith(
       name: null == name
@@ -84,10 +99,18 @@ class _$TwoDatesRecordCopyWithImpl<$Res>
           ? _self.data1
           : data1 // ignore: cast_nullable_to_non_nullable
               as double?,
+      metricCode1: freezed == metricCode1
+          ? _self.metricCode1
+          : metricCode1 // ignore: cast_nullable_to_non_nullable
+              as String?,
       data2: freezed == data2
           ? _self.data2
           : data2 // ignore: cast_nullable_to_non_nullable
               as double?,
+      metricCode2: freezed == metricCode2
+          ? _self.metricCode2
+          : metricCode2 // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -185,13 +208,16 @@ extension TwoDatesRecordPatterns on TwoDatesRecord {
 
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(String name, double? data1, double? data2)? $default, {
+    TResult Function(String name, double? data1, String? metricCode1,
+            double? data2, String? metricCode2)?
+        $default, {
     required TResult orElse(),
   }) {
     final _that = this;
     switch (_that) {
       case _TwoDatesRecord() when $default != null:
-        return $default(_that.name, _that.data1, _that.data2);
+        return $default(_that.name, _that.data1, _that.metricCode1, _that.data2,
+            _that.metricCode2);
       case _:
         return orElse();
     }
@@ -212,12 +238,15 @@ extension TwoDatesRecordPatterns on TwoDatesRecord {
 
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(String name, double? data1, double? data2) $default,
+    TResult Function(String name, double? data1, String? metricCode1,
+            double? data2, String? metricCode2)
+        $default,
   ) {
     final _that = this;
     switch (_that) {
       case _TwoDatesRecord():
-        return $default(_that.name, _that.data1, _that.data2);
+        return $default(_that.name, _that.data1, _that.metricCode1, _that.data2,
+            _that.metricCode2);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -237,12 +266,15 @@ extension TwoDatesRecordPatterns on TwoDatesRecord {
 
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(String name, double? data1, double? data2)? $default,
+    TResult? Function(String name, double? data1, String? metricCode1,
+            double? data2, String? metricCode2)?
+        $default,
   ) {
     final _that = this;
     switch (_that) {
       case _TwoDatesRecord() when $default != null:
-        return $default(_that.name, _that.data1, _that.data2);
+        return $default(_that.name, _that.data1, _that.metricCode1, _that.data2,
+            _that.metricCode2);
       case _:
         return null;
     }
@@ -253,16 +285,27 @@ extension TwoDatesRecordPatterns on TwoDatesRecord {
 @JsonSerializable()
 class _TwoDatesRecord implements TwoDatesRecord {
   const _TwoDatesRecord(
-      {required this.name, required this.data1, required this.data2});
+      {required this.name,
+      required this.data1,
+      required this.metricCode1,
+      required this.data2,
+      required this.metricCode2});
   factory _TwoDatesRecord.fromJson(Map<String, dynamic> json) =>
       _$TwoDatesRecordFromJson(json);
 
+// Target name
   @override
   final String name;
+// First date value
   @override
   final double? data1;
   @override
+  final String? metricCode1;
+// Second date value
+  @override
   final double? data2;
+  @override
+  final String? metricCode2;
 
   /// Create a copy of TwoDatesRecord
   /// with the given fields replaced by the non-null parameter values.
@@ -286,16 +329,21 @@ class _TwoDatesRecord implements TwoDatesRecord {
             other is _TwoDatesRecord &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.data1, data1) || other.data1 == data1) &&
-            (identical(other.data2, data2) || other.data2 == data2));
+            (identical(other.metricCode1, metricCode1) ||
+                other.metricCode1 == metricCode1) &&
+            (identical(other.data2, data2) || other.data2 == data2) &&
+            (identical(other.metricCode2, metricCode2) ||
+                other.metricCode2 == metricCode2));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, name, data1, data2);
+  int get hashCode =>
+      Object.hash(runtimeType, name, data1, metricCode1, data2, metricCode2);
 
   @override
   String toString() {
-    return 'TwoDatesRecord(name: $name, data1: $data1, data2: $data2)';
+    return 'TwoDatesRecord(name: $name, data1: $data1, metricCode1: $metricCode1, data2: $data2, metricCode2: $metricCode2)';
   }
 }
 
@@ -307,7 +355,12 @@ abstract mixin class _$TwoDatesRecordCopyWith<$Res>
       __$TwoDatesRecordCopyWithImpl;
   @override
   @useResult
-  $Res call({String name, double? data1, double? data2});
+  $Res call(
+      {String name,
+      double? data1,
+      String? metricCode1,
+      double? data2,
+      String? metricCode2});
 }
 
 /// @nodoc
@@ -325,7 +378,9 @@ class __$TwoDatesRecordCopyWithImpl<$Res>
   $Res call({
     Object? name = null,
     Object? data1 = freezed,
+    Object? metricCode1 = freezed,
     Object? data2 = freezed,
+    Object? metricCode2 = freezed,
   }) {
     return _then(_TwoDatesRecord(
       name: null == name
@@ -336,10 +391,18 @@ class __$TwoDatesRecordCopyWithImpl<$Res>
           ? _self.data1
           : data1 // ignore: cast_nullable_to_non_nullable
               as double?,
+      metricCode1: freezed == metricCode1
+          ? _self.metricCode1
+          : metricCode1 // ignore: cast_nullable_to_non_nullable
+              as String?,
       data2: freezed == data2
           ? _self.data2
           : data2 // ignore: cast_nullable_to_non_nullable
               as double?,
+      metricCode2: freezed == metricCode2
+          ? _self.metricCode2
+          : metricCode2 // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }

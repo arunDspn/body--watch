@@ -352,80 +352,88 @@ ORDER BY mt.display_order;
     required DateTime dateOne,
     required DateTime dateTwo,
   }) async {
-    // TODO: implement getAllRecordsByTwoDates
-    // throw UnimplementedError();
-
     try {
       final db = await databaseService.database;
 
-      //     final result = await db.rawQuery('''
-      //   SELECT m1.name, m1.VALUE AS data1, m2.VALUE AS data2
-      //   FROM measurements AS m1
-      //   FULL JOIN (
-      //     SELECT name, VALUE
-      //     FROM measurements
-      //     WHERE STRFTIME("%Y-%m-%d", date) = ${dateOne.toIso8601String().substring(0, 10)}
-      //   ) AS m2 ON m1.name = m2.name
-      //   WHERE STRFTIME("%Y-%m-%d", m1.date) = ${dateTwo.toIso8601String().substring(0, 10)}
-      // };
-      // ''');
-      final date = dateOne.toIso8601String().substring(0, 10);
-      final sime = await db.query(
-        'measurements',
-        columns: [
-          'type',
-          'value',
-        ],
-        where: 'date = ?',
-        whereArgs: [
-          date,
-        ],
+      // Query for first date
+      final resultOne = await db.rawQuery(
+        '''
+        SELECT 
+          m.value,
+          m.date,
+          mt.name as target_name,
+          met.code as metric_code
+        FROM ${DatabaseService.measurementsDataTable} m
+        INNER JOIN ${DatabaseService.measurementTargetsTable} mt ON m.target_id = mt.id
+        INNER JOIN ${DatabaseService.targetMetricsTable} tm ON mt.id = tm.target_id
+        INNER JOIN ${DatabaseService.metricsTable} met ON tm.metric_id = met.id
+        WHERE m.user_id = ? AND STRFTIME("%Y-%m-%d", m.date) = ?
+        ORDER BY mt.name
+        ''',
+        [1, dateOne.toIso8601String().substring(0, 10)],
       );
 
-      final resultOne = await db.query(
-        'measurements',
-        // columns: [
-        //   'type',
-        //   'value',
-        // ],
-        where: 'STRFTIME("%Y-%m-%d", date) = ?',
-        whereArgs: [
-          dateOne.toIso8601String().substring(0, 10),
-        ],
+      // Query for second date
+      final resultTwo = await db.rawQuery(
+        '''
+        SELECT 
+          m.value,
+          m.date,
+          mt.name as target_name,
+          met.code as metric_code
+        FROM ${DatabaseService.measurementsDataTable} m
+        INNER JOIN ${DatabaseService.measurementTargetsTable} mt ON m.target_id = mt.id
+        INNER JOIN ${DatabaseService.targetMetricsTable} tm ON mt.id = tm.target_id
+        INNER JOIN ${DatabaseService.metricsTable} met ON tm.metric_id = met.id
+        WHERE m.user_id = ? AND STRFTIME("%Y-%m-%d", m.date) = ?
+        ORDER BY mt.name
+        ''',
+        [1, dateTwo.toIso8601String().substring(0, 10)],
       );
 
-      final resultTwo = await db.query(
-        'measurements',
-        // columns: [
-        //   'type',
-        //   'value',
-        // ],
-        where: 'STRFTIME("%Y-%m-%d", date) = ?',
-        whereArgs: [
-          dateTwo.toIso8601String().substring(0, 10),
-        ],
-      );
+      log(resultOne.toString());
+      log(resultTwo.toString());
 
-      throw UnimplementedError();
-      // final dataOne = resultOne.map(MeasurementEntity.fromMap).toList();
-      // final dataTwo = resultTwo.map(MeasurementEntity.fromMap).toList();
+      // final recordsDateOne = resultOne.map(MeasurementModel.fromJson).toList();
 
-      // var namesSet = dataOne.map((e) => e.type).toSet();
-      // namesSet = namesSet.union(dataTwo.map((e) => e.type).toSet());
+      // final recordsDateTwo = resultTwo.map(MeasurementModel.fromJson).toList();
 
-      // final data = namesSet.map((e) {
-      //   return TwoDatesRecord(
-      //     name: e,
-      //     data1:
-      //         dataOne.firstWhereOrNull((element) => element.type == e)?.value,
-      //     data2:
-      //         dataTwo.firstWhereOrNull((element) => element.type == e)?.value,
-      //   );
-      // }).toList();
+      final combinedRecords = <TwoDatesRecord>[];
 
-      // return Right(data);
+      // Group resultOne by target_name
+      final groupedResultOne = <String, Map<String, dynamic>>{};
+      for (final record in resultOne) {
+        groupedResultOne[record['target_name'] as String] = record;
+      }
 
-      // return right(result.map(TwoDatesRecord.fromJson).toList());
+      // Group resultTwo by target_name
+      final groupedResultTwo = <String, Map<String, dynamic>>{};
+      for (final record in resultTwo) {
+        groupedResultTwo[record['target_name'] as String] = record;
+      }
+
+      // Get all unique target names from both results
+      final allTargetNames = <String>{
+        ...groupedResultOne.keys,
+        ...groupedResultTwo.keys,
+      };
+
+      // Create combined records
+      for (final targetName in allTargetNames) {
+        final recordOne = groupedResultOne[targetName];
+        final recordTwo = groupedResultTwo[targetName];
+
+        combinedRecords.add(
+          TwoDatesRecord(
+            name: targetName,
+            data1: recordOne?['value'] as double?,
+            data2: recordTwo?['value'] as double?,
+            metricCode1: recordOne?['metric_code'] as String?,
+            metricCode2: recordTwo?['metric_code'] as String?,
+          ),
+        );
+      }
+      return Right(combinedRecords);
     } catch (exception) {
       return left(exception.toString());
     }

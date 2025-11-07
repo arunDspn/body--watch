@@ -10,8 +10,9 @@ class ComparePictureFormCubit extends Cubit<ComparePictureFormState> {
           const ComparePictureFormState.state(
             firstDate: null,
             secondDate: null,
-            tag: '',
+            tag: null,
             ready: false,
+            targets: [],
           ),
         );
 
@@ -39,9 +40,21 @@ class ComparePictureFormCubit extends Cubit<ComparePictureFormState> {
     );
   }
 
-  void alterTag(String tag) {
+  void alterTag(int tag) {
     final newState = state.copyWith(
       tag: tag,
+    );
+
+    emit(
+      newState.copyWith(
+        ready: _isReady(newState),
+      ),
+    );
+  }
+
+  void alerTargets(List<int> targets) {
+    final newState = state.copyWith(
+      targets: targets,
     );
 
     emit(
@@ -54,6 +67,6 @@ class ComparePictureFormCubit extends Cubit<ComparePictureFormState> {
   bool _isReady(ComparePictureFormState state) {
     return state.firstDate != null &&
         state.secondDate != null &&
-        state.tag != '';
+        state.tag != null;
   }
 }

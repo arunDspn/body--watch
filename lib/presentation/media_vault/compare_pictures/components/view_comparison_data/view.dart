@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/components/view_comparison_data/cubit/comparison_data_cubit.dart';
+import 'package:watcha_body/utils/value_to_pref_value.dart';
 
 class ViewComparisonDataModalView extends StatelessWidget {
   const ViewComparisonDataModalView({
@@ -68,7 +69,15 @@ class ViewComparisonDataModalView extends StatelessWidget {
                             return DataRow(
                               cells: [
                                 DataCell(
-                                  Text(e.data1.toString()),
+                                  Text(
+                                    e.data1 == null
+                                        ? ''
+                                        : UserMetricHelper.convertToUserPref(
+                                            value: e.data1!,
+                                            metricCode: e.metricCode1!,
+                                            context: context,
+                                          ),
+                                  ),
                                 ),
                                 DataCell(
                                   Text(
@@ -78,7 +87,17 @@ class ViewComparisonDataModalView extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                DataCell(Text(e.data2.toString())),
+                                DataCell(
+                                  Text(
+                                    e.data2 == null
+                                        ? ''
+                                        : UserMetricHelper.convertToUserPref(
+                                            value: e.data2!,
+                                            metricCode: e.metricCode2!,
+                                            context: context,
+                                          ),
+                                  ),
+                                ),
                               ],
                             );
                           }).toList(),

@@ -26,7 +26,8 @@ mixin _$MeasurementModel {
 
   /// Measurement type, e.g., "body", "fitness"
   String get type;
-  String get notes;
+  @JsonKey(name: '')
+  String? get notes;
 
   /// Foreign key to the measurement target
   @JsonKey(name: 'target_id')
@@ -95,7 +96,7 @@ abstract mixin class $MeasurementModelCopyWith<$Res> {
       @JsonKey(name: 'target_name') String targetName,
       @JsonKey(name: 'metric_code') String metricCode,
       String type,
-      String notes,
+      @JsonKey(name: '') String? notes,
       @JsonKey(name: 'target_id') int targetId,
       @JsonKey(name: 'created_at') DateTime createdAt,
       @JsonKey(name: 'updated_at') DateTime updatedAt});
@@ -120,7 +121,7 @@ class _$MeasurementModelCopyWithImpl<$Res>
     Object? targetName = null,
     Object? metricCode = null,
     Object? type = null,
-    Object? notes = null,
+    Object? notes = freezed,
     Object? targetId = null,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -150,10 +151,10 @@ class _$MeasurementModelCopyWithImpl<$Res>
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
-      notes: null == notes
+      notes: freezed == notes
           ? _self.notes
           : notes // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       targetId: null == targetId
           ? _self.targetId
           : targetId // ignore: cast_nullable_to_non_nullable
@@ -270,7 +271,7 @@ extension MeasurementModelPatterns on MeasurementModel {
             @JsonKey(name: 'target_name') String targetName,
             @JsonKey(name: 'metric_code') String metricCode,
             String type,
-            String notes,
+            @JsonKey(name: '') String? notes,
             @JsonKey(name: 'target_id') int targetId,
             @JsonKey(name: 'created_at') DateTime createdAt,
             @JsonKey(name: 'updated_at') DateTime updatedAt)?
@@ -318,7 +319,7 @@ extension MeasurementModelPatterns on MeasurementModel {
             @JsonKey(name: 'target_name') String targetName,
             @JsonKey(name: 'metric_code') String metricCode,
             String type,
-            String notes,
+            @JsonKey(name: '') String? notes,
             @JsonKey(name: 'target_id') int targetId,
             @JsonKey(name: 'created_at') DateTime createdAt,
             @JsonKey(name: 'updated_at') DateTime updatedAt)
@@ -364,7 +365,7 @@ extension MeasurementModelPatterns on MeasurementModel {
             @JsonKey(name: 'target_name') String targetName,
             @JsonKey(name: 'metric_code') String metricCode,
             String type,
-            String notes,
+            @JsonKey(name: '') String? notes,
             @JsonKey(name: 'target_id') int targetId,
             @JsonKey(name: 'created_at') DateTime createdAt,
             @JsonKey(name: 'updated_at') DateTime updatedAt)?
@@ -400,7 +401,7 @@ class _MeasurementModel implements MeasurementModel {
       @JsonKey(name: 'target_name') required this.targetName,
       @JsonKey(name: 'metric_code') required this.metricCode,
       required this.type,
-      required this.notes,
+      @JsonKey(name: '') this.notes,
       @JsonKey(name: 'target_id') required this.targetId,
       @JsonKey(name: 'created_at') required this.createdAt,
       @JsonKey(name: 'updated_at') required this.updatedAt});
@@ -426,7 +427,8 @@ class _MeasurementModel implements MeasurementModel {
   @override
   final String type;
   @override
-  final String notes;
+  @JsonKey(name: '')
+  final String? notes;
 
   /// Foreign key to the measurement target
   @override
@@ -504,7 +506,7 @@ abstract mixin class _$MeasurementModelCopyWith<$Res>
       @JsonKey(name: 'target_name') String targetName,
       @JsonKey(name: 'metric_code') String metricCode,
       String type,
-      String notes,
+      @JsonKey(name: '') String? notes,
       @JsonKey(name: 'target_id') int targetId,
       @JsonKey(name: 'created_at') DateTime createdAt,
       @JsonKey(name: 'updated_at') DateTime updatedAt});
@@ -529,7 +531,7 @@ class __$MeasurementModelCopyWithImpl<$Res>
     Object? targetName = null,
     Object? metricCode = null,
     Object? type = null,
-    Object? notes = null,
+    Object? notes = freezed,
     Object? targetId = null,
     Object? createdAt = null,
     Object? updatedAt = null,
@@ -559,10 +561,10 @@ class __$MeasurementModelCopyWithImpl<$Res>
           ? _self.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
-      notes: null == notes
+      notes: freezed == notes
           ? _self.notes
           : notes // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       targetId: null == targetId
           ? _self.targetId
           : targetId // ignore: cast_nullable_to_non_nullable

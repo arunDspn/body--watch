@@ -400,7 +400,7 @@ class BodyPictureRepository implements IBodyPictureFacade {
 
   @override
   Future<Either<String, CompareImagesModel>> getBodyPicturesByTagAndTwoDate({
-    required String tag,
+    required int tag,
     required DateTime firstdate,
     required DateTime seconddate,
   }) async {
@@ -417,11 +417,11 @@ class BodyPictureRepository implements IBodyPictureFacade {
             p.note,
             t.tag,
             GROUP_CONCAT(mt.name) as targets
-          FROM pictures p
-          INNER JOIN tags t ON p.tag_id = t.id
-          LEFT JOIN picture_targets pt ON p.id = pt.picture_id
+          FROM ${DatabaseService.picturesTable} p
+          INNER JOIN ${DatabaseService.tagsTable} t ON p.tag_id = t.id
+          LEFT JOIN ${DatabaseService.pictureTargetsTable} pt ON p.id = pt.picture_id
           LEFT JOIN ${DatabaseService.measurementTargetsTable} mt ON pt.target_id = mt.id
-          WHERE t.tag = ? AND STRFTIME("%Y-%m-%d", p.date) = ?
+          WHERE p.tag_id = ? AND STRFTIME("%Y-%m-%d", p.date) = ?
           GROUP BY p.id
         ''',
         [tag, firstdate.toIso8601String().substring(0, 10)],
@@ -441,7 +441,7 @@ class BodyPictureRepository implements IBodyPictureFacade {
           INNER JOIN tags t ON p.tag_id = t.id
           LEFT JOIN picture_targets pt ON p.id = pt.picture_id
           LEFT JOIN ${DatabaseService.measurementTargetsTable} mt ON pt.target_id = mt.id
-          WHERE t.tag = ? AND STRFTIME("%Y-%m-%d", p.date) = ?
+          WHERE p.tag_id = ? AND STRFTIME("%Y-%m-%d", p.date) = ?
           GROUP BY p.id
         ''',
         [tag, seconddate.toIso8601String().substring(0, 10)],

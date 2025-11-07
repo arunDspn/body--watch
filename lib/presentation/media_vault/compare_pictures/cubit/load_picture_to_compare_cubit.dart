@@ -13,7 +13,7 @@ class LoadPictureToCompareCubit extends Cubit<LoadPictureToCompareState> {
   final BodyPictureRepository bodyPictureRepository;
 
   Future<void> loadPicture({
-    required String tag,
+    required int tag,
     required DateTime firstDate,
     required DateTime secondDate,
   }) async {
