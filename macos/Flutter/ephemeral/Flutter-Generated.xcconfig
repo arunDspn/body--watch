@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/home/arun/dev-tools/flutter
-FLUTTER_APPLICATION_PATH=/home/arun/devan/body--watch
+FLUTTER_ROOT=/Users/arundas/development-tools/flutter
+FLUTTER_APPLICATION_PATH=/Users/arundas/Documents/GitHub/body--watch
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_BUILD_DIR=build
 FLUTTER_BUILD_NAME=1.0.0
