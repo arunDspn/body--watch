@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:watcha_body/data/domain/i_auth_repository.dart';
+import 'package:watcha_body/domain/auth/i_auth_repository.dart';
 
 class LocalAuthRepositoryImpl implements IAuthRepository {
   LocalAuthRepositoryImpl({

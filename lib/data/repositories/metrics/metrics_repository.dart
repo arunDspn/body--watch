@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:watcha_body/data/data_layer/database_service.dart';
-import 'package:watcha_body/data/domain/metrics_units/i_metrics_reposiotry.dart';
-import 'package:watcha_body/data/domain/metrics_units/models/metric_units_model.dart';
+import 'package:watcha_body/data/services/database_service.dart';
+import 'package:watcha_body/domain/metrics_units/i_metrics_reposiotry.dart';
+import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
 
 class MetricsRepository implements IMetricsRepository {
   MetricsRepository() : _databaseService = DatabaseService();

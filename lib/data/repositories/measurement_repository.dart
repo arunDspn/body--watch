@@ -4,13 +4,13 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:watcha_body/data/data_layer/database_service.dart';
-import 'package:watcha_body/data/domain/measurement/i_measurements.dart';
-import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
-import 'package:watcha_body/data/domain/measurement/models/measurement_model.dart';
-import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart';
-import 'package:watcha_body/data/domain/metrics_units/models/metric_units_model.dart';
-import 'package:watcha_body/data/domain/models/two_dates_record_model.dart';
+import 'package:watcha_body/data/services/database_service.dart';
+import 'package:watcha_body/domain/measurement/i_measurements.dart';
+import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
+import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
+import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
+import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
+import 'package:watcha_body/domain/models/two_dates_record_model.dart';
 
 class MeasurementRepository extends IMeasurementsFacade {
   MeasurementRepository(this.databaseService);

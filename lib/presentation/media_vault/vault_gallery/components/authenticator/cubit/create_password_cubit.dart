@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/data/domain/i_auth_repository.dart';
+import 'package:watcha_body/domain/auth/i_auth_repository.dart';
 
 part 'create_password_state.dart';
 part 'create_password_cubit.freezed.dart';

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/data/domain/measurement/i_measurements.dart';
+import 'package:watcha_body/domain/measurement/i_measurements.dart';
 
 part 'delete_measurement_state.dart';
 part 'delete_measurement_cubit.freezed.dart';

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_compare_slider/image_compare_slider.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
-import 'package:watcha_body/data/domain/body_picture/models/image_tag_model.dart';
+import 'package:watcha_body/domain/body_picture/models/image_tag_model.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';

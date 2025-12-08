@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/data/data_layer/user_preference/user_preference_reposiotry.dart';
-import 'package:watcha_body/data/domain/user_preferences/models/user_unit_preferences_entity.dart';
+import 'package:watcha_body/data/repositories/user_preference/user_preference_reposiotry.dart';
+import 'package:watcha_body/domain/user_preferences/models/user_unit_preferences_entity.dart';
 
 part 'set_user_unit_preferences_state.dart';
 part 'set_user_unit_preferences_cubit.freezed.dart';

@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
+import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/measurement_in_detail/cubit/delete_measurement_cubit.dart';

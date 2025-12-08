@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:watcha_body/app/data/app_data.dart';
-import 'package:watcha_body/data/domain/measurement/i_measurements.dart';
-import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart';
+import 'package:watcha_body/domain/measurement/i_measurements.dart';
+import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
 
 part 'getallwidgets_state.dart';
 part 'getallwidgets_cubit.freezed.dart';

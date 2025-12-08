@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/data/domain/body_picture/models/vault_image_model.dart';
+import 'package:watcha_body/domain/body_picture/models/vault_image_model.dart';
 
 part 'filtered_gallery_images_state.dart';
 part 'filtered_gallery_images_cubit.freezed.dart';

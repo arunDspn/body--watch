@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/data/domain/metrics_units/models/metric_units_model.dart';
+import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
 part 'measurement_target_model.freezed.dart';
 part 'measurement_target_model.g.dart';
 

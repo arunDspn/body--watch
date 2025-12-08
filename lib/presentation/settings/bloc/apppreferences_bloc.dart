@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/data/domain/models/app_preferences.dart';
+import 'package:watcha_body/domain/models/app_preferences.dart';
 
 part 'apppreferences_event.dart';
 part 'apppreferences_bloc.freezed.dart';

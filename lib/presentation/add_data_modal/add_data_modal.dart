@@ -4,9 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
-import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
-import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart';
-import 'package:watcha_body/data/domain/metrics_units/models/metric_units_model.dart';
+import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
+import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
+import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/size_config.dart';
 

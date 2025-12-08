@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart';
+import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
 
 abstract class IMeasurementTargetRepository {
   /// Returns List of [MeasurementTargetModel]s

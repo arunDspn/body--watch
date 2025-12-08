@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
+import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 part 'adddata_state.dart';
 part 'adddata_cubit.freezed.dart';

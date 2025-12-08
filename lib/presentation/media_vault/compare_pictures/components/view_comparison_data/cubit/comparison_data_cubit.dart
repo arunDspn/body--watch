@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/data/domain/models/two_dates_record_model.dart';
+import 'package:watcha_body/domain/models/two_dates_record_model.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 
 part 'comparison_data_state.dart';

@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/data/data_layer/metrics/metrics_repository.dart';
-import 'package:watcha_body/data/domain/metrics_units/models/metric_units_model.dart';
+import 'package:watcha_body/data/repositories/metrics/metrics_repository.dart';
+import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
 
 part 'get_all_metric_units_available_state.dart';
 part 'get_all_metric_units_available_cubit.freezed.dart';

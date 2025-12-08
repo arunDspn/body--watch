@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/data/domain/models/app_preferences.dart';
-import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
+import 'package:watcha_body/domain/models/app_preferences.dart';
+import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 
 part 'getallmeasurments_state.dart';

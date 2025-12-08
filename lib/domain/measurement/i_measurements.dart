@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:watcha_body/data/domain/measurement/models/measurement_entity.dart';
-import 'package:watcha_body/data/domain/measurement/models/measurement_model.dart';
-import 'package:watcha_body/data/domain/measurement_target/model/measurement_target_model.dart';
-import 'package:watcha_body/data/domain/models/two_dates_record_model.dart';
+import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
+import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
+import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
+import 'package:watcha_body/domain/models/two_dates_record_model.dart';
 
 abstract class IMeasurementsFacade {
   /// Will return a list of each latest Measurement from

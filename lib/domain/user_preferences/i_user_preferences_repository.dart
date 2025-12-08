@@ -1,5 +1,5 @@
-import 'package:watcha_body/data/domain/user_preferences/models/user_unit_preference_model.dart';
-import 'package:watcha_body/data/domain/user_preferences/models/user_unit_preferences_entity.dart';
+import 'package:watcha_body/domain/user_preferences/models/user_unit_preference_model.dart';
+import 'package:watcha_body/domain/user_preferences/models/user_unit_preferences_entity.dart';
 
 abstract class IUserPreferencesRepository {
   /// Check if preferences exist for a user

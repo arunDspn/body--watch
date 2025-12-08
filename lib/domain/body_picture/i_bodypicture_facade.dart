@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:watcha_body/data/domain/body_picture/models/image_tag_model.dart';
-import 'package:watcha_body/data/domain/body_picture/models/save_vault_image_request.dart';
-import 'package:watcha_body/data/domain/body_picture/models/vault_image_model.dart';
-import 'package:watcha_body/data/domain/models/compare_images_model.dart';
+import 'package:watcha_body/domain/body_picture/models/image_tag_model.dart';
+import 'package:watcha_body/domain/body_picture/models/save_vault_image_request.dart';
+import 'package:watcha_body/domain/body_picture/models/vault_image_model.dart';
+import 'package:watcha_body/domain/models/compare_images_model.dart';
 
 abstract interface class IBodyPictureFacade {
   // Save a new body picture

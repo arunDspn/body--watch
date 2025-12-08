@@ -7,13 +7,13 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:watcha_body/data/data_layer/database_service.dart';
-import 'package:watcha_body/data/domain/body_picture/i_bodypicture_facade.dart';
-import 'package:watcha_body/data/domain/body_picture/models/image_tag_model.dart';
-import 'package:watcha_body/data/domain/body_picture/models/save_vault_image_request.dart';
-import 'package:watcha_body/data/domain/body_picture/models/vault_image_entity.dart';
-import 'package:watcha_body/data/domain/models/compare_images_model.dart';
-import 'package:watcha_body/data/domain/body_picture/models/vault_image_model.dart';
+import 'package:watcha_body/data/services/database_service.dart';
+import 'package:watcha_body/domain/body_picture/i_bodypicture_facade.dart';
+import 'package:watcha_body/domain/body_picture/models/image_tag_model.dart';
+import 'package:watcha_body/domain/body_picture/models/save_vault_image_request.dart';
+import 'package:watcha_body/domain/body_picture/models/vault_image_entity.dart';
+import 'package:watcha_body/domain/models/compare_images_model.dart';
+import 'package:watcha_body/domain/body_picture/models/vault_image_model.dart';
 
 class BodyPictureRepository implements IBodyPictureFacade {
   BodyPictureRepository({
