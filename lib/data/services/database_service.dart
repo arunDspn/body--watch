@@ -252,6 +252,7 @@ class DatabaseService {
       "id"	INTEGER,
       "user_id" INTEGER NOT NULL,
       "value"	REAL NOT NULL CHECK (value > 0),
+      "goal_value" REAL CHECK (goal_value > 0),
       "date"	TEXT NOT NULL,
       "target_id" INTEGER NOT NULL,
       "notes" TEXT DEFAULT NULL,
