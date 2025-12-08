@@ -289,11 +289,13 @@ class DatabaseService {
   static const _createPictureTable = '''
     CREATE TABLE IF NOT EXISTS $picturesTable (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
       file TEXT NOT NULL,
       thumbnail_file TEXT NOT NULL,
       date TEXT NOT NULL,
       tag_id INTEGER NOT NULL,
       note TEXT,
+      FOREIGN KEY(user_id) REFERENCES $userTable(id) ON DELETE CASCADE,
       FOREIGN KEY(tag_id) REFERENCES $tagsTable(id)
     );
   ''';
