@@ -10,6 +10,7 @@ abstract class MeasurementModel with _$MeasurementModel {
     required int id,
     required double value,
     required DateTime date,
+    @JsonKey(name: 'goal_value') double? goalValue,
 
     /// Measurement target name, e.g., "Weight", "Height"
     @JsonKey(name: 'target_name') required String targetName,

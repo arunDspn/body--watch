@@ -15,6 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MeasurementEntity {
   double get value;
+  @JsonKey(name: 'goal_value')
+  double? get goalValue;
   DateTime get date;
   @JsonKey(name: 'target_id')
   int get targetId;
@@ -44,6 +46,8 @@ mixin _$MeasurementEntity {
         (other.runtimeType == runtimeType &&
             other is MeasurementEntity &&
             (identical(other.value, value) || other.value == value) &&
+            (identical(other.goalValue, goalValue) ||
+                other.goalValue == goalValue) &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.targetId, targetId) ||
                 other.targetId == targetId) &&
@@ -58,12 +62,12 @@ mixin _$MeasurementEntity {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, value, date, targetId, notes,
-      createdAt, updatedAt, userId, id);
+  int get hashCode => Object.hash(runtimeType, value, goalValue, date, targetId,
+      notes, createdAt, updatedAt, userId, id);
 
   @override
   String toString() {
-    return 'MeasurementEntity(value: $value, date: $date, targetId: $targetId, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, id: $id)';
+    return 'MeasurementEntity(value: $value, goalValue: $goalValue, date: $date, targetId: $targetId, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, id: $id)';
   }
 }
 
@@ -75,6 +79,7 @@ abstract mixin class $MeasurementEntityCopyWith<$Res> {
   @useResult
   $Res call(
       {double value,
+      @JsonKey(name: 'goal_value') double? goalValue,
       DateTime date,
       @JsonKey(name: 'target_id') int targetId,
       String notes,
@@ -98,6 +103,7 @@ class _$MeasurementEntityCopyWithImpl<$Res>
   @override
   $Res call({
     Object? value = null,
+    Object? goalValue = freezed,
     Object? date = null,
     Object? targetId = null,
     Object? notes = null,
@@ -111,6 +117,10 @@ class _$MeasurementEntityCopyWithImpl<$Res>
           ? _self.value
           : value // ignore: cast_nullable_to_non_nullable
               as double,
+      goalValue: freezed == goalValue
+          ? _self.goalValue
+          : goalValue // ignore: cast_nullable_to_non_nullable
+              as double?,
       date: null == date
           ? _self.date
           : date // ignore: cast_nullable_to_non_nullable
@@ -238,6 +248,7 @@ extension MeasurementEntityPatterns on MeasurementEntity {
   TResult maybeWhen<TResult extends Object?>(
     TResult Function(
             double value,
+            @JsonKey(name: 'goal_value') double? goalValue,
             DateTime date,
             @JsonKey(name: 'target_id') int targetId,
             String notes,
@@ -251,8 +262,16 @@ extension MeasurementEntityPatterns on MeasurementEntity {
     final _that = this;
     switch (_that) {
       case _MeasurementEntity() when $default != null:
-        return $default(_that.value, _that.date, _that.targetId, _that.notes,
-            _that.createdAt, _that.updatedAt, _that.userId, _that.id);
+        return $default(
+            _that.value,
+            _that.goalValue,
+            _that.date,
+            _that.targetId,
+            _that.notes,
+            _that.createdAt,
+            _that.updatedAt,
+            _that.userId,
+            _that.id);
       case _:
         return orElse();
     }
@@ -275,6 +294,7 @@ extension MeasurementEntityPatterns on MeasurementEntity {
   TResult when<TResult extends Object?>(
     TResult Function(
             double value,
+            @JsonKey(name: 'goal_value') double? goalValue,
             DateTime date,
             @JsonKey(name: 'target_id') int targetId,
             String notes,
@@ -287,8 +307,16 @@ extension MeasurementEntityPatterns on MeasurementEntity {
     final _that = this;
     switch (_that) {
       case _MeasurementEntity():
-        return $default(_that.value, _that.date, _that.targetId, _that.notes,
-            _that.createdAt, _that.updatedAt, _that.userId, _that.id);
+        return $default(
+            _that.value,
+            _that.goalValue,
+            _that.date,
+            _that.targetId,
+            _that.notes,
+            _that.createdAt,
+            _that.updatedAt,
+            _that.userId,
+            _that.id);
       case _:
         throw StateError('Unexpected subclass');
     }
@@ -310,6 +338,7 @@ extension MeasurementEntityPatterns on MeasurementEntity {
   TResult? whenOrNull<TResult extends Object?>(
     TResult? Function(
             double value,
+            @JsonKey(name: 'goal_value') double? goalValue,
             DateTime date,
             @JsonKey(name: 'target_id') int targetId,
             String notes,
@@ -322,8 +351,16 @@ extension MeasurementEntityPatterns on MeasurementEntity {
     final _that = this;
     switch (_that) {
       case _MeasurementEntity() when $default != null:
-        return $default(_that.value, _that.date, _that.targetId, _that.notes,
-            _that.createdAt, _that.updatedAt, _that.userId, _that.id);
+        return $default(
+            _that.value,
+            _that.goalValue,
+            _that.date,
+            _that.targetId,
+            _that.notes,
+            _that.createdAt,
+            _that.updatedAt,
+            _that.userId,
+            _that.id);
       case _:
         return null;
     }
@@ -335,6 +372,7 @@ extension MeasurementEntityPatterns on MeasurementEntity {
 class _MeasurementEntity implements MeasurementEntity {
   const _MeasurementEntity(
       {required this.value,
+      @JsonKey(name: 'goal_value') this.goalValue,
       required this.date,
       @JsonKey(name: 'target_id') required this.targetId,
       required this.notes,
@@ -347,6 +385,9 @@ class _MeasurementEntity implements MeasurementEntity {
 
   @override
   final double value;
+  @override
+  @JsonKey(name: 'goal_value')
+  final double? goalValue;
   @override
   final DateTime date;
   @override
@@ -388,6 +429,8 @@ class _MeasurementEntity implements MeasurementEntity {
         (other.runtimeType == runtimeType &&
             other is _MeasurementEntity &&
             (identical(other.value, value) || other.value == value) &&
+            (identical(other.goalValue, goalValue) ||
+                other.goalValue == goalValue) &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.targetId, targetId) ||
                 other.targetId == targetId) &&
@@ -402,12 +445,12 @@ class _MeasurementEntity implements MeasurementEntity {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, value, date, targetId, notes,
-      createdAt, updatedAt, userId, id);
+  int get hashCode => Object.hash(runtimeType, value, goalValue, date, targetId,
+      notes, createdAt, updatedAt, userId, id);
 
   @override
   String toString() {
-    return 'MeasurementEntity(value: $value, date: $date, targetId: $targetId, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, id: $id)';
+    return 'MeasurementEntity(value: $value, goalValue: $goalValue, date: $date, targetId: $targetId, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, id: $id)';
   }
 }
 
@@ -421,6 +464,7 @@ abstract mixin class _$MeasurementEntityCopyWith<$Res>
   @useResult
   $Res call(
       {double value,
+      @JsonKey(name: 'goal_value') double? goalValue,
       DateTime date,
       @JsonKey(name: 'target_id') int targetId,
       String notes,
@@ -444,6 +488,7 @@ class __$MeasurementEntityCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   $Res call({
     Object? value = null,
+    Object? goalValue = freezed,
     Object? date = null,
     Object? targetId = null,
     Object? notes = null,
@@ -457,6 +502,10 @@ class __$MeasurementEntityCopyWithImpl<$Res>
           ? _self.value
           : value // ignore: cast_nullable_to_non_nullable
               as double,
+      goalValue: freezed == goalValue
+          ? _self.goalValue
+          : goalValue // ignore: cast_nullable_to_non_nullable
+              as double?,
       date: null == date
           ? _self.date
           : date // ignore: cast_nullable_to_non_nullable

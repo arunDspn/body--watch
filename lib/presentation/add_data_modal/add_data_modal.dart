@@ -432,6 +432,63 @@ class _AddorEditMeasurementTargetModalState
                               ],
                             ),
                             const Divider(),
+                            // Goal
+
+                            Row(
+                              children: [
+                                //
+
+                                Text(
+                                  'Goal',
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                const Spacer(),
+                                SizedBox(
+                                  width: SizeConfig.screenWidth! * 0.3,
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter some value';
+                                      }
+                                      final number = double.tryParse(value);
+                                      if (number == null) {
+                                        return 'Please enter a valid number';
+                                      }
+                                      if (number <= 0) {
+                                        return 'Please enter a number greater than zero';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: InputDecoration(
+                                      labelStyle: TextStyle(
+                                        fontSize: 23,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                      ),
+                                    ),
+                                    // maxLength: 5,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                        RegExp('[0-9.]'),
+                                      ),
+                                    ],
+                                    controller: _measurementController,
+                                    keyboardType: TextInputType.number,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ),
+                                // Text(
+                                //   measurementUnit,
+                                //   style: Theme.of(context).textTheme.bodyLarge,
+                                // ),
+                              ],
+                            ),
                             // Notes Input
                             Row(
                               children: [

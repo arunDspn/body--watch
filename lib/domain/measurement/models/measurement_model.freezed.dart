@@ -17,6 +17,8 @@ mixin _$MeasurementModel {
   int get id;
   double get value;
   DateTime get date;
+  @JsonKey(name: 'goal_value')
+  double? get goalValue;
 
   /// Measurement target name, e.g., "Weight", "Height"
   @JsonKey(name: 'target_name')
@@ -58,6 +60,8 @@ mixin _$MeasurementModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.date, date) || other.date == date) &&
+            (identical(other.goalValue, goalValue) ||
+                other.goalValue == goalValue) &&
             (identical(other.targetName, targetName) ||
                 other.targetName == targetName) &&
             (identical(other.metricCode, metricCode) ||
@@ -74,12 +78,12 @@ mixin _$MeasurementModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, value, date, targetName,
-      metricCode, type, notes, targetId, createdAt, updatedAt);
+  int get hashCode => Object.hash(runtimeType, id, value, date, goalValue,
+      targetName, metricCode, type, notes, targetId, createdAt, updatedAt);
 
   @override
   String toString() {
-    return 'MeasurementModel(id: $id, value: $value, date: $date, targetName: $targetName, metricCode: $metricCode, type: $type, notes: $notes, targetId: $targetId, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'MeasurementModel(id: $id, value: $value, date: $date, goalValue: $goalValue, targetName: $targetName, metricCode: $metricCode, type: $type, notes: $notes, targetId: $targetId, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }
 
@@ -93,6 +97,7 @@ abstract mixin class $MeasurementModelCopyWith<$Res> {
       {int id,
       double value,
       DateTime date,
+      @JsonKey(name: 'goal_value') double? goalValue,
       @JsonKey(name: 'target_name') String targetName,
       @JsonKey(name: 'metric_code') String metricCode,
       String type,
@@ -118,6 +123,7 @@ class _$MeasurementModelCopyWithImpl<$Res>
     Object? id = null,
     Object? value = null,
     Object? date = null,
+    Object? goalValue = freezed,
     Object? targetName = null,
     Object? metricCode = null,
     Object? type = null,
@@ -139,6 +145,10 @@ class _$MeasurementModelCopyWithImpl<$Res>
           ? _self.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      goalValue: freezed == goalValue
+          ? _self.goalValue
+          : goalValue // ignore: cast_nullable_to_non_nullable
+              as double?,
       targetName: null == targetName
           ? _self.targetName
           : targetName // ignore: cast_nullable_to_non_nullable
@@ -268,6 +278,7 @@ extension MeasurementModelPatterns on MeasurementModel {
             int id,
             double value,
             DateTime date,
+            @JsonKey(name: 'goal_value') double? goalValue,
             @JsonKey(name: 'target_name') String targetName,
             @JsonKey(name: 'metric_code') String metricCode,
             String type,
@@ -285,6 +296,7 @@ extension MeasurementModelPatterns on MeasurementModel {
             _that.id,
             _that.value,
             _that.date,
+            _that.goalValue,
             _that.targetName,
             _that.metricCode,
             _that.type,
@@ -316,6 +328,7 @@ extension MeasurementModelPatterns on MeasurementModel {
             int id,
             double value,
             DateTime date,
+            @JsonKey(name: 'goal_value') double? goalValue,
             @JsonKey(name: 'target_name') String targetName,
             @JsonKey(name: 'metric_code') String metricCode,
             String type,
@@ -332,6 +345,7 @@ extension MeasurementModelPatterns on MeasurementModel {
             _that.id,
             _that.value,
             _that.date,
+            _that.goalValue,
             _that.targetName,
             _that.metricCode,
             _that.type,
@@ -362,6 +376,7 @@ extension MeasurementModelPatterns on MeasurementModel {
             int id,
             double value,
             DateTime date,
+            @JsonKey(name: 'goal_value') double? goalValue,
             @JsonKey(name: 'target_name') String targetName,
             @JsonKey(name: 'metric_code') String metricCode,
             String type,
@@ -378,6 +393,7 @@ extension MeasurementModelPatterns on MeasurementModel {
             _that.id,
             _that.value,
             _that.date,
+            _that.goalValue,
             _that.targetName,
             _that.metricCode,
             _that.type,
@@ -398,6 +414,7 @@ class _MeasurementModel implements MeasurementModel {
       {required this.id,
       required this.value,
       required this.date,
+      @JsonKey(name: 'goal_value') this.goalValue,
       @JsonKey(name: 'target_name') required this.targetName,
       @JsonKey(name: 'metric_code') required this.metricCode,
       required this.type,
@@ -414,6 +431,9 @@ class _MeasurementModel implements MeasurementModel {
   final double value;
   @override
   final DateTime date;
+  @override
+  @JsonKey(name: 'goal_value')
+  final double? goalValue;
 
   /// Measurement target name, e.g., "Weight", "Height"
   @override
@@ -466,6 +486,8 @@ class _MeasurementModel implements MeasurementModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.value, value) || other.value == value) &&
             (identical(other.date, date) || other.date == date) &&
+            (identical(other.goalValue, goalValue) ||
+                other.goalValue == goalValue) &&
             (identical(other.targetName, targetName) ||
                 other.targetName == targetName) &&
             (identical(other.metricCode, metricCode) ||
@@ -482,12 +504,12 @@ class _MeasurementModel implements MeasurementModel {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, value, date, targetName,
-      metricCode, type, notes, targetId, createdAt, updatedAt);
+  int get hashCode => Object.hash(runtimeType, id, value, date, goalValue,
+      targetName, metricCode, type, notes, targetId, createdAt, updatedAt);
 
   @override
   String toString() {
-    return 'MeasurementModel(id: $id, value: $value, date: $date, targetName: $targetName, metricCode: $metricCode, type: $type, notes: $notes, targetId: $targetId, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'MeasurementModel(id: $id, value: $value, date: $date, goalValue: $goalValue, targetName: $targetName, metricCode: $metricCode, type: $type, notes: $notes, targetId: $targetId, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }
 
@@ -503,6 +525,7 @@ abstract mixin class _$MeasurementModelCopyWith<$Res>
       {int id,
       double value,
       DateTime date,
+      @JsonKey(name: 'goal_value') double? goalValue,
       @JsonKey(name: 'target_name') String targetName,
       @JsonKey(name: 'metric_code') String metricCode,
       String type,
@@ -528,6 +551,7 @@ class __$MeasurementModelCopyWithImpl<$Res>
     Object? id = null,
     Object? value = null,
     Object? date = null,
+    Object? goalValue = freezed,
     Object? targetName = null,
     Object? metricCode = null,
     Object? type = null,
@@ -549,6 +573,10 @@ class __$MeasurementModelCopyWithImpl<$Res>
           ? _self.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      goalValue: freezed == goalValue
+          ? _self.goalValue
+          : goalValue // ignore: cast_nullable_to_non_nullable
+              as double?,
       targetName: null == targetName
           ? _self.targetName
           : targetName // ignore: cast_nullable_to_non_nullable

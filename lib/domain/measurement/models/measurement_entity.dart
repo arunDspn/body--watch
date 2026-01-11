@@ -6,6 +6,7 @@ part 'measurement_entity.g.dart';
 abstract class MeasurementEntity with _$MeasurementEntity {
   const factory MeasurementEntity({
     required double value,
+    @JsonKey(name: 'goal_value') double? goalValue,
     required DateTime date,
     @JsonKey(name: 'target_id') required int targetId,
     required String notes,
@@ -18,12 +19,14 @@ abstract class MeasurementEntity with _$MeasurementEntity {
 
   factory MeasurementEntity.createNew({
     required double value,
+    double? goalValue,
     required DateTime date,
     required int targetId,
     required String notes,
   }) {
     return MeasurementEntity(
       value: value,
+      goalValue: goalValue,
       date: date,
       targetId: targetId,
       notes: notes,
