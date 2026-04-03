@@ -11,523 +11,480 @@ part of 'getallwidgetsdata_bloc.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$GetallwidgetsdataEvent {
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is GetallwidgetsdataEvent);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  String toString() {
-    return 'GetallwidgetsdataEvent()';
-  }
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetallwidgetsdataEvent);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'GetallwidgetsdataEvent()';
+}
+
+
 }
 
 /// @nodoc
-class $GetallwidgetsdataEventCopyWith<$Res> {
-  $GetallwidgetsdataEventCopyWith(
-      GetallwidgetsdataEvent _, $Res Function(GetallwidgetsdataEvent) __);
+class $GetallwidgetsdataEventCopyWith<$Res>  {
+$GetallwidgetsdataEventCopyWith(GetallwidgetsdataEvent _, $Res Function(GetallwidgetsdataEvent) __);
 }
+
 
 /// Adds pattern-matching-related methods to [GetallwidgetsdataEvent].
 extension GetallwidgetsdataEventPatterns on GetallwidgetsdataEvent {
-  /// A variant of `map` that fallback to returning `orElse`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_FetchAllData value)? fetchAllData,
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _FetchAllData() when fetchAllData != null:
-        return fetchAllData(_that);
-      case _:
-        return orElse();
-    }
-  }
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _FetchAllData value)?  fetchAllData,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _FetchAllData() when fetchAllData != null:
+return fetchAllData(_that);case _:
+  return orElse();
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// Callbacks receives the raw object, upcasted.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case final Subclass2 value:
-  ///     return ...;
-  /// }
-  /// ```
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_FetchAllData value) fetchAllData,
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _FetchAllData():
-        return fetchAllData(_that);
-      case _:
-        throw StateError('Unexpected subclass');
-    }
-  }
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _FetchAllData value)  fetchAllData,}){
+final _that = this;
+switch (_that) {
+case _FetchAllData():
+return fetchAllData(_that);case _:
+  throw StateError('Unexpected subclass');
 
-  /// A variant of `map` that fallback to returning `null`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_FetchAllData value)? fetchAllData,
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _FetchAllData() when fetchAllData != null:
-        return fetchAllData(_that);
-      case _:
-        return null;
-    }
-  }
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _FetchAllData value)?  fetchAllData,}){
+final _that = this;
+switch (_that) {
+case _FetchAllData() when fetchAllData != null:
+return fetchAllData(_that);case _:
+  return null;
 
-  /// A variant of `when` that fallback to an `orElse` callback.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchAllData,
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _FetchAllData() when fetchAllData != null:
-        return fetchAllData();
-      case _:
-        return orElse();
-    }
-  }
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  fetchAllData,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _FetchAllData() when fetchAllData != null:
+return fetchAllData();case _:
+  return orElse();
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// As opposed to `map`, this offers destructuring.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case Subclass2(:final field2):
-  ///     return ...;
-  /// }
-  /// ```
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() fetchAllData,
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _FetchAllData():
-        return fetchAllData();
-      case _:
-        throw StateError('Unexpected subclass');
-    }
-  }
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  fetchAllData,}) {final _that = this;
+switch (_that) {
+case _FetchAllData():
+return fetchAllData();case _:
+  throw StateError('Unexpected subclass');
 
-  /// A variant of `when` that fallback to returning `null`
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchAllData,
-  }) {
-    final _that = this;
-    switch (_that) {
-      case _FetchAllData() when fetchAllData != null:
-        return fetchAllData();
-      case _:
-        return null;
-    }
-  }
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  fetchAllData,}) {final _that = this;
+switch (_that) {
+case _FetchAllData() when fetchAllData != null:
+return fetchAllData();case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
+
 
 class _FetchAllData implements GetallwidgetsdataEvent {
   const _FetchAllData();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _FetchAllData);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  String toString() {
-    return 'GetallwidgetsdataEvent.fetchAllData()';
-  }
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FetchAllData);
 }
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'GetallwidgetsdataEvent.fetchAllData()';
+}
+
+
+}
+
+
+
 
 /// @nodoc
 mixin _$GetallwidgetsdataState {
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is GetallwidgetsdataState);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  String toString() {
-    return 'GetallwidgetsdataState()';
-  }
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetallwidgetsdataState);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'GetallwidgetsdataState()';
+}
+
+
 }
 
 /// @nodoc
-class $GetallwidgetsdataStateCopyWith<$Res> {
-  $GetallwidgetsdataStateCopyWith(
-      GetallwidgetsdataState _, $Res Function(GetallwidgetsdataState) __);
+class $GetallwidgetsdataStateCopyWith<$Res>  {
+$GetallwidgetsdataStateCopyWith(GetallwidgetsdataState _, $Res Function(GetallwidgetsdataState) __);
 }
+
 
 /// Adds pattern-matching-related methods to [GetallwidgetsdataState].
 extension GetallwidgetsdataStatePatterns on GetallwidgetsdataState {
-  /// A variant of `map` that fallback to returning `orElse`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(GetallwidgetsdataStateInitial value)? initial,
-    TResult Function(GetallwidgetsdataStateLoading value)? loading,
-    TResult Function(GetallwidgetsdataStateFailure value)? failure,
-    TResult Function(GetallwidgetsdataStateSuccess value)? success,
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case GetallwidgetsdataStateInitial() when initial != null:
-        return initial(_that);
-      case GetallwidgetsdataStateLoading() when loading != null:
-        return loading(_that);
-      case GetallwidgetsdataStateFailure() when failure != null:
-        return failure(_that);
-      case GetallwidgetsdataStateSuccess() when success != null:
-        return success(_that);
-      case _:
-        return orElse();
-    }
-  }
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( GetallwidgetsdataStateInitial value)?  initial,TResult Function( GetallwidgetsdataStateLoading value)?  loading,TResult Function( GetallwidgetsdataStateFailure value)?  failure,TResult Function( GetallwidgetsdataStateSuccess value)?  success,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case GetallwidgetsdataStateInitial() when initial != null:
+return initial(_that);case GetallwidgetsdataStateLoading() when loading != null:
+return loading(_that);case GetallwidgetsdataStateFailure() when failure != null:
+return failure(_that);case GetallwidgetsdataStateSuccess() when success != null:
+return success(_that);case _:
+  return orElse();
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// Callbacks receives the raw object, upcasted.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case final Subclass2 value:
-  ///     return ...;
-  /// }
-  /// ```
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(GetallwidgetsdataStateInitial value) initial,
-    required TResult Function(GetallwidgetsdataStateLoading value) loading,
-    required TResult Function(GetallwidgetsdataStateFailure value) failure,
-    required TResult Function(GetallwidgetsdataStateSuccess value) success,
-  }) {
-    final _that = this;
-    switch (_that) {
-      case GetallwidgetsdataStateInitial():
-        return initial(_that);
-      case GetallwidgetsdataStateLoading():
-        return loading(_that);
-      case GetallwidgetsdataStateFailure():
-        return failure(_that);
-      case GetallwidgetsdataStateSuccess():
-        return success(_that);
-    }
-  }
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( GetallwidgetsdataStateInitial value)  initial,required TResult Function( GetallwidgetsdataStateLoading value)  loading,required TResult Function( GetallwidgetsdataStateFailure value)  failure,required TResult Function( GetallwidgetsdataStateSuccess value)  success,}){
+final _that = this;
+switch (_that) {
+case GetallwidgetsdataStateInitial():
+return initial(_that);case GetallwidgetsdataStateLoading():
+return loading(_that);case GetallwidgetsdataStateFailure():
+return failure(_that);case GetallwidgetsdataStateSuccess():
+return success(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  /// A variant of `map` that fallback to returning `null`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( GetallwidgetsdataStateInitial value)?  initial,TResult? Function( GetallwidgetsdataStateLoading value)?  loading,TResult? Function( GetallwidgetsdataStateFailure value)?  failure,TResult? Function( GetallwidgetsdataStateSuccess value)?  success,}){
+final _that = this;
+switch (_that) {
+case GetallwidgetsdataStateInitial() when initial != null:
+return initial(_that);case GetallwidgetsdataStateLoading() when loading != null:
+return loading(_that);case GetallwidgetsdataStateFailure() when failure != null:
+return failure(_that);case GetallwidgetsdataStateSuccess() when success != null:
+return success(_that);case _:
+  return null;
 
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(GetallwidgetsdataStateInitial value)? initial,
-    TResult? Function(GetallwidgetsdataStateLoading value)? loading,
-    TResult? Function(GetallwidgetsdataStateFailure value)? failure,
-    TResult? Function(GetallwidgetsdataStateSuccess value)? success,
-  }) {
-    final _that = this;
-    switch (_that) {
-      case GetallwidgetsdataStateInitial() when initial != null:
-        return initial(_that);
-      case GetallwidgetsdataStateLoading() when loading != null:
-        return loading(_that);
-      case GetallwidgetsdataStateFailure() when failure != null:
-        return failure(_that);
-      case GetallwidgetsdataStateSuccess() when success != null:
-        return success(_that);
-      case _:
-        return null;
-    }
-  }
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// A variant of `when` that fallback to an `orElse` callback.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( String cause)?  failure,TResult Function( Map<String, List<MeasurementModel>> widgets)?  success,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case GetallwidgetsdataStateInitial() when initial != null:
+return initial();case GetallwidgetsdataStateLoading() when loading != null:
+return loading();case GetallwidgetsdataStateFailure() when failure != null:
+return failure(_that.cause);case GetallwidgetsdataStateSuccess() when success != null:
+return success(_that.widgets);case _:
+  return orElse();
 
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initial,
-    TResult Function()? loading,
-    TResult Function(String cause)? failure,
-    TResult Function(Map<String, List<MeasurementModel>> widgets)? success,
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case GetallwidgetsdataStateInitial() when initial != null:
-        return initial();
-      case GetallwidgetsdataStateLoading() when loading != null:
-        return loading();
-      case GetallwidgetsdataStateFailure() when failure != null:
-        return failure(_that.cause);
-      case GetallwidgetsdataStateSuccess() when success != null:
-        return success(_that.widgets);
-      case _:
-        return orElse();
-    }
-  }
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// As opposed to `map`, this offers destructuring.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case Subclass2(:final field2):
-  ///     return ...;
-  /// }
-  /// ```
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( String cause)  failure,required TResult Function( Map<String, List<MeasurementModel>> widgets)  success,}) {final _that = this;
+switch (_that) {
+case GetallwidgetsdataStateInitial():
+return initial();case GetallwidgetsdataStateLoading():
+return loading();case GetallwidgetsdataStateFailure():
+return failure(_that.cause);case GetallwidgetsdataStateSuccess():
+return success(_that.widgets);}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initial,
-    required TResult Function() loading,
-    required TResult Function(String cause) failure,
-    required TResult Function(Map<String, List<MeasurementModel>> widgets)
-        success,
-  }) {
-    final _that = this;
-    switch (_that) {
-      case GetallwidgetsdataStateInitial():
-        return initial();
-      case GetallwidgetsdataStateLoading():
-        return loading();
-      case GetallwidgetsdataStateFailure():
-        return failure(_that.cause);
-      case GetallwidgetsdataStateSuccess():
-        return success(_that.widgets);
-    }
-  }
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( String cause)?  failure,TResult? Function( Map<String, List<MeasurementModel>> widgets)?  success,}) {final _that = this;
+switch (_that) {
+case GetallwidgetsdataStateInitial() when initial != null:
+return initial();case GetallwidgetsdataStateLoading() when loading != null:
+return loading();case GetallwidgetsdataStateFailure() when failure != null:
+return failure(_that.cause);case GetallwidgetsdataStateSuccess() when success != null:
+return success(_that.widgets);case _:
+  return null;
 
-  /// A variant of `when` that fallback to returning `null`
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+}
+}
 
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initial,
-    TResult? Function()? loading,
-    TResult? Function(String cause)? failure,
-    TResult? Function(Map<String, List<MeasurementModel>> widgets)? success,
-  }) {
-    final _that = this;
-    switch (_that) {
-      case GetallwidgetsdataStateInitial() when initial != null:
-        return initial();
-      case GetallwidgetsdataStateLoading() when loading != null:
-        return loading();
-      case GetallwidgetsdataStateFailure() when failure != null:
-        return failure(_that.cause);
-      case GetallwidgetsdataStateSuccess() when success != null:
-        return success(_that.widgets);
-      case _:
-        return null;
-    }
-  }
 }
 
 /// @nodoc
+
 
 class GetallwidgetsdataStateInitial implements GetallwidgetsdataState {
   const GetallwidgetsdataStateInitial();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is GetallwidgetsdataStateInitial);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  String toString() {
-    return 'GetallwidgetsdataState.initial()';
-  }
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetallwidgetsdataStateInitial);
 }
 
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'GetallwidgetsdataState.initial()';
+}
+
+
+}
+
+
+
+
 /// @nodoc
+
 
 class GetallwidgetsdataStateLoading implements GetallwidgetsdataState {
   const GetallwidgetsdataStateLoading();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is GetallwidgetsdataStateLoading);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  String toString() {
-    return 'GetallwidgetsdataState.loading()';
-  }
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetallwidgetsdataStateLoading);
 }
 
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'GetallwidgetsdataState.loading()';
+}
+
+
+}
+
+
+
+
 /// @nodoc
+
 
 class GetallwidgetsdataStateFailure implements GetallwidgetsdataState {
   const GetallwidgetsdataStateFailure(this.cause);
+  
 
-  final String cause;
+ final  String cause;
 
-  /// Create a copy of GetallwidgetsdataState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $GetallwidgetsdataStateFailureCopyWith<GetallwidgetsdataStateFailure>
-      get copyWith => _$GetallwidgetsdataStateFailureCopyWithImpl<
-          GetallwidgetsdataStateFailure>(this, _$identity);
+/// Create a copy of GetallwidgetsdataState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$GetallwidgetsdataStateFailureCopyWith<GetallwidgetsdataStateFailure> get copyWith => _$GetallwidgetsdataStateFailureCopyWithImpl<GetallwidgetsdataStateFailure>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is GetallwidgetsdataStateFailure &&
-            (identical(other.cause, cause) || other.cause == cause));
-  }
 
-  @override
-  int get hashCode => Object.hash(runtimeType, cause);
 
-  @override
-  String toString() {
-    return 'GetallwidgetsdataState.failure(cause: $cause)';
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetallwidgetsdataStateFailure&&(identical(other.cause, cause) || other.cause == cause));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,cause);
+
+@override
+String toString() {
+  return 'GetallwidgetsdataState.failure(cause: $cause)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class $GetallwidgetsdataStateFailureCopyWith<$Res>
-    implements $GetallwidgetsdataStateCopyWith<$Res> {
-  factory $GetallwidgetsdataStateFailureCopyWith(
-          GetallwidgetsdataStateFailure value,
-          $Res Function(GetallwidgetsdataStateFailure) _then) =
-      _$GetallwidgetsdataStateFailureCopyWithImpl;
-  @useResult
-  $Res call({String cause});
-}
+abstract mixin class $GetallwidgetsdataStateFailureCopyWith<$Res> implements $GetallwidgetsdataStateCopyWith<$Res> {
+  factory $GetallwidgetsdataStateFailureCopyWith(GetallwidgetsdataStateFailure value, $Res Function(GetallwidgetsdataStateFailure) _then) = _$GetallwidgetsdataStateFailureCopyWithImpl;
+@useResult
+$Res call({
+ String cause
+});
 
+
+
+
+}
 /// @nodoc
 class _$GetallwidgetsdataStateFailureCopyWithImpl<$Res>
     implements $GetallwidgetsdataStateFailureCopyWith<$Res> {
@@ -536,72 +493,70 @@ class _$GetallwidgetsdataStateFailureCopyWithImpl<$Res>
   final GetallwidgetsdataStateFailure _self;
   final $Res Function(GetallwidgetsdataStateFailure) _then;
 
-  /// Create a copy of GetallwidgetsdataState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? cause = null,
-  }) {
-    return _then(GetallwidgetsdataStateFailure(
-      null == cause
-          ? _self.cause
-          : cause // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
+/// Create a copy of GetallwidgetsdataState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? cause = null,}) {
+  return _then(GetallwidgetsdataStateFailure(
+null == cause ? _self.cause : cause // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
 }
 
 /// @nodoc
+
 
 class GetallwidgetsdataStateSuccess implements GetallwidgetsdataState {
-  const GetallwidgetsdataStateSuccess(
-      {required final Map<String, List<MeasurementModel>> widgets})
-      : _widgets = widgets;
+  const GetallwidgetsdataStateSuccess({required final  Map<String, List<MeasurementModel>> widgets}): _widgets = widgets;
+  
 
-  final Map<String, List<MeasurementModel>> _widgets;
-  Map<String, List<MeasurementModel>> get widgets {
-    if (_widgets is EqualUnmodifiableMapView) return _widgets;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_widgets);
-  }
+ final  Map<String, List<MeasurementModel>> _widgets;
+ Map<String, List<MeasurementModel>> get widgets {
+  if (_widgets is EqualUnmodifiableMapView) return _widgets;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_widgets);
+}
 
-  /// Create a copy of GetallwidgetsdataState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $GetallwidgetsdataStateSuccessCopyWith<GetallwidgetsdataStateSuccess>
-      get copyWith => _$GetallwidgetsdataStateSuccessCopyWithImpl<
-          GetallwidgetsdataStateSuccess>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is GetallwidgetsdataStateSuccess &&
-            const DeepCollectionEquality().equals(other._widgets, _widgets));
-  }
+/// Create a copy of GetallwidgetsdataState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$GetallwidgetsdataStateSuccessCopyWith<GetallwidgetsdataStateSuccess> get copyWith => _$GetallwidgetsdataStateSuccessCopyWithImpl<GetallwidgetsdataStateSuccess>(this, _$identity);
 
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_widgets));
 
-  @override
-  String toString() {
-    return 'GetallwidgetsdataState.success(widgets: $widgets)';
-  }
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetallwidgetsdataStateSuccess&&const DeepCollectionEquality().equals(other._widgets, _widgets));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_widgets));
+
+@override
+String toString() {
+  return 'GetallwidgetsdataState.success(widgets: $widgets)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class $GetallwidgetsdataStateSuccessCopyWith<$Res>
-    implements $GetallwidgetsdataStateCopyWith<$Res> {
-  factory $GetallwidgetsdataStateSuccessCopyWith(
-          GetallwidgetsdataStateSuccess value,
-          $Res Function(GetallwidgetsdataStateSuccess) _then) =
-      _$GetallwidgetsdataStateSuccessCopyWithImpl;
-  @useResult
-  $Res call({Map<String, List<MeasurementModel>> widgets});
-}
+abstract mixin class $GetallwidgetsdataStateSuccessCopyWith<$Res> implements $GetallwidgetsdataStateCopyWith<$Res> {
+  factory $GetallwidgetsdataStateSuccessCopyWith(GetallwidgetsdataStateSuccess value, $Res Function(GetallwidgetsdataStateSuccess) _then) = _$GetallwidgetsdataStateSuccessCopyWithImpl;
+@useResult
+$Res call({
+ Map<String, List<MeasurementModel>> widgets
+});
 
+
+
+
+}
 /// @nodoc
 class _$GetallwidgetsdataStateSuccessCopyWithImpl<$Res>
     implements $GetallwidgetsdataStateSuccessCopyWith<$Res> {
@@ -610,19 +565,16 @@ class _$GetallwidgetsdataStateSuccessCopyWithImpl<$Res>
   final GetallwidgetsdataStateSuccess _self;
   final $Res Function(GetallwidgetsdataStateSuccess) _then;
 
-  /// Create a copy of GetallwidgetsdataState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? widgets = null,
-  }) {
-    return _then(GetallwidgetsdataStateSuccess(
-      widgets: null == widgets
-          ? _self._widgets
-          : widgets // ignore: cast_nullable_to_non_nullable
-              as Map<String, List<MeasurementModel>>,
-    ));
-  }
+/// Create a copy of GetallwidgetsdataState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? widgets = null,}) {
+  return _then(GetallwidgetsdataStateSuccess(
+widgets: null == widgets ? _self._widgets : widgets // ignore: cast_nullable_to_non_nullable
+as Map<String, List<MeasurementModel>>,
+  ));
+}
+
+
 }
 
 // dart format on

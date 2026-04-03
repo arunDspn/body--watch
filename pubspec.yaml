@@ -4,7 +4,7 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: ">=3.00.0 <4.0.0"
+  sdk: ">=3.8.0 <4.0.0"
 
 dependencies:
   benchmark_harness: ^2.2.2
@@ -31,13 +31,13 @@ dependencies:
   flutter_windowmanager_plus: ^1.0.1
   freezed_annotation: ^3.0.0
   grouped_scroll_view: ^0.2.3
-  hydrated_bloc: ^10.0.0
+  hydrated_bloc: ^11.0.0
   image: ^4.2.0
   image_compare_slider: ^2.8.0
   image_picker: ^1.0.5
   intl: ^0.20.0
   json_annotation: ^4.9.0
-  local_auth: ^2.2.0
+  local_auth: ^3.0.1
   media_scanner: ^2.1.0
   multi_dropdown: ^3.0.1
   page_transition: ^2.1.0
@@ -61,7 +61,7 @@ dev_dependencies:
   json_serializable: ^6.9.5
   mockito: ^5.1.0
   mocktail: ^1.0.1
-  very_good_analysis: ^9.0.0
+  very_good_analysis: ^10.2.0
 
 flutter:
   uses-material-design: true

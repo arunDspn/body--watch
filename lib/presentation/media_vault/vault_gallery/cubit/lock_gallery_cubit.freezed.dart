@@ -11,277 +11,266 @@ part of 'lock_gallery_cubit.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$LockGalleryState {
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is LockGalleryState);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  String toString() {
-    return 'LockGalleryState()';
-  }
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LockGalleryState);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'LockGalleryState()';
+}
+
+
 }
 
 /// @nodoc
-class $LockGalleryStateCopyWith<$Res> {
-  $LockGalleryStateCopyWith(
-      LockGalleryState _, $Res Function(LockGalleryState) __);
+class $LockGalleryStateCopyWith<$Res>  {
+$LockGalleryStateCopyWith(LockGalleryState _, $Res Function(LockGalleryState) __);
 }
+
 
 /// Adds pattern-matching-related methods to [LockGalleryState].
 extension LockGalleryStatePatterns on LockGalleryState {
-  /// A variant of `map` that fallback to returning `orElse`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(LockGalleryStateLocked value)? locked,
-    TResult Function(LockGalleryStateUnlocked value)? unlocked,
-    TResult Function(LockGalleryStateInitial value)? initial,
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case LockGalleryStateLocked() when locked != null:
-        return locked(_that);
-      case LockGalleryStateUnlocked() when unlocked != null:
-        return unlocked(_that);
-      case LockGalleryStateInitial() when initial != null:
-        return initial(_that);
-      case _:
-        return orElse();
-    }
-  }
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( LockGalleryStateLocked value)?  locked,TResult Function( LockGalleryStateUnlocked value)?  unlocked,TResult Function( LockGalleryStateInitial value)?  initial,required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case LockGalleryStateLocked() when locked != null:
+return locked(_that);case LockGalleryStateUnlocked() when unlocked != null:
+return unlocked(_that);case LockGalleryStateInitial() when initial != null:
+return initial(_that);case _:
+  return orElse();
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// Callbacks receives the raw object, upcasted.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case final Subclass2 value:
-  ///     return ...;
-  /// }
-  /// ```
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(LockGalleryStateLocked value) locked,
-    required TResult Function(LockGalleryStateUnlocked value) unlocked,
-    required TResult Function(LockGalleryStateInitial value) initial,
-  }) {
-    final _that = this;
-    switch (_that) {
-      case LockGalleryStateLocked():
-        return locked(_that);
-      case LockGalleryStateUnlocked():
-        return unlocked(_that);
-      case LockGalleryStateInitial():
-        return initial(_that);
-    }
-  }
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( LockGalleryStateLocked value)  locked,required TResult Function( LockGalleryStateUnlocked value)  unlocked,required TResult Function( LockGalleryStateInitial value)  initial,}){
+final _that = this;
+switch (_that) {
+case LockGalleryStateLocked():
+return locked(_that);case LockGalleryStateUnlocked():
+return unlocked(_that);case LockGalleryStateInitial():
+return initial(_that);}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  /// A variant of `map` that fallback to returning `null`.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case final Subclass value:
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( LockGalleryStateLocked value)?  locked,TResult? Function( LockGalleryStateUnlocked value)?  unlocked,TResult? Function( LockGalleryStateInitial value)?  initial,}){
+final _that = this;
+switch (_that) {
+case LockGalleryStateLocked() when locked != null:
+return locked(_that);case LockGalleryStateUnlocked() when unlocked != null:
+return unlocked(_that);case LockGalleryStateInitial() when initial != null:
+return initial(_that);case _:
+  return null;
 
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(LockGalleryStateLocked value)? locked,
-    TResult? Function(LockGalleryStateUnlocked value)? unlocked,
-    TResult? Function(LockGalleryStateInitial value)? initial,
-  }) {
-    final _that = this;
-    switch (_that) {
-      case LockGalleryStateLocked() when locked != null:
-        return locked(_that);
-      case LockGalleryStateUnlocked() when unlocked != null:
-        return unlocked(_that);
-      case LockGalleryStateInitial() when initial != null:
-        return initial(_that);
-      case _:
-        return null;
-    }
-  }
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
 
-  /// A variant of `when` that fallback to an `orElse` callback.
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return orElse();
-  /// }
-  /// ```
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  locked,TResult Function()?  unlocked,TResult Function()?  initial,required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case LockGalleryStateLocked() when locked != null:
+return locked();case LockGalleryStateUnlocked() when unlocked != null:
+return unlocked();case LockGalleryStateInitial() when initial != null:
+return initial();case _:
+  return orElse();
 
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? locked,
-    TResult Function()? unlocked,
-    TResult Function()? initial,
-    required TResult orElse(),
-  }) {
-    final _that = this;
-    switch (_that) {
-      case LockGalleryStateLocked() when locked != null:
-        return locked();
-      case LockGalleryStateUnlocked() when unlocked != null:
-        return unlocked();
-      case LockGalleryStateInitial() when initial != null:
-        return initial();
-      case _:
-        return orElse();
-    }
-  }
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
 
-  /// A `switch`-like method, using callbacks.
-  ///
-  /// As opposed to `map`, this offers destructuring.
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case Subclass2(:final field2):
-  ///     return ...;
-  /// }
-  /// ```
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  locked,required TResult Function()  unlocked,required TResult Function()  initial,}) {final _that = this;
+switch (_that) {
+case LockGalleryStateLocked():
+return locked();case LockGalleryStateUnlocked():
+return unlocked();case LockGalleryStateInitial():
+return initial();}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
 
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() locked,
-    required TResult Function() unlocked,
-    required TResult Function() initial,
-  }) {
-    final _that = this;
-    switch (_that) {
-      case LockGalleryStateLocked():
-        return locked();
-      case LockGalleryStateUnlocked():
-        return unlocked();
-      case LockGalleryStateInitial():
-        return initial();
-    }
-  }
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  locked,TResult? Function()?  unlocked,TResult? Function()?  initial,}) {final _that = this;
+switch (_that) {
+case LockGalleryStateLocked() when locked != null:
+return locked();case LockGalleryStateUnlocked() when unlocked != null:
+return unlocked();case LockGalleryStateInitial() when initial != null:
+return initial();case _:
+  return null;
 
-  /// A variant of `when` that fallback to returning `null`
-  ///
-  /// It is equivalent to doing:
-  /// ```dart
-  /// switch (sealedClass) {
-  ///   case Subclass(:final field):
-  ///     return ...;
-  ///   case _:
-  ///     return null;
-  /// }
-  /// ```
+}
+}
 
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? locked,
-    TResult? Function()? unlocked,
-    TResult? Function()? initial,
-  }) {
-    final _that = this;
-    switch (_that) {
-      case LockGalleryStateLocked() when locked != null:
-        return locked();
-      case LockGalleryStateUnlocked() when unlocked != null:
-        return unlocked();
-      case LockGalleryStateInitial() when initial != null:
-        return initial();
-      case _:
-        return null;
-    }
-  }
 }
 
 /// @nodoc
+
 
 class LockGalleryStateLocked implements LockGalleryState {
   const LockGalleryStateLocked();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is LockGalleryStateLocked);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  String toString() {
-    return 'LockGalleryState.locked()';
-  }
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LockGalleryStateLocked);
 }
 
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'LockGalleryState.locked()';
+}
+
+
+}
+
+
+
+
 /// @nodoc
+
 
 class LockGalleryStateUnlocked implements LockGalleryState {
   const LockGalleryStateUnlocked();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is LockGalleryStateUnlocked);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  String toString() {
-    return 'LockGalleryState.unlocked()';
-  }
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LockGalleryStateUnlocked);
 }
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'LockGalleryState.unlocked()';
+}
+
+
+}
+
+
+
 
 /// @nodoc
 
+
 class LockGalleryStateInitial implements LockGalleryState {
   const LockGalleryStateInitial();
+  
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is LockGalleryStateInitial);
-  }
 
-  @override
-  int get hashCode => runtimeType.hashCode;
 
-  @override
-  String toString() {
-    return 'LockGalleryState.initial()';
-  }
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LockGalleryStateInitial);
 }
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'LockGalleryState.initial()';
+}
+
+
+}
+
+
+
 
 // dart format on

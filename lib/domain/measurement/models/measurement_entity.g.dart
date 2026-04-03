@@ -9,7 +9,6 @@ part of 'measurement_entity.dart';
 _MeasurementEntity _$MeasurementEntityFromJson(Map<String, dynamic> json) =>
     _MeasurementEntity(
       value: (json['value'] as num).toDouble(),
-      goalValue: (json['goal_value'] as num?)?.toDouble(),
       date: DateTime.parse(json['date'] as String),
       targetId: (json['target_id'] as num).toInt(),
       notes: json['notes'] as String,
@@ -26,7 +25,6 @@ _MeasurementEntity _$MeasurementEntityFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$MeasurementEntityToJson(_MeasurementEntity instance) =>
     <String, dynamic>{
       'value': instance.value,
-      'goal_value': instance.goalValue,
       'date': instance.date.toIso8601String(),
       'target_id': instance.targetId,
       'notes': instance.notes,

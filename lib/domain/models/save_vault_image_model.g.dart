@@ -17,10 +17,10 @@ _SaveVaultImageModel _$SaveVaultImageModelFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$SaveVaultImageModelToJson(
-        _SaveVaultImageModel instance) =>
-    <String, dynamic>{
-      'tag': instance.tag,
-      'path': instance.path,
-      'date': instance.date.toIso8601String(),
-      'muscleGroup': instance.muscleGroup,
-    };
+  _SaveVaultImageModel instance,
+) => <String, dynamic>{
+  'tag': instance.tag,
+  'path': instance.path,
+  'date': instance.date.toIso8601String(),
+  'muscleGroup': instance.muscleGroup,
+};

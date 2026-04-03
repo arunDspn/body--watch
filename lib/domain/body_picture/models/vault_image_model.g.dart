@@ -10,8 +10,9 @@ _VaultImageModel _$VaultImageModelFromJson(Map<String, dynamic> json) =>
     _VaultImageModel(
       id: (json['id'] as num).toInt(),
       tag: json['tag'] as String,
-      targets:
-          (json['targets'] as List<dynamic>).map((e) => e as String).toList(),
+      targets: (json['targets'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
       file: json['file'] as String,
       thumbnailFile: json['thumbnail_file'] as String,
       date: DateTime.parse(json['date'] as String),
