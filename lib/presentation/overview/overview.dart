@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +10,6 @@ import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
-import 'package:watcha_body/presentation/chart_2/charts_view2.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/view/vault_section.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
@@ -161,7 +161,7 @@ class OverView extends StatelessWidget {
         child: BlocConsumer<GetallwidgetsdataBloc, GetallwidgetsdataState>(
           listener: (context, state) {
             switch (state) {
-              case GetallwidgetsdataStateSuccess(:final widgets):
+              case GetallwidgetsdataStateSuccess():
                 // context
                 //     .read<SearchWidgetsBloc>()
                 //     .add(SearchWidgetsEvent.addData(list: widgets));
@@ -218,9 +218,7 @@ class OverView extends StatelessWidget {
 }
 
 class _EmptyWidgetList extends StatelessWidget {
-  const _EmptyWidgetList({
-    super.key,
-  });
+  const _EmptyWidgetList();
 
   @override
   Widget build(BuildContext context) {
@@ -275,9 +273,7 @@ class _EmptyWidgetList extends StatelessWidget {
 }
 
 class _ElseCase extends StatelessWidget {
-  const _ElseCase({
-    super.key,
-  });
+  const _ElseCase();
 
   @override
   Widget build(BuildContext context) {
@@ -563,29 +559,6 @@ class _WidgetBoxState extends State<_WidgetBox> {
 
   @override
   Widget build(BuildContext context) {
-    // late String _unit = '';
-    // // final _preferences =
-    // //     (context.watch<ApppreferencesBloc>().state as SavedAndReady)
-    // //         .appPreferences;
-
-    // if (widget.data.name is LengthMeasurementType) {
-    //   _unit = _preferences.lengthUnitString;
-    // } else if (widget.data.name is WeightMeasurementType) {
-    //   _unit = _preferences.weightUnitString;
-    // } else {
-    //   _unit = '%';
-    // }
-
-    final minValue = widget.data.reduce(
-      (value, element) => value.value < element.value ? value : element,
-    );
-
-    final maxValue = widget.data.reduce(
-      (value, element) => value.value > element.value ? value : element,
-    );
-
-    print('rebinfing ------  box');
-
     final latestData = widget.data.first;
 
     final delta =
@@ -599,198 +572,258 @@ class _WidgetBoxState extends State<_WidgetBox> {
       (element) => element.metricCode == widget.data.last.metricCode,
     );
 
+    final preferredUnit = metricCode?.preferredUnit ?? '';
+    final metricCodeValue = metricCode?.metricCode ?? latestData.metricCode;
+    final convertedValue = UserMetricHelper.convertToUserPref(
+      value: latestData.value,
+      metricCode: metricCodeValue,
+      context: context,
+    );
+
+    final theme = Theme.of(context);
+
     return Padding(
-      padding: const EdgeInsets.all(8),
-      child: GestureDetector(
-        onTap: () {
-          // Navigator.pushNamed(
-          //   context,
-          //   MeasurementInDetail.routeName,
-          //   arguments: widget.data.,
-          // );
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(12),
-            ),
-            color: Theme.of(context).colorScheme.primaryContainer,
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+      child: Card(
+        elevation: isExpanded ? 1 : 0,
+        color: theme.colorScheme.surfaceContainerHighest,
+        shadowColor: theme.colorScheme.shadow.withOpacity(0.1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(
+            color: theme.colorScheme.outlineVariant.withOpacity(0.55),
           ),
+        ),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
           width: double.infinity,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          padding: const EdgeInsets.fromLTRB(16, 14, 12, 12),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isCompact = constraints.maxWidth < 440;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: '${latestData.targetName} · ',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                            TextSpan(
-                              text:
-                                  '${UserMetricHelper.convertToUserPref(value: latestData.value, metricCode: metricCode!.metricCode, context: context)} ',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall
-                                  ?.copyWith(fontWeight: FontWeight.w600),
-                            ),
-                            TextSpan(
-                              text: metricCode!.preferredUnit,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium!
-                                  .copyWith(
-                                    fontSize: getProportionateScreenWidth(18),
-                                  ),
-                            ),
-                          ],
+                      Text(
+                        latestData.targetName,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.15,
                         ),
                       ),
-                      // Align(
-                      //   alignment: Alignment.topLeft,
-                      //   child: Row(
-                      //     crossAxisAlignment: CrossAxisAlignment.end,
-                      //     children: [
-                      //       Text(
-                      //         '${data.name.name} : ${data.latest.value} ',
-                      //         style: Theme.of(context)
-                      //             .textTheme
-                      //             .headlineSmall
-                      //             ?.copyWith(fontWeight: FontWeight.w600),
-                      //         textAlign: TextAlign.center,
-                      //       ),
-                      //       Text(
-                      //         _unit,
-                      //         style: Theme.of(context)
-                      //             .textTheme
-                      //             .headlineMedium!
-                      //             .copyWith(
-                      //               fontSize: getProportionateScreenWidth(18),
-                      //             ),
-                      //         textAlign: TextAlign.center,
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: Text(
-                            lastMeasurementDayFormatter.format(latestData.date),
-                            style: Theme.of(context).textTheme.titleMedium,
-                            textAlign: TextAlign.left,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(999),
+                          color: theme.colorScheme.secondaryContainer,
+                        ),
+                        child: Text(
+                          '$convertedValue $preferredUnit',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: theme.colorScheme.onSecondaryContainer,
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      _MetricChip(
+                        icon: Icons.event,
+                        text:
+                            lastMeasurementDayFormatter.format(latestData.date),
+                      ),
                       if (delta != null)
-                        Row(
-                          children: [
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Icon(
-                                delta < 0
-                                    ? Icons.arrow_drop_down
-                                    : Icons.arrow_drop_up,
-                                color: delta < 0 ? Colors.red : Colors.green,
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                '${delta!.toStringAsFixed(1)} than ${formatDate(widget.data[1].date)}',
-                                style: Theme.of(context).textTheme.titleSmall,
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                          ],
+                        _MetricChip(
+                          icon: delta < 0
+                              ? Icons.south_rounded
+                              : Icons.north_rounded,
+                          text:
+                              '${delta.toStringAsFixed(1)} than ${formatDate(widget.data[1].date)}',
+                          backgroundColor: delta < 0
+                              ? theme.colorScheme.errorContainer
+                              : theme.colorScheme.tertiaryContainer,
+                          foregroundColor: delta < 0
+                              ? theme.colorScheme.onErrorContainer
+                              : theme.colorScheme.onTertiaryContainer,
                         )
                       else
-                        const Text('No previous data'),
+                        _MetricChip(
+                          icon: Icons.timeline,
+                          text: 'No previous data',
+                        ),
                     ],
                   ),
-                  Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          final targets = (context
-                                  .read<GetallwidgetsCubit>()
-                                  .state as GetAllWidgetSuccess)
-                              .widgets;
-                          final target = targets.firstWhere(
-                            (element) => element.id == latestData.targetId,
-                          );
-                          showModalBottomSheet<void>(
-                            context: context,
-                            builder: (context) {
-                              return BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                                child: AddorEditMeasurementTargetModal.edit(
-                                  type: target,
-                                  addedId: latestData.id,
-                                  addedValue: latestData.value,
-                                  addedDate: latestData.date,
-                                  notes: latestData.notes,
-                                ),
-                              );
-                            },
-                          );
-                        },
-                        icon: Icon(
-                          Icons.add,
-                          color: Theme.of(context).colorScheme.primary,
-                          size: getProportionateScreenHeight(30),
+                  const SizedBox(height: 12),
+                  if (isCompact)
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        FilledButton.tonalIcon(
+                          onPressed: () {
+                            final targets = (context
+                                    .read<GetallwidgetsCubit>()
+                                    .state as GetAllWidgetSuccess)
+                                .widgets;
+                            final target = targets.firstWhere(
+                              (element) => element.id == latestData.targetId,
+                            );
+                            showModalBottomSheet<void>(
+                              context: context,
+                              builder: (context) {
+                                return BackdropFilter(
+                                  filter:
+                                      ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                                  child: AddorEditMeasurementTargetModal.edit(
+                                    type: target,
+                                    addedId: latestData.id,
+                                    addedValue: latestData.value,
+                                    addedDate: latestData.date,
+                                    notes: latestData.notes,
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          icon: const Icon(Icons.add),
+                          label: const Text('Add Data'),
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            isExpanded = !isExpanded;
-                          });
-                        },
-                        icon: Icon(
-                          !isExpanded
-                              ? Icons.expand_more_outlined
-                              : Icons.expand_less_outlined,
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              isExpanded = !isExpanded;
+                            });
+                          },
+                          icon: Icon(
+                            !isExpanded
+                                ? Icons.expand_more_rounded
+                                : Icons.expand_less_rounded,
+                          ),
+                          label: Text(isExpanded ? 'Less' : 'More'),
                         ),
-                      ),
-                    ],
+                      ],
+                    )
+                  else
+                    Row(
+                      children: [
+                        FilledButton.tonalIcon(
+                          onPressed: () {
+                            final targets = (context
+                                    .read<GetallwidgetsCubit>()
+                                    .state as GetAllWidgetSuccess)
+                                .widgets;
+                            final target = targets.firstWhere(
+                              (element) => element.id == latestData.targetId,
+                            );
+                            showModalBottomSheet<void>(
+                              context: context,
+                              builder: (context) {
+                                return BackdropFilter(
+                                  filter:
+                                      ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                                  child: AddorEditMeasurementTargetModal.edit(
+                                    type: target,
+                                    addedId: latestData.id,
+                                    addedValue: latestData.value,
+                                    addedDate: latestData.date,
+                                    notes: latestData.notes,
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          icon: const Icon(Icons.add),
+                          label: const Text('Add Data'),
+                        ),
+                        const Spacer(),
+                        IconButton.filledTonal(
+                          onPressed: () {
+                            setState(() {
+                              isExpanded = !isExpanded;
+                            });
+                          },
+                          icon: Icon(
+                            !isExpanded
+                                ? Icons.expand_more_rounded
+                                : Icons.expand_less_rounded,
+                          ),
+                        ),
+                      ],
+                    ),
+                  AnimatedCrossFade(
+                    duration: const Duration(milliseconds: 220),
+                    firstChild: const SizedBox.shrink(),
+                    secondChild: _ExtraDetails(
+                      key: Key(widget.data.hashCode.toString()),
+                      data: widget.data,
+                    ),
+                    crossFadeState: isExpanded
+                        ? CrossFadeState.showSecond
+                        : CrossFadeState.showFirst,
                   ),
                 ],
-              ),
-              // Row(
-              //   children: [
-              //     const Spacer(),
-              //     IconButton(
-              //       onPressed: () {
-              //         setState(() {
-              //           isExpanded = !isExpanded;
-              //         });
-              //       },
-              //       icon: const Icon(Icons.expand_circle_down),
-              //     ),
-              //   ],
-              // ),
-              if (isExpanded)
-                _ExtraDetails(
-                  key: Key(widget.data.hashCode.toString()),
-                  data: widget.data,
-                ),
-            ],
+              );
+            },
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _MetricChip extends StatelessWidget {
+  const _MetricChip({
+    required this.icon,
+    required this.text,
+    this.backgroundColor,
+    this.foregroundColor,
+  });
+
+  final IconData icon;
+  final String text;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final bg = backgroundColor ?? theme.colorScheme.surfaceContainerHigh;
+    final fg = foregroundColor ?? theme.colorScheme.onSurfaceVariant;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: fg),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: fg,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1058,9 +1091,11 @@ class _ExtraDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final lastMeasurementDayFormatter = DateFormat('d MMM');
     final startDate = data.first.date;
     final endDate = data.last.date;
+    final latestValue = data.first.value;
     final minValue = data.reduce(
       (value, element) => value.value < element.value ? value : element,
     );
@@ -1076,88 +1111,365 @@ class _ExtraDetails extends StatelessWidget {
       (element) => element.metricCode == data.last.metricCode,
     );
 
-    print('rebuiling ---- extra det');
+    final metricCodeValue = metricCode?.metricCode ?? data.last.metricCode;
+    final toBaseFactor = metricCode?.toBaseFactor ?? 1;
+    final unit = metricCode?.preferredUnit ?? '';
+    final rangeValue = maxValue.value - minValue.value;
+
+    final latestDisplay = UserMetricHelper.convertToUserPref(
+      value: latestValue,
+      metricCode: metricCodeValue,
+      context: context,
+    );
+    final trendValues = data
+        .take(10)
+        .toList()
+        .reversed
+        .map((e) => e.value / toBaseFactor)
+        .toList();
+    final minDisplay = (minValue.value / toBaseFactor).toStringAsFixed(1);
+    final maxDisplay = (maxValue.value / toBaseFactor).toStringAsFixed(1);
+    final rangeDisplay = (rangeValue / toBaseFactor).toStringAsFixed(1);
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: getProportionateScreenHeight(16),
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                // round
-                // border: Border.all(
-                //   color: Theme.of(context).colorScheme.primary,
-                //   width: getProportionateScreenWidth(1),
-                // ),
-                borderRadius: BorderRadius.circular(
-                  getProportionateScreenWidth(10),
-                ),
-                color: Theme.of(context)
-                    .colorScheme
-                    .inversePrimary
-                    .withOpacity(.5),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: RichText(
-                  text: TextSpan(
+        const SizedBox(height: 16),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final isCompact = constraints.maxWidth < 520;
+            final tileWidth = isCompact
+                ? constraints.maxWidth
+                : (constraints.maxWidth - 10) / 2;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 240),
+                  curve: Curves.easeOutCubic,
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(14),
+                    color: theme.colorScheme.primaryContainer,
+                    border: Border.all(
+                      color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+                    ),
+                  ),
+                  child: Row(
                     children: [
-                      TextSpan(
-                        text:
-                            '${lastMeasurementDayFormatter.format(startDate)} - ${lastMeasurementDayFormatter.format(endDate)}\n',
-                        style:
-                            Theme.of(context).textTheme.labelMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                      Icon(
+                        Icons.insights_rounded,
+                        color: theme.colorScheme.onPrimaryContainer,
                       ),
-                      // TextSpan(
-                      //   text:
-                      //       '${lastMeasurementDayFormatter.format(data.endDate)}\n',
-                      //   style: Theme.of(context)
-                      //       .textTheme
-                      //       .labelMedium
-                      //       ?.copyWith(fontWeight: FontWeight.w600),
-                      // ),
-                      TextSpan(
-                        text:
-                            '${minValue.value / metricCode!.toBaseFactor} - ${maxValue.value / metricCode.toBaseFactor} ${metricCode.preferredUnit}\n',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text:
+                                    '${lastMeasurementDayFormatter.format(startDate)} - ${lastMeasurementDayFormatter.format(endDate)}\n',
+                                style: theme.textTheme.labelLarge?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: theme.colorScheme.onPrimaryContainer,
+                                ),
+                              ),
+                              TextSpan(
+                                text: '$minDisplay - $maxDisplay $unit',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onPrimaryContainer,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    SizedBox(
+                      width: tileWidth,
+                      child: _DetailStatTile(
+                        title: 'Latest',
+                        value: '$latestDisplay $unit',
+                        icon: Icons.fiber_manual_record_rounded,
+                        accentColor: theme.colorScheme.primary,
+                      ),
+                    ),
+                    SizedBox(
+                      width: tileWidth,
+                      child: _DetailStatTile(
+                        title: 'Range',
+                        value: '$rangeDisplay $unit',
+                        icon: Icons.swap_vert_rounded,
+                        accentColor: theme.colorScheme.tertiary,
+                      ),
+                    ),
+                    SizedBox(
+                      width: tileWidth,
+                      child: _DetailStatTile(
+                        title: 'Lowest',
+                        value: '$minDisplay $unit',
+                        icon: Icons.south_rounded,
+                        accentColor: theme.colorScheme.error,
+                      ),
+                    ),
+                    SizedBox(
+                      width: tileWidth,
+                      child: _DetailStatTile(
+                        title: 'Highest',
+                        value: '$maxDisplay $unit',
+                        icon: Icons.north_rounded,
+                        accentColor: theme.colorScheme.secondary,
+                      ),
+                    ),
+                  ],
+                ),
+                if (trendValues.length > 1) ...[
+                  const SizedBox(height: 12),
+                  _MiniTrendChart(
+                    values: trendValues,
+                    unit: unit,
+                  ),
+                ],
+              ],
+            );
+          },
+        ),
+        // Expanded(
+        //   child: OverviewMetricsLineGraph(
+        //     // key: Key('${data.name.name}overviewGraph'),
+        //     filteredMeasurements: data,
+        //     startDate: startDate,
+        //     endDate: endDate,
+        //     previousMeasurement: null,
+        //     dayToText: DayToText(
+        //       startDate: endDate,
+        //       endDate: startDate,
+        //       timeUnit: TimeUnit.threeMonth,
+        //     ),
+        //   ),
+        // ),
+      ],
+    );
+  }
+}
+
+class _MiniTrendChart extends StatelessWidget {
+  const _MiniTrendChart({
+    required this.values,
+    required this.unit,
+  });
+
+  final List<double> values;
+  final String unit;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final points = <FlSpot>[];
+
+    for (var i = 0; i < values.length; i++) {
+      points.add(FlSpot(i.toDouble(), values[i]));
+    }
+
+    final minYRaw = values.reduce((a, b) => a < b ? a : b);
+    final maxYRaw = values.reduce((a, b) => a > b ? a : b);
+    final ySpan = (maxYRaw - minYRaw).abs();
+    final yPad = ySpan == 0 ? 1.0 : ySpan * 0.18;
+    final minY = minYRaw - yPad;
+    final maxY = maxYRaw + yPad;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        color: theme.colorScheme.surfaceContainer,
+        border: Border.all(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                'Trend',
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Text(
+                'Last ${values.length} values${unit.isNotEmpty ? ' ($unit)' : ''}',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 92,
+            child: LineChart(
+              LineChartData(
+                lineTouchData: LineTouchData(enabled: false),
+                gridData: FlGridData(
+                  drawVerticalLine: false,
+                  drawHorizontalLine: true,
+                  horizontalInterval: (maxY - minY) / 2,
+                  getDrawingHorizontalLine: (_) => FlLine(
+                    color: theme.colorScheme.outlineVariant.withOpacity(0.22),
+                    strokeWidth: 1,
+                  ),
+                ),
+                titlesData: const FlTitlesData(
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                ),
+                borderData: FlBorderData(show: false),
+                minX: 0,
+                maxX: (values.length - 1).toDouble(),
+                minY: minY,
+                maxY: maxY,
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: points,
+                    isCurved: true,
+                    curveSmoothness: 0.2,
+                    color: theme.colorScheme.primary,
+                    barWidth: 2.5,
+                    isStrokeCapRound: true,
+                    dotData: FlDotData(
+                      show: true,
+                      checkToShowDot: (spot, barData) {
+                        return spot.x == 0 ||
+                            spot.x == (values.length - 1).toDouble();
+                      },
+                      getDotPainter: (spot, percent, barData, index) {
+                        return FlDotCirclePainter(
+                          radius: 3.2,
+                          color: theme.colorScheme.primary,
+                          strokeWidth: 1.6,
+                          strokeColor: theme.colorScheme.surface,
+                        );
+                      },
+                    ),
+                    belowBarData: BarAreaData(
+                      show: true,
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          theme.colorScheme.primary.withOpacity(0.2),
+                          theme.colorScheme.primary.withOpacity(0.02),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              duration: const Duration(milliseconds: 280),
+              curve: Curves.easeOutCubic,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DetailStatTile extends StatelessWidget {
+  const _DetailStatTile({
+    required this.title,
+    required this.value,
+    required this.icon,
+    required this.accentColor,
+  });
+
+  final String title;
+  final String value;
+  final IconData icon;
+  final Color accentColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.96, end: 1),
+      duration: const Duration(milliseconds: 220),
+      curve: Curves.easeOutCubic,
+      builder: (context, scale, child) {
+        return Transform.scale(
+          scale: scale,
+          child: child,
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: theme.colorScheme.surfaceContainerHigh,
+          border: Border.all(
+            color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: accentColor.withOpacity(0.14),
+                borderRadius: BorderRadius.circular(9),
+              ),
+              child: Icon(icon, size: 18, color: accentColor),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  Text(
+                    value,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const VerticalDivider(
-              indent: 6,
-              color: Colors.red,
-              thickness: 6,
-              endIndent: 5,
-              width: 22,
-              // width: 6,
-            ),
-            // Expanded(
-            //   child: OverviewMetricsLineGraph(
-            //     // key: Key('${data.name.name}overviewGraph'),
-            //     filteredMeasurements: data,
-            //     startDate: startDate,
-            //     endDate: endDate,
-            //     previousMeasurement: null,
-            //     dayToText: DayToText(
-            //       startDate: endDate,
-            //       endDate: startDate,
-            //       timeUnit: TimeUnit.threeMonth,
-            //     ),
-            //   ),
-            // ),
           ],
         ),
-      ],
+      ),
     );
   }
 }

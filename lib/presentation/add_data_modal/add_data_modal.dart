@@ -458,15 +458,14 @@ class _AddorEditMeasurementTargetModalState
                                   width: SizeConfig.screenWidth! * 0.3,
                                   child: TextFormField(
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter some value';
-                                      }
+                                      if (value != null && value.isNotEmpty) {
                                       final number = double.tryParse(value);
                                       if (number == null) {
                                         return 'Please enter a valid number';
                                       }
                                       if (number <= 0) {
                                         return 'Please enter a number greater than zero';
+                                      }
                                       }
                                       return null;
                                     },
