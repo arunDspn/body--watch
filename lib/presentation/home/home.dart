@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/view/vault_section.dart';
-import 'package:watcha_body/presentation/media_vault/vault_gallery/components/gallery_view/vault_gallery_view.dart';
 import 'package:watcha_body/presentation/overview/overview.dart';
 import 'package:watcha_body/size_config.dart';
 

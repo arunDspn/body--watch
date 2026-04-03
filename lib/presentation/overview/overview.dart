@@ -4,23 +4,15 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
-import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
-import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
 import 'package:watcha_body/presentation/chart_2/charts_view2.dart';
-import 'package:watcha_body/presentation/display_models/measurement_display.dart';
-import 'package:watcha_body/presentation/measurement_in_detail/helper/day_to_text.dart';
-import 'package:watcha_body/presentation/measurement_in_detail/measurement_detailed.dart';
-import 'package:watcha_body/presentation/measurement_in_detail/widget/time_unit_segemented_filter/cubit/time_unit_filter_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/view/vault_section.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
-import 'package:watcha_body/presentation/overview/widgets/overview_chart.dart';
 import 'package:watcha_body/size_config.dart';
 import 'package:watcha_body/utils/value_to_pref_value.dart';
 
@@ -62,20 +54,20 @@ class OverView extends StatelessWidget {
             },
           ),
           //
-          IconButton(
-            onPressed: () {
-              // context.read<BodyPictureRepository>().getAllTags();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return ChartsView2();
-                  },
-                ),
-              );
-            },
-            icon: const Icon(Icons.emoji_emotions),
-          ),
+          // IconButton(
+          //   onPressed: () {
+          //     // context.read<BodyPictureRepository>().getAllTags();
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) {
+          //           return ChartsView2();
+          //         },
+          //       ),
+          //     );
+          //   },
+          //   icon: const Icon(Icons.emoji_emotions),
+          // ),
         ],
       ),
       // appBar: AppBar(

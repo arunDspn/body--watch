@@ -57,6 +57,7 @@ class _AddorEditMeasurementTargetModalState
 
   // Controllers
   late final TextEditingController _measurementController;
+  late final TextEditingController _goalController;
   late final TextEditingController _dateController;
   late final TextEditingController _notesController;
 
@@ -78,12 +79,14 @@ class _AddorEditMeasurementTargetModalState
       _measurementController.text = widget.addedValue.toString();
       _dateController.text = formatter.format(selectedDate!);
       _notesController = TextEditingController();
+      _goalController = TextEditingController();
       // _notesController.text = widget.a ?? '';
     } else {
       selectedDate = DateTime.now();
       // _measurementController.text = '';
       _dateController.text = formatter.format(selectedDate!);
       _notesController = TextEditingController();
+      _goalController = TextEditingController();
     }
 
     super.initState();
@@ -289,6 +292,10 @@ class _AddorEditMeasurementTargetModalState
                                   value: convertedValue,
                                   notes: _notesController.text,
                                   targetId: widget.type.id,
+                                  goalValue: _goalController.text.isNotEmpty
+                                      ? double.parse(_goalController.text) *
+                                          toBaseFactor
+                                      : null,
                                 ),
                               );
                         }
@@ -327,30 +334,12 @@ class _AddorEditMeasurementTargetModalState
                             // Value Input
                             Row(
                               children: [
-                                //
-                                DropdownButton<String>(
-                                  value: measurementUnit,
-                                  onChanged: (String? newValue) {
-                                    if (newValue != null) {
-                                      setState(() {
-                                        measurementUnit = newValue;
-                                      });
-                                    }
-                                  },
-                                  items: widget.type.units
-                                      .map<DropdownMenuItem<String>>(
-                                          (MetricUnitsModel value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value.unit,
-                                      child: Text(
-                                        value.unit,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                      ),
-                                    );
-                                  }).toList(),
+                                Text(
+                                  'Value',
+                                  style: Theme.of(context).textTheme.bodyLarge,
                                 ),
+                                //
+
                                 const Spacer(),
                                 SizedBox(
                                   width: SizeConfig.screenWidth! * 0.3,
@@ -391,6 +380,29 @@ class _AddorEditMeasurementTargetModalState
                                           fontWeight: FontWeight.bold,
                                         ),
                                   ),
+                                ),
+                                DropdownButton<String>(
+                                  value: measurementUnit,
+                                  onChanged: (String? newValue) {
+                                    if (newValue != null) {
+                                      setState(() {
+                                        measurementUnit = newValue;
+                                      });
+                                    }
+                                  },
+                                  items: widget.type.units
+                                      .map<DropdownMenuItem<String>>(
+                                          (MetricUnitsModel value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value.unit,
+                                      child: Text(
+                                        value.unit,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge,
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
                                 // Text(
                                 //   measurementUnit,
@@ -433,7 +445,6 @@ class _AddorEditMeasurementTargetModalState
                             ),
                             const Divider(),
                             // Goal
-
                             Row(
                               children: [
                                 //
@@ -473,7 +484,7 @@ class _AddorEditMeasurementTargetModalState
                                         RegExp('[0-9.]'),
                                       ),
                                     ],
-                                    controller: _measurementController,
+                                    controller: _goalController,
                                     keyboardType: TextInputType.number,
                                     style: Theme.of(context)
                                         .textTheme
@@ -489,6 +500,7 @@ class _AddorEditMeasurementTargetModalState
                                 // ),
                               ],
                             ),
+                            const Divider(),
                             // Notes Input
                             Row(
                               children: [
