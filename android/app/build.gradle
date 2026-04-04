@@ -40,7 +40,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.example.verygoodcore.watcha_body"
 
-    ndkVersion "27.0.12077973"
+    ndkVersion = "28.2.13676358"
 
     // compileSdkVersion flutter.compileSdkVersion
     compileSdkVersion 36
