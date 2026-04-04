@@ -686,16 +686,12 @@ class _WidgetBoxState extends State<_WidgetBox> {
                             showModalBottomSheet<void>(
                               context: context,
                               builder: (context) {
-                                return BackdropFilter(
-                                  filter:
-                                      ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                                  child: AddorEditMeasurementTargetModal.edit(
-                                    type: target,
-                                    addedId: latestData.id,
-                                    addedValue: latestData.value,
-                                    addedDate: latestData.date,
-                                    notes: latestData.notes,
-                                  ),
+                                return AddorEditMeasurementTargetModal.edit(
+                                  type: target,
+                                  addedId: latestData.id,
+                                  addedValue: latestData.value,
+                                  addedDate: latestData.date,
+                                  notes: latestData.notes,
                                 );
                               },
                             );

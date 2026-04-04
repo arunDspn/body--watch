@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -21,6 +19,10 @@ class DatabaseService {
 
   /// All measurement data will be stored in this table
   static const String measurementsDataTable = 'measurementsData';
+
+  /// Goals table
+  /// Stores user goals separately from measurement history
+  static const String measurementGoalsTable = 'measurement_goals';
 
   /// metrics table
   /// stores base metrics with their standard unit
@@ -252,7 +254,6 @@ class DatabaseService {
       "id"	INTEGER,
       "user_id" INTEGER NOT NULL,
       "value"	REAL NOT NULL CHECK (value > 0),
-      "goal_value" REAL CHECK (goal_value > 0),
       "date"	TEXT NOT NULL,
       "target_id" INTEGER NOT NULL,
       "notes" TEXT DEFAULT NULL,
@@ -262,6 +263,32 @@ class DatabaseService {
       FOREIGN KEY("user_id") REFERENCES "users"("id") ON DELETE CASCADE,
       FOREIGN KEY("target_id") REFERENCES "measurement_targets"("id")
     )
+  ''';
+
+  /// Create measurement goals table - stores target goals separately
+  static const String _createMeasurementGoalsTable = '''
+    CREATE TABLE $measurementGoalsTable (
+      "id" INTEGER,
+      "user_id" INTEGER NOT NULL,
+      "target_id" INTEGER NOT NULL,
+      "target_value" REAL NOT NULL CHECK (target_value > 0),
+      "start_date" TEXT NOT NULL,
+      "due_date" TEXT,
+      "status" TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active', 'completed', 'cancelled')),
+      "notes" TEXT DEFAULT NULL,
+      "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY("id" AUTOINCREMENT),
+      FOREIGN KEY("user_id") REFERENCES "users"("id") ON DELETE CASCADE,
+      FOREIGN KEY("target_id") REFERENCES "measurement_targets"("id") ON DELETE CASCADE
+    )
+  ''';
+
+  /// Enforce one active goal per user and measurement target
+  static const String _createActiveGoalUniqueIndex = '''
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_measurement_goals_active_unique
+    ON $measurementGoalsTable ("user_id", "target_id")
+    WHERE status = 'active'
   ''';
 
   static const String _createTagTable = '''
@@ -356,6 +383,8 @@ class DatabaseService {
     await db.execute(_createUsersTable);
     await db.execute(_createUserUnitPreferencesTable);
     await db.execute(_createUserSettingsTable);
+    await db.execute(_createMeasurementGoalsTable);
+    await db.execute(_createActiveGoalUniqueIndex);
     await db.execute(_createMeasurementTable);
     await db.execute(_createTagTable);
     await db.execute(_createPictureTable);

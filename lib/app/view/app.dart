@@ -15,6 +15,7 @@ import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
+import 'package:watcha_body/data/repositories/goals_repository.dart';
 import 'package:watcha_body/data/repositories/local_auth_repository_impl.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/data/repositories/user_preference/user_preference_reposiotry.dart';
@@ -93,6 +94,9 @@ class App extends StatelessWidget {
         RepositoryProvider<MeasurementRepository>(
           create: (context) => MeasurementRepository(databaseService),
         ),
+        RepositoryProvider<GoalsRepository>(
+          create: (context) => GoalsRepository(databaseService),
+        ),
         RepositoryProvider<TimeRangeService>(
           create: (context) => TimeRangeService(),
         ),
@@ -107,57 +111,43 @@ class App extends StatelessWidget {
             );
           },
         ),
-        RepositoryProvider<IAuthRepository>.value(
-          value: authRepository,
-        ),
+        RepositoryProvider<IAuthRepository>.value(value: authRepository),
 
         // UserPreferenceRepository
         RepositoryProvider<UserPreferenceRepository>(
-          create: (context) => UserPreferenceRepository(
-            databaseService,
-          ),
+          create: (context) => UserPreferenceRepository(databaseService),
         ),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => AdddataCubit(
-              MeasurementRepository(DatabaseService()),
-            ),
+            create: (context) =>
+                AdddataCubit(MeasurementRepository(DatabaseService())),
           ),
           BlocProvider<GetallwidgetsdataBloc>(
-            create: (context) => GetallwidgetsdataBloc(
-              context.read<MeasurementRepository>(),
-            ),
+            create: (context) =>
+                GetallwidgetsdataBloc(context.read<MeasurementRepository>()),
           ),
           BlocProvider<ChartdataBloc>(
-            create: (context) => ChartdataBloc(
-              context.read<MeasurementRepository>(),
-            ),
+            create: (context) =>
+                ChartdataBloc(context.read<MeasurementRepository>()),
           ),
           BlocProvider<ApppreferencesBloc>(
             create: (context) => ApppreferencesBloc(),
           ),
-          BlocProvider<AppthemeBloc>(
-            create: (context) => AppthemeBloc(),
-          ),
-          BlocProvider<FilterchartBloc>(
-            create: (context) => FilterchartBloc(),
-          ),
+          BlocProvider<AppthemeBloc>(create: (context) => AppthemeBloc()),
+          BlocProvider<FilterchartBloc>(create: (context) => FilterchartBloc()),
           BlocProvider<BackupRestoreDataCubit>(
-            create: (context) => BackupRestoreDataCubit(
-              context.read<MeasurementRepository>(),
-            ),
+            create: (context) =>
+                BackupRestoreDataCubit(context.read<MeasurementRepository>()),
           ),
           BlocProvider<DeleteAllDataCubit>(
-            create: (context) => DeleteAllDataCubit(
-              context.read<MeasurementRepository>(),
-            ),
+            create: (context) =>
+                DeleteAllDataCubit(context.read<MeasurementRepository>()),
           ),
           BlocProvider<DeleteMeasurementCubit>(
-            create: (context) => DeleteMeasurementCubit(
-              context.read<MeasurementRepository>(),
-            ),
+            create: (context) =>
+                DeleteMeasurementCubit(context.read<MeasurementRepository>()),
           ),
           BlocProvider<SearchWidgetsBloc>(
             create: (context) => SearchWidgetsBloc(),
@@ -171,9 +161,7 @@ class App extends StatelessWidget {
           BlocProvider(
             create: (context) => PictureTypeFilterModalBloc(
               context.read<BodyPictureRepository>(),
-            )..add(
-                const PictureTypeFilterModalEvent.started(),
-              ),
+            )..add(const PictureTypeFilterModalEvent.started()),
           ),
           BlocProvider(
             create: (context) =>
@@ -184,12 +172,11 @@ class App extends StatelessWidget {
                 BackUpPicturesToZipCubit(context.read<BodyPictureRepository>()),
           ),
           BlocProvider(
-            create: (context) => AuthInitializationChecker(authRepository)
-              ..add(const AuthInitializationCheckerEvents.checkAuth()),
+            create: (context) =>
+                AuthInitializationChecker(authRepository)
+                  ..add(const AuthInitializationCheckerEvents.checkAuth()),
           ),
-          BlocProvider(
-            create: (context) => AuthenicateCubit(authRepository),
-          ),
+          BlocProvider(create: (context) => AuthenicateCubit(authRepository)),
           BlocProvider(
             create: (context) => CreatePasswordCubit(authRepository),
           ),
@@ -198,28 +185,30 @@ class App extends StatelessWidget {
           //   lazy: false,
           // ),
           BlocProvider(
-            create: (context) => AuthGateKeeperBloc()
-              ..add(const AuthGateKeeperEvent.triggerUnAuth()),
+            create: (context) =>
+                AuthGateKeeperBloc()
+                  ..add(const AuthGateKeeperEvent.triggerUnAuth()),
             lazy: false,
           ),
           // Cubit for User Preferences
           BlocProvider(
-            create: (context) => UserPreferencesCubit(
-              context.read<UserPreferenceRepository>(),
-            )..fetchUserPreferences(1),
+            create: (context) =>
+                UserPreferencesCubit(context.read<UserPreferenceRepository>())
+                  ..fetchUserPreferences(1),
             lazy: false,
           ),
 
           BlocProvider<GetallwidgetsCubit>(
-            create: (context) => GetallwidgetsCubit(
-              context.read<MeasurementRepository>(),
-            )..fetch(),
+            create: (context) =>
+                GetallwidgetsCubit(context.read<MeasurementRepository>())
+                  ..fetch(),
             lazy: false,
           ),
 
           BlocProvider(
-            create: (context) => GetAllMetricUnitsAvailableCubit()
-              ..fetchAllMetricUnitsAvailable(),
+            create: (context) =>
+                GetAllMetricUnitsAvailableCubit()
+                  ..fetchAllMetricUnitsAvailable(),
           ),
           BlocProvider(
             create: (context) => SetUserUnitPreferencesCubit(
@@ -247,6 +236,7 @@ class App extends StatelessWidget {
                     return DynamicColorBuilder(
                       builder: (lightDynamic, darkDynamic) => MaterialApp(
                         themeMode: ThemeMode.system,
+
                         // darkTheme: ThemeData.dark(
                         //   useMaterial3: true,
                         // ).copyWith(
@@ -260,11 +250,10 @@ class App extends StatelessWidget {
                         //   useMaterial3: true,
                         //   brightness: Brightness.dark,
                         // ),
-
                         darkTheme: ThemeData.dark().copyWith(
                           textTheme: ThemeData.dark().textTheme.apply(
-                                fontFamily: 'Poppins',
-                              ),
+                            fontFamily: 'Poppins',
+                          ),
                           colorScheme: darkDynamic,
                         ),
 
@@ -311,9 +300,7 @@ class App extends StatelessWidget {
 Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
   switch (settings.name) {
     case '/':
-      return MaterialPageRoute<void>(
-        builder: (context) => const SplashView(),
-      );
+      return MaterialPageRoute<void>(builder: (context) => const SplashView());
     case HomeView.routeName:
       return MaterialPageRoute<void>(
         builder: (context) {
@@ -323,8 +310,8 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
           //         as UserPreferencesLoaded;
           // Bloc for overview data
           context.read<GetallwidgetsdataBloc>().add(
-                const GetallwidgetsdataEvent.fetchAllData(),
-              );
+            const GetallwidgetsdataEvent.fetchAllData(),
+          );
 
           // Bloc for chart data
           // context.read<ChartdataBloc>().add(
@@ -345,18 +332,17 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
                 (context.read<ApppreferencesBloc>().state as SavedAndReady)
                     .appPreferences;
             return BlocProvider(
-              create: (context) => GetSingleMeasurmentsDetailsCubit(
-                context.read<MeasurementRepository>(),
-              )..fetchAllData(
-                  type: _args.name,
-                  appPreferences: appPref,
-                  // durationsEnum: DurationsEnum.month1,
-                  // (appPrefWrapperState as SavedAndReady)
-                  //     .appPreferences,
-                ),
-              child: MeasurementInDetail(
-                measurementType: _args,
-              ),
+              create: (context) =>
+                  GetSingleMeasurmentsDetailsCubit(
+                    context.read<MeasurementRepository>(),
+                  )..fetchAllData(
+                    type: _args.name,
+                    appPreferences: appPref,
+                    // durationsEnum: DurationsEnum.month1,
+                    // (appPrefWrapperState as SavedAndReady)
+                    //     .appPreferences,
+                  ),
+              child: MeasurementInDetail(measurementType: _args),
             );
           },
         );
@@ -373,9 +359,7 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
         builder: (context) => const SettingsView(),
       );
     case AppIniter.routeName:
-      return MaterialPageRoute<void>(
-        builder: (context) => const AppIniter(),
-      );
+      return MaterialPageRoute<void>(builder: (context) => const AppIniter());
     // case VaultGalleryView.routeName:
     //   return MaterialPageRoute<void>(
     //     builder: (context) {
@@ -398,9 +382,7 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
       return MaterialPageRoute<void>(
         builder: (context) => MultiBlocProvider(
           providers: [
-            BlocProvider(
-              create: (context) => ComparePictureFormCubit(),
-            ),
+            BlocProvider(create: (context) => ComparePictureFormCubit()),
             BlocProvider(
               create: (context) => LoadPictureToCompareCubit(
                 context.read<BodyPictureRepository>(),
@@ -419,18 +401,16 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
                   AddNewMediaCubit(context.read<BodyPictureRepository>()),
             ),
             BlocProvider(
-              create: (context) => GetAllMuscleGroupsCubit(
-                context.read<MeasurementRepository>(),
-              )..fetchAllMuscleGroups(),
+              create: (context) =>
+                  GetAllMuscleGroupsCubit(context.read<MeasurementRepository>())
+                    ..fetchAllMuscleGroups(),
             ),
           ],
           child: const AddNewMediaView(),
         ),
       );
     default:
-      return MaterialPageRoute<void>(
-        builder: (context) => const Charts(),
-      );
+      return MaterialPageRoute<void>(builder: (context) => const Charts());
   }
   return null;
 }

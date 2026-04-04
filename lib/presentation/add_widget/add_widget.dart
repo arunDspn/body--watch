@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
+import 'package:watcha_body/presentation/add_initial_measurement_data/add_initial_measurement_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
 
 class AddWidget extends StatelessWidget {
@@ -20,9 +21,7 @@ class AddWidget extends StatelessWidget {
           switch (state) {
             case AddDataFailure(:final message):
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Failed to add data: $message'),
-                ),
+                SnackBar(content: Text('Failed to add data: $message')),
               );
               break;
             case AddDataSuccess():
@@ -55,11 +54,12 @@ class AddWidget extends StatelessWidget {
                     builder: (context, state) {
                       return switch (state) {
                         GetAllWidgetInitial() => const Text('Never see me'),
-                        GetAllWidgetLoading() =>
-                          const Center(child: CircularProgressIndicator()),
+                        GetAllWidgetLoading() => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
                         GetAllWidgetFailure(:final cause) => Center(
-                            child: Text('Failed to load widgets: $cause'),
-                          ),
+                          child: Text('Failed to load widgets: $cause'),
+                        ),
                         GetAllWidgetSuccess(widgets: final widgets)
                             when widgets.isEmpty =>
                           Expanded(
@@ -71,18 +71,16 @@ class AddWidget extends StatelessWidget {
                             ),
                           ),
                         GetAllWidgetSuccess(widgets: final widgets) => Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: ListView.builder(
-                                itemCount: widgets.length,
-                                itemBuilder: (context, index) {
-                                  return _Boxes(
-                                    target: widgets[index],
-                                  );
-                                },
-                              ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: ListView.builder(
+                              itemCount: widgets.length,
+                              itemBuilder: (context, index) {
+                                return _Boxes(target: widgets[index]);
+                              },
                             ),
                           ),
+                        ),
                       };
                     },
                   ),
@@ -97,10 +95,7 @@ class AddWidget extends StatelessWidget {
 }
 
 class _Boxes extends StatelessWidget {
-  const _Boxes({
-    Key? key,
-    required this.target,
-  }) : super(key: key);
+  const _Boxes({Key? key, required this.target}) : super(key: key);
 
   final MeasurementTargetModel target;
 
@@ -111,12 +106,8 @@ class _Boxes extends StatelessWidget {
         showModalBottomSheet<void>(
           context: context,
           builder: (context) {
-            return BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              child: AddorEditMeasurementTargetModal.add(
-                type: target,
-              ),
-            );
+            // return AddorEditMeasurementTargetModal.add(type: target);
+            return AddInitialMeasurementDataModal(type: target);
           },
         );
       },
@@ -132,10 +123,9 @@ class _Boxes extends StatelessWidget {
           child: Center(
             child: Text(
               target.name,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w600),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
           ),
         ),

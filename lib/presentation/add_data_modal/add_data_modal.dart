@@ -19,14 +19,12 @@ class AddorEditMeasurementTargetModal extends StatefulWidget {
   //       notes = null,
   //       super(key: null);
 
-  const AddorEditMeasurementTargetModal.add({
-    Key? key,
-    required this.type,
-  })  : addedId = null,
-        addedDate = null,
-        addedValue = null,
-        notes = null,
-        super(key: key);
+  const AddorEditMeasurementTargetModal.add({Key? key, required this.type})
+    : addedId = null,
+      addedDate = null,
+      addedValue = null,
+      notes = null,
+      super(key: key);
 
   const AddorEditMeasurementTargetModal.edit({
     Key? key,
@@ -51,6 +49,9 @@ class AddorEditMeasurementTargetModal extends StatefulWidget {
 class _AddorEditMeasurementTargetModalState
     extends State<AddorEditMeasurementTargetModal> {
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
+  final _decimalInputFormatter = FilteringTextInputFormatter.allow(
+    RegExp(r'^\d*\.?\d{0,2}'),
+  );
   late String measurementUnit;
 
   DateTime? selectedDate;
@@ -74,22 +75,28 @@ class _AddorEditMeasurementTargetModalState
     //Todo: Use preferred unit as initial value
     measurementUnit = widget.type.units.first.unit;
     _dateController = TextEditingController();
+    _notesController = TextEditingController(text: widget.notes ?? '');
+    _goalController = TextEditingController();
+
     if (widget.addedDate != null && widget.addedValue != null) {
       selectedDate = widget.addedDate;
       _measurementController.text = widget.addedValue.toString();
       _dateController.text = formatter.format(selectedDate!);
-      _notesController = TextEditingController();
-      _goalController = TextEditingController();
-      // _notesController.text = widget.a ?? '';
     } else {
       selectedDate = DateTime.now();
-      // _measurementController.text = '';
       _dateController.text = formatter.format(selectedDate!);
-      _notesController = TextEditingController();
-      _goalController = TextEditingController();
     }
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _measurementController.dispose();
+    _goalController.dispose();
+    _dateController.dispose();
+    _notesController.dispose();
+    super.dispose();
   }
 
   @override
@@ -113,24 +120,24 @@ class _AddorEditMeasurementTargetModalState
           measurementUnit = preferredUnit;
         });
       }
+      _didSetPreferredUnit = true;
     }
 
     if (!_didSetInitialValue && widget.addedValue != null) {
       final valueInPrefrerredUnit = widget.addedValue != null
           ? widget.addedValue! /
-              widget.type.units
-                  .firstWhere(
-                    (element) => element.unit == measurementUnit,
-                    orElse: () => widget.type.units.first,
-                  )
-                  .toBaseFactor
+                widget.type.units
+                    .firstWhere(
+                      (element) => element.unit == measurementUnit,
+                      orElse: () => widget.type.units.first,
+                    )
+                    .toBaseFactor
           : null;
 
       if (valueInPrefrerredUnit != null) {
-        // WidgetsBinding.instance.addPostFrameCallback((_) {
         _measurementController.text = valueInPrefrerredUnit.toStringAsFixed(1);
-        // });
       }
+      _didSetInitialValue = true;
     }
   }
 
@@ -243,68 +250,57 @@ class _AddorEditMeasurementTargetModalState
           ),
           child: Form(
             key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        'Cancel',
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel'),
                       ),
-                    ),
-                    Text(
-                      widget.type.name,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Validate form
-                        if (_formKey.currentState!.validate()) {
-                          final value =
-                              double.parse(_measurementController.text);
-                          final toBaseFactor = widget.addedDate != null
-                              ? widget.type.units
-                                  .firstWhere(
-                                    (element) =>
-                                        element.unit == measurementUnit,
-                                  )
-                                  .toBaseFactor
-                              : widget.type.units
-                                  .firstWhere(
-                                    (element) =>
-                                        element.unit == measurementUnit,
-                                  )
-                                  .toBaseFactor;
+                      Text(
+                        widget.type.name,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          if (!_formKey.currentState!.validate()) {
+                            return;
+                          }
+
+                          final value = double.parse(
+                            _measurementController.text.trim(),
+                          );
+                          final toBaseFactor = widget.type.units
+                              .firstWhere(
+                                (element) => element.unit == measurementUnit,
+                              )
+                              .toBaseFactor;
 
                           final convertedValue = value * toBaseFactor;
                           context.read<AdddataCubit>().insertData(
-                                measurement: MeasurementEntity.createNew(
-                                  date: selectedDate ?? DateTime.now(),
-                                  value: convertedValue,
-                                  notes: _notesController.text,
-                                  targetId: widget.type.id,
-                                  goalValue: _goalController.text.isNotEmpty
-                                      ? double.parse(_goalController.text) *
-                                          toBaseFactor
-                                      : null,
-                                ),
-                              );
-                        }
-
-                        // Navigator.pop(context);
-                      },
-                      child: const Text('Save'),
-                    ),
-                  ],
+                            measurement: MeasurementEntity.createNew(
+                              date: selectedDate ?? DateTime.now(),
+                              value: convertedValue,
+                              notes: _notesController.text.trim(),
+                              targetId: widget.type.id,
+                            ),
+                          );
+                        },
+                        child: const Text('Save'),
+                      ),
+                    ],
+                  ),
                 ),
 
                 // Form
@@ -312,9 +308,11 @@ class _AddorEditMeasurementTargetModalState
                   data: Theme.of(context).copyWith(
                     inputDecorationTheme: const InputDecorationTheme(
                       border: InputBorder.none,
-                      // style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      //       fontWeight: FontWeight.w600,
-                      //     ),
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 10,
+                      ),
                     ),
                   ),
                   child: Padding(
@@ -338,12 +336,13 @@ class _AddorEditMeasurementTargetModalState
                                   'Value',
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
-                                //
 
+                                //
                                 const Spacer(),
                                 SizedBox(
                                   width: SizeConfig.screenWidth! * 0.3,
                                   child: TextFormField(
+                                    textAlign: TextAlign.end,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Please enter some value';
@@ -360,27 +359,24 @@ class _AddorEditMeasurementTargetModalState
                                     decoration: InputDecoration(
                                       labelStyle: TextStyle(
                                         fontSize: 23,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurface,
                                       ),
                                     ),
                                     // maxLength: 5,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(
-                                        RegExp('[0-9.]'),
-                                      ),
-                                    ],
+                                    inputFormatters: [_decimalInputFormatter],
                                     controller: _measurementController,
-                                    keyboardType: TextInputType.number,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.bold,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                          decimal: true,
                                         ),
+                                    textInputAction: TextInputAction.next,
+                                    style: Theme.of(context).textTheme.bodyLarge
+                                        ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                 ),
+                                const SizedBox(width: 8),
                                 DropdownButton<String>(
                                   value: measurementUnit,
                                   onChanged: (String? newValue) {
@@ -391,18 +387,20 @@ class _AddorEditMeasurementTargetModalState
                                     }
                                   },
                                   items: widget.type.units
-                                      .map<DropdownMenuItem<String>>(
-                                          (MetricUnitsModel value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value.unit,
-                                      child: Text(
-                                        value.unit,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge,
-                                      ),
-                                    );
-                                  }).toList(),
+                                      .map<DropdownMenuItem<String>>((
+                                        MetricUnitsModel value,
+                                      ) {
+                                        return DropdownMenuItem<String>(
+                                          value: value.unit,
+                                          child: Text(
+                                            value.unit,
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyLarge,
+                                          ),
+                                        );
+                                      })
+                                      .toList(),
                                 ),
                                 // Text(
                                 //   measurementUnit,
@@ -421,85 +419,25 @@ class _AddorEditMeasurementTargetModalState
                                 const Spacer(),
                                 SizedBox(
                                   width: SizeConfig.screenWidth! * 0.3,
-                                  child: GestureDetector(
+                                  child: TextFormField(
+                                    readOnly: true,
+                                    showCursor: false,
+                                    enableInteractiveSelection: false,
                                     onTap: () {
                                       _selectDate(context);
                                     },
-                                    child: AbsorbPointer(
-                                      child: TextFormField(
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                        controller: _dateController,
-                                      ),
-                                    ),
+                                    style: Theme.of(context).textTheme.bodyLarge
+                                        ?.copyWith(fontWeight: FontWeight.bold),
+                                    controller: _dateController,
                                   ),
                                 ),
-                                // SizedBox(
-                                //   width: getProportionateScreenWidth(20),
-                                // ),
+                                const SizedBox(
+                                  child: Icon(Icons.calendar_today_rounded),
+                                ),
                               ],
                             ),
                             const Divider(),
-                            // Goal
-                            Row(
-                              children: [
-                                //
 
-                                Text(
-                                  'Goal',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                const Spacer(),
-                                SizedBox(
-                                  width: SizeConfig.screenWidth! * 0.3,
-                                  child: TextFormField(
-                                    validator: (value) {
-                                      if (value != null && value.isNotEmpty) {
-                                      final number = double.tryParse(value);
-                                      if (number == null) {
-                                        return 'Please enter a valid number';
-                                      }
-                                      if (number <= 0) {
-                                        return 'Please enter a number greater than zero';
-                                      }
-                                      }
-                                      return null;
-                                    },
-                                    decoration: InputDecoration(
-                                      labelStyle: TextStyle(
-                                        fontSize: 23,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSurface,
-                                      ),
-                                    ),
-                                    // maxLength: 5,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(
-                                        RegExp('[0-9.]'),
-                                      ),
-                                    ],
-                                    controller: _goalController,
-                                    keyboardType: TextInputType.number,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                ),
-                                // Text(
-                                //   measurementUnit,
-                                //   style: Theme.of(context).textTheme.bodyLarge,
-                                // ),
-                              ],
-                            ),
-                            const Divider(),
                             // Notes Input
                             Row(
                               children: [
@@ -512,6 +450,7 @@ class _AddorEditMeasurementTargetModalState
                                   width: SizeConfig.screenWidth! * 0.3,
                                   child: TextFormField(
                                     controller: _notesController,
+                                    textInputAction: TextInputAction.done,
                                     decoration: InputDecoration(
                                       hintText: 'Optional notes',
                                       hintStyle: TextStyle(
@@ -524,12 +463,8 @@ class _AddorEditMeasurementTargetModalState
                                     ),
                                     maxLines: 2,
                                     minLines: 1,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                    style: Theme.of(context).textTheme.bodyLarge
+                                        ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -540,9 +475,7 @@ class _AddorEditMeasurementTargetModalState
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: SizeConfig.screenHeight! * 0.019,
-                ),
+                SizedBox(height: SizeConfig.screenHeight! * 0.019),
               ],
             ),
           ),
@@ -552,11 +485,21 @@ class _AddorEditMeasurementTargetModalState
   }
 
   void _selectDate(BuildContext context) {
+    final now = DateTime.now();
+    final firstDate = DateTime(2021);
+    final initialDate = selectedDate == null
+        ? now
+        : selectedDate!.isBefore(firstDate)
+        ? firstDate
+        : selectedDate!.isAfter(now)
+        ? now
+        : selectedDate!;
+
     showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2021),
-      lastDate: DateTime.now(),
+      initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: now,
     ).then((picked) {
       if (picked != null && picked != selectedDate) {
         // time picker
