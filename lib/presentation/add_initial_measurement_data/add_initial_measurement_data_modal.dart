@@ -4,12 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
-import 'package:watcha_body/data/repositories/goals_repository.dart';
-import 'package:watcha_body/domain/measurement/models/goal_entity.dart';
 import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
-import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
+import 'package:watcha_body/presentation/add_initial_measurement_data/cubit/add_initial_measurement_data_cubit.dart';
 import 'package:watcha_body/size_config.dart';
 
 class AddInitialMeasurementDataModal extends StatefulWidget {
@@ -103,10 +101,10 @@ class _AddInitialMeasurementDataModalState
     final maxModalHeight = MediaQuery.of(context).size.height * 0.82;
 
     return SafeArea(
-      child: BlocListener<AdddataCubit, AdddataState>(
+      child: BlocListener<AddInitialMeasurementDataCubit, AddInitialMeasurementDataState>(
         listener: (context, state) {
-          switch (state) {
-            case AddDataFailure(:final message):
+          state.maybeWhen(
+            failure: (message) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(message.isEmpty ? 'Failed' : message),
@@ -114,8 +112,10 @@ class _AddInitialMeasurementDataModalState
                   behavior: SnackBarBehavior.floating,
                 ),
               );
-              break;
-            case AddDataSuccess():
+            },
+            success: () {
+              // Dismiss pop-up first to ensure the success message is visible
+              Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: const Text('Success'),
@@ -124,10 +124,9 @@ class _AddInitialMeasurementDataModalState
                 ),
               );
               Navigator.pop(context);
-              break;
-            default:
-              break;
-          }
+            },
+            orElse: () {},
+          );
         },
         child: Form(
           key: _formKey,
@@ -510,60 +509,29 @@ class _AddInitialMeasurementDataModalState
         .firstWhere((element) => element.unit == _measurementUnit)
         .toBaseFactor;
     final convertedValue = value * toBaseFactor;
-
-    await context.read<AdddataCubit>().insertData(
-      measurement: MeasurementEntity.createNew(
-        date: _selectedDate ?? DateTime.now(),
-        value: convertedValue,
-        notes: _notesController.text.trim(),
-        targetId: widget.type.id,
-      ),
+    final measurement = MeasurementEntity.createNew(
+      date: _selectedDate ?? DateTime.now(),
+      value: convertedValue,
+      notes: _notesController.text.trim(),
+      targetId: widget.type.id,
     );
 
-    if (!mounted || context.read<AdddataCubit>().state is! AddDataSuccess) {
-      return;
-    }
-
-    if (_isGoalEnabled) {
-      await _createGoal(toBaseFactor: toBaseFactor);
-    }
-  }
-
-  Future<void> _createGoal({required double toBaseFactor}) async {
-    final goalValue = double.parse(_goalController.text.trim()) * toBaseFactor;
-
-    final result = await context
-        .read<GoalsRepository>()
-        .createOrReplaceActiveGoal(
-          goal: GoalEntity(
-            targetId: widget.type.id,
-            targetValue: goalValue,
-            startDate: _selectedDate ?? DateTime.now(),
-            dueDate: _goalDueDate,
-            notes: _goalNoteController.text.trim().isEmpty
-                ? null
-                : _goalNoteController.text.trim(),
-            userId: 1,
-          ),
-        );
-
-    if (!mounted) {
-      return;
-    }
-
-    result.fold((failure) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            failure.isEmpty
-                ? 'Measurement saved, but failed to save goal'
-                : 'Measurement saved, but failed to save goal: $failure',
-          ),
-          backgroundColor: Theme.of(context).colorScheme.error,
-          behavior: SnackBarBehavior.floating,
-        ),
+    if (!_isGoalEnabled) {
+      await context.read<AddInitialMeasurementDataCubit>().insertDataOnly(
+        measurement: measurement,
       );
-    }, (_) {});
+      return;
+    }
+
+    final goalValue = double.parse(_goalController.text.trim()) * toBaseFactor;
+    await context.read<AddInitialMeasurementDataCubit>().insertDataWithGoal(
+      measurement: measurement,
+      targetValue: goalValue,
+      dueDate: _goalDueDate,
+      goalNote: _goalNoteController.text.trim().isEmpty
+          ? null
+          : _goalNoteController.text.trim(),
+    );
   }
 
   Future<void> _selectMeasurementDate() async {

@@ -2,8 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:watcha_body/data/repositories/goals_repository.dart';
+import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
-import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
+import 'package:watcha_body/presentation/add_initial_measurement_data/cubit/add_initial_measurement_data_cubit.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/add_initial_measurement_data/add_initial_measurement_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
@@ -107,7 +109,13 @@ class _Boxes extends StatelessWidget {
           context: context,
           builder: (context) {
             // return AddorEditMeasurementTargetModal.add(type: target);
-            return AddInitialMeasurementDataModal(type: target);
+            return BlocProvider(
+              create: (context) => AddInitialMeasurementDataCubit(
+                measurementRepository: context.read<MeasurementRepository>(),
+                goalsRepository: context.read<GoalsRepository>(),
+              ),
+              child: AddInitialMeasurementDataModal(type: target),
+            );
           },
         );
       },

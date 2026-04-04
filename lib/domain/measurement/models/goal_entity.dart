@@ -35,8 +35,6 @@ abstract class GoalEntity with _$GoalEntity {
     @JsonKey(name: 'created_at') @Default(null) DateTime? createdAt,
     @JsonKey(name: 'updated_at') @Default(null) DateTime? updatedAt,
     @JsonKey(name: 'user_id') required int userId,
-    //a optional Note
-    String? goalNote,
 
     int? id,
   }) = _GoalEntity;

@@ -24,7 +24,6 @@ _GoalEntity _$GoalEntityFromJson(Map<String, dynamic> json) => _GoalEntity(
       ? null
       : DateTime.parse(json['updated_at'] as String),
   userId: (json['user_id'] as num).toInt(),
-  goalNote: json['goalNote'] as String?,
   id: (json['id'] as num?)?.toInt(),
 );
 
@@ -39,7 +38,6 @@ Map<String, dynamic> _$GoalEntityToJson(_GoalEntity instance) =>
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
       'user_id': instance.userId,
-      'goalNote': instance.goalNote,
       'id': instance.id,
     };
 
