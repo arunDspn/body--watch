@@ -57,9 +57,7 @@ class MeasurementRepository extends IMeasurementsFacade {
   }
 
   @override
-  Future<Either<String, Unit>> deleteAllData({
-    String? id,
-  }) async {
+  Future<Either<String, Unit>> deleteAllData({String? id}) async {
     // try {
     //   await databaseService.delete(
     //     id: id,
@@ -180,23 +178,9 @@ class MeasurementRepository extends IMeasurementsFacade {
   Future<Either<String, List<MeasurementTargetModel>>> getAddedTypes() async {
     try {
       final _db = await databaseService.database;
-      // final _data =
-      //     await _db.rawQuery('SELECT DISTINCT(type) from measurements');
 
-      /**
-       * SELECT 
-  mt.*,
-  m.code as metric_code,
-  m.base_unit,
-  mu.unit,
-  mu.to_base_factor
-FROM measurement_targets mt
-JOIN target_metrics tm ON tm.target_id = mt.id
-JOIN metrics m ON m.id = tm.metric_id
-JOIN metric_units mu ON mu.metric_id = m.id
-ORDER BY mt.display_order;
-       */
-      final _data = await _db.rawQuery('''
+      final _data = await _db.rawQuery(
+        '''
         SELECT 
           mt.*,
           m.code as metric_code,
@@ -207,8 +191,16 @@ ORDER BY mt.display_order;
         JOIN ${DatabaseService.targetMetricsTable} tm ON tm.target_id = mt.id
         JOIN ${DatabaseService.metricsTable} m ON m.id = tm.metric_id
         JOIN ${DatabaseService.metricUnitsTable} mu ON mu.metric_id = m.id
+        WHERE NOT EXISTS (
+          SELECT 1
+          FROM ${DatabaseService.measurementsDataTable} md
+          WHERE md.target_id = mt.id
+            AND md.user_id = ?
+        )
         ORDER BY mt.display_order;
-      ''');
+      ''',
+        [1],
+      );
 
       log(_data.toString());
 
@@ -326,12 +318,13 @@ ORDER BY mt.display_order;
       //   ],
       // );
 
-      final formattedDate =
-          date.toIso8601String().substring(0, 10); // Extract YYYY-MM-DD
+      final formattedDate = date.toIso8601String().substring(
+        0,
+        10,
+      ); // Extract YYYY-MM-DD
       final whereArgs = [formattedDate];
 
-      final result = await _db.rawQuery(
-        '''
+      final result = await _db.rawQuery('''
             SELECT 
               m.id,
               m.value,
@@ -356,9 +349,7 @@ ORDER BY mt.display_order;
             INNER JOIN ${DatabaseService.targetMetricsTable} tm ON mt.id = tm.target_id
             INNER JOIN ${DatabaseService.metricsTable} met ON tm.metric_id = met.id
             ORDER BY m.target_id, m.date DESC
-          ''',
-        whereArgs,
-      );
+          ''', whereArgs);
 
       final _dData = result.map(MeasurementModel.fromJson).toList();
       return Right(_dData);
@@ -473,7 +464,7 @@ ORDER BY mt.display_order;
 
   @override
   Future<Either<String, List<MeasurementEntity>>>
-      getMeasurementItemDataByDateRange({
+  getMeasurementItemDataByDateRange({
     required DateTime startDate,
     required DateTime endDate,
     required int measurementItemId,
@@ -484,9 +475,7 @@ ORDER BY mt.display_order;
 
   @override
   Future<Either<String, Map<String, List<MeasurementModel>>>>
-      getLatestThreeMeasurements({
-    int userId = 1,
-  }) async {
+  getLatestThreeMeasurements({int userId = 1}) async {
     try {
       final db = await databaseService.database;
       final result = await db.rawQuery(

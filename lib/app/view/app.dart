@@ -198,13 +198,12 @@ class App extends StatelessWidget {
             lazy: false,
           ),
 
-          BlocProvider<GetallwidgetsCubit>(
-            create: (context) =>
-                GetallwidgetsCubit(context.read<MeasurementRepository>())
-                  ..fetch(),
-            lazy: false,
-          ),
-
+          // BlocProvider<GetallwidgetsCubit>(
+          //   create: (context) =>
+          //       GetallwidgetsCubit(context.read<MeasurementRepository>())
+          //         ..fetch(),
+          //   lazy: false,
+          // ),
           BlocProvider(
             create: (context) =>
                 GetAllMetricUnitsAvailableCubit()

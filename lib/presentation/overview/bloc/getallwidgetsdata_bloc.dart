@@ -1,20 +1,17 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
-import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
-import 'package:watcha_body/domain/models/app_preferences.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
-import 'package:watcha_body/presentation/display_models/measurement_display.dart';
+import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
 
+part 'getallwidgetsdata_bloc.freezed.dart';
 part 'getallwidgetsdata_event.dart';
 part 'getallwidgetsdata_state.dart';
-part 'getallwidgetsdata_bloc.freezed.dart';
 
 // Used in Overview
 class GetallwidgetsdataBloc
     extends Bloc<GetallwidgetsdataEvent, GetallwidgetsdataState> {
   GetallwidgetsdataBloc(this.measurementRepository)
-      : super(const GetallwidgetsdataState.initial()) {
+    : super(const GetallwidgetsdataState.initial()) {
     on<GetallwidgetsdataEvent>((event, emit) async {
       switch (event) {
         case _FetchAllData():
@@ -23,11 +20,7 @@ class GetallwidgetsdataBloc
           final data = await measurementRepository.getLatestThreeMeasurements();
           data.fold(
             (l) => emit(GetallwidgetsdataState.failure(l)),
-            (r) => emit(
-              GetallwidgetsdataState.success(
-                widgets: r,
-              ),
-            ),
+            (r) => emit(GetallwidgetsdataState.success(widgets: r)),
           );
 
         // final _addedWidgets = await measurementRepository.getAddedTypes();

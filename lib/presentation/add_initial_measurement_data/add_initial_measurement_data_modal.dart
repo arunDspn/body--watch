@@ -8,6 +8,7 @@ import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/presentation/add_initial_measurement_data/cubit/add_initial_measurement_data_cubit.dart';
+import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/size_config.dart';
 
 class AddInitialMeasurementDataModal extends StatefulWidget {
@@ -114,15 +115,21 @@ class _AddInitialMeasurementDataModalState
               );
             },
             success: () {
+              // Rebuild OverviewPage to reflect the new measurement and goal
+              context.read<GetallwidgetsdataBloc>().add(
+                const GetallwidgetsdataEvent.fetchAllData(),
+              );
+
               // Dismiss pop-up first to ensure the success message is visible
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Success'),
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
+
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   SnackBar(
+              //     content: const Text('Success'),
+              //     backgroundColor: Theme.of(context).colorScheme.primary,
+              //     behavior: SnackBarBehavior.floating,
+              //   ),
+              // );
               Navigator.pop(context);
             },
             orElse: () {},
