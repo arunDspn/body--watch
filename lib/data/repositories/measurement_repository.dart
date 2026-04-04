@@ -175,7 +175,8 @@ class MeasurementRepository extends IMeasurementsFacade {
   }
 
   @override
-  Future<Either<String, List<MeasurementTargetModel>>> getAddedTypes() async {
+  Future<Either<String, List<MeasurementTargetModel>>>
+  getNonAddedTargets() async {
     try {
       final _db = await databaseService.database;
 
@@ -201,6 +202,34 @@ class MeasurementRepository extends IMeasurementsFacade {
       ''',
         [1],
       );
+
+      log(_data.toString());
+
+      final _dData = _transformUnitsToNestedStructureInTarget(_data);
+      return Right(_dData);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, List<MeasurementTargetModel>>> getAllTargets() async {
+    try {
+      final _db = await databaseService.database;
+
+      final _data = await _db.rawQuery('''
+        SELECT 
+          mt.*,
+          m.code as metric_code,
+          m.base_unit,
+          mu.unit,
+          mu.to_base_factor
+        FROM ${DatabaseService.measurementTargetsTable} mt
+        JOIN ${DatabaseService.targetMetricsTable} tm ON tm.target_id = mt.id
+        JOIN ${DatabaseService.metricsTable} m ON m.id = tm.metric_id
+        JOIN ${DatabaseService.metricUnitsTable} mu ON mu.metric_id = m.id
+        ORDER BY mt.display_order;
+      ''');
 
       log(_data.toString());
 

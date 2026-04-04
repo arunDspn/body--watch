@@ -9,22 +9,19 @@ part 'getallwidgets_cubit.freezed.dart';
 
 class GetallwidgetsCubit extends Cubit<GetallwidgetsState> {
   GetallwidgetsCubit(this.measurementsFacade)
-      : super(const GetallwidgetsState.initial());
+    : super(const GetallwidgetsState.initial());
   final IMeasurementsFacade measurementsFacade;
 
   Future<void> fetch() async {
     emit(const GetallwidgetsState.loading());
 
-    final _result = await measurementsFacade.getAddedTypes();
+    final _result = await measurementsFacade.getNonAddedTargets();
 
-    _result.fold(
-      (l) => emit(GetallwidgetsState.failure(l)),
-      (r) {
-        // final _remainingWidgets =
-        //     allWidgets.where((e) => !r.contains(e.name)).toList();
+    _result.fold((l) => emit(GetallwidgetsState.failure(l)), (r) {
+      // final _remainingWidgets =
+      //     allWidgets.where((e) => !r.contains(e.name)).toList();
 
-        emit(GetallwidgetsState.success(widgets: r));
-      },
-    );
+      emit(GetallwidgetsState.success(widgets: r));
+    });
   }
 }

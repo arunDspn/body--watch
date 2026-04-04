@@ -134,16 +134,33 @@ class MockMeasurementRepository extends _i1.Mock
 
   @override
   _i5.Future<_i3.Either<String, List<_i7.MeasurementTargetModel>>>
-  getAddedTypes() =>
+  getNonAddedTargets() =>
       (super.noSuchMethod(
-            Invocation.method(#getAddedTypes, []),
+            Invocation.method(#getNonAddedTargets, []),
             returnValue:
                 _i5.Future<
                   _i3.Either<String, List<_i7.MeasurementTargetModel>>
                 >.value(
                   _FakeEither_1<String, List<_i7.MeasurementTargetModel>>(
                     this,
-                    Invocation.method(#getAddedTypes, []),
+                    Invocation.method(#getNonAddedTargets, []),
+                  ),
+                ),
+          )
+          as _i5.Future<_i3.Either<String, List<_i7.MeasurementTargetModel>>>);
+
+  @override
+  _i5.Future<_i3.Either<String, List<_i7.MeasurementTargetModel>>>
+  getAllTargets() =>
+      (super.noSuchMethod(
+            Invocation.method(#getAllTargets, []),
+            returnValue:
+                _i5.Future<
+                  _i3.Either<String, List<_i7.MeasurementTargetModel>>
+                >.value(
+                  _FakeEither_1<String, List<_i7.MeasurementTargetModel>>(
+                    this,
+                    Invocation.method(#getAllTargets, []),
                   ),
                 ),
           )

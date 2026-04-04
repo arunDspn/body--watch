@@ -8,6 +8,7 @@ import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
+import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/size_config.dart';
 
 class AddorEditMeasurementTargetModal extends StatefulWidget {
@@ -206,6 +207,15 @@ class _AddorEditMeasurementTargetModalState
               );
               break;
             case AddDataSuccess():
+              // Dismiss Modal
+              Navigator.pop(context);
+
+              // Refresh Overview Screen Data - GetallwidgetsdataBloc
+
+              context.read<GetallwidgetsdataBloc>().add(
+                const GetallwidgetsdataEvent.fetchAllData(),
+              );
+
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: const Text('Success'),

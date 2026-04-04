@@ -11,6 +11,8 @@ import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
 import 'package:watcha_body/presentation/chart_2/charts_view2.dart';
+import 'package:watcha_body/presentation/chart_2/models/chart_models.dart';
+import 'package:watcha_body/presentation/core/controllers/cubit/all_available_targets_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/view/vault_section.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
@@ -560,6 +562,7 @@ class _WidgetBoxState extends State<_WidgetBox> {
 
     final preferredUnit = metricCode?.preferredUnit ?? '';
     final metricCodeValue = metricCode?.metricCode ?? latestData.metricCode;
+    final toBaseFactor = metricCode?.toBaseFactor ?? 1;
     final convertedValue = UserMetricHelper.convertToUserPref(
       value: latestData.value,
       metricCode: metricCodeValue,
@@ -570,200 +573,234 @@ class _WidgetBoxState extends State<_WidgetBox> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
-      child: Card(
-        elevation: isExpanded ? 1 : 0,
-        color: theme.colorScheme.surfaceContainerHighest,
-        shadowColor: theme.colorScheme.shadow.withOpacity(0.1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(
-            color: theme.colorScheme.outlineVariant.withOpacity(0.55),
+      child: GestureDetector(
+        onTap: () {
+          final safeFactor = toBaseFactor == 0 ? 1 : toBaseFactor;
+          final chartData = widget.data
+              .map(
+                (measurement) => DataPoint(
+                  dateTime: measurement.date,
+                  value: measurement.value / safeFactor,
+                ),
+              )
+              .toList();
+
+          Navigator.push<void>(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return ChartsView2(
+                  data: chartData,
+                  config: ChartConfig(
+                    title: latestData.targetName,
+                    unit: preferredUnit,
+                    color: theme.colorScheme.primary,
+                    backgroundColor: theme.colorScheme.primaryContainer,
+                    showGridLines: true,
+                  ),
+                  defaultFilter: ChartFilter.threeMonth,
+                );
+              },
+            ),
+          );
+        },
+        child: Card(
+          elevation: isExpanded ? 1 : 0,
+          color: theme.colorScheme.surfaceContainerHighest,
+          shadowColor: theme.colorScheme.shadow.withOpacity(0.1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(
+              color: theme.colorScheme.outlineVariant.withOpacity(0.55),
+            ),
           ),
-        ),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 220),
-          curve: Curves.easeOutCubic,
-          width: double.infinity,
-          padding: const EdgeInsets.fromLTRB(16, 14, 12, 12),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final isCompact = constraints.maxWidth < 440;
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Text(
-                        latestData.targetName,
-                        style: theme.textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.15,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(999),
-                          color: theme.colorScheme.secondaryContainer,
-                        ),
-                        child: Text(
-                          '$convertedValue $preferredUnit',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: theme.colorScheme.onSecondaryContainer,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 8,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      _MetricChip(
-                        icon: Icons.event,
-                        text: lastMeasurementDayFormatter.format(
-                          latestData.date,
-                        ),
-                      ),
-                      if (delta != null)
-                        _MetricChip(
-                          icon: delta < 0
-                              ? Icons.south_rounded
-                              : Icons.north_rounded,
-                          text:
-                              '${delta.toStringAsFixed(1)} than ${formatDate(widget.data[1].date)}',
-                          backgroundColor: delta < 0
-                              ? theme.colorScheme.errorContainer
-                              : theme.colorScheme.tertiaryContainer,
-                          foregroundColor: delta < 0
-                              ? theme.colorScheme.onErrorContainer
-                              : theme.colorScheme.onTertiaryContainer,
-                        )
-                      else
-                        _MetricChip(
-                          icon: Icons.timeline,
-                          text: 'No previous data',
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  if (isCompact)
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeOutCubic,
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(16, 14, 12, 12),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isCompact = constraints.maxWidth < 440;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        FilledButton.tonalIcon(
-                          onPressed: () {
-                            final targets =
-                                (context.read<GetallwidgetsCubit>().state
-                                        as GetAllWidgetSuccess)
-                                    .widgets;
-                            final target = targets.firstWhere(
-                              (element) => element.id == latestData.targetId,
-                            );
-                            showModalBottomSheet<void>(
-                              context: context,
-                              builder: (context) {
-                                return AddorEditMeasurementTargetModal.edit(
-                                  type: target,
-                                  addedId: latestData.id,
-                                  addedValue: latestData.value,
-                                  addedDate: latestData.date,
-                                  notes: latestData.notes,
-                                );
-                              },
-                            );
-                          },
-                          icon: const Icon(Icons.add),
-                          label: const Text('Add Data'),
-                        ),
-                        OutlinedButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              isExpanded = !isExpanded;
-                            });
-                          },
-                          icon: Icon(
-                            !isExpanded
-                                ? Icons.expand_more_rounded
-                                : Icons.expand_less_rounded,
+                        Text(
+                          latestData.targetName,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.15,
                           ),
-                          label: Text(isExpanded ? 'Less' : 'More'),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(999),
+                            color: theme.colorScheme.secondaryContainer,
+                          ),
+                          child: Text(
+                            '$convertedValue $preferredUnit',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: theme.colorScheme.onSecondaryContainer,
+                            ),
+                          ),
                         ),
                       ],
-                    )
-                  else
-                    Row(
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 8,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        FilledButton.tonalIcon(
-                          onPressed: () {
-                            final targets =
-                                (context.read<GetallwidgetsCubit>().state
-                                        as GetAllWidgetSuccess)
-                                    .widgets;
-                            final target = targets.firstWhere(
-                              (element) => element.id == latestData.targetId,
-                            );
-                            showModalBottomSheet<void>(
-                              context: context,
-                              builder: (context) {
-                                return BackdropFilter(
-                                  filter: ImageFilter.blur(
-                                    sigmaX: 2,
-                                    sigmaY: 2,
-                                  ),
-                                  child: AddorEditMeasurementTargetModal.edit(
+                        _MetricChip(
+                          icon: Icons.event,
+                          text: lastMeasurementDayFormatter.format(
+                            latestData.date,
+                          ),
+                        ),
+                        if (delta != null)
+                          _MetricChip(
+                            icon: delta < 0
+                                ? Icons.south_rounded
+                                : Icons.north_rounded,
+                            text:
+                                '${delta.toStringAsFixed(1)} than ${formatDate(widget.data[1].date)}',
+                            backgroundColor: delta < 0
+                                ? theme.colorScheme.errorContainer
+                                : theme.colorScheme.tertiaryContainer,
+                            foregroundColor: delta < 0
+                                ? theme.colorScheme.onErrorContainer
+                                : theme.colorScheme.onTertiaryContainer,
+                          )
+                        else
+                          _MetricChip(
+                            icon: Icons.timeline,
+                            text: 'No previous data',
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    if (isCompact)
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          FilledButton.tonalIcon(
+                            onPressed: () {
+                              final targets =
+                                  (context
+                                              .read<AllAvailableTargetsCubit>()
+                                              .state
+                                          as Success)
+                                      .targets;
+                              final target = targets.firstWhere(
+                                (element) => element.id == latestData.targetId,
+                              );
+                              showModalBottomSheet<void>(
+                                context: context,
+                                builder: (context) {
+                                  return AddorEditMeasurementTargetModal.edit(
                                     type: target,
                                     addedId: latestData.id,
                                     addedValue: latestData.value,
                                     addedDate: latestData.date,
                                     notes: latestData.notes,
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          icon: const Icon(Icons.add),
-                          label: const Text('Add Data'),
-                        ),
-                        const Spacer(),
-                        IconButton.filledTonal(
-                          onPressed: () {
-                            setState(() {
-                              isExpanded = !isExpanded;
-                            });
-                          },
-                          icon: Icon(
-                            !isExpanded
-                                ? Icons.expand_more_rounded
-                                : Icons.expand_less_rounded,
+                                  );
+                                },
+                              );
+                            },
+                            icon: const Icon(Icons.add),
+                            label: const Text('Add Data'),
                           ),
-                        ),
-                      ],
+                          OutlinedButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                isExpanded = !isExpanded;
+                              });
+                            },
+                            icon: Icon(
+                              !isExpanded
+                                  ? Icons.expand_more_rounded
+                                  : Icons.expand_less_rounded,
+                            ),
+                            label: Text(isExpanded ? 'Less' : 'More'),
+                          ),
+                        ],
+                      )
+                    else
+                      Row(
+                        children: [
+                          FilledButton.tonalIcon(
+                            onPressed: () {
+                              final targets =
+                                  (context.read<GetallwidgetsCubit>().state
+                                          as GetAllWidgetSuccess)
+                                      .widgets;
+                              final target = targets.firstWhere(
+                                (element) => element.id == latestData.targetId,
+                              );
+                              showModalBottomSheet<void>(
+                                context: context,
+                                builder: (context) {
+                                  return BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                      sigmaX: 2,
+                                      sigmaY: 2,
+                                    ),
+                                    child: AddorEditMeasurementTargetModal.edit(
+                                      type: target,
+                                      addedId: latestData.id,
+                                      addedValue: latestData.value,
+                                      addedDate: latestData.date,
+                                      notes: latestData.notes,
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            icon: const Icon(Icons.add),
+                            label: const Text('Add Data'),
+                          ),
+                          const Spacer(),
+                          IconButton.filledTonal(
+                            onPressed: () {
+                              setState(() {
+                                isExpanded = !isExpanded;
+                              });
+                            },
+                            icon: Icon(
+                              !isExpanded
+                                  ? Icons.expand_more_rounded
+                                  : Icons.expand_less_rounded,
+                            ),
+                          ),
+                        ],
+                      ),
+                    AnimatedCrossFade(
+                      duration: const Duration(milliseconds: 220),
+                      firstChild: const SizedBox.shrink(),
+                      secondChild: _ExtraDetails(
+                        key: Key(widget.data.hashCode.toString()),
+                        data: widget.data,
+                      ),
+                      crossFadeState: isExpanded
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
                     ),
-                  AnimatedCrossFade(
-                    duration: const Duration(milliseconds: 220),
-                    firstChild: const SizedBox.shrink(),
-                    secondChild: _ExtraDetails(
-                      key: Key(widget.data.hashCode.toString()),
-                      data: widget.data,
-                    ),
-                    crossFadeState: isExpanded
-                        ? CrossFadeState.showSecond
-                        : CrossFadeState.showFirst,
-                  ),
-                ],
-              );
-            },
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),

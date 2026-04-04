@@ -28,6 +28,7 @@ import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.da
 import 'package:watcha_body/presentation/app_initializer/app_initer.dart';
 import 'package:watcha_body/presentation/app_initializer/cubit/get_all_metrics/get_all_metric_units_available_cubit.dart';
 import 'package:watcha_body/presentation/app_initializer/cubit/set_user_unit_preferences/set_user_unit_preferences_cubit.dart';
+import 'package:watcha_body/presentation/core/controllers/cubit/all_available_targets_cubit.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/chartdata_bloc.dart';
 import 'package:watcha_body/presentation/home/charts/bloc/filter_chart_bloc/filterchart_bloc.dart';
 import 'package:watcha_body/presentation/home/charts/charts.dart';
@@ -198,16 +199,16 @@ class App extends StatelessWidget {
             lazy: false,
           ),
 
-          // BlocProvider<GetallwidgetsCubit>(
-          //   create: (context) =>
-          //       GetallwidgetsCubit(context.read<MeasurementRepository>())
-          //         ..fetch(),
-          //   lazy: false,
-          // ),
-          BlocProvider(
+          BlocProvider<AllAvailableTargetsCubit>(
             create: (context) =>
-                GetAllMetricUnitsAvailableCubit()
-                  ..fetchAllMetricUnitsAvailable(),
+                AllAvailableTargetsCubit(context.read<MeasurementRepository>())
+                  ..fetch(),
+            lazy: false,
+          ),
+          BlocProvider(
+            create: (context) => GetAllMetricUnitsAvailableCubit(
+              context.read<MeasurementRepository>(),
+            )..fetchAllMetricUnitsAvailable(),
           ),
           BlocProvider(
             create: (context) => SetUserUnitPreferencesCubit(

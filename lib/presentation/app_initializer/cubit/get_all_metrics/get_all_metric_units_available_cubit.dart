@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/data/repositories/metrics/metrics_repository.dart';
 import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
 
@@ -8,8 +9,8 @@ part 'get_all_metric_units_available_cubit.freezed.dart';
 
 class GetAllMetricUnitsAvailableCubit
     extends Cubit<GetAllMetricUnitsAvailableState> {
-  GetAllMetricUnitsAvailableCubit()
-      : super(const GetAllMetricUnitsAvailableState.initial());
+  GetAllMetricUnitsAvailableCubit(MeasurementRepository read)
+    : super(const GetAllMetricUnitsAvailableState.initial());
 
   final MetricsRepository metricsRepository = MetricsRepository();
 

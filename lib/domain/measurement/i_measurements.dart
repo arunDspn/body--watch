@@ -15,7 +15,7 @@ abstract class IMeasurementsFacade {
   /// startDate and endDate are optional
   /// if its empty all data will be returned
   Future<Either<String, List<MeasurementEntity>>>
-      getMeasurementItemDataByDateRange({
+  getMeasurementItemDataByDateRange({
     required DateTime startDate,
     required DateTime endDate,
     required int measurementItemId,
@@ -33,26 +33,23 @@ abstract class IMeasurementsFacade {
   });
 
   /// Deletes all [MeasurementEntity] Data
-  Future<Either<String, Unit>> deleteAllData({
-    String? id,
-  });
+  Future<Either<String, Unit>> deleteAllData({String? id});
 
   /// Deletes a [MeasurementEntity]
   /// Based on [MeasurementEntity.id]
-  Future<Either<String, Unit>> deleteMeasurement({
-    required String id,
-  });
+  Future<Either<String, Unit>> deleteMeasurement({required String id});
 
   /// Gets latest 3 Measurements data of all added measurement types
   Future<Either<String, Map<String, List<MeasurementModel>>>>
-      getLatestThreeMeasurements({
-    int userId = 1,
-  });
+  getLatestThreeMeasurements({int userId = 1});
 
   /// Returns List of Types added in table as String
   /// Use this filter it with All Types available from App Binary
   /// To get remaining types
-  Future<Either<String, List<MeasurementTargetModel>>> getAddedTypes();
+  Future<Either<String, List<MeasurementTargetModel>>> getNonAddedTargets();
+
+  /// Returns List all available Targets
+  Future<Either<String, List<MeasurementTargetModel>>> getAllTargets();
 
   Future<Either<String, String>> backupDatabase();
 
