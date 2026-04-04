@@ -375,13 +375,42 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
       // axisSide: meta.axisSide,
       space: 8,
       child: Text(
-        '${value.toStringAsFixed(1)}${widget.config.unit}',
+        _formatYAxisValue(value),
         style: TextStyle(
           color: Theme.of(context).colorScheme.onSurfaceVariant,
           fontSize: 12,
         ),
       ),
     );
+  }
+
+  String _formatYAxisValue(double value) {
+    // Keep axis labels compact and readable on small screens.
+    if (value % 1 == 0) {
+      return value.toStringAsFixed(0);
+    }
+    return value.toStringAsFixed(1);
+  }
+
+  double _leftAxisReservedSize(BuildContext context) {
+    final textScale = MediaQuery.textScalerOf(context).scale(1.0);
+    return textScale > 1.15 ? 52 : 46;
+  }
+
+  double _roundDownToStep(double value, double step) {
+    return (value / step).floorToDouble() * step;
+  }
+
+  double _roundUpToStep(double value, double step) {
+    return (value / step).ceilToDouble() * step;
+  }
+
+  double _niceYAxisInterval(double minY, double maxY) {
+    final range = maxY - minY;
+    if (range <= 4) return 1;
+    if (range <= 8) return 2;
+    if (range <= 16) return 4;
+    return _calculateInterval(minY, maxY);
   }
 
   /// Calculate the X-coordinate for a data point based on its date/time and the current filter
@@ -439,20 +468,20 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Title
-          Text(
-            widget.config.title,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 0.2,
-            ),
-          ),
-          const SizedBox(height: 16),
+          // Text(
+          //   widget.config.title,
+          //   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+          //     color: Theme.of(context).colorScheme.onSurface,
+          //     fontWeight: FontWeight.w700,
+          //     letterSpacing: 0.2,
+          //   ),
+          // ),
+          // const SizedBox(height: 16),
 
           // Filter tabs
           ChartFilterTabs(
@@ -487,24 +516,6 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     return ChartDateUtils.getMaxXValue(_currentPeriod, _currentFilter);
   }
 
-  BoxDecoration _chartContainerDecoration(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return BoxDecoration(
-      color: colorScheme.surfaceContainerLowest,
-      border: Border.all(
-        color: colorScheme.outlineVariant.withValues(alpha: 0.5),
-      ),
-      borderRadius: BorderRadius.circular(20),
-      boxShadow: [
-        BoxShadow(
-          color: colorScheme.shadow.withValues(alpha: 0.08),
-          blurRadius: 14,
-          offset: const Offset(0, 6),
-        ),
-      ],
-    );
-  }
-
   Color _chartGridColor(BuildContext context) {
     return Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.6);
   }
@@ -515,17 +526,16 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     final colorScheme = Theme.of(context).colorScheme;
     final minY = 0.0;
     final maxY = 100.0;
+    final yAxisInterval = _niceYAxisInterval(minY, maxY);
 
-    return Container(
-      height: 300,
-      decoration: _chartContainerDecoration(context),
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+    return SizedBox(
+      height: 340,
       child: LineChart(
         LineChartData(
           gridData: FlGridData(
             show: widget.config.showGridLines,
             drawVerticalLine: false,
-            horizontalInterval: _calculateInterval(minY, maxY),
+            horizontalInterval: yAxisInterval,
             getDrawingHorizontalLine: (value) {
               return FlLine(
                 color: _chartGridColor(context),
@@ -548,8 +558,10 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
                 showTitles: true,
                 getTitlesWidget: (value, meta) =>
                     _buildLeftTitleWidgets(value, meta),
-                reservedSize: 45,
-                interval: _calculateInterval(minY, maxY),
+                reservedSize: _leftAxisReservedSize(context),
+                interval: yAxisInterval,
+                minIncluded: false,
+                maxIncluded: false,
               ),
             ),
             rightTitles: const AxisTitles(
@@ -584,8 +596,15 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
 
     // Create a small range around the single point for better visualization
     final value = dataPoint.value;
-    final minY = value - (value * 0.1).abs() - 1;
-    final maxY = value + (value * 0.1).abs() + 1;
+    final dynamicPadding = value.abs() * 0.015;
+    final padding = dynamicPadding < 0.8
+        ? 0.8
+        : (dynamicPadding > 2.0 ? 2.0 : dynamicPadding);
+    final rawMinY = value - padding;
+    final rawMaxY = value + padding;
+    final yAxisInterval = (rawMaxY - rawMinY) <= 2.0 ? 0.5 : 1.0;
+    final minY = _roundDownToStep(rawMinY, yAxisInterval);
+    final maxY = _roundUpToStep(rawMaxY, yAxisInterval);
 
     // Calculate position for the single point
     final startDate = _currentPeriod;
@@ -593,16 +612,14 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
 
     final x = _calculateXPosition(dataPoint.dateTime, startDate, endDate);
 
-    return Container(
-      height: 300,
-      decoration: _chartContainerDecoration(context),
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+    return SizedBox(
+      height: 340,
       child: LineChart(
         LineChartData(
           gridData: FlGridData(
             show: widget.config.showGridLines,
             drawVerticalLine: false,
-            horizontalInterval: _calculateInterval(minY, maxY),
+            horizontalInterval: yAxisInterval,
             getDrawingHorizontalLine: (value) {
               return FlLine(color: _chartGridColor(context), strokeWidth: 1);
             },
@@ -621,8 +638,10 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
                 showTitles: true,
                 getTitlesWidget: (value, meta) =>
                     _buildLeftTitleWidgets(value, meta),
-                reservedSize: 45,
-                interval: _calculateInterval(minY, maxY),
+                reservedSize: _leftAxisReservedSize(context),
+                interval: yAxisInterval,
+                minIncluded: false,
+                maxIncluded: false,
               ),
             ),
             rightTitles: const AxisTitles(
@@ -836,21 +855,22 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
 
     // Add a small padding to the top and bottom
     final yRange = maxY - minY;
-    final paddedMinY = minY - (yRange * 0.1);
-    final paddedMaxY = maxY + (yRange * 0.1);
+    final rawPaddedMinY = minY - (yRange * 0.1);
+    final rawPaddedMaxY = maxY + (yRange * 0.1);
+    final yAxisInterval = _niceYAxisInterval(rawPaddedMinY, rawPaddedMaxY);
+    final paddedMinY = _roundDownToStep(rawPaddedMinY, yAxisInterval);
+    final paddedMaxY = _roundUpToStep(rawPaddedMaxY, yAxisInterval);
 
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      height: 300,
-      decoration: _chartContainerDecoration(context),
-      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+    return SizedBox(
+      height: 340,
       child: LineChart(
         LineChartData(
           gridData: FlGridData(
             show: widget.config.showGridLines,
             drawVerticalLine: false,
-            horizontalInterval: _calculateInterval(paddedMinY, paddedMaxY),
+            horizontalInterval: yAxisInterval,
             getDrawingHorizontalLine: (value) {
               return FlLine(
                 color: _chartGridColor(context),
@@ -873,8 +893,10 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
                 showTitles: true,
                 getTitlesWidget: (value, meta) =>
                     _buildLeftTitleWidgets(value, meta),
-                reservedSize: 45,
-                interval: _calculateInterval(paddedMinY, paddedMaxY),
+                reservedSize: _leftAxisReservedSize(context),
+                interval: yAxisInterval,
+                minIncluded: false,
+                maxIncluded: false,
               ),
             ),
             rightTitles: const AxisTitles(

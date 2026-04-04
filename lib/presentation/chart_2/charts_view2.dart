@@ -312,12 +312,16 @@ class _ChartsView2State extends State<ChartsView2> {
       appBar: AppBar(
         title: Text(
           _isUsingMockData ? 'Body Measurement Charts' : _chartConfig.title,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.2,
+          ),
         ),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -348,7 +352,10 @@ class _ChartsView2State extends State<ChartsView2> {
 
               const SizedBox(height: 24),
 
-              _buildMeasurementElements(context),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: _buildMeasurementElements(context),
+              ),
 
               const SizedBox(height: 24),
 
