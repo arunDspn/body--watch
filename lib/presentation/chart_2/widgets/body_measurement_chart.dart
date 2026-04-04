@@ -1,6 +1,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import '../models/chart_models.dart';
+import 'package:watcha_body/presentation/chart_2/models/chart_models.dart';
+import 'package:watcha_body/presentation/chart_2/utils/chart_data_transformer.dart';
+import 'package:watcha_body/presentation/chart_2/utils/chart_date_utils.dart';
+import 'package:watcha_body/presentation/chart_2/widgets/chart_filter_tabs.dart';
+import 'package:watcha_body/presentation/chart_2/widgets/chart_navigation_row.dart';
 
 /// A reusable chart widget for visualizing body measurements
 class BodyMeasurementChart extends StatefulWidget {
@@ -19,17 +23,11 @@ class BodyMeasurementChart extends StatefulWidget {
   State<BodyMeasurementChart> createState() => _BodyMeasurementChartState();
 }
 
-class _BodyMeasurementChartState extends State<BodyMeasurementChart>
-    with SingleTickerProviderStateMixin {
+class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
   // State variables for chart management
   late ChartFilter _currentFilter;
   late DateTime _currentPeriod;
   int? _selectedPointIndex;
-
-  // Animation controller for smooth transitions
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<double> _scaleAnimation;
 
   @override
   void initState() {
@@ -37,65 +35,35 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
     _currentFilter = widget.defaultFilter;
     _currentPeriod = _calculateCurrentPeriod();
     _selectedPointIndex = null;
-
-    // Initialize animation controller
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
-
-    _fadeAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    );
-
-    _scaleAnimation = Tween<double>(begin: 0.95, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeOutCubic,
-      ),
-    );
-
-    // Start initial animation
-    _animationController.forward();
   }
 
   @override
   void didUpdateWidget(BodyMeasurementChart oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Reset period if data changed and trigger animation
+    // Reset period if data changed
     if (oldWidget.data != widget.data) {
       _currentPeriod = _calculateCurrentPeriod();
       _selectedPointIndex = null;
-      _animationController.forward(from: 0.0);
+    }
+
+    if (oldWidget.defaultFilter != widget.defaultFilter) {
+      _currentFilter = widget.defaultFilter;
+      _currentPeriod = _calculateCurrentPeriod();
+      _selectedPointIndex = null;
     }
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
     super.dispose();
   }
 
   /// Calculate the current period based on the selected filter and current date
   DateTime _calculateCurrentPeriod() {
-    final now = DateTime.now();
-
-    switch (_currentFilter) {
-      case ChartFilter.week:
-        // Start of current week (Sunday)
-        return now.subtract(Duration(days: now.weekday % 7));
-      case ChartFilter.month:
-        // Start of current month
-        return DateTime(now.year, now.month, 1);
-      case ChartFilter.threeMonth:
-        // Start of current quarter
-        final quarterMonth = ((now.month - 1) ~/ 3) * 3 + 1;
-        return DateTime(now.year, quarterMonth, 1);
-      case ChartFilter.year:
-        // Start of current year
-        return DateTime(now.year, 1, 1);
-    }
+    return ChartDateUtils.calculateCurrentPeriod(
+      _currentFilter,
+      DateTime.now(),
+    );
   }
 
   /// Change the current filter and recalculate period
@@ -105,8 +73,6 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
       _currentPeriod = _calculateCurrentPeriod();
       _selectedPointIndex = null; // Clear selection when changing filters
     });
-    // Trigger smooth animation on filter change
-    _animationController.forward(from: 0.0);
   }
 
   /// Navigate to previous or next period
@@ -125,36 +91,16 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
           : _getPreviousPeriod(_currentPeriod, _currentFilter);
       _selectedPointIndex = null; // Clear selection when navigating
     });
-    // Trigger smooth animation on navigation
-    _animationController.forward(from: 0.0);
   }
 
   /// Get the next period based on current filter
   DateTime _getNextPeriod(DateTime current, ChartFilter filter) {
-    switch (filter) {
-      case ChartFilter.week:
-        return current.add(const Duration(days: 7));
-      case ChartFilter.month:
-        return DateTime(current.year, current.month + 1, 1);
-      case ChartFilter.threeMonth:
-        return DateTime(current.year, current.month + 3, 1);
-      case ChartFilter.year:
-        return DateTime(current.year + 1, 1, 1);
-    }
+    return ChartDateUtils.getNextPeriod(current, filter);
   }
 
   /// Get the previous period based on current filter
   DateTime _getPreviousPeriod(DateTime current, ChartFilter filter) {
-    switch (filter) {
-      case ChartFilter.week:
-        return current.subtract(const Duration(days: 7));
-      case ChartFilter.month:
-        return DateTime(current.year, current.month - 1, 1);
-      case ChartFilter.threeMonth:
-        return DateTime(current.year, current.month - 3, 1);
-      case ChartFilter.year:
-        return DateTime(current.year - 1, 1, 1);
-    }
+    return ChartDateUtils.getPreviousPeriod(current, filter);
   }
 
   /// Select a data point for tooltip display
@@ -215,42 +161,27 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
 
   /// Get data points filtered by the current period and filter
   List<DataPoint> _getFilteredData() {
-    if (widget.data.isEmpty) return [];
+    return ChartDataTransformer.filterDataByPeriod(
+      widget.data,
+      _currentPeriod,
+      _currentFilter,
+    );
+  }
 
-    DateTime startDate;
-    DateTime endDate;
+  DateTime _getPeriodEndDate(DateTime period, ChartFilter filter) {
+    return ChartDateUtils.getPeriodEndDate(period, filter);
+  }
 
-    // Calculate date range based on filter type and current period
-    switch (_currentFilter) {
-      case ChartFilter.week:
-        startDate = _currentPeriod;
-        endDate = _currentPeriod.add(const Duration(days: 7));
-        break;
-      case ChartFilter.month:
-        startDate = _currentPeriod;
-        // Last day of the month
-        final nextMonth =
-            DateTime(_currentPeriod.year, _currentPeriod.month + 1, 1);
-        endDate = nextMonth;
-        break;
-      case ChartFilter.threeMonth:
-        startDate = _currentPeriod;
-        endDate = DateTime(_currentPeriod.year, _currentPeriod.month + 3, 1);
-        break;
-      case ChartFilter.year:
-        startDate = _currentPeriod;
-        endDate = DateTime(_currentPeriod.year + 1, 1, 1);
-        break;
-    }
+  DateTime _startOfWeek(DateTime date) {
+    return ChartDateUtils.startOfWeek(date);
+  }
 
-    // Filter data points within the selected period
-    return widget.data
-        .where((point) =>
-            point.dateTime
-                .isAfter(startDate.subtract(const Duration(seconds: 1))) &&
-            point.dateTime.isBefore(endDate))
-        .toList()
-      ..sort((a, b) => a.dateTime.compareTo(b.dateTime));
+  DateTime _endOfWeekExclusive(DateTime date) {
+    return ChartDateUtils.endOfWeekExclusive(date);
+  }
+
+  List<int> _getMonthLabelDays() {
+    return ChartDateUtils.getMonthLabelDays(_currentPeriod);
   }
 
   /// Calculate appropriate interval for grid lines and Y-axis labels
@@ -270,34 +201,20 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
 
   /// Format date for tooltip display in 'Sep 16' format
   String _formatDate(DateTime date) {
-    final month = _getShortMonthName(date.month);
-    final day = date.day.toString();
-    return '$month $day';
+    return ChartDateUtils.formatDate(date);
   }
 
   /// Get short month name (3 letters)
   String _getShortMonthName(int month) {
-    const months = [
-      '',
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ];
-    return months[month];
+    return ChartDateUtils.shortMonthName(month);
   }
 
   /// Build bottom (X-axis) title widgets
   Widget _buildBottomTitleWidgets(
-      double value, TitleMeta meta, List<DataPoint> filteredData) {
+    double value,
+    TitleMeta meta,
+    List<DataPoint> filteredData,
+  ) {
     String label;
     bool isCurrentPeriod = false;
     final now = DateTime.now();
@@ -317,34 +234,22 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
         label = _getShortWeekdayName(date.weekday);
 
         // Check if this is today
-        isCurrentPeriod = isCurrentViewPeriod &&
+        isCurrentPeriod =
+            isCurrentViewPeriod &&
             date.year == now.year &&
             date.month == now.month &&
             date.day == now.day;
         break;
 
       case ChartFilter.month:
-        // Get days in the month
-        final daysInMonth =
-            DateTime(_currentPeriod.year, _currentPeriod.month + 1, 0).day;
+        final labelDays = _getMonthLabelDays();
+        final nearestDay = labelDays.reduce((a, b) {
+          final distanceToA = (value - (a - 1)).abs();
+          final distanceToB = (value - (b - 1)).abs();
+          return distanceToA <= distanceToB ? a : b;
+        });
 
-        // The value represents the day position in the month (0-based from start)
-        // We need to show labels at specific day numbers: 7, 14, 21, 28
-        final weeklyDayNumbers = [7, 14, 21, 28];
-
-        // Find the closest day number to the current value
-        // value represents days from start of month (0 = day 1, 6 = day 7, etc.)
-        int? matchedDay;
-        for (final dayNum in weeklyDayNumbers) {
-          // dayNum - 1 because value is 0-based (value 6 = day 7)
-          if ((value - (dayNum - 1)).abs() < 0.5 && dayNum <= daysInMonth) {
-            matchedDay = dayNum;
-            break;
-          }
-        }
-
-        // If we're not close to any of our target days, don't show label
-        if (matchedDay == null) {
+        if ((value - (nearestDay - 1)).abs() > 0.75) {
           return const SizedBox.shrink();
         }
 
@@ -352,63 +257,56 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
         final shortMonth = _getShortMonthName(_currentPeriod.month);
 
         // Format as "7 Sep", "14 Sep", "21 Sep", "28 Sep"
-        label = '$matchedDay $shortMonth';
+        label = '$nearestDay $shortMonth';
 
         // Check if this is the current week
         if (isCurrentViewPeriod) {
-          final weekStart = now.subtract(Duration(days: now.weekday % 7));
-          final weekEnd = weekStart.add(const Duration(days: 7));
+          final weekStart = _startOfWeek(now);
+          final weekEnd = _endOfWeekExclusive(now);
 
-          final date =
-              DateTime(_currentPeriod.year, _currentPeriod.month, matchedDay);
+          final date = DateTime(
+            _currentPeriod.year,
+            _currentPeriod.month,
+            nearestDay,
+          );
 
           isCurrentPeriod =
               date.isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
-                  date.isBefore(weekEnd);
+              date.isBefore(weekEnd);
         }
         break;
       case ChartFilter.threeMonth:
         // For 3-month view, show month labels more precisely
-        // The quarter will span approximately 90 days (3 months)
-        // Each month should be roughly 30 days apart
-
-        // Calculate which month we're in (0, 1, or 2) within the quarter
         final totalDays = _getMaxXValue();
         final daysPerMonth = totalDays / 3;
         final monthPosition = value / daysPerMonth;
         final monthIndex = monthPosition.floor();
 
-        // Only show labels at the start of each month
-        if ((value - (monthIndex * daysPerMonth)).abs() > 2) {
+        // Only show labels near the start of each month bucket
+        if ((value - (monthIndex * daysPerMonth)).abs() > 2 ||
+            monthIndex < 0 ||
+            monthIndex > 2) {
           return const SizedBox.shrink();
         }
 
-        // Calculate the actual month number (1-12)
-        final month = _currentPeriod.month + monthIndex;
-        final adjustedMonth =
-            ((month - 1) % 12) + 1; // Handle wrap-around to next year
-        label = _getShortMonthName(adjustedMonth);
+        final labelDate = DateTime(
+          _currentPeriod.year,
+          _currentPeriod.month + monthIndex,
+          1,
+        );
+        label = _getShortMonthName(labelDate.month);
 
         // Check if this is the current month
-        isCurrentPeriod = isCurrentViewPeriod &&
-            now.year == _currentPeriod.year &&
-            now.month == adjustedMonth;
+        isCurrentPeriod =
+            isCurrentViewPeriod &&
+            now.year == labelDate.year &&
+            now.month == labelDate.month;
         break;
 
       case ChartFilter.year:
-        // For year view, show a label for every month:
-        // Odd-numbered months (Jan=1, Mar=3, etc.) show month name
-        // Even-numbered months (Feb=2, Apr=4, etc.) show a dash "-"
-
-        // Calculate position based on days from start of year
-        // Average days per month = 365/12 ≈ 30.42 days
-        final daysPerMonth = _getMaxXValue() / 12.0;
-
-        // Determine which month this value falls into (0-11)
+        // For year view, show odd months as labels and even months as dividers.
+        final daysPerMonth = _getMaxXValue() / 12;
         final monthIndex = (value / daysPerMonth).round();
-
-        // Check if we're within the range for showing a month label
-        // We want to show label if we're within half a month of a month boundary
         final expectedPosition = monthIndex * daysPerMonth;
         final distance = (value - expectedPosition).abs();
 
@@ -416,26 +314,21 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
           return const SizedBox.shrink();
         }
 
-        // Calculate actual calendar month (1-12)
-        // monthIndex goes from 0-11, representing months within the year view
-        final calendarMonth =
-            ((monthIndex + _currentPeriod.month - 1) % 12) + 1;
+        final labelDate = DateTime(_currentPeriod.year, monthIndex + 1, 1);
+        final calendarMonth = labelDate.month;
 
-        // For odd months (1, 3, 5, 7, 9, 11), show the month name
-        // For even months (2, 4, 6, 8, 10, 12), show a dash "-"
-        if (calendarMonth % 2 == 1) {
-          // Odd month - show month name (Jan, Mar, May, Jul, Sep, Nov)
+        if (calendarMonth.isOdd) {
           label = _getShortMonthName(calendarMonth);
         } else {
-          // Even month - show dash (Feb, Apr, Jun, Aug, Oct, Dec)
           label = '-';
         }
 
-        // Check if this is the current quarter
+        // Check if this is the current quarter.
         final currentQuarter = (now.month - 1) ~/ 3;
         final labelQuarter = (calendarMonth - 1) ~/ 3;
-        isCurrentPeriod = isCurrentViewPeriod &&
-            now.year == _currentPeriod.year &&
+        isCurrentPeriod =
+            isCurrentViewPeriod &&
+            now.year == labelDate.year &&
             currentQuarter == labelQuarter;
         break;
     }
@@ -447,10 +340,10 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
         decoration: isCurrentPeriod
             ? BoxDecoration(
-                color: widget.config.color.withOpacity(0.1),
+                color: widget.config.color.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(4),
                 border: Border.all(
-                  color: widget.config.color.withOpacity(0.3),
+                  color: widget.config.color.withValues(alpha: 0.35),
                   width: 1,
                 ),
               )
@@ -458,8 +351,10 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
         child: Text(
           label,
           style: TextStyle(
-            color: isCurrentPeriod ? widget.config.color : Colors.grey.shade700,
-            fontWeight: isCurrentPeriod ? FontWeight.bold : FontWeight.normal,
+            color: isCurrentPeriod
+                ? widget.config.color
+                : Theme.of(context).colorScheme.onSurfaceVariant,
+            fontWeight: isCurrentPeriod ? FontWeight.w700 : FontWeight.normal,
             fontSize: 12,
           ),
         ),
@@ -482,7 +377,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
       child: Text(
         '${value.toStringAsFixed(1)}${widget.config.unit}',
         style: TextStyle(
-          color: Colors.grey.shade700,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
           fontSize: 12,
         ),
       ),
@@ -491,539 +386,139 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
 
   /// Calculate the X-coordinate for a data point based on its date/time and the current filter
   double _calculateXPosition(
-      DateTime dateTime, DateTime startDate, DateTime endDate) {
-    final double totalRange;
-    final double pointPosition;
-
-    switch (_currentFilter) {
-      case ChartFilter.week:
-        // For week view, position based on exact days and time within the week
-        totalRange = 7.0; // 7 days in a week
-        final diffInMillis = dateTime.difference(startDate).inMilliseconds;
-        final weekDurationMillis = const Duration(days: 7).inMilliseconds;
-        pointPosition = (diffInMillis / weekDurationMillis) * totalRange;
-        break;
-
-      case ChartFilter.month:
-        // For month view, position based on days within the month
-        totalRange = endDate.difference(startDate).inDays.toDouble();
-        final diffDays = dateTime.difference(startDate).inDays.toDouble();
-        // Add time component for sub-day positioning
-        final dayFraction =
-            (dateTime.hour * 3600 + dateTime.minute * 60 + dateTime.second) /
-                86400.0;
-        pointPosition = diffDays + dayFraction;
-        break;
-
-      case ChartFilter.threeMonth:
-        // For 3-month view, position based on days within the quarter
-        totalRange = endDate.difference(startDate).inDays.toDouble();
-        final diffDays = dateTime.difference(startDate).inDays.toDouble();
-        // Add time component with less weight for quarterly view
-        final dayFraction =
-            (dateTime.hour * 3600 + dateTime.minute * 60 + dateTime.second) /
-                86400.0 *
-                0.5;
-        pointPosition = diffDays + dayFraction;
-        break;
-
-      case ChartFilter.year:
-        // For year view, position based on days within the year
-        totalRange = endDate.difference(startDate).inDays.toDouble();
-        final diffDays = dateTime.difference(startDate).inDays.toDouble();
-        pointPosition = diffDays;
-        break;
-    }
-
-    return pointPosition;
-  }
-
-  /// Group data points by date for handling multiple entries per day
-  Map<DateTime, List<DataPoint>> _groupPointsByDate(List<DataPoint> points) {
-    final groupedPoints = <DateTime, List<DataPoint>>{};
-
-    for (final point in points) {
-      // Normalize to just the date part
-      final dateOnly = DateTime(
-          point.dateTime.year, point.dateTime.month, point.dateTime.day);
-
-      if (!groupedPoints.containsKey(dateOnly)) {
-        groupedPoints[dateOnly] = [];
-      }
-      groupedPoints[dateOnly]!.add(point);
-    }
-
-    return groupedPoints;
+    DateTime dateTime,
+    DateTime startDate,
+    DateTime endDate,
+  ) {
+    return ChartDataTransformer.calculateXPosition(
+      dateTime,
+      startDate,
+      endDate,
+      _currentFilter,
+    );
   }
 
   /// Check if a date is in the current period based on the current filter
   bool _isInCurrentPeriod(DateTime dateTime) {
-    // Get the current date/time
-    final now = DateTime.now();
-
-    // Normalize the current period based on the viewed period
-    // This ensures highlighting works even when viewing past/future periods
-    final bool isCurrentViewPeriod = _isCurrentViewPeriod();
-    if (!isCurrentViewPeriod) {
-      // If we're not looking at the current period, nothing should be highlighted
-      return false;
-    }
-
-    switch (_currentFilter) {
-      case ChartFilter.week:
-        // Current day - highlight today
-        return dateTime.year == now.year &&
-            dateTime.month == now.month &&
-            dateTime.day == now.day;
-
-      case ChartFilter.month:
-        // Current week - highlight points within the current week
-        // Get start of current week (Sunday)
-        final weekStart = now.subtract(Duration(days: now.weekday % 7));
-        final weekEnd = weekStart.add(const Duration(days: 7));
-
-        return dateTime
-                .isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
-            dateTime.isBefore(weekEnd);
-
-      case ChartFilter.threeMonth:
-        // Current month - highlight points within the current month
-        return dateTime.year == now.year && dateTime.month == now.month;
-
-      case ChartFilter.year:
-        // Current quarter - highlight points within the current quarter
-        final currentQuarter = (now.month - 1) ~/ 3;
-        final dateQuarter = (dateTime.month - 1) ~/ 3;
-        return dateTime.year == now.year && dateQuarter == currentQuarter;
-    }
+    return ChartDateUtils.isInCurrentPeriod(
+      _currentFilter,
+      dateTime,
+      _currentPeriod,
+      DateTime.now(),
+    );
   }
 
   /// Check if the currently viewed period is the current period (today, this month, etc.)
   bool _isCurrentViewPeriod() {
-    final now = DateTime.now();
-
-    switch (_currentFilter) {
-      case ChartFilter.week:
-        // Check if current week is being viewed
-        final currentWeekStart = now.subtract(Duration(days: now.weekday % 7));
-        final viewWeekStart = _currentPeriod;
-        return viewWeekStart.year == currentWeekStart.year &&
-            viewWeekStart.month == currentWeekStart.month &&
-            viewWeekStart.day == currentWeekStart.day;
-
-      case ChartFilter.month:
-        // Check if current month is being viewed
-        return _currentPeriod.year == now.year &&
-            _currentPeriod.month == now.month;
-
-      case ChartFilter.threeMonth:
-        // Check if current quarter is being viewed
-        final currentQuarterStart =
-            DateTime(now.year, ((now.month - 1) ~/ 3) * 3 + 1, 1);
-        return _currentPeriod.year == currentQuarterStart.year &&
-            _currentPeriod.month == currentQuarterStart.month;
-
-      case ChartFilter.year:
-        // Check if current year is being viewed
-        return _currentPeriod.year == now.year;
-    }
+    return ChartDateUtils.isCurrentViewPeriod(
+      _currentFilter,
+      _currentPeriod,
+      DateTime.now(),
+    );
   }
 
   /// Find the closest data point to a given spot
   int _findClosestDataPoint(FlSpot spot, List<DataPoint> filteredData) {
-    if (filteredData.isEmpty) return -1;
-
-    // Get all spots
-    final spots = _generateSpots(filteredData);
-
-    // Find the closest spot
-    int closestIndex = -1;
-    double minDistance = double.infinity;
-
-    for (int i = 0; i < spots.length; i++) {
-      final distance = (spots[i].x - spot.x) * (spots[i].x - spot.x) +
-          (spots[i].y - spot.y) * (spots[i].y - spot.y);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIndex = i;
-      }
-    }
-
-    return closestIndex < filteredData.length ? closestIndex : -1;
+    return ChartDataTransformer.findClosestDataPoint(
+      spot,
+      filteredData,
+      _currentPeriod,
+      _currentFilter,
+    );
   }
 
   /// Generate spots for chart with proper positioning
   List<FlSpot> _generateSpots(List<DataPoint> filteredData) {
-    if (filteredData.isEmpty) return [];
-
-    // Sort by date
-    filteredData.sort((a, b) => a.dateTime.compareTo(b.dateTime));
-
-    // Calculate period start and end dates
-    DateTime startDate;
-    DateTime endDate;
-
-    switch (_currentFilter) {
-      case ChartFilter.week:
-        startDate = _currentPeriod;
-        endDate = _currentPeriod.add(const Duration(days: 7));
-        break;
-      case ChartFilter.month:
-        startDate = _currentPeriod;
-        endDate = DateTime(_currentPeriod.year, _currentPeriod.month + 1, 1);
-        break;
-      case ChartFilter.threeMonth:
-        startDate = _currentPeriod;
-        endDate = DateTime(_currentPeriod.year, _currentPeriod.month + 3, 1);
-        break;
-      case ChartFilter.year:
-        startDate = _currentPeriod;
-        endDate = DateTime(_currentPeriod.year + 1, 1, 1);
-        break;
-    }
-
-    // Group points by date to handle multiple entries per day
-    final groupedPoints = _groupPointsByDate(filteredData);
-    final spots = <FlSpot>[];
-
-    // Process each group and generate spots
-    for (final dateEntry in groupedPoints.entries) {
-      final pointsForDay = dateEntry.value;
-
-      // If only one point on this day, position it normally
-      if (pointsForDay.length == 1) {
-        final point = pointsForDay.first;
-        final x = _calculateXPosition(point.dateTime, startDate, endDate);
-        spots.add(FlSpot(x, point.value));
-      }
-      // If multiple points on the same day, space them slightly apart
-      else {
-        final baseX = _calculateXPosition(dateEntry.key, startDate, endDate);
-        final spacing = 0.08; // Slight spacing between points on the same day
-
-        for (int i = 0; i < pointsForDay.length; i++) {
-          final offset = (i - (pointsForDay.length - 1) / 2) * spacing;
-          spots.add(FlSpot(baseX + offset, pointsForDay[i].value));
-        }
-      }
-    }
-
-    // Sort by X position
-    spots.sort((a, b) => a.x.compareTo(b.x));
-
-    // Add linear interpolation for missing data points
-    if (spots.length > 1) {
-      // If we have gaps in our data (e.g., missing days), we need to interpolate
-      final interpolatedSpots = <FlSpot>[];
-
-      // Set the minimum gap size that requires interpolation
-      // based on the current filter
-      double minGapForInterpolation;
-      switch (_currentFilter) {
-        case ChartFilter.week:
-          minGapForInterpolation = 0.5; // Half a day
-          break;
-        case ChartFilter.month:
-          minGapForInterpolation = 3.0; // 3 days
-          break;
-        case ChartFilter.threeMonth:
-          minGapForInterpolation = 7.0; // 7 days
-          break;
-        case ChartFilter.year:
-          minGapForInterpolation = 15.0; // 15 days
-          break;
-      }
-
-      interpolatedSpots.add(spots.first);
-
-      for (int i = 0; i < spots.length - 1; i++) {
-        final current = spots[i];
-        final next = spots[i + 1];
-        final gap = next.x - current.x;
-
-        // If the gap is large enough, add interpolated points
-        if (gap > minGapForInterpolation) {
-          final steps = (gap / minGapForInterpolation).ceil();
-          final stepSize = gap / steps;
-
-          for (int j = 1; j < steps; j++) {
-            final ratio = j / steps;
-            final x = current.x + stepSize * j;
-            // Linear interpolation formula: y = y1 + (y2-y1) * (x-x1) / (x2-x1)
-            final y = current.y + (next.y - current.y) * ratio;
-            interpolatedSpots.add(FlSpot(x, y));
-          }
-        }
-
-        if (i < spots.length - 2) {
-          interpolatedSpots.add(next);
-        }
-      }
-
-      interpolatedSpots.add(spots.last);
-      return interpolatedSpots;
-    }
-
-    return spots;
+    return ChartDataTransformer.generateSpots(
+      filteredData,
+      _currentPeriod,
+      _currentFilter,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Title
-              Text(
-                widget.config.title,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 16),
-
-              // Filter tabs
-              _buildFilterTabs(),
-              const SizedBox(height: 16),
-
-              // Navigation and date display
-              _buildNavigationRow(),
-              const SizedBox(height: 16),
-
-              // Chart area with animation
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: SlideTransition(
-                      position: Tween<Offset>(
-                        begin: const Offset(0.0, 0.05),
-                        end: Offset.zero,
-                      ).animate(animation),
-                      child: child,
-                    ),
-                  );
-                },
-                child: _buildChartArea(),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFilterTabs() {
     return Container(
-      height: 48,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Title
+          Text(
+            widget.config.title,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.2,
+            ),
           ),
+          const SizedBox(height: 16),
+
+          // Filter tabs
+          ChartFilterTabs(
+            currentFilter: _currentFilter,
+            onFilterChanged: _changeFilter,
+          ),
+          const SizedBox(height: 16),
+
+          // Navigation and date display
+          ChartNavigationRow(
+            canGoPrevious: _canNavigatePrevious(),
+            canGoNext: _canNavigateNext(),
+            periodText: _getPeriodDisplayText(),
+            onPrevious: () => _navigatePeriod(false),
+            onNext: () => _navigatePeriod(true),
+          ),
+          const SizedBox(height: 16),
+
+          // Keep chart updates direct so filter/period changes feel adaptive.
+          _buildChartArea(),
         ],
       ),
-      child: Row(
-        children: ChartFilter.values.map((filter) {
-          final isSelected = filter == _currentFilter;
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => _changeFilter(filter),
-                  borderRadius: BorderRadius.circular(6),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
-                    decoration: BoxDecoration(
-                      color:
-                          isSelected ? widget.config.color : Colors.transparent,
-                      borderRadius: BorderRadius.circular(6),
-                      boxShadow: isSelected
-                          ? [
-                              BoxShadow(
-                                color: widget.config.color.withOpacity(0.3),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ]
-                          : null,
-                    ),
-                    child: Center(
-                      child: AnimatedDefaultTextStyle(
-                        duration: const Duration(milliseconds: 200),
-                        style: TextStyle(
-                          color:
-                              isSelected ? Colors.white : Colors.grey.shade700,
-                          fontWeight:
-                              isSelected ? FontWeight.bold : FontWeight.normal,
-                          fontSize: isSelected ? 14 : 13,
-                        ),
-                        child: Text(filter.displayName),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
     );
   }
 
-  Widget _buildNavigationRow() {
-    final canGoPrevious = _canNavigatePrevious();
-    final canGoNext = _canNavigateNext();
+  String _getPeriodDisplayText() {
+    return ChartDateUtils.getPeriodDisplayText(_currentPeriod, _currentFilter);
+  }
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Material(
-          color: Colors.transparent,
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
-            opacity: canGoPrevious ? 1.0 : 0.4,
-            child: IconButton(
-              onPressed: canGoPrevious ? () => _navigatePeriod(false) : null,
-              icon: Icon(
-                Icons.chevron_left,
-                color: canGoPrevious
-                    ? Theme.of(context).iconTheme.color
-                    : Colors.grey.shade400,
-              ),
-            ),
-          ),
-        ),
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          transitionBuilder: (Widget child, Animation<double> animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: ScaleTransition(
-                scale: Tween<double>(begin: 0.8, end: 1.0).animate(
-                  CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeOut,
-                  ),
-                ),
-                child: child,
-              ),
-            );
-          },
-          child: Text(
-            _getPeriodDisplayText(),
-            key: ValueKey<String>(_getPeriodDisplayText()),
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ),
-        Material(
-          color: Colors.transparent,
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
-            opacity: canGoNext ? 1.0 : 0.4,
-            child: IconButton(
-              onPressed: canGoNext ? () => _navigatePeriod(true) : null,
-              icon: Icon(
-                Icons.chevron_right,
-                color: canGoNext
-                    ? Theme.of(context).iconTheme.color
-                    : Colors.grey.shade400,
-              ),
-            ),
-          ),
+  /// Get the maximum X value for the chart based on the current filter
+  double _getMaxXValue() {
+    return ChartDateUtils.getMaxXValue(_currentPeriod, _currentFilter);
+  }
+
+  BoxDecoration _chartContainerDecoration(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return BoxDecoration(
+      color: colorScheme.surfaceContainerLowest,
+      border: Border.all(
+        color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+      ),
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: colorScheme.shadow.withValues(alpha: 0.08),
+          blurRadius: 14,
+          offset: const Offset(0, 6),
         ),
       ],
     );
   }
 
-  String _getPeriodDisplayText() {
-    // Placeholder implementation - will be enhanced later
-    switch (_currentFilter) {
-      case ChartFilter.week:
-        return '${_currentPeriod.day}-${_currentPeriod.add(const Duration(days: 6)).day} ${_getMonthName(_currentPeriod.month)} ${_currentPeriod.year}';
-      case ChartFilter.month:
-        return '${_getMonthName(_currentPeriod.month)} ${_currentPeriod.year}';
-      case ChartFilter.threeMonth:
-        final endMonth = _currentPeriod.month + 2;
-        return '${_getMonthName(_currentPeriod.month)}-${_getMonthName(endMonth)} ${_currentPeriod.year}';
-      case ChartFilter.year:
-        return '${_currentPeriod.year}';
-    }
-  }
-
-  String _getMonthName(int month) {
-    const months = [
-      '',
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
-    return months[month];
-  }
-
-  /// Get the maximum X value for the chart based on the current filter
-  double _getMaxXValue() {
-    switch (_currentFilter) {
-      case ChartFilter.week:
-        return 7.0; // 7 days
-      case ChartFilter.month:
-        // Get days in the current month
-        final year = _currentPeriod.year;
-        final month = _currentPeriod.month;
-        final daysInMonth = DateTime(year, month + 1, 0).day;
-        return daysInMonth.toDouble();
-      case ChartFilter.threeMonth:
-        return 90.0; // Approximately 3 months
-      case ChartFilter.year:
-        return 365.0; // Approximately 1 year
-    }
+  Color _chartGridColor(BuildContext context) {
+    return Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.6);
   }
 
   /// Build empty chart showing only axes and grid lines (no data message)
   Widget _buildEmptyChart() {
     // Use a reasonable Y-axis range for empty chart
+    final colorScheme = Theme.of(context).colorScheme;
     final minY = 0.0;
     final maxY = 100.0;
 
     return Container(
       height: 300,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey.shade200),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+      decoration: _chartContainerDecoration(context),
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
       child: LineChart(
         LineChartData(
@@ -1033,7 +528,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
             horizontalInterval: _calculateInterval(minY, maxY),
             getDrawingHorizontalLine: (value) {
               return FlLine(
-                color: Colors.grey.shade200,
+                color: _chartGridColor(context),
                 strokeWidth: 1,
                 dashArray: [5, 5],
               );
@@ -1067,8 +562,8 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
           borderData: FlBorderData(
             show: true,
             border: Border(
-              bottom: BorderSide(color: Colors.grey.shade300),
-              left: BorderSide(color: Colors.grey.shade300),
+              bottom: BorderSide(color: colorScheme.outlineVariant),
+              left: BorderSide(color: colorScheme.outlineVariant),
             ),
           ),
           minX: 0,
@@ -1084,6 +579,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
 
   /// Build chart for single data point with special handling
   Widget _buildSinglePointChart(List<DataPoint> filteredData) {
+    final colorScheme = Theme.of(context).colorScheme;
     final dataPoint = filteredData.first;
 
     // Create a small range around the single point for better visualization
@@ -1092,36 +588,14 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
     final maxY = value + (value * 0.1).abs() + 1;
 
     // Calculate position for the single point
-    DateTime startDate;
-    DateTime endDate;
-
-    switch (_currentFilter) {
-      case ChartFilter.week:
-        startDate = _currentPeriod;
-        endDate = _currentPeriod.add(const Duration(days: 7));
-        break;
-      case ChartFilter.month:
-        startDate = _currentPeriod;
-        endDate = DateTime(_currentPeriod.year, _currentPeriod.month + 1, 1);
-        break;
-      case ChartFilter.threeMonth:
-        startDate = _currentPeriod;
-        endDate = DateTime(_currentPeriod.year, _currentPeriod.month + 3, 1);
-        break;
-      case ChartFilter.year:
-        startDate = _currentPeriod;
-        endDate = DateTime(_currentPeriod.year + 1, 1, 1);
-        break;
-    }
+    final startDate = _currentPeriod;
+    final endDate = _getPeriodEndDate(_currentPeriod, _currentFilter);
 
     final x = _calculateXPosition(dataPoint.dateTime, startDate, endDate);
 
     return Container(
       height: 300,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
+      decoration: _chartContainerDecoration(context),
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
       child: LineChart(
         LineChartData(
@@ -1130,10 +604,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
             drawVerticalLine: false,
             horizontalInterval: _calculateInterval(minY, maxY),
             getDrawingHorizontalLine: (value) {
-              return FlLine(
-                color: Colors.grey.shade300,
-                strokeWidth: 1,
-              );
+              return FlLine(color: _chartGridColor(context), strokeWidth: 1);
             },
           ),
           titlesData: FlTitlesData(
@@ -1164,8 +635,8 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
           borderData: FlBorderData(
             show: true,
             border: Border(
-              bottom: BorderSide(color: Colors.grey.shade300),
-              left: BorderSide(color: Colors.grey.shade300),
+              bottom: BorderSide(color: colorScheme.outlineVariant),
+              left: BorderSide(color: colorScheme.outlineVariant),
             ),
           ),
           minX: 0,
@@ -1175,14 +646,14 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
           lineTouchData: LineTouchData(
             enabled: true,
             touchTooltipData: LineTouchTooltipData(
-              getTooltipColor: (touchedSpot) => Colors.white,
+              getTooltipColor: (touchedSpot) => colorScheme.surfaceContainerLow,
               tooltipPadding: const EdgeInsets.symmetric(
                 horizontal: 12,
                 vertical: 8,
               ),
               tooltipMargin: 12,
               tooltipBorder: BorderSide(
-                color: widget.config.color.withOpacity(0.3),
+                color: widget.config.color.withValues(alpha: 0.35),
                 width: 1.5,
               ),
               getTooltipItems: (spots) {
@@ -1232,11 +703,17 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
 
   /// Build a highlight for the current period section in the chart
   ExtraLinesData _buildCurrentPeriodHighlight(
-      List<DataPoint> filteredData, double minY, double maxY) {
+    List<DataPoint> filteredData,
+    double minY,
+    double maxY,
+  ) {
     // Only add highlight if we're viewing the current period
     if (!_isCurrentViewPeriod()) {
       return ExtraLinesData(
-          extraLinesOnTop: true, horizontalLines: [], verticalLines: []);
+        extraLinesOnTop: true,
+        horizontalLines: [],
+        verticalLines: [],
+      );
     }
 
     final now = DateTime.now();
@@ -1255,8 +732,8 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
 
       case ChartFilter.month:
         // Highlight current week
-        final weekStart = now.subtract(Duration(days: now.weekday % 7));
-        final weekEnd = weekStart.add(const Duration(days: 7));
+        final weekStart = _startOfWeek(now);
+        final weekEnd = _endOfWeekExclusive(now);
 
         // Convert to X coordinates
         startX = weekStart.difference(periodStartDate).inDays.toDouble();
@@ -1281,10 +758,16 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
 
       case ChartFilter.year:
         // Highlight current quarter
-        final quarterStart =
-            DateTime(now.year, ((now.month - 1) ~/ 3) * 3 + 1, 1);
-        final quarterEnd =
-            DateTime(now.year, ((now.month - 1) ~/ 3) * 3 + 4, 1);
+        final quarterStart = DateTime(
+          now.year,
+          ((now.month - 1) ~/ 3) * 3 + 1,
+          1,
+        );
+        final quarterEnd = DateTime(
+          now.year,
+          ((now.month - 1) ~/ 3) * 3 + 4,
+          1,
+        );
 
         // Convert to X coordinates
         startX = quarterStart.difference(periodStartDate).inDays.toDouble();
@@ -1299,13 +782,13 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
     final List<VerticalLine> verticalLines = [
       VerticalLine(
         x: startX,
-        color: widget.config.color.withOpacity(0.3),
+        color: widget.config.color.withValues(alpha: 0.3),
         strokeWidth: 1,
         dashArray: [5, 5],
       ),
       VerticalLine(
         x: endX,
-        color: widget.config.color.withOpacity(0.3),
+        color: widget.config.color.withValues(alpha: 0.3),
         strokeWidth: 1,
         dashArray: [5, 5],
       ),
@@ -1318,7 +801,9 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
       verticalLines.add(
         VerticalLine(
           x: x,
-          color: widget.config.color.withOpacity(0.03), // Very light color
+          color: widget.config.color.withValues(
+            alpha: 0.03,
+          ), // Very light color
           strokeWidth: step * 0.9, // Almost fills the space between lines
         ),
       );
@@ -1354,20 +839,11 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
     final paddedMinY = minY - (yRange * 0.1);
     final paddedMaxY = maxY + (yRange * 0.1);
 
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       height: 300,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey.shade200),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+      decoration: _chartContainerDecoration(context),
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
       child: LineChart(
         LineChartData(
@@ -1377,7 +853,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
             horizontalInterval: _calculateInterval(paddedMinY, paddedMaxY),
             getDrawingHorizontalLine: (value) {
               return FlLine(
-                color: Colors.grey.shade200,
+                color: _chartGridColor(context),
                 strokeWidth: 1,
                 dashArray: [5, 5],
               );
@@ -1411,8 +887,8 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
           borderData: FlBorderData(
             show: true,
             border: Border(
-              bottom: BorderSide(color: Colors.grey.shade300),
-              left: BorderSide(color: Colors.grey.shade300),
+              bottom: BorderSide(color: colorScheme.outlineVariant),
+              left: BorderSide(color: colorScheme.outlineVariant),
             ),
           ),
           minX: 0,
@@ -1422,21 +898,23 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
           lineTouchData: LineTouchData(
             enabled: true,
             touchTooltipData: LineTouchTooltipData(
-              getTooltipColor: (touchedSpot) => Colors.white,
+              getTooltipColor: (touchedSpot) => colorScheme.surfaceContainerLow,
               tooltipPadding: const EdgeInsets.symmetric(
                 horizontal: 12,
                 vertical: 8,
               ),
               tooltipMargin: 12,
               tooltipBorder: BorderSide(
-                color: widget.config.color.withOpacity(0.3),
+                color: widget.config.color.withValues(alpha: 0.35),
                 width: 1.5,
               ),
               getTooltipItems: (spots) {
                 return spots.map((spot) {
                   // Find the closest data point to this spot
-                  final closestPointIndex =
-                      _findClosestDataPoint(spot, filteredData);
+                  final closestPointIndex = _findClosestDataPoint(
+                    spot,
+                    filteredData,
+                  );
                   if (closestPointIndex != -1) {
                     final dataPoint = filteredData[closestPointIndex];
                     // Format as "84 kg - Sep 16" according to spec
@@ -1465,8 +943,10 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
                 if (touchResponse?.lineBarSpots != null &&
                     touchResponse!.lineBarSpots!.isNotEmpty) {
                   final spot = touchResponse.lineBarSpots!.first;
-                  final closestPointIndex =
-                      _findClosestDataPoint(spot, filteredData);
+                  final closestPointIndex = _findClosestDataPoint(
+                    spot,
+                    filteredData,
+                  );
                   _selectDataPoint(closestPointIndex);
                 } else {
                   // Tap outside - deselect
@@ -1493,7 +973,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
               isStrokeCapRound: true,
               gradient: LinearGradient(
                 colors: [
-                  widget.config.color.withOpacity(0.8),
+                  widget.config.color.withValues(alpha: 0.8),
                   widget.config.color,
                 ],
                 begin: Alignment.centerLeft,
@@ -1528,7 +1008,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
                   } else {
                     // Regular point - smaller and slightly transparent
                     radius = 3.5;
-                    dotColor = widget.config.color.withOpacity(0.85);
+                    dotColor = widget.config.color.withValues(alpha: 0.85);
                     strokeWidth = 2;
                   }
 
@@ -1542,12 +1022,15 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart>
               ),
               belowBarData: BarAreaData(
                 show: widget.config.backgroundColor != null,
-                color: widget.config.backgroundColor?.withOpacity(0.2),
+                color: widget.config.backgroundColor?.withValues(alpha: 0.2),
               ),
             ),
           ],
           extraLinesData: _buildCurrentPeriodHighlight(
-              filteredData, paddedMinY, paddedMaxY),
+            filteredData,
+            paddedMinY,
+            paddedMaxY,
+          ),
         ),
       ),
     );

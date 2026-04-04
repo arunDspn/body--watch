@@ -10,6 +10,7 @@ import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
+import 'package:watcha_body/presentation/chart_2/charts_view2.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/authenticator/view/vault_section.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/overview/bloc/search_widgets_bloc.dart';
@@ -54,20 +55,20 @@ class OverView extends StatelessWidget {
             },
           ),
           //
-          // IconButton(
-          //   onPressed: () {
-          //     // context.read<BodyPictureRepository>().getAllTags();
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder: (context) {
-          //           return ChartsView2();
-          //         },
-          //       ),
-          //     );
-          //   },
-          //   icon: const Icon(Icons.emoji_emotions),
-          // ),
+          IconButton(
+            onPressed: () {
+              // context.read<BodyPictureRepository>().getAllTags();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return ChartsView2();
+                  },
+                ),
+              );
+            },
+            icon: const Icon(Icons.emoji_emotions),
+          ),
         ],
       ),
       // appBar: AppBar(
@@ -178,14 +179,14 @@ class OverView extends StatelessWidget {
             return switch (state) {
               GetallwidgetsdataStateInitial() => const _ElseCase(),
               GetallwidgetsdataStateLoading() => const Center(
-                  child: CircularProgressIndicator(),
-                ),
+                child: CircularProgressIndicator(),
+              ),
               GetallwidgetsdataStateSuccess(:final widgets)
                   when widgets.isEmpty =>
                 const _EmptyWidgetList(),
               GetallwidgetsdataStateSuccess(:final widgets) => SearchView(
-                  widgets: widgets,
-                ),
+                widgets: widgets,
+              ),
               GetallwidgetsdataStateFailure(:final cause) => Text(cause),
             };
 
@@ -235,15 +236,11 @@ class _EmptyWidgetList extends StatelessWidget {
             ),
           ),
           const Text('No Widgets Added'),
-          const SizedBox(
-            height: 8,
-          ),
+          const SizedBox(height: 8),
           Text(
             'Add a widget by clicking + at top right \nto get started',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -291,10 +288,9 @@ class _ElseCase extends StatelessWidget {
           ),
           Text(
             'No You Cant See Me',
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge
-                ?.copyWith(color: Colors.red),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(color: Colors.red),
           ),
         ],
       ),
@@ -303,10 +299,7 @@ class _ElseCase extends StatelessWidget {
 }
 
 class SearchView extends StatelessWidget {
-  const SearchView({
-    super.key,
-    required this.widgets,
-  });
+  const SearchView({super.key, required this.widgets});
 
   final Map<String, List<MeasurementModel>> widgets;
 
@@ -362,10 +355,7 @@ class _SearchBarState extends State<_SearchBar> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 4,
-          vertical: 12,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
         child: SearchBar(
           controller: textEditingController,
           padding: const MaterialStatePropertyAll(
@@ -384,9 +374,9 @@ class _SearchBarState extends State<_SearchBar> {
                 closeIcon = false;
               }
             });
-            context
-                .read<SearchWidgetsBloc>()
-                .add(SearchWidgetsEvent.keyChanged(value));
+            context.read<SearchWidgetsBloc>().add(
+              SearchWidgetsEvent.keyChanged(value),
+            );
           },
           leading: Padding(
             padding: const EdgeInsets.all(8),
@@ -394,8 +384,8 @@ class _SearchBarState extends State<_SearchBar> {
                 ? GestureDetector(
                     onTap: () {
                       context.read<SearchWidgetsBloc>().add(
-                            const SearchWidgetsEvent.keyChanged(''),
-                          );
+                        const SearchWidgetsEvent.keyChanged(''),
+                      );
                       setState(() {
                         textEditingController.text = '';
                         closeIcon = false;
@@ -459,9 +449,7 @@ class WidgetList extends StatelessWidget {
       builder: (context, state) {
         return state.maybeWhen(
           orElse: () {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           },
           loaded: (preferences) {
             return ListView.builder(
@@ -523,10 +511,7 @@ class WidgetList extends StatelessWidget {
 // }
 
 class _WidgetBox extends StatefulWidget {
-  const _WidgetBox({
-    required Key key,
-    required this.data,
-  }) : super(key: key);
+  const _WidgetBox({required Key key, required this.data}) : super(key: key);
 
   final List<MeasurementModel> data;
 
@@ -561,8 +546,9 @@ class _WidgetBoxState extends State<_WidgetBox> {
   Widget build(BuildContext context) {
     final latestData = widget.data.first;
 
-    final delta =
-        widget.data.length > 1 ? latestData.value - widget.data[1].value : null;
+    final delta = widget.data.length > 1
+        ? latestData.value - widget.data[1].value
+        : null;
 
     final pref =
         (context.read<UserPreferencesCubit>().state as UserPreferencesLoaded)
@@ -644,8 +630,9 @@ class _WidgetBoxState extends State<_WidgetBox> {
                     children: [
                       _MetricChip(
                         icon: Icons.event,
-                        text:
-                            lastMeasurementDayFormatter.format(latestData.date),
+                        text: lastMeasurementDayFormatter.format(
+                          latestData.date,
+                        ),
                       ),
                       if (delta != null)
                         _MetricChip(
@@ -676,10 +663,10 @@ class _WidgetBoxState extends State<_WidgetBox> {
                       children: [
                         FilledButton.tonalIcon(
                           onPressed: () {
-                            final targets = (context
-                                    .read<GetallwidgetsCubit>()
-                                    .state as GetAllWidgetSuccess)
-                                .widgets;
+                            final targets =
+                                (context.read<GetallwidgetsCubit>().state
+                                        as GetAllWidgetSuccess)
+                                    .widgets;
                             final target = targets.firstWhere(
                               (element) => element.id == latestData.targetId,
                             );
@@ -719,10 +706,10 @@ class _WidgetBoxState extends State<_WidgetBox> {
                       children: [
                         FilledButton.tonalIcon(
                           onPressed: () {
-                            final targets = (context
-                                    .read<GetallwidgetsCubit>()
-                                    .state as GetAllWidgetSuccess)
-                                .widgets;
+                            final targets =
+                                (context.read<GetallwidgetsCubit>().state
+                                        as GetAllWidgetSuccess)
+                                    .widgets;
                             final target = targets.firstWhere(
                               (element) => element.id == latestData.targetId,
                             );
@@ -730,8 +717,10 @@ class _WidgetBoxState extends State<_WidgetBox> {
                               context: context,
                               builder: (context) {
                                 return BackdropFilter(
-                                  filter:
-                                      ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                                  filter: ImageFilter.blur(
+                                    sigmaX: 2,
+                                    sigmaY: 2,
+                                  ),
                                   child: AddorEditMeasurementTargetModal.edit(
                                     type: target,
                                     addedId: latestData.id,
@@ -1078,10 +1067,7 @@ class _MetricChip extends StatelessWidget {
 // }
 
 class _ExtraDetails extends StatelessWidget {
-  const _ExtraDetails({
-    required super.key,
-    required this.data,
-  });
+  const _ExtraDetails({required super.key, required this.data});
 
   final List<MeasurementModel> data;
 
@@ -1145,8 +1131,10 @@ class _ExtraDetails extends StatelessWidget {
                   duration: const Duration(milliseconds: 240),
                   curve: Curves.easeOutCubic,
                   width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(14),
                     color: theme.colorScheme.primaryContainer,
@@ -1231,10 +1219,7 @@ class _ExtraDetails extends StatelessWidget {
                 ),
                 if (trendValues.length > 1) ...[
                   const SizedBox(height: 12),
-                  _MiniTrendChart(
-                    values: trendValues,
-                    unit: unit,
-                  ),
+                  _MiniTrendChart(values: trendValues, unit: unit),
                 ],
               ],
             );
@@ -1260,10 +1245,7 @@ class _ExtraDetails extends StatelessWidget {
 }
 
 class _MiniTrendChart extends StatelessWidget {
-  const _MiniTrendChart({
-    required this.values,
-    required this.unit,
-  });
+  const _MiniTrendChart({required this.values, required this.unit});
 
   final List<double> values;
   final String unit;
@@ -1417,10 +1399,7 @@ class _DetailStatTile extends StatelessWidget {
       duration: const Duration(milliseconds: 220),
       curve: Curves.easeOutCubic,
       builder: (context, scale, child) {
-        return Transform.scale(
-          scale: scale,
-          child: child,
-        );
+        return Transform.scale(scale: scale, child: child);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
