@@ -11,12 +11,14 @@ class BodyMeasurementChart extends StatefulWidget {
   final List<DataPoint> data;
   final ChartConfig config;
   final ChartFilter defaultFilter;
+  final double? goalValue;
 
   const BodyMeasurementChart({
     super.key,
     required this.data,
     required this.config,
     this.defaultFilter = ChartFilter.month,
+    this.goalValue,
   });
 
   @override
@@ -488,6 +490,10 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
             currentFilter: _currentFilter,
             onFilterChanged: _changeFilter,
           ),
+          if (widget.goalValue != null) ...[
+            const SizedBox(height: 10),
+            _buildGoalLegend(context),
+          ],
           const SizedBox(height: 16),
 
           // Navigation and date display
@@ -520,12 +526,92 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     return Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.6);
   }
 
+  Widget _buildGoalLegend(BuildContext context) {
+    if (widget.goalValue == null) {
+      return const SizedBox.shrink();
+    }
+
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: colorScheme.tertiaryContainer.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: colorScheme.tertiary.withValues(alpha: 0.35)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 34,
+            height: 2,
+            child: CustomPaint(
+              painter: _DashedLegendLinePainter(colorScheme.tertiary),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'Goal ${_formatYAxisValue(widget.goalValue!)} ${widget.config.unit}',
+            style: TextStyle(
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  HorizontalLine? _buildGoalReferenceLine() {
+    if (widget.goalValue == null) {
+      return null;
+    }
+
+    final colorScheme = Theme.of(context).colorScheme;
+    return HorizontalLine(
+      y: widget.goalValue!,
+      color: colorScheme.tertiary,
+      strokeWidth: 1.8,
+      dashArray: [8, 5],
+    );
+  }
+
+  ExtraLinesData _buildExtraLinesData(
+    List<DataPoint> filteredData,
+    double minY,
+    double maxY,
+  ) {
+    final currentPeriodLines = _buildCurrentPeriodHighlight(
+      filteredData,
+      minY,
+      maxY,
+    );
+
+    final horizontalLines = List<HorizontalLine>.from(
+      currentPeriodLines.horizontalLines,
+    );
+    final goalLine = _buildGoalReferenceLine();
+    if (goalLine != null) {
+      horizontalLines.add(goalLine);
+    }
+
+    return ExtraLinesData(
+      extraLinesOnTop: false,
+      horizontalLines: horizontalLines,
+      verticalLines: currentPeriodLines.verticalLines,
+    );
+  }
+
   /// Build empty chart showing only axes and grid lines (no data message)
   Widget _buildEmptyChart() {
-    // Use a reasonable Y-axis range for empty chart
     final colorScheme = Theme.of(context).colorScheme;
-    final minY = 0.0;
-    final maxY = 100.0;
+    var minY = 0.0;
+    var maxY = 100.0;
+    if (widget.goalValue != null) {
+      minY = (widget.goalValue! - 10).clamp(0.0, double.infinity);
+      maxY = widget.goalValue! + 10;
+    }
     final yAxisInterval = _niceYAxisInterval(minY, maxY);
 
     return SizedBox(
@@ -584,6 +670,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
           maxY: maxY,
           lineTouchData: LineTouchData(enabled: false),
           lineBarsData: [], // No data to display
+          extraLinesData: _buildExtraLinesData([], minY, maxY),
         ),
       ),
     );
@@ -600,8 +687,13 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     final padding = dynamicPadding < 0.8
         ? 0.8
         : (dynamicPadding > 2.0 ? 2.0 : dynamicPadding);
-    final rawMinY = value - padding;
-    final rawMaxY = value + padding;
+    final goalValue = widget.goalValue;
+    final rawMinY = goalValue == null
+        ? value - padding
+        : (value < goalValue ? value : goalValue) - padding;
+    final rawMaxY = goalValue == null
+        ? value + padding
+        : (value > goalValue ? value : goalValue) + padding;
     final yAxisInterval = (rawMaxY - rawMinY) <= 2.0 ? 0.5 : 1.0;
     final minY = _roundDownToStep(rawMinY, yAxisInterval);
     final maxY = _roundUpToStep(rawMaxY, yAxisInterval);
@@ -715,6 +807,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
               ),
             ),
           ],
+          extraLinesData: _buildExtraLinesData(filteredData, minY, maxY),
         ),
       ),
     );
@@ -850,6 +943,9 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
 
     // Get min and max values for Y-axis scaling
     final yValues = filteredData.map((point) => point.value).toList();
+    if (widget.goalValue != null) {
+      yValues.add(widget.goalValue!);
+    }
     final minY = yValues.reduce((a, b) => a < b ? a : b);
     final maxY = yValues.reduce((a, b) => a > b ? a : b);
 
@@ -1048,7 +1144,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
               ),
             ),
           ],
-          extraLinesData: _buildCurrentPeriodHighlight(
+          extraLinesData: _buildExtraLinesData(
             filteredData,
             paddedMinY,
             paddedMaxY,
@@ -1056,5 +1152,38 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
         ),
       ),
     );
+  }
+}
+
+class _DashedLegendLinePainter extends CustomPainter {
+  const _DashedLegendLinePainter(this.color);
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    const dashWidth = 7.0;
+    const gapWidth = 4.0;
+    var startX = 0.0;
+    final centerY = size.height / 2;
+
+    while (startX < size.width) {
+      final endX = startX + dashWidth > size.width
+          ? size.width
+          : startX + dashWidth;
+      canvas.drawLine(Offset(startX, centerY), Offset(endX, centerY), paint);
+      startX += dashWidth + gapWidth;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _DashedLegendLinePainter oldDelegate) {
+    return oldDelegate.color != color;
   }
 }

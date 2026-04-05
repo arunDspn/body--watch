@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:watcha_body/data/repositories/goals_repository.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
+import 'package:watcha_body/domain/measurement/models/goal_entity.dart';
 import 'cubit/chart_detail_cubit.dart';
 import 'models/chart_models.dart';
 import 'widgets/body_measurement_chart.dart';
@@ -33,6 +35,8 @@ class _ChartsView2State extends State<ChartsView2> {
   final DateFormat _dayMonthFormatter = DateFormat('d MMM');
   ChartDetailCubit? _chartDetailCubit;
 
+  double get _safeDivisor => widget.valueDivisor == 0 ? 1 : widget.valueDivisor;
+
   bool get _shouldLoadFromRepository =>
       widget.targetId != null && widget.data == null;
 
@@ -42,6 +46,7 @@ class _ChartsView2State extends State<ChartsView2> {
     if (_shouldLoadFromRepository) {
       _chartDetailCubit = ChartDetailCubit(
         context.read<MeasurementRepository>(),
+        context.read<GoalsRepository>(),
       )..load(targetId: widget.targetId!, userId: widget.userId);
     }
   }
@@ -125,6 +130,580 @@ class _ChartsView2State extends State<ChartsView2> {
     if (diff == 1) return 'Yesterday';
     if (diff > 1 && diff <= 7) return '$diff days ago';
     return _dayMonthFormatter.format(date);
+  }
+
+  double _displayGoalTarget(GoalEntity goal) {
+    return goal.targetValue / _safeDivisor;
+  }
+
+  double _storageGoalTarget(double displayTarget) {
+    return displayTarget * _safeDivisor;
+  }
+
+  bool _isGoalAchieved({
+    required GoalEntity goal,
+    required double latestValue,
+  }) {
+    final target = _displayGoalTarget(goal);
+    return goal.direction == GoalDirection.increase
+        ? latestValue >= target
+        : latestValue <= target;
+  }
+
+  String _goalDirectionLabel(GoalDirection direction) {
+    return direction == GoalDirection.increase ? 'Increase' : 'Decrease';
+  }
+
+  Future<void> _showGoalEditorSheet(
+    BuildContext context, {
+    required ChartConfig config,
+    GoalEntity? activeGoal,
+  }) async {
+    if (!_shouldLoadFromRepository || _chartDetailCubit == null) {
+      return;
+    }
+
+    final targetController = TextEditingController(
+      text: activeGoal == null
+          ? ''
+          : _displayGoalTarget(activeGoal).toStringAsFixed(1),
+    );
+    final noteController = TextEditingController(text: activeGoal?.notes ?? '');
+
+    var direction = activeGoal?.direction ?? GoalDirection.increase;
+    DateTime? dueDate = activeGoal?.dueDate;
+    String? inputError;
+    bool isSaving = false;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (modalContext, setModalState) {
+            return SafeArea(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  16,
+                  12,
+                  16,
+                  16 + MediaQuery.of(sheetContext).viewInsets.bottom,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      activeGoal == null ? 'Set New Goal' : 'Edit Goal',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    TextField(
+                      controller: targetController,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: 'Target Value (${config.unit})',
+                        errorText: inputError,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<GoalDirection>(
+                      value: direction,
+                      items: const [
+                        DropdownMenuItem(
+                          value: GoalDirection.increase,
+                          child: Text('Increase'),
+                        ),
+                        DropdownMenuItem(
+                          value: GoalDirection.decrease,
+                          child: Text('Decrease'),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        if (value == null) return;
+                        setModalState(() => direction = value);
+                      },
+                      decoration: const InputDecoration(labelText: 'Direction'),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(8),
+                            onTap: () async {
+                              final now = DateTime.now();
+                              final picked = await showDatePicker(
+                                context: sheetContext,
+                                firstDate: now,
+                                initialDate: dueDate ?? now,
+                                lastDate: DateTime(now.year + 10),
+                              );
+                              if (picked == null) return;
+                              setModalState(() {
+                                dueDate = DateTime(
+                                  picked.year,
+                                  picked.month,
+                                  picked.day,
+                                );
+                              });
+                            },
+                            child: InputDecorator(
+                              decoration: const InputDecoration(
+                                labelText: 'Due Date (Optional)',
+                              ),
+                              child: Text(
+                                dueDate == null
+                                    ? 'Optional'
+                                    : _dateFormatter.format(dueDate!),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          onPressed: () async {
+                            if (dueDate == null) {
+                              final now = DateTime.now();
+                              final picked = await showDatePicker(
+                                context: sheetContext,
+                                firstDate: now,
+                                initialDate: now,
+                                lastDate: DateTime(now.year + 10),
+                              );
+                              if (picked == null) return;
+                              setModalState(() {
+                                dueDate = DateTime(
+                                  picked.year,
+                                  picked.month,
+                                  picked.day,
+                                );
+                              });
+                              return;
+                            }
+
+                            setModalState(() {
+                              dueDate = null;
+                            });
+                          },
+                          icon: Icon(
+                            dueDate == null
+                                ? Icons.event_rounded
+                                : Icons.close_rounded,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: noteController,
+                      maxLines: 2,
+                      decoration: const InputDecoration(
+                        labelText: 'Goal Note (Optional)',
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: isSaving
+                            ? null
+                            : () async {
+                                final parsedTarget = double.tryParse(
+                                  targetController.text.trim().replaceAll(
+                                    ',',
+                                    '.',
+                                  ),
+                                );
+                                if (parsedTarget == null || parsedTarget <= 0) {
+                                  setModalState(() {
+                                    inputError =
+                                        'Enter a valid positive number';
+                                  });
+                                  return;
+                                }
+
+                                setModalState(() {
+                                  inputError = null;
+                                  isSaving = true;
+                                });
+
+                                final goal = GoalEntity(
+                                  id: activeGoal?.id,
+                                  targetId: widget.targetId!,
+                                  targetValue: _storageGoalTarget(parsedTarget),
+                                  startDate: DateTime.now(),
+                                  dueDate: dueDate,
+                                  notes: noteController.text.trim().isEmpty
+                                      ? null
+                                      : noteController.text.trim(),
+                                  userId: widget.userId,
+                                  direction: direction,
+                                );
+
+                                final error = await _chartDetailCubit!
+                                    .createOrReplaceGoal(goal: goal);
+
+                                if (!mounted) return;
+
+                                if (error != null) {
+                                  setModalState(() => isSaving = false);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'Failed to save goal: $error',
+                                      ),
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                await _chartDetailCubit!.load(
+                                  targetId: widget.targetId!,
+                                  userId: widget.userId,
+                                );
+
+                                if (!mounted) return;
+                                Navigator.of(sheetContext).pop();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      activeGoal == null
+                                          ? 'Goal created'
+                                          : 'Goal updated',
+                                    ),
+                                  ),
+                                );
+                              },
+                        icon: isSaving
+                            ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.check_rounded),
+                        label: Text(isSaving ? 'Saving...' : 'Save Goal'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+
+    targetController.dispose();
+    noteController.dispose();
+  }
+
+  Future<void> _completeGoal(
+    BuildContext context, {
+    required GoalEntity goal,
+  }) async {
+    if (!_shouldLoadFromRepository ||
+        _chartDetailCubit == null ||
+        goal.id == null) {
+      return;
+    }
+
+    final shouldProceed = await _showGoalActionConfirmation(
+      context,
+      title: 'Complete Goal?',
+      message:
+          'This will mark the active goal as completed. You can still create a new goal later.',
+      confirmLabel: 'Complete',
+    );
+
+    if (!shouldProceed) {
+      return;
+    }
+
+    final error = await _chartDetailCubit!.completeGoal(goalId: goal.id!);
+    if (!mounted) return;
+
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to complete goal: $error')),
+      );
+      return;
+    }
+
+    await _chartDetailCubit!.load(
+      targetId: widget.targetId!,
+      userId: widget.userId,
+    );
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Goal marked as completed')));
+  }
+
+  Future<void> _cancelGoal(
+    BuildContext context, {
+    required GoalEntity goal,
+  }) async {
+    if (!_shouldLoadFromRepository ||
+        _chartDetailCubit == null ||
+        goal.id == null) {
+      return;
+    }
+
+    final shouldProceed = await _showGoalActionConfirmation(
+      context,
+      title: 'Cancel Goal?',
+      message:
+          'This will close the active goal without marking it as achieved. You can set another goal anytime.',
+      confirmLabel: 'Cancel Goal',
+      isDestructive: true,
+    );
+
+    if (!shouldProceed) {
+      return;
+    }
+
+    final error = await _chartDetailCubit!.cancelGoal(goalId: goal.id!);
+    if (!mounted) return;
+
+    if (error != null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed to cancel goal: $error')));
+      return;
+    }
+
+    await _chartDetailCubit!.load(
+      targetId: widget.targetId!,
+      userId: widget.userId,
+    );
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Goal cancelled')));
+  }
+
+  Future<bool> _showGoalActionConfirmation(
+    BuildContext context, {
+    required String title,
+    required String message,
+    required String confirmLabel,
+    bool isDestructive = false,
+  }) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        final colorScheme = Theme.of(dialogContext).colorScheme;
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Keep Goal'),
+            ),
+            FilledButton(
+              style: isDestructive
+                  ? FilledButton.styleFrom(
+                      backgroundColor: colorScheme.error,
+                      foregroundColor: colorScheme.onError,
+                    )
+                  : null,
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: Text(confirmLabel),
+            ),
+          ],
+        );
+      },
+    );
+
+    return result ?? false;
+  }
+
+  Widget _buildGoalCard(
+    BuildContext context, {
+    required List<DataPoint> chartData,
+    required ChartConfig config,
+    GoalEntity? activeGoal,
+  }) {
+    if (!_shouldLoadFromRepository) {
+      return const SizedBox.shrink();
+    }
+
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final measurements = _sortedData(chartData);
+    final latestValue = measurements.isEmpty ? null : measurements.first.value;
+
+    if (activeGoal == null) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: colorScheme.surfaceContainerHigh,
+          border: Border.all(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Goal',
+              style: textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'No active goal set yet.',
+              style: textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: FilledButton.icon(
+                onPressed: () => _showGoalEditorSheet(context, config: config),
+                icon: const Icon(Icons.flag_rounded),
+                label: const Text('Set Goal'),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final target = _displayGoalTarget(activeGoal);
+    final achieved = latestValue == null
+        ? false
+        : _isGoalAchieved(goal: activeGoal, latestValue: latestValue);
+    final remaining = latestValue == null
+        ? null
+        : activeGoal.direction == GoalDirection.increase
+        ? target - latestValue
+        : latestValue - target;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: colorScheme.surfaceContainerHigh,
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                'Goal',
+                style: textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(999),
+                  color: achieved
+                      ? colorScheme.tertiaryContainer
+                      : colorScheme.primaryContainer,
+                ),
+                child: Text(
+                  achieved ? 'Achieved' : 'Active',
+                  style: textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: achieved
+                        ? colorScheme.onTertiaryContainer
+                        : colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Target: ${_valueText(target, config)}',
+            style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Direction: ${_goalDirectionLabel(activeGoal.direction)}',
+            style: textTheme.bodyMedium,
+          ),
+          if (activeGoal.dueDate != null)
+            Text(
+              'Due: ${_dateFormatter.format(activeGoal.dueDate!)}',
+              style: textTheme.bodyMedium,
+            ),
+          if (latestValue != null)
+            Text(
+              achieved
+                  ? 'Goal reached with latest value ${_valueText(latestValue, config)}'
+                  : 'Remaining: ${remaining!.toStringAsFixed(1)} ${config.unit}',
+              style: textTheme.bodyMedium?.copyWith(
+                color: achieved
+                    ? colorScheme.tertiary
+                    : colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          if ((activeGoal.notes ?? '').isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(
+              activeGoal.notes!,
+              style: textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              FilledButton.tonalIcon(
+                onPressed: () => _showGoalEditorSheet(
+                  context,
+                  config: config,
+                  activeGoal: activeGoal,
+                ),
+                icon: const Icon(Icons.edit_rounded),
+                label: const Text('Edit'),
+              ),
+              FilledButton.tonalIcon(
+                onPressed: activeGoal.id == null
+                    ? null
+                    : () => _completeGoal(context, goal: activeGoal),
+                icon: const Icon(Icons.check_circle_rounded),
+                label: const Text('Complete'),
+              ),
+              OutlinedButton.icon(
+                onPressed: activeGoal.id == null
+                    ? null
+                    : () => _cancelGoal(context, goal: activeGoal),
+                icon: const Icon(Icons.cancel_outlined),
+                label: const Text('Cancel'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildMeasurementElements(
@@ -340,6 +919,7 @@ class _ChartsView2State extends State<ChartsView2> {
     required List<DataPoint> chartData,
     required ChartConfig config,
     required bool isUsingMockData,
+    GoalEntity? activeGoal,
   }) {
     return Scaffold(
       appBar: AppBar(
@@ -380,9 +960,21 @@ class _ChartsView2State extends State<ChartsView2> {
                 data: chartData,
                 config: config,
                 defaultFilter: widget.defaultFilter,
+                goalValue: activeGoal == null
+                    ? null
+                    : _displayGoalTarget(activeGoal),
               ),
 
               const SizedBox(height: 24),
+
+              _buildGoalCard(
+                context,
+                chartData: chartData,
+                config: config,
+                activeGoal: activeGoal,
+              ),
+
+              if (_shouldLoadFromRepository) const SizedBox(height: 24),
 
               Padding(
                 padding: const EdgeInsets.all(8),
@@ -492,15 +1084,12 @@ class _ChartsView2State extends State<ChartsView2> {
                   ),
                 ),
               );
-            case ChartDetailLoaded(:final measurements):
-              final safeDivisor = widget.valueDivisor == 0
-                  ? 1
-                  : widget.valueDivisor;
+            case ChartDetailLoaded(:final measurements, :final activeGoal):
               final chartData = measurements
                   .map(
                     (measurement) => DataPoint(
                       dateTime: measurement.date,
-                      value: measurement.value / safeDivisor,
+                      value: measurement.value / _safeDivisor,
                     ),
                   )
                   .toList();
@@ -509,6 +1098,7 @@ class _ChartsView2State extends State<ChartsView2> {
                 chartData: chartData,
                 config: config,
                 isUsingMockData: false,
+                activeGoal: activeGoal,
               );
             default:
               return Scaffold(

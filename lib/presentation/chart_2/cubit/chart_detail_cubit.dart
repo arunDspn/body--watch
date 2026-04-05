@@ -1,24 +1,51 @@
 import 'package:bloc/bloc.dart';
+import 'package:watcha_body/data/repositories/goals_repository.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
+import 'package:watcha_body/domain/measurement/models/goal_entity.dart';
 import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
 
 class ChartDetailCubit extends Cubit<ChartDetailState> {
-  ChartDetailCubit(this._repository) : super(const ChartDetailInitial());
+  ChartDetailCubit(this._measurementRepository, this._goalsRepository)
+    : super(const ChartDetailInitial());
 
-  final MeasurementRepository _repository;
+  final MeasurementRepository _measurementRepository;
+  final GoalsRepository _goalsRepository;
 
   Future<void> load({required int targetId, int userId = 1}) async {
     emit(const ChartDetailLoading());
 
-    final result = await _repository.getMeasurementsByTarget(
-      targetId: targetId,
+    final measurementsResult = await _measurementRepository
+        .getMeasurementsByTarget(targetId: targetId, userId: userId);
+    final goalResult = await _goalsRepository.getActiveGoal(
       userId: userId,
+      targetId: targetId,
     );
 
-    result.fold(
-      (error) => emit(ChartDetailFailure(error)),
-      (measurements) => emit(ChartDetailLoaded(measurements)),
-    );
+    measurementsResult.fold((error) => emit(ChartDetailFailure(error)), (
+      measurements,
+    ) {
+      goalResult.fold(
+        (_) => emit(ChartDetailLoaded(measurements: measurements)),
+        (activeGoal) => emit(
+          ChartDetailLoaded(measurements: measurements, activeGoal: activeGoal),
+        ),
+      );
+    });
+  }
+
+  Future<String?> createOrReplaceGoal({required GoalEntity goal}) async {
+    final result = await _goalsRepository.createOrReplaceActiveGoal(goal: goal);
+    return result.fold((error) => error, (_) => null);
+  }
+
+  Future<String?> completeGoal({required int goalId}) async {
+    final result = await _goalsRepository.completeGoal(goalId: goalId);
+    return result.fold((error) => error, (_) => null);
+  }
+
+  Future<String?> cancelGoal({required int goalId}) async {
+    final result = await _goalsRepository.cancelGoal(goalId: goalId);
+    return result.fold((error) => error, (_) => null);
   }
 }
 
@@ -35,9 +62,10 @@ class ChartDetailLoading extends ChartDetailState {
 }
 
 class ChartDetailLoaded extends ChartDetailState {
-  const ChartDetailLoaded(this.measurements);
+  const ChartDetailLoaded({required this.measurements, this.activeGoal});
 
   final List<MeasurementModel> measurements;
+  final GoalEntity? activeGoal;
 }
 
 class ChartDetailFailure extends ChartDetailState {
