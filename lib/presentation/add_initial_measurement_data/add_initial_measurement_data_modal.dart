@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
+import 'package:watcha_body/domain/measurement/models/goal_entity.dart';
 import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
@@ -31,6 +32,7 @@ class _AddInitialMeasurementDataModalState
   late String _measurementUnit;
   DateTime? _selectedDate;
   DateTime? _goalDueDate;
+  GoalDirection _goalDirection = GoalDirection.increase;
 
   late final TextEditingController _measurementController;
   late final TextEditingController _dateController;
@@ -301,6 +303,8 @@ class _AddInitialMeasurementDataModalState
                                           _goalNoteController.clear();
                                           _goalDueDate = null;
                                           _goalDueDateController.clear();
+                                          _goalDirection =
+                                              GoalDirection.increase;
                                         }
                                       });
                                     },
@@ -351,6 +355,48 @@ class _AddInitialMeasurementDataModalState
                                       style: Theme.of(
                                         context,
                                       ).textTheme.bodyLarge,
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Goal Direction',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge,
+                                    ),
+                                    const Spacer(),
+                                    DropdownButton<GoalDirection>(
+                                      value: _goalDirection,
+                                      onChanged: (GoalDirection? newValue) {
+                                        if (newValue != null) {
+                                          setState(() {
+                                            _goalDirection = newValue;
+                                          });
+                                        }
+                                      },
+                                      items: [
+                                        DropdownMenuItem(
+                                          value: GoalDirection.increase,
+                                          child: Text(
+                                            'Increase',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyLarge,
+                                          ),
+                                        ),
+                                        DropdownMenuItem(
+                                          value: GoalDirection.decrease,
+                                          child: Text(
+                                            'Decrease',
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodyLarge,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -534,6 +580,7 @@ class _AddInitialMeasurementDataModalState
     await context.read<AddInitialMeasurementDataCubit>().insertDataWithGoal(
       measurement: measurement,
       targetValue: goalValue,
+      goalDirection: _goalDirection,
       dueDate: _goalDueDate,
       goalNote: _goalNoteController.text.trim().isEmpty
           ? null

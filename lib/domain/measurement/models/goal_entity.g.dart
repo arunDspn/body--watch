@@ -17,6 +17,9 @@ _GoalEntity _$GoalEntityFromJson(Map<String, dynamic> json) => _GoalEntity(
   status:
       $enumDecodeNullable(_$GoalStatusEnumMap, json['status']) ??
       GoalStatus.active,
+  direction:
+      $enumDecodeNullable(_$GoalDirectionEnumMap, json['direction']) ??
+      GoalDirection.increase,
   createdAt: json['created_at'] == null
       ? null
       : DateTime.parse(json['created_at'] as String),
@@ -35,6 +38,7 @@ Map<String, dynamic> _$GoalEntityToJson(_GoalEntity instance) =>
       'due_date': instance.dueDate?.toIso8601String(),
       'notes': instance.notes,
       'status': _$GoalStatusEnumMap[instance.status]!,
+      'direction': _$GoalDirectionEnumMap[instance.direction]!,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
       'user_id': instance.userId,
@@ -45,4 +49,9 @@ const _$GoalStatusEnumMap = {
   GoalStatus.active: 'active',
   GoalStatus.completed: 'completed',
   GoalStatus.cancelled: 'cancelled',
+};
+
+const _$GoalDirectionEnumMap = {
+  GoalDirection.increase: 'increase',
+  GoalDirection.decrease: 'decrease',
 };

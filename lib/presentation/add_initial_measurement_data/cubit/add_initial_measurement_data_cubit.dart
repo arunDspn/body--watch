@@ -41,6 +41,7 @@ class AddInitialMeasurementDataCubit
   Future<void> insertDataWithGoal({
     required MeasurementEntity measurement,
     required double targetValue,
+    required GoalDirection goalDirection,
     DateTime? dueDate,
     String? goalNote,
   }) async {
@@ -73,6 +74,7 @@ class AddInitialMeasurementDataCubit
       dueDate: dueDate,
       notes: goalNote,
       userId: measurement.userId,
+      direction: goalDirection,
     );
 
     final goalResult = await goalsRepository.createOrReplaceActiveGoal(

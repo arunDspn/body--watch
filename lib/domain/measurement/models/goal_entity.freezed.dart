@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GoalEntity {
 
-@JsonKey(name: 'target_id') int get targetId;@JsonKey(name: 'target_value') double get targetValue;@JsonKey(name: 'start_date') DateTime get startDate;@JsonKey(name: 'due_date') DateTime? get dueDate; String? get notes;@JsonKey(name: 'status') GoalStatus get status;@JsonKey(name: 'created_at') DateTime? get createdAt;@JsonKey(name: 'updated_at') DateTime? get updatedAt;@JsonKey(name: 'user_id') int get userId; int? get id;
+@JsonKey(name: 'target_id') int get targetId;@JsonKey(name: 'target_value') double get targetValue;@JsonKey(name: 'start_date') DateTime get startDate;@JsonKey(name: 'due_date') DateTime? get dueDate; String? get notes;@JsonKey(name: 'status') GoalStatus get status;@JsonKey(name: 'direction') GoalDirection get direction;@JsonKey(name: 'created_at') DateTime? get createdAt;@JsonKey(name: 'updated_at') DateTime? get updatedAt;@JsonKey(name: 'user_id') int get userId; int? get id;
 /// Create a copy of GoalEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $GoalEntityCopyWith<GoalEntity> get copyWith => _$GoalEntityCopyWithImpl<GoalEnt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoalEntity&&(identical(other.targetId, targetId) || other.targetId == targetId)&&(identical(other.targetValue, targetValue) || other.targetValue == targetValue)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.id, id) || other.id == id));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoalEntity&&(identical(other.targetId, targetId) || other.targetId == targetId)&&(identical(other.targetValue, targetValue) || other.targetValue == targetValue)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.status, status) || other.status == status)&&(identical(other.direction, direction) || other.direction == direction)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.id, id) || other.id == id));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,targetId,targetValue,startDate,dueDate,notes,status,createdAt,updatedAt,userId,id);
+int get hashCode => Object.hash(runtimeType,targetId,targetValue,startDate,dueDate,notes,status,direction,createdAt,updatedAt,userId,id);
 
 @override
 String toString() {
-  return 'GoalEntity(targetId: $targetId, targetValue: $targetValue, startDate: $startDate, dueDate: $dueDate, notes: $notes, status: $status, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, id: $id)';
+  return 'GoalEntity(targetId: $targetId, targetValue: $targetValue, startDate: $startDate, dueDate: $dueDate, notes: $notes, status: $status, direction: $direction, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, id: $id)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $GoalEntityCopyWith<$Res>  {
   factory $GoalEntityCopyWith(GoalEntity value, $Res Function(GoalEntity) _then) = _$GoalEntityCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'target_id') int targetId,@JsonKey(name: 'target_value') double targetValue,@JsonKey(name: 'start_date') DateTime startDate,@JsonKey(name: 'due_date') DateTime? dueDate, String? notes,@JsonKey(name: 'status') GoalStatus status,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt,@JsonKey(name: 'user_id') int userId, int? id
+@JsonKey(name: 'target_id') int targetId,@JsonKey(name: 'target_value') double targetValue,@JsonKey(name: 'start_date') DateTime startDate,@JsonKey(name: 'due_date') DateTime? dueDate, String? notes,@JsonKey(name: 'status') GoalStatus status,@JsonKey(name: 'direction') GoalDirection direction,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt,@JsonKey(name: 'user_id') int userId, int? id
 });
 
 
@@ -65,7 +65,7 @@ class _$GoalEntityCopyWithImpl<$Res>
 
 /// Create a copy of GoalEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? targetId = null,Object? targetValue = null,Object? startDate = null,Object? dueDate = freezed,Object? notes = freezed,Object? status = null,Object? createdAt = freezed,Object? updatedAt = freezed,Object? userId = null,Object? id = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? targetId = null,Object? targetValue = null,Object? startDate = null,Object? dueDate = freezed,Object? notes = freezed,Object? status = null,Object? direction = null,Object? createdAt = freezed,Object? updatedAt = freezed,Object? userId = null,Object? id = freezed,}) {
   return _then(_self.copyWith(
 targetId: null == targetId ? _self.targetId : targetId // ignore: cast_nullable_to_non_nullable
 as int,targetValue: null == targetValue ? _self.targetValue : targetValue // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,8 @@ as double,startDate: null == startDate ? _self.startDate : startDate // ignore: 
 as DateTime,dueDate: freezed == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as GoalStatus,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as GoalStatus,direction: null == direction ? _self.direction : direction // ignore: cast_nullable_to_non_nullable
+as GoalDirection,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as int,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
@@ -162,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'target_id')  int targetId, @JsonKey(name: 'target_value')  double targetValue, @JsonKey(name: 'start_date')  DateTime startDate, @JsonKey(name: 'due_date')  DateTime? dueDate,  String? notes, @JsonKey(name: 'status')  GoalStatus status, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt, @JsonKey(name: 'user_id')  int userId,  int? id)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'target_id')  int targetId, @JsonKey(name: 'target_value')  double targetValue, @JsonKey(name: 'start_date')  DateTime startDate, @JsonKey(name: 'due_date')  DateTime? dueDate,  String? notes, @JsonKey(name: 'status')  GoalStatus status, @JsonKey(name: 'direction')  GoalDirection direction, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt, @JsonKey(name: 'user_id')  int userId,  int? id)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GoalEntity() when $default != null:
-return $default(_that.targetId,_that.targetValue,_that.startDate,_that.dueDate,_that.notes,_that.status,_that.createdAt,_that.updatedAt,_that.userId,_that.id);case _:
+return $default(_that.targetId,_that.targetValue,_that.startDate,_that.dueDate,_that.notes,_that.status,_that.direction,_that.createdAt,_that.updatedAt,_that.userId,_that.id);case _:
   return orElse();
 
 }
@@ -183,10 +184,10 @@ return $default(_that.targetId,_that.targetValue,_that.startDate,_that.dueDate,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'target_id')  int targetId, @JsonKey(name: 'target_value')  double targetValue, @JsonKey(name: 'start_date')  DateTime startDate, @JsonKey(name: 'due_date')  DateTime? dueDate,  String? notes, @JsonKey(name: 'status')  GoalStatus status, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt, @JsonKey(name: 'user_id')  int userId,  int? id)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'target_id')  int targetId, @JsonKey(name: 'target_value')  double targetValue, @JsonKey(name: 'start_date')  DateTime startDate, @JsonKey(name: 'due_date')  DateTime? dueDate,  String? notes, @JsonKey(name: 'status')  GoalStatus status, @JsonKey(name: 'direction')  GoalDirection direction, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt, @JsonKey(name: 'user_id')  int userId,  int? id)  $default,) {final _that = this;
 switch (_that) {
 case _GoalEntity():
-return $default(_that.targetId,_that.targetValue,_that.startDate,_that.dueDate,_that.notes,_that.status,_that.createdAt,_that.updatedAt,_that.userId,_that.id);case _:
+return $default(_that.targetId,_that.targetValue,_that.startDate,_that.dueDate,_that.notes,_that.status,_that.direction,_that.createdAt,_that.updatedAt,_that.userId,_that.id);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +204,10 @@ return $default(_that.targetId,_that.targetValue,_that.startDate,_that.dueDate,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'target_id')  int targetId, @JsonKey(name: 'target_value')  double targetValue, @JsonKey(name: 'start_date')  DateTime startDate, @JsonKey(name: 'due_date')  DateTime? dueDate,  String? notes, @JsonKey(name: 'status')  GoalStatus status, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt, @JsonKey(name: 'user_id')  int userId,  int? id)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'target_id')  int targetId, @JsonKey(name: 'target_value')  double targetValue, @JsonKey(name: 'start_date')  DateTime startDate, @JsonKey(name: 'due_date')  DateTime? dueDate,  String? notes, @JsonKey(name: 'status')  GoalStatus status, @JsonKey(name: 'direction')  GoalDirection direction, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt, @JsonKey(name: 'user_id')  int userId,  int? id)?  $default,) {final _that = this;
 switch (_that) {
 case _GoalEntity() when $default != null:
-return $default(_that.targetId,_that.targetValue,_that.startDate,_that.dueDate,_that.notes,_that.status,_that.createdAt,_that.updatedAt,_that.userId,_that.id);case _:
+return $default(_that.targetId,_that.targetValue,_that.startDate,_that.dueDate,_that.notes,_that.status,_that.direction,_that.createdAt,_that.updatedAt,_that.userId,_that.id);case _:
   return null;
 
 }
@@ -218,7 +219,7 @@ return $default(_that.targetId,_that.targetValue,_that.startDate,_that.dueDate,_
 @JsonSerializable()
 
 class _GoalEntity implements GoalEntity {
-  const _GoalEntity({@JsonKey(name: 'target_id') required this.targetId, @JsonKey(name: 'target_value') required this.targetValue, @JsonKey(name: 'start_date') required this.startDate, @JsonKey(name: 'due_date') this.dueDate, this.notes, @JsonKey(name: 'status') this.status = GoalStatus.active, @JsonKey(name: 'created_at') this.createdAt = null, @JsonKey(name: 'updated_at') this.updatedAt = null, @JsonKey(name: 'user_id') required this.userId, this.id});
+  const _GoalEntity({@JsonKey(name: 'target_id') required this.targetId, @JsonKey(name: 'target_value') required this.targetValue, @JsonKey(name: 'start_date') required this.startDate, @JsonKey(name: 'due_date') this.dueDate, this.notes, @JsonKey(name: 'status') this.status = GoalStatus.active, @JsonKey(name: 'direction') this.direction = GoalDirection.increase, @JsonKey(name: 'created_at') this.createdAt = null, @JsonKey(name: 'updated_at') this.updatedAt = null, @JsonKey(name: 'user_id') required this.userId, this.id});
   factory _GoalEntity.fromJson(Map<String, dynamic> json) => _$GoalEntityFromJson(json);
 
 @override@JsonKey(name: 'target_id') final  int targetId;
@@ -227,6 +228,7 @@ class _GoalEntity implements GoalEntity {
 @override@JsonKey(name: 'due_date') final  DateTime? dueDate;
 @override final  String? notes;
 @override@JsonKey(name: 'status') final  GoalStatus status;
+@override@JsonKey(name: 'direction') final  GoalDirection direction;
 @override@JsonKey(name: 'created_at') final  DateTime? createdAt;
 @override@JsonKey(name: 'updated_at') final  DateTime? updatedAt;
 @override@JsonKey(name: 'user_id') final  int userId;
@@ -245,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GoalEntity&&(identical(other.targetId, targetId) || other.targetId == targetId)&&(identical(other.targetValue, targetValue) || other.targetValue == targetValue)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.id, id) || other.id == id));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GoalEntity&&(identical(other.targetId, targetId) || other.targetId == targetId)&&(identical(other.targetValue, targetValue) || other.targetValue == targetValue)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.status, status) || other.status == status)&&(identical(other.direction, direction) || other.direction == direction)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.id, id) || other.id == id));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,targetId,targetValue,startDate,dueDate,notes,status,createdAt,updatedAt,userId,id);
+int get hashCode => Object.hash(runtimeType,targetId,targetValue,startDate,dueDate,notes,status,direction,createdAt,updatedAt,userId,id);
 
 @override
 String toString() {
-  return 'GoalEntity(targetId: $targetId, targetValue: $targetValue, startDate: $startDate, dueDate: $dueDate, notes: $notes, status: $status, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, id: $id)';
+  return 'GoalEntity(targetId: $targetId, targetValue: $targetValue, startDate: $startDate, dueDate: $dueDate, notes: $notes, status: $status, direction: $direction, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, id: $id)';
 }
 
 
@@ -265,7 +267,7 @@ abstract mixin class _$GoalEntityCopyWith<$Res> implements $GoalEntityCopyWith<$
   factory _$GoalEntityCopyWith(_GoalEntity value, $Res Function(_GoalEntity) _then) = __$GoalEntityCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'target_id') int targetId,@JsonKey(name: 'target_value') double targetValue,@JsonKey(name: 'start_date') DateTime startDate,@JsonKey(name: 'due_date') DateTime? dueDate, String? notes,@JsonKey(name: 'status') GoalStatus status,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt,@JsonKey(name: 'user_id') int userId, int? id
+@JsonKey(name: 'target_id') int targetId,@JsonKey(name: 'target_value') double targetValue,@JsonKey(name: 'start_date') DateTime startDate,@JsonKey(name: 'due_date') DateTime? dueDate, String? notes,@JsonKey(name: 'status') GoalStatus status,@JsonKey(name: 'direction') GoalDirection direction,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt,@JsonKey(name: 'user_id') int userId, int? id
 });
 
 
@@ -282,7 +284,7 @@ class __$GoalEntityCopyWithImpl<$Res>
 
 /// Create a copy of GoalEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? targetId = null,Object? targetValue = null,Object? startDate = null,Object? dueDate = freezed,Object? notes = freezed,Object? status = null,Object? createdAt = freezed,Object? updatedAt = freezed,Object? userId = null,Object? id = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? targetId = null,Object? targetValue = null,Object? startDate = null,Object? dueDate = freezed,Object? notes = freezed,Object? status = null,Object? direction = null,Object? createdAt = freezed,Object? updatedAt = freezed,Object? userId = null,Object? id = freezed,}) {
   return _then(_GoalEntity(
 targetId: null == targetId ? _self.targetId : targetId // ignore: cast_nullable_to_non_nullable
 as int,targetValue: null == targetValue ? _self.targetValue : targetValue // ignore: cast_nullable_to_non_nullable
@@ -290,7 +292,8 @@ as double,startDate: null == startDate ? _self.startDate : startDate // ignore: 
 as DateTime,dueDate: freezed == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
-as GoalStatus,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as GoalStatus,direction: null == direction ? _self.direction : direction // ignore: cast_nullable_to_non_nullable
+as GoalDirection,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as int,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable

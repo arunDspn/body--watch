@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:watcha_body/domain/measurement/models/goal_entity.dart';
 import 'package:watcha_body/data/services/database_service.dart';
 import 'package:watcha_body/domain/measurement/i_measurements.dart';
 import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
@@ -46,11 +47,17 @@ class MeasurementRepository extends IMeasurementsFacade {
   }) async {
     try {
       final db = await databaseService.database;
-      await db.insert(
-        DatabaseService.measurementsDataTable,
-        measurement.toJson()..remove('id'),
-        conflictAlgorithm: ConflictAlgorithm.abort,
-      );
+      await db.transaction((txn) async {
+        await txn.insert(
+          DatabaseService.measurementsDataTable,
+          measurement.toJson()..remove('id'),
+          conflictAlgorithm: ConflictAlgorithm.abort,
+        );
+        await _completeGoalIfMeasurementMatchesTarget(
+          dbExecutor: txn,
+          measurement: measurement,
+        );
+      });
       return const Right(unit);
     } catch (e) {
       return Left(e.toString());
@@ -164,15 +171,85 @@ class MeasurementRepository extends IMeasurementsFacade {
   Future<Either<String, Unit>> updateMeasurement({
     required MeasurementEntity measurement,
   }) async {
-    // try {
-    //   await databaseService.update(
-    //     map: measurement.toMap(),
-    //   );
-    //   return const Right(unit);
-    // } catch (e) {
-    //   return Left(e.toString());
-    // }
-    throw UnimplementedError();
+    if (measurement.id == null) {
+      return const Left('Measurement id is required for update');
+    }
+
+    try {
+      final db = await databaseService.database;
+      final now = DateTime.now().toIso8601String();
+      var updatedRows = 0;
+
+      await db.transaction((txn) async {
+        updatedRows = await txn.update(
+          DatabaseService.measurementsDataTable,
+          {
+            'value': measurement.value,
+            'date': measurement.date.toIso8601String(),
+            'target_id': measurement.targetId,
+            'notes': measurement.notes,
+            'updated_at': now,
+          },
+          where: 'id = ? AND user_id = ?',
+          whereArgs: [measurement.id, measurement.userId],
+          conflictAlgorithm: ConflictAlgorithm.abort,
+        );
+
+        if (updatedRows > 0) {
+          await _completeGoalIfMeasurementMatchesTarget(
+            dbExecutor: txn,
+            measurement: measurement,
+          );
+        }
+      });
+
+      if (updatedRows == 0) {
+        return Left('No measurement found for id ${measurement.id}');
+      }
+
+      return const Right(unit);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<void> _completeGoalIfMeasurementMatchesTarget({
+    required DatabaseExecutor dbExecutor,
+    required MeasurementEntity measurement,
+  }) async {
+    // Fetch active goal for this user and target to check direction
+    final activeGoal = await dbExecutor.query(
+      DatabaseService.measurementGoalsTable,
+      where: 'user_id = ? AND target_id = ? AND status = ?',
+      whereArgs: [
+        measurement.userId,
+        measurement.targetId,
+        GoalStatus.active.name,
+      ],
+    );
+
+    if (activeGoal.isEmpty) {
+      return;
+    }
+
+    final goal = activeGoal.first;
+    final targetValue = (goal['target_value'] as num).toDouble();
+    final direction = goal['direction'] as String;
+    final isAchieved = direction == GoalDirection.increase.name
+        ? measurement.value >= targetValue
+        : measurement.value <= targetValue;
+
+    if (isAchieved) {
+      await dbExecutor.update(
+        DatabaseService.measurementGoalsTable,
+        {
+          'status': GoalStatus.completed.name,
+          'updated_at': DateTime.now().toIso8601String(),
+        },
+        where: 'id = ?',
+        whereArgs: [goal['id']],
+      );
+    }
   }
 
   @override

@@ -23,6 +23,13 @@ enum GoalStatus {
   cancelled,
 }
 
+enum GoalDirection {
+  @JsonValue('increase')
+  increase,
+  @JsonValue('decrease')
+  decrease,
+}
+
 @freezed
 abstract class GoalEntity with _$GoalEntity {
   const factory GoalEntity({
@@ -32,6 +39,9 @@ abstract class GoalEntity with _$GoalEntity {
     @JsonKey(name: 'due_date') DateTime? dueDate,
     String? notes,
     @JsonKey(name: 'status') @Default(GoalStatus.active) GoalStatus status,
+    @JsonKey(name: 'direction')
+    @Default(GoalDirection.increase)
+    GoalDirection direction,
     @JsonKey(name: 'created_at') @Default(null) DateTime? createdAt,
     @JsonKey(name: 'updated_at') @Default(null) DateTime? updatedAt,
     @JsonKey(name: 'user_id') required int userId,

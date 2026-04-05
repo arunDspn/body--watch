@@ -92,7 +92,8 @@ class DatabaseService {
   /// length: cm, inch
 
   /// Create metrics table - stores base metrics with their standard unit
-  static const String _createMetricsTable = '''
+  static const String _createMetricsTable =
+      '''
     CREATE TABLE $metricsTable (
       "id" INTEGER,
       "code" TEXT NOT NULL UNIQUE,
@@ -103,7 +104,8 @@ class DatabaseService {
   ''';
 
   /// Create metric units table - stores unit conversions
-  static const String _createMetricUnitsTable = '''
+  static const String _createMetricUnitsTable =
+      '''
     CREATE TABLE $metricUnitsTable (
       "metric_id" INTEGER NOT NULL,
       "unit" TEXT NOT NULL,
@@ -114,7 +116,8 @@ class DatabaseService {
   ''';
 
   /// Insert base metrics
-  static const String _insertMetrics = '''
+  static const String _insertMetrics =
+      '''
     INSERT INTO $metricsTable (code, name, base_unit)
     VALUES
       ('weight', 'Weight', 'kg'),
@@ -125,7 +128,8 @@ class DatabaseService {
   ''';
 
   /// Insert unit conversions
-  static const String _insertMetricUnits = '''
+  static const String _insertMetricUnits =
+      '''
     INSERT INTO $metricUnitsTable (metric_id, unit, to_base_factor)
     SELECT id, base_unit, 1.0 FROM $metricsTable
     UNION ALL
@@ -138,7 +142,8 @@ class DatabaseService {
 
   /// Create Measurement Targets Table
   /// This table stores all measurable items (muscles and body metrics)
-  static const String _createMeasurementTargetsTable = '''
+  static const String _createMeasurementTargetsTable =
+      '''
     CREATE TABLE $measurementTargetsTable (
       "id" INTEGER,
       "name" TEXT NOT NULL UNIQUE,
@@ -152,7 +157,8 @@ class DatabaseService {
 
   /// Create Users Table
   /// This table stores user information
-  static const String _createUsersTable = '''
+  static const String _createUsersTable =
+      '''
     CREATE TABLE $userTable (
       "id" INTEGER,
       "name" TEXT NOT NULL,
@@ -164,7 +170,8 @@ class DatabaseService {
 
   /// Create User Unit Preferences Table
   /// This table stores user preferred units for each metric
-  static const String _createUserUnitPreferencesTable = '''
+  static const String _createUserUnitPreferencesTable =
+      '''
     CREATE TABLE $userUnitPreferencesTable (
       "user_id" INTEGER NOT NULL,
       "metric_code" TEXT NOT NULL,  -- 'weight', 'length', 'height'
@@ -176,7 +183,8 @@ class DatabaseService {
 
   /// Create User Settings Table
   /// This table stores user settings like language, theme, notifications
-  static const String _createUserSettingsTable = '''
+  static const String _createUserSettingsTable =
+      '''
     CREATE TABLE $userSettingsTable (
       "user_id" INTEGER NOT NULL,
       "setting_key" TEXT NOT NULL,  -- 'language', 'theme', 'notifications'
@@ -187,7 +195,8 @@ class DatabaseService {
   ''';
 
   /// Add data to Measurement Targets Table
-  static const String _insertMeasurementTargets = '''
+  static const String _insertMeasurementTargets =
+      '''
     -- Body measurements
     INSERT INTO $measurementTargetsTable (name, code, type, category, display_order)
     VALUES
@@ -223,7 +232,8 @@ class DatabaseService {
 
   /// Create Target Metrics Table
   /// This table links measurement targets with their supported metrics
-  static const String _createTargetMetricsTable = '''
+  static const String _createTargetMetricsTable =
+      '''
     CREATE TABLE $targetMetricsTable (
       "target_id" INTEGER NOT NULL,
       "metric_id" INTEGER NOT NULL,
@@ -234,7 +244,8 @@ class DatabaseService {
   ''';
 
   /// Link targets with their supported metrics
-  static const String _insertTargetMetrics = '''
+  static const String _insertTargetMetrics =
+      '''
     -- Link body measurements with their specific metrics
     INSERT INTO $targetMetricsTable (target_id, metric_id)
     SELECT t.id, m.id
@@ -249,7 +260,8 @@ class DatabaseService {
   ''';
 
   /// Create measurements table - stores user measurements
-  static const String _createMeasurementTable = '''
+  static const String _createMeasurementTable =
+      '''
     CREATE TABLE $measurementsDataTable (
       "id"	INTEGER,
       "user_id" INTEGER NOT NULL,
@@ -266,7 +278,8 @@ class DatabaseService {
   ''';
 
   /// Create measurement goals table - stores target goals separately
-  static const String _createMeasurementGoalsTable = '''
+  static const String _createMeasurementGoalsTable =
+      '''
     CREATE TABLE $measurementGoalsTable (
       "id" INTEGER,
       "user_id" INTEGER NOT NULL,
@@ -275,6 +288,7 @@ class DatabaseService {
       "start_date" TEXT NOT NULL,
       "due_date" TEXT,
       "status" TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active', 'completed', 'cancelled')),
+      "direction" TEXT NOT NULL DEFAULT 'increase' CHECK(direction IN ('increase', 'decrease')),
       "notes" TEXT DEFAULT NULL,
       "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -285,13 +299,15 @@ class DatabaseService {
   ''';
 
   /// Enforce one active goal per user and measurement target
-  static const String _createActiveGoalUniqueIndex = '''
+  static const String _createActiveGoalUniqueIndex =
+      '''
     CREATE UNIQUE INDEX IF NOT EXISTS idx_measurement_goals_active_unique
     ON $measurementGoalsTable ("user_id", "target_id")
     WHERE status = 'active'
   ''';
 
-  static const String _createTagTable = '''
+  static const String _createTagTable =
+      '''
     CREATE TABLE IF NOT EXISTS $tagsTable (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       tag TEXT NOT NULL UNIQUE
@@ -301,7 +317,8 @@ class DatabaseService {
   // insert pre defined tags to table above
   // chest, back, legs, arms, shoulders, abs, neck, waist, hips, calves, thighs,
   // butt, feet, face,
-  static const String _insertTagsQuery = '''
+  static const String _insertTagsQuery =
+      '''
     INSERT OR IGNORE INTO $tagsTable (tag)
     VALUES
       ('double chin'),
@@ -314,7 +331,8 @@ class DatabaseService {
   ''';
 
   // Pictures Table
-  static const _createPictureTable = '''
+  static const _createPictureTable =
+      '''
     CREATE TABLE IF NOT EXISTS $picturesTable (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id INTEGER NOT NULL,
@@ -329,7 +347,8 @@ class DatabaseService {
   ''';
 
   // Picture Targets Junction Table (many-to-many relationship)
-  static const String _createPictureTargetsTable = '''
+  static const String _createPictureTargetsTable =
+      '''
     CREATE TABLE IF NOT EXISTS $pictureTargetsTable (
       picture_id INTEGER NOT NULL,
       target_id INTEGER NOT NULL,
@@ -351,10 +370,7 @@ class DatabaseService {
 
   Future<Database> _initDatabase() async {
     final database = await openDatabase(
-      join(
-        await getDatabasesPath(),
-        _databaseName,
-      ),
+      join(await getDatabasesPath(), _databaseName),
       version: _databaseVersion,
       onCreate: _onCreateDB,
       onUpgrade: (db, oldVersion, newVersion) {
@@ -398,136 +414,136 @@ class DatabaseService {
     await db.execute(_insertTagsQuery);
   }
 
-//   Future<void> insert({
-//     required Map<String, dynamic> map,
-//   }) async {
-//     try {
-//       final _db = await database;
-//       await _db.insert(tableName, map);
-//     } catch (e) {
-//       return Future.error(e);
-//     }
-//   }
+  //   Future<void> insert({
+  //     required Map<String, dynamic> map,
+  //   }) async {
+  //     try {
+  //       final _db = await database;
+  //       await _db.insert(tableName, map);
+  //     } catch (e) {
+  //       return Future.error(e);
+  //     }
+  //   }
 
-//   Future<void> update({
-//     required Map<String, dynamic> map,
-//   }) async {
-//     try {
-//       final _db = await database;
-//       await _db.update(
-//         tableName,
-//         map,
-//         where: 'id = ?',
-//         whereArgs: [map['id']],
-//       );
-//     } catch (e) {
-//       return Future.error(e);
-//     }
-//   }
+  //   Future<void> update({
+  //     required Map<String, dynamic> map,
+  //   }) async {
+  //     try {
+  //       final _db = await database;
+  //       await _db.update(
+  //         tableName,
+  //         map,
+  //         where: 'id = ?',
+  //         whereArgs: [map['id']],
+  //       );
+  //     } catch (e) {
+  //       return Future.error(e);
+  //     }
+  //   }
 
-//   Future<void> delete({
-//     String? id,
-//   }) async {
-//     try {
-//       final _db = await database;
-//       if (id != null) {
-//         await _db.delete(
-//           tableName,
-//           where: 'id = ?',
-//           whereArgs: [id],
-//         );
-//       } else {
-//         await _db.delete(tableName);
-//       }
-//     } catch (e) {
-//       return Future.error(e);
-//     }
-//   }
+  //   Future<void> delete({
+  //     String? id,
+  //   }) async {
+  //     try {
+  //       final _db = await database;
+  //       if (id != null) {
+  //         await _db.delete(
+  //           tableName,
+  //           where: 'id = ?',
+  //           whereArgs: [id],
+  //         );
+  //       } else {
+  //         await _db.delete(tableName);
+  //       }
+  //     } catch (e) {
+  //       return Future.error(e);
+  //     }
+  //   }
 
-//   Future<List<Map<String, dynamic>>> getData({
-//     DateTime? startDate,
-//     DateTime? endDate,
-//     String? type,
-//   }) async {
-//     try {
-//       final _db = await database;
-//       late List<Map<String, Object?>> _data;
-//       if (startDate != null && endDate != null && type != null) {
-//         _data = await _db.query(
-//           tableName,
-//           where: 'date BETWEEN ? AND ? AND type = ?',
-//           whereArgs: [
-//             startDate.toIso8601String(),
-//             endDate.toIso8601String(),
-//             type,
-//           ],
-//           orderBy: 'date DESC',
-//         );
-//         print("object");
-//       } else if (startDate != null && endDate != null && type == null) {
-//         // _data = await _db.query(
-//         //   tableName,
-//         //   where: 'date BETWEEN ? AND ?',
-//         //   whereArgs: [
-//         //     startDate.toIso8601String(),
-//         //     endDate.toIso8601String(),
-//         //   ],
-//         //   orderBy: 'date DESC',
-//         // );
-//         _data = await _db.query(
-//           tableName,
-//           where: '"date" BETWEEN ? AND ?',
-//           whereArgs: [
-//             endDate.toIso8601String(),
-//             startDate.toIso8601String(),
-//           ],
-//           orderBy: 'date DESC',
-//         );
-//         print("object");
-//       } else if (type != null) {
-//         _data = await _db.query(
-//           tableName,
-//           where: 'type = ?',
-//           whereArgs: [type],
-//           // orderBy: 'date DESC',
-//           orderBy: 'date DESC',
-//         );
-//       } else {
-//         _data = await _db.query(
-//           tableName,
-//           orderBy: 'date DESC',
-//         );
-//       }
+  //   Future<List<Map<String, dynamic>>> getData({
+  //     DateTime? startDate,
+  //     DateTime? endDate,
+  //     String? type,
+  //   }) async {
+  //     try {
+  //       final _db = await database;
+  //       late List<Map<String, Object?>> _data;
+  //       if (startDate != null && endDate != null && type != null) {
+  //         _data = await _db.query(
+  //           tableName,
+  //           where: 'date BETWEEN ? AND ? AND type = ?',
+  //           whereArgs: [
+  //             startDate.toIso8601String(),
+  //             endDate.toIso8601String(),
+  //             type,
+  //           ],
+  //           orderBy: 'date DESC',
+  //         );
+  //         print("object");
+  //       } else if (startDate != null && endDate != null && type == null) {
+  //         // _data = await _db.query(
+  //         //   tableName,
+  //         //   where: 'date BETWEEN ? AND ?',
+  //         //   whereArgs: [
+  //         //     startDate.toIso8601String(),
+  //         //     endDate.toIso8601String(),
+  //         //   ],
+  //         //   orderBy: 'date DESC',
+  //         // );
+  //         _data = await _db.query(
+  //           tableName,
+  //           where: '"date" BETWEEN ? AND ?',
+  //           whereArgs: [
+  //             endDate.toIso8601String(),
+  //             startDate.toIso8601String(),
+  //           ],
+  //           orderBy: 'date DESC',
+  //         );
+  //         print("object");
+  //       } else if (type != null) {
+  //         _data = await _db.query(
+  //           tableName,
+  //           where: 'type = ?',
+  //           whereArgs: [type],
+  //           // orderBy: 'date DESC',
+  //           orderBy: 'date DESC',
+  //         );
+  //       } else {
+  //         _data = await _db.query(
+  //           tableName,
+  //           orderBy: 'date DESC',
+  //         );
+  //       }
 
-//       return _data;
-//     } catch (e) {
-//       return Future.error(e);
-//     }
-//   }
+  //       return _data;
+  //     } catch (e) {
+  //       return Future.error(e);
+  //     }
+  //   }
 
-//   Future<void> createTable({
-//     required String query,
-//   }) async {
-//     try {
-//       final _db = await database;
-//       await _db.execute(query);
-//     } catch (e) {
-//       return Future.error(e);
-//     }
-//   }
+  //   Future<void> createTable({
+  //     required String query,
+  //   }) async {
+  //     try {
+  //       final _db = await database;
+  //       await _db.execute(query);
+  //     } catch (e) {
+  //       return Future.error(e);
+  //     }
+  //   }
 
-//   Future<void> restoreData({required dynamic datas}) async {
-//     try {
-//       final _db = await database;
-//       final _batch = _db.batch();
-//       for (final data in datas) {
-//         _batch.insert(tableName, data as Map<String, Object?>);
-//       }
-//       await _batch.commit();
-//     } catch (e) {
-//       return Future.error(e);
-//     }
-//   }
+  //   Future<void> restoreData({required dynamic datas}) async {
+  //     try {
+  //       final _db = await database;
+  //       final _batch = _db.batch();
+  //       for (final data in datas) {
+  //         _batch.insert(tableName, data as Map<String, Object?>);
+  //       }
+  //       await _batch.commit();
+  //     } catch (e) {
+  //       return Future.error(e);
+  //     }
+  //   }
 }
 
 /**
