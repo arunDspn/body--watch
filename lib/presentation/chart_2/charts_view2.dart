@@ -163,246 +163,59 @@ class _ChartsView2State extends State<ChartsView2> {
       return;
     }
 
-    final targetController = TextEditingController(
-      text: activeGoal == null
-          ? ''
-          : _displayGoalTarget(activeGoal).toStringAsFixed(1),
-    );
-    final noteController = TextEditingController(text: activeGoal?.notes ?? '');
-
-    var direction = activeGoal?.direction ?? GoalDirection.increase;
-    DateTime? dueDate = activeGoal?.dueDate;
-    String? inputError;
-    bool isSaving = false;
-
-    await showModalBottomSheet<void>(
+    final formData = await showModalBottomSheet<_GoalEditorFormData>(
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
+      useRootNavigator: true,
       builder: (sheetContext) {
-        return StatefulBuilder(
-          builder: (modalContext, setModalState) {
-            return SafeArea(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  16,
-                  12,
-                  16,
-                  16 + MediaQuery.of(sheetContext).viewInsets.bottom,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      activeGoal == null ? 'Set New Goal' : 'Edit Goal',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    TextField(
-                      controller: targetController,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      decoration: InputDecoration(
-                        labelText: 'Target Value (${config.unit})',
-                        errorText: inputError,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    DropdownButtonFormField<GoalDirection>(
-                      value: direction,
-                      items: const [
-                        DropdownMenuItem(
-                          value: GoalDirection.increase,
-                          child: Text('Increase'),
-                        ),
-                        DropdownMenuItem(
-                          value: GoalDirection.decrease,
-                          child: Text('Decrease'),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        if (value == null) return;
-                        setModalState(() => direction = value);
-                      },
-                      decoration: const InputDecoration(labelText: 'Direction'),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(8),
-                            onTap: () async {
-                              final now = DateTime.now();
-                              final picked = await showDatePicker(
-                                context: sheetContext,
-                                firstDate: now,
-                                initialDate: dueDate ?? now,
-                                lastDate: DateTime(now.year + 10),
-                              );
-                              if (picked == null) return;
-                              setModalState(() {
-                                dueDate = DateTime(
-                                  picked.year,
-                                  picked.month,
-                                  picked.day,
-                                );
-                              });
-                            },
-                            child: InputDecorator(
-                              decoration: const InputDecoration(
-                                labelText: 'Due Date (Optional)',
-                              ),
-                              child: Text(
-                                dueDate == null
-                                    ? 'Optional'
-                                    : _dateFormatter.format(dueDate!),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        IconButton(
-                          onPressed: () async {
-                            if (dueDate == null) {
-                              final now = DateTime.now();
-                              final picked = await showDatePicker(
-                                context: sheetContext,
-                                firstDate: now,
-                                initialDate: now,
-                                lastDate: DateTime(now.year + 10),
-                              );
-                              if (picked == null) return;
-                              setModalState(() {
-                                dueDate = DateTime(
-                                  picked.year,
-                                  picked.month,
-                                  picked.day,
-                                );
-                              });
-                              return;
-                            }
-
-                            setModalState(() {
-                              dueDate = null;
-                            });
-                          },
-                          icon: Icon(
-                            dueDate == null
-                                ? Icons.event_rounded
-                                : Icons.close_rounded,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: noteController,
-                      maxLines: 2,
-                      decoration: const InputDecoration(
-                        labelText: 'Goal Note (Optional)',
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton.icon(
-                        onPressed: isSaving
-                            ? null
-                            : () async {
-                                final parsedTarget = double.tryParse(
-                                  targetController.text.trim().replaceAll(
-                                    ',',
-                                    '.',
-                                  ),
-                                );
-                                if (parsedTarget == null || parsedTarget <= 0) {
-                                  setModalState(() {
-                                    inputError =
-                                        'Enter a valid positive number';
-                                  });
-                                  return;
-                                }
-
-                                setModalState(() {
-                                  inputError = null;
-                                  isSaving = true;
-                                });
-
-                                final goal = GoalEntity(
-                                  id: activeGoal?.id,
-                                  targetId: widget.targetId!,
-                                  targetValue: _storageGoalTarget(parsedTarget),
-                                  startDate: DateTime.now(),
-                                  dueDate: dueDate,
-                                  notes: noteController.text.trim().isEmpty
-                                      ? null
-                                      : noteController.text.trim(),
-                                  userId: widget.userId,
-                                  direction: direction,
-                                );
-
-                                final error = await _chartDetailCubit!
-                                    .createOrReplaceGoal(goal: goal);
-
-                                if (!mounted) return;
-
-                                if (error != null) {
-                                  setModalState(() => isSaving = false);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Failed to save goal: $error',
-                                      ),
-                                    ),
-                                  );
-                                  return;
-                                }
-
-                                await _chartDetailCubit!.load(
-                                  targetId: widget.targetId!,
-                                  userId: widget.userId,
-                                );
-
-                                if (!mounted) return;
-                                Navigator.of(sheetContext).pop();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      activeGoal == null
-                                          ? 'Goal created'
-                                          : 'Goal updated',
-                                    ),
-                                  ),
-                                );
-                              },
-                        icon: isSaving
-                            ? const SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Icon(Icons.check_rounded),
-                        label: Text(isSaving ? 'Saving...' : 'Save Goal'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
+        return _GoalEditorSheet(
+          config: config,
+          initialTargetValue: activeGoal == null
+              ? null
+              : _displayGoalTarget(activeGoal),
+          initialDirection: activeGoal?.direction ?? GoalDirection.increase,
+          initialDueDate: activeGoal?.dueDate,
+          initialNote: activeGoal?.notes,
         );
       },
     );
 
-    targetController.dispose();
-    noteController.dispose();
+    if (formData != null && mounted) {
+      final goal = GoalEntity(
+        id: activeGoal?.id,
+        targetId: widget.targetId!,
+        targetValue: _storageGoalTarget(formData.targetValue),
+        startDate: DateTime.now(),
+        dueDate: formData.dueDate,
+        notes: formData.note,
+        userId: widget.userId,
+        direction: formData.direction,
+      );
+
+      final error = await _chartDetailCubit!.createOrReplaceGoal(goal: goal);
+
+      if (!mounted) return;
+
+      if (error != null) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to save goal: $error')));
+        return;
+      }
+
+      await _chartDetailCubit!.load(
+        targetId: widget.targetId!,
+        userId: widget.userId,
+      );
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(activeGoal == null ? 'Goal created' : 'Goal updated'),
+        ),
+      );
+    }
   }
 
   Future<void> _completeGoal(
@@ -1126,6 +939,218 @@ class _ChartsView2State extends State<ChartsView2> {
       chartData: chartData,
       config: config,
       isUsingMockData: isUsingMockData,
+    );
+  }
+}
+
+class _GoalEditorFormData {
+  const _GoalEditorFormData({
+    required this.targetValue,
+    required this.direction,
+    this.dueDate,
+    this.note,
+  });
+
+  final double targetValue;
+  final GoalDirection direction;
+  final DateTime? dueDate;
+  final String? note;
+}
+
+class _GoalEditorSheet extends StatefulWidget {
+  const _GoalEditorSheet({
+    required this.config,
+    required this.initialDirection,
+    this.initialTargetValue,
+    this.initialDueDate,
+    this.initialNote,
+  });
+
+  final ChartConfig config;
+  final double? initialTargetValue;
+  final GoalDirection initialDirection;
+  final DateTime? initialDueDate;
+  final String? initialNote;
+
+  @override
+  State<_GoalEditorSheet> createState() => _GoalEditorSheetState();
+}
+
+class _GoalEditorSheetState extends State<_GoalEditorSheet> {
+  final DateFormat _dateFormatter = DateFormat('yyyy-MM-dd');
+  late final TextEditingController _targetController;
+  late final TextEditingController _noteController;
+
+  late GoalDirection _direction;
+  DateTime? _dueDate;
+  String? _inputError;
+
+  @override
+  void initState() {
+    super.initState();
+    _targetController = TextEditingController(
+      text: widget.initialTargetValue == null
+          ? ''
+          : widget.initialTargetValue!.toStringAsFixed(1),
+    );
+    _noteController = TextEditingController(text: widget.initialNote ?? '');
+    _direction = widget.initialDirection;
+    _dueDate = widget.initialDueDate;
+  }
+
+  @override
+  void dispose() {
+    _targetController.dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      firstDate: now,
+      initialDate: _dueDate ?? now,
+      lastDate: DateTime(now.year + 10),
+    );
+    if (picked == null || !mounted) return;
+    setState(() {
+      _dueDate = DateTime(picked.year, picked.month, picked.day);
+    });
+  }
+
+  void _submit() {
+    final parsedTarget = double.tryParse(
+      _targetController.text.trim().replaceAll(',', '.'),
+    );
+    if (parsedTarget == null || parsedTarget <= 0) {
+      setState(() {
+        _inputError = 'Enter a valid positive number';
+      });
+      return;
+    }
+
+    final note = _noteController.text.trim();
+    Navigator.of(context).pop(
+      _GoalEditorFormData(
+        targetValue: parsedTarget,
+        direction: _direction,
+        dueDate: _dueDate,
+        note: note.isEmpty ? null : note,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(
+          16,
+          12,
+          16,
+          16 + MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.initialTargetValue == null ? 'Set New Goal' : 'Edit Goal',
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 14),
+            TextField(
+              controller: _targetController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              decoration: InputDecoration(
+                labelText: 'Target Value (${widget.config.unit})',
+                errorText: _inputError,
+              ),
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<GoalDirection>(
+              value: _direction,
+              items: const [
+                DropdownMenuItem(
+                  value: GoalDirection.increase,
+                  child: Text('Increase'),
+                ),
+                DropdownMenuItem(
+                  value: GoalDirection.decrease,
+                  child: Text('Decrease'),
+                ),
+              ],
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  _direction = value;
+                });
+              },
+              decoration: const InputDecoration(labelText: 'Direction'),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: _pickDate,
+                    child: InputDecorator(
+                      decoration: const InputDecoration(
+                        labelText: 'Due Date (Optional)',
+                      ),
+                      child: Text(
+                        _dueDate == null
+                            ? 'Optional'
+                            : _dateFormatter.format(_dueDate!),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  onPressed: () {
+                    if (_dueDate == null) {
+                      _pickDate();
+                      return;
+                    }
+                    setState(() {
+                      _dueDate = null;
+                    });
+                  },
+                  icon: Icon(
+                    _dueDate == null
+                        ? Icons.event_rounded
+                        : Icons.close_rounded,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _noteController,
+              maxLines: 2,
+              decoration: const InputDecoration(
+                labelText: 'Goal Note (Optional)',
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: _submit,
+                icon: const Icon(Icons.check_rounded),
+                label: const Text('Save Goal'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
