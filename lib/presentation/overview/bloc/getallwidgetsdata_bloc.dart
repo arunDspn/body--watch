@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
-import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
+import 'package:watcha_body/domain/measurement/models/overview_widget_model.dart';
 
 part 'getallwidgetsdata_bloc.freezed.dart';
 part 'getallwidgetsdata_event.dart';
@@ -17,7 +17,9 @@ class GetallwidgetsdataBloc
         case _FetchAllData():
           emit(const GetallwidgetsdataState.loading());
 
-          final data = await measurementRepository.getLatestThreeMeasurements();
+          final data = await measurementRepository.getOverviewWidgetsData(
+            latestLimit: 10,
+          );
           data.fold(
             (l) => emit(GetallwidgetsdataState.failure(l)),
             (r) => emit(GetallwidgetsdataState.success(widgets: r)),

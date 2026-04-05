@@ -8,6 +8,7 @@ import 'package:watcha_body/data/services/database_service.dart';
 import 'package:watcha_body/domain/measurement/i_measurements.dart';
 import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
+import 'package:watcha_body/domain/measurement/models/overview_widget_model.dart';
 import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/domain/models/two_dates_record_model.dart';
@@ -548,6 +549,113 @@ class MeasurementRepository extends IMeasurementsFacade {
         }
       }
       return Right(groupedData);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either<String, List<OverviewWidgetModel>>> getOverviewWidgetsData({
+    int userId = 1,
+    int latestLimit = 10,
+  }) async {
+    try {
+      final db = await databaseService.database;
+      final result = await db.rawQuery(
+        '''
+          WITH ranked AS (
+            SELECT
+              m.*,
+              ROW_NUMBER() OVER (
+                PARTITION BY m.target_id
+                ORDER BY m.date DESC, m.id DESC
+              ) AS rn
+            FROM ${DatabaseService.measurementsDataTable} m
+            WHERE m.user_id = ?
+          ),
+          stats AS (
+            SELECT
+              m.target_id,
+              MIN(m.value) AS lowest_value,
+              MAX(m.value) AS highest_value
+            FROM ${DatabaseService.measurementsDataTable} m
+            WHERE m.user_id = ?
+            GROUP BY m.target_id
+          ),
+          active_goals AS (
+            SELECT
+              g.target_id,
+              g.target_value AS goal_value
+            FROM ${DatabaseService.measurementGoalsTable} g
+            WHERE g.user_id = ? AND g.status = 'active'
+          )
+          SELECT
+            r.id,
+            r.value,
+            r.date,
+            r.notes,
+            r.target_id,
+            r.created_at,
+            r.updated_at,
+            mt.name AS target_name,
+            mt.type,
+            met.code AS metric_code,
+            met.base_unit,
+            s.lowest_value,
+            s.highest_value,
+            ag.goal_value
+          FROM ranked r
+          INNER JOIN ${DatabaseService.measurementTargetsTable} mt
+            ON r.target_id = mt.id
+          INNER JOIN ${DatabaseService.targetMetricsTable} tm
+            ON mt.id = tm.target_id
+          INNER JOIN ${DatabaseService.metricsTable} met
+            ON tm.metric_id = met.id
+          INNER JOIN stats s
+            ON s.target_id = r.target_id
+          LEFT JOIN active_goals ag
+            ON ag.target_id = r.target_id
+          WHERE r.rn <= ?
+          ORDER BY r.target_id, r.date DESC, r.id DESC
+        ''',
+        [userId, userId, userId, latestLimit],
+      );
+
+      final groupedRows = <int, List<Map<String, Object?>>>{};
+      for (final row in result) {
+        final targetId = row['target_id'] as int;
+        groupedRows.putIfAbsent(targetId, () => []).add(row);
+      }
+
+      final widgets = <OverviewWidgetModel>[];
+      for (final rows in groupedRows.values) {
+        if (rows.isEmpty) {
+          continue;
+        }
+
+        final first = rows.first;
+        final latestMeasurements = rows
+            .map(
+              (row) =>
+                  MeasurementModel.fromJson(Map<String, dynamic>.from(row)),
+            )
+            .toList();
+
+        widgets.add(
+          OverviewWidgetModel(
+            targetId: first['target_id'] as int,
+            targetName: first['target_name'] as String,
+            metricCode: first['metric_code'] as String,
+            type: first['type'] as String,
+            latestMeasurements: latestMeasurements,
+            lowestValue: (first['lowest_value'] as num).toDouble(),
+            highestValue: (first['highest_value'] as num).toDouble(),
+            goalValue: (first['goal_value'] as num?)?.toDouble(),
+          ),
+        );
+      }
+
+      return Right(widgets);
     } catch (e) {
       return Left(e.toString());
     }

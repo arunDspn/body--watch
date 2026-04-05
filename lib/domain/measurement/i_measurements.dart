@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
+import 'package:watcha_body/domain/measurement/models/overview_widget_model.dart';
 import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/domain/models/two_dates_record_model.dart';
 
@@ -42,6 +43,14 @@ abstract class IMeasurementsFacade {
   /// Gets latest 3 Measurements data of all added measurement types
   Future<Either<String, Map<String, List<MeasurementModel>>>>
   getLatestThreeMeasurements({int userId = 1});
+
+  /// Gets overview widget data with latest measurements and all-time stats.
+  ///
+  /// [latestLimit] controls how many latest values are loaded per target.
+  Future<Either<String, List<OverviewWidgetModel>>> getOverviewWidgetsData({
+    int userId = 1,
+    int latestLimit = 10,
+  });
 
   /// Returns List of Types added in table as String
   /// Use this filter it with All Types available from App Binary

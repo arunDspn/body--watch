@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
-import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
+import 'package:watcha_body/domain/measurement/models/overview_widget_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
@@ -303,7 +303,7 @@ class _ElseCase extends StatelessWidget {
 class SearchView extends StatelessWidget {
   const SearchView({super.key, required this.widgets});
 
-  final Map<String, List<MeasurementModel>> widgets;
+  final List<OverviewWidgetModel> widgets;
 
   @override
   Widget build(BuildContext context) {
@@ -327,11 +327,11 @@ class SearchView extends StatelessWidget {
       body: BlocBuilder<UserPreferencesCubit, UserPreferencesState>(
         builder: (context, state) {
           return ListView.builder(
-            itemCount: widgets.keys.length,
+            itemCount: widgets.length,
             itemBuilder: (context, index) {
-              final widget = widgets[widgets.keys.elementAt(index)];
+              final widget = widgets[index];
               return _WidgetBox(
-                key: Key(widget!.first.id.toString()),
+                key: Key(widget.targetId.toString()),
                 data: widget,
               );
             },
@@ -443,7 +443,7 @@ class _SearchBarState extends State<_SearchBar> {
 class WidgetList extends StatelessWidget {
   const WidgetList({super.key, required this.list});
 
-  final List<MeasurementModel> list;
+  final List<OverviewWidgetModel> list;
 
   @override
   Widget build(BuildContext context) {
@@ -458,8 +458,8 @@ class WidgetList extends StatelessWidget {
               itemCount: list.length,
               itemBuilder: (context, index) {
                 return _WidgetBox(
-                  key: Key(list.hashCode.toString()),
-                  data: list,
+                  key: Key(list[index].targetId.toString()),
+                  data: list[index],
                 );
               },
             );
@@ -515,7 +515,7 @@ class WidgetList extends StatelessWidget {
 class _WidgetBox extends StatefulWidget {
   const _WidgetBox({required Key key, required this.data}) : super(key: key);
 
-  final List<MeasurementModel> data;
+  final OverviewWidgetModel data;
 
   @override
   State<_WidgetBox> createState() => _WidgetBoxState();
@@ -546,10 +546,15 @@ class _WidgetBoxState extends State<_WidgetBox> {
 
   @override
   Widget build(BuildContext context) {
-    final latestData = widget.data.first;
+    final latestMeasurements = widget.data.latestMeasurements;
+    if (latestMeasurements.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
-    final delta = widget.data.length > 1
-        ? latestData.value - widget.data[1].value
+    final latestData = latestMeasurements.first;
+
+    final delta = latestMeasurements.length > 1
+        ? latestData.value - latestMeasurements[1].value
         : null;
 
     final pref =
@@ -557,7 +562,7 @@ class _WidgetBoxState extends State<_WidgetBox> {
             .preferences;
 
     final metricCode = pref.firstWhereOrNull(
-      (element) => element.metricCode == widget.data.last.metricCode,
+      (element) => element.metricCode == widget.data.metricCode,
     );
 
     final preferredUnit = metricCode?.preferredUnit ?? '';
@@ -576,7 +581,7 @@ class _WidgetBoxState extends State<_WidgetBox> {
       child: GestureDetector(
         onTap: () {
           final safeFactor = toBaseFactor == 0 ? 1 : toBaseFactor;
-          final chartData = widget.data
+          final chartData = latestMeasurements
               .map(
                 (measurement) => DataPoint(
                   dateTime: measurement.date,
@@ -674,7 +679,7 @@ class _WidgetBoxState extends State<_WidgetBox> {
                                 ? Icons.south_rounded
                                 : Icons.north_rounded,
                             text:
-                                '${delta.toStringAsFixed(1)} than ${formatDate(widget.data[1].date)}',
+                                '${delta.toStringAsFixed(1)} than ${formatDate(latestMeasurements[1].date)}',
                             backgroundColor: delta < 0
                                 ? theme.colorScheme.errorContainer
                                 : theme.colorScheme.tertiaryContainer,
@@ -1106,49 +1111,55 @@ class _MetricChip extends StatelessWidget {
 class _ExtraDetails extends StatelessWidget {
   const _ExtraDetails({required super.key, required this.data});
 
-  final List<MeasurementModel> data;
+  final OverviewWidgetModel data;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final latestMeasurements = data.latestMeasurements;
+    if (latestMeasurements.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     final lastMeasurementDayFormatter = DateFormat('d MMM');
-    final startDate = data.first.date;
-    final endDate = data.last.date;
-    final latestValue = data.first.value;
-    final minValue = data.reduce(
-      (value, element) => value.value < element.value ? value : element,
-    );
-    final maxValue = data.reduce(
-      (value, element) => value.value > element.value ? value : element,
-    );
+    final startDate = latestMeasurements.first.date;
+    final endDate = latestMeasurements.last.date;
+    final latestValue = latestMeasurements.first.value;
 
     final pref =
         (context.read<UserPreferencesCubit>().state as UserPreferencesLoaded)
             .preferences;
 
     final metricCode = pref.firstWhereOrNull(
-      (element) => element.metricCode == data.last.metricCode,
+      (element) => element.metricCode == data.metricCode,
     );
 
-    final metricCodeValue = metricCode?.metricCode ?? data.last.metricCode;
+    final metricCodeValue = metricCode?.metricCode ?? data.metricCode;
     final toBaseFactor = metricCode?.toBaseFactor ?? 1;
     final unit = metricCode?.preferredUnit ?? '';
-    final rangeValue = maxValue.value - minValue.value;
+    final rangeValue = data.highestValue - data.lowestValue;
 
     final latestDisplay = UserMetricHelper.convertToUserPref(
       value: latestValue,
       metricCode: metricCodeValue,
       context: context,
     );
-    final trendValues = data
+    final trendValues = latestMeasurements
         .take(10)
         .toList()
         .reversed
         .map((e) => e.value / toBaseFactor)
         .toList();
-    final minDisplay = (minValue.value / toBaseFactor).toStringAsFixed(1);
-    final maxDisplay = (maxValue.value / toBaseFactor).toStringAsFixed(1);
+    final minDisplay = (data.lowestValue / toBaseFactor).toStringAsFixed(1);
+    final maxDisplay = (data.highestValue / toBaseFactor).toStringAsFixed(1);
     final rangeDisplay = (rangeValue / toBaseFactor).toStringAsFixed(1);
+    final goalDisplay = data.goalValue == null
+        ? null
+        : UserMetricHelper.convertToUserPref(
+            value: data.goalValue!,
+            metricCode: metricCodeValue,
+            context: context,
+          );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1252,6 +1263,16 @@ class _ExtraDetails extends StatelessWidget {
                         accentColor: theme.colorScheme.secondary,
                       ),
                     ),
+                    if (goalDisplay != null)
+                      SizedBox(
+                        width: tileWidth,
+                        child: _DetailStatTile(
+                          title: 'Goal',
+                          value: '$goalDisplay $unit',
+                          icon: Icons.flag_rounded,
+                          accentColor: theme.colorScheme.primary,
+                        ),
+                      ),
                   ],
                 ),
                 if (trendValues.length > 1) ...[

@@ -317,7 +317,7 @@ return success(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( String cause)?  failure,TResult Function( Map<String, List<MeasurementModel>> widgets)?  success,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( String cause)?  failure,TResult Function( List<OverviewWidgetModel> widgets)?  success,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case GetallwidgetsdataStateInitial() when initial != null:
 return initial();case GetallwidgetsdataStateLoading() when loading != null:
@@ -341,7 +341,7 @@ return success(_that.widgets);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( String cause)  failure,required TResult Function( Map<String, List<MeasurementModel>> widgets)  success,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( String cause)  failure,required TResult Function( List<OverviewWidgetModel> widgets)  success,}) {final _that = this;
 switch (_that) {
 case GetallwidgetsdataStateInitial():
 return initial();case GetallwidgetsdataStateLoading():
@@ -361,7 +361,7 @@ return success(_that.widgets);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( String cause)?  failure,TResult? Function( Map<String, List<MeasurementModel>> widgets)?  success,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( String cause)?  failure,TResult? Function( List<OverviewWidgetModel> widgets)?  success,}) {final _that = this;
 switch (_that) {
 case GetallwidgetsdataStateInitial() when initial != null:
 return initial();case GetallwidgetsdataStateLoading() when loading != null:
@@ -509,14 +509,14 @@ as String,
 
 
 class GetallwidgetsdataStateSuccess implements GetallwidgetsdataState {
-  const GetallwidgetsdataStateSuccess({required final  Map<String, List<MeasurementModel>> widgets}): _widgets = widgets;
+  const GetallwidgetsdataStateSuccess({required final  List<OverviewWidgetModel> widgets}): _widgets = widgets;
   
 
- final  Map<String, List<MeasurementModel>> _widgets;
- Map<String, List<MeasurementModel>> get widgets {
-  if (_widgets is EqualUnmodifiableMapView) return _widgets;
+ final  List<OverviewWidgetModel> _widgets;
+ List<OverviewWidgetModel> get widgets {
+  if (_widgets is EqualUnmodifiableListView) return _widgets;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableMapView(_widgets);
+  return EqualUnmodifiableListView(_widgets);
 }
 
 
@@ -550,7 +550,7 @@ abstract mixin class $GetallwidgetsdataStateSuccessCopyWith<$Res> implements $Ge
   factory $GetallwidgetsdataStateSuccessCopyWith(GetallwidgetsdataStateSuccess value, $Res Function(GetallwidgetsdataStateSuccess) _then) = _$GetallwidgetsdataStateSuccessCopyWithImpl;
 @useResult
 $Res call({
- Map<String, List<MeasurementModel>> widgets
+ List<OverviewWidgetModel> widgets
 });
 
 
@@ -570,7 +570,7 @@ class _$GetallwidgetsdataStateSuccessCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? widgets = null,}) {
   return _then(GetallwidgetsdataStateSuccess(
 widgets: null == widgets ? _self._widgets : widgets // ignore: cast_nullable_to_non_nullable
-as Map<String, List<MeasurementModel>>,
+as List<OverviewWidgetModel>,
   ));
 }
 

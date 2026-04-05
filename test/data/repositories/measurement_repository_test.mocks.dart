@@ -14,6 +14,8 @@ import 'package:watcha_body/domain/measurement/models/measurement_entity.dart'
     as _i6;
 import 'package:watcha_body/domain/measurement/models/measurement_model.dart'
     as _i8;
+import 'package:watcha_body/domain/measurement/models/overview_widget_model.dart'
+    as _i10;
 import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart'
     as _i7;
 import 'package:watcha_body/domain/models/two_dates_record_model.dart' as _i9;
@@ -326,4 +328,27 @@ class MockMeasurementRepository extends _i1.Mock
           as _i5.Future<
             _i3.Either<String, Map<String, List<_i8.MeasurementModel>>>
           >);
+
+  @override
+  _i5.Future<_i3.Either<String, List<_i10.OverviewWidgetModel>>>
+  getOverviewWidgetsData({int? userId = 1, int? latestLimit = 10}) =>
+      (super.noSuchMethod(
+            Invocation.method(#getOverviewWidgetsData, [], {
+              #userId: userId,
+              #latestLimit: latestLimit,
+            }),
+            returnValue:
+                _i5.Future<
+                  _i3.Either<String, List<_i10.OverviewWidgetModel>>
+                >.value(
+                  _FakeEither_1<String, List<_i10.OverviewWidgetModel>>(
+                    this,
+                    Invocation.method(#getOverviewWidgetsData, [], {
+                      #userId: userId,
+                      #latestLimit: latestLimit,
+                    }),
+                  ),
+                ),
+          )
+          as _i5.Future<_i3.Either<String, List<_i10.OverviewWidgetModel>>>);
 }
