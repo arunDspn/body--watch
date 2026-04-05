@@ -580,22 +580,15 @@ class _WidgetBoxState extends State<_WidgetBox> {
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
       child: GestureDetector(
         onTap: () {
-          final safeFactor = toBaseFactor == 0 ? 1 : toBaseFactor;
-          final chartData = latestMeasurements
-              .map(
-                (measurement) => DataPoint(
-                  dateTime: measurement.date,
-                  value: measurement.value / safeFactor,
-                ),
-              )
-              .toList();
+          final safeFactor = toBaseFactor == 0 ? 1.0 : toBaseFactor.toDouble();
 
           Navigator.push<void>(
             context,
             MaterialPageRoute(
               builder: (context) {
                 return ChartsView2(
-                  data: chartData,
+                  targetId: widget.data.targetId,
+                  valueDivisor: safeFactor,
                   config: ChartConfig(
                     title: latestData.targetName,
                     unit: preferredUnit,

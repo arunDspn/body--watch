@@ -52,6 +52,12 @@ abstract class IMeasurementsFacade {
     int latestLimit = 10,
   });
 
+  /// Gets all measurements for a single target, ordered from latest to oldest.
+  Future<Either<String, List<MeasurementModel>>> getMeasurementsByTarget({
+    required int targetId,
+    int userId = 1,
+  });
+
   /// Returns List of Types added in table as String
   /// Use this filter it with All Types available from App Binary
   /// To get remaining types

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:watcha_body/data/repositories/measurement_repository.dart';
+import 'cubit/chart_detail_cubit.dart';
 import 'models/chart_models.dart';
 import 'widgets/body_measurement_chart.dart';
 
@@ -7,11 +10,17 @@ class ChartsView2 extends StatefulWidget {
   const ChartsView2({
     super.key,
     this.data,
+    this.targetId,
+    this.userId = 1,
+    this.valueDivisor = 1,
     this.config,
     this.defaultFilter = ChartFilter.month,
   });
 
   final List<DataPoint>? data;
+  final int? targetId;
+  final int userId;
+  final double valueDivisor;
   final ChartConfig? config;
   final ChartFilter defaultFilter;
 
@@ -22,6 +31,26 @@ class ChartsView2 extends StatefulWidget {
 class _ChartsView2State extends State<ChartsView2> {
   final DateFormat _dateFormatter = DateFormat('yyyy-MM-dd');
   final DateFormat _dayMonthFormatter = DateFormat('d MMM');
+  ChartDetailCubit? _chartDetailCubit;
+
+  bool get _shouldLoadFromRepository =>
+      widget.targetId != null && widget.data == null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_shouldLoadFromRepository) {
+      _chartDetailCubit = ChartDetailCubit(
+        context.read<MeasurementRepository>(),
+      )..load(targetId: widget.targetId!, userId: widget.userId);
+    }
+  }
+
+  @override
+  void dispose() {
+    _chartDetailCubit?.close();
+    super.dispose();
+  }
 
   // Mock data for testing
   List<DataPoint> get _mockWeightData {
@@ -74,20 +103,16 @@ class _ChartsView2State extends State<ChartsView2> {
     );
   }
 
-  List<DataPoint> get _chartData => widget.data ?? _mockWeightData;
-
   ChartConfig get _chartConfig => widget.config ?? _weightChartConfig;
 
-  bool get _isUsingMockData => widget.data == null || widget.config == null;
-
-  List<DataPoint> get _sortedChartData {
-    final copy = List<DataPoint>.from(_chartData);
+  List<DataPoint> _sortedData(List<DataPoint> source) {
+    final copy = List<DataPoint>.from(source);
     copy.sort((a, b) => b.dateTime.compareTo(a.dateTime));
     return copy;
   }
 
-  String _valueText(double value) {
-    return '${value.toStringAsFixed(1)} ${_chartConfig.unit}'.trim();
+  String _valueText(double value, ChartConfig config) {
+    return '${value.toStringAsFixed(1)} ${config.unit}'.trim();
   }
 
   String _relativeDateText(DateTime date) {
@@ -102,10 +127,14 @@ class _ChartsView2State extends State<ChartsView2> {
     return _dayMonthFormatter.format(date);
   }
 
-  Widget _buildMeasurementElements(BuildContext context) {
+  Widget _buildMeasurementElements(
+    BuildContext context, {
+    required List<DataPoint> chartData,
+    required ChartConfig config,
+  }) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final measurements = _sortedChartData;
+    final measurements = _sortedData(chartData);
 
     if (measurements.isEmpty) {
       return const SizedBox.shrink();
@@ -182,7 +211,7 @@ class _ChartsView2State extends State<ChartsView2> {
                       ),
                     ),
                     Text(
-                      _valueText(latest.value),
+                      _valueText(latest.value, config),
                       style: textTheme.titleMedium?.copyWith(
                         color: colorScheme.onPrimaryContainer,
                         fontWeight: FontWeight.w700,
@@ -253,7 +282,7 @@ class _ChartsView2State extends State<ChartsView2> {
                         ),
                       ),
                       title: Text(
-                        _valueText(measurement.value),
+                        _valueText(measurement.value, config),
                         style: textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w700,
                         ),
@@ -306,12 +335,16 @@ class _ChartsView2State extends State<ChartsView2> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildScaffold(
+    BuildContext context, {
+    required List<DataPoint> chartData,
+    required ChartConfig config,
+    required bool isUsingMockData,
+  }) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _isUsingMockData ? 'Body Measurement Charts' : _chartConfig.title,
+          isUsingMockData ? 'Body Measurement Charts' : config.title,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w700,
             letterSpacing: 0.2,
@@ -325,7 +358,7 @@ class _ChartsView2State extends State<ChartsView2> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (_isUsingMockData) ...[
+              if (isUsingMockData) ...[
                 Text(
                   'Phase 8: Animations & Polish Complete',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -343,10 +376,9 @@ class _ChartsView2State extends State<ChartsView2> {
                 const SizedBox(height: 24),
               ],
 
-              // Weight Chart
               BodyMeasurementChart(
-                data: _chartData,
-                config: _chartConfig,
+                data: chartData,
+                config: config,
                 defaultFilter: widget.defaultFilter,
               ),
 
@@ -354,12 +386,16 @@ class _ChartsView2State extends State<ChartsView2> {
 
               Padding(
                 padding: const EdgeInsets.all(8),
-                child: _buildMeasurementElements(context),
+                child: _buildMeasurementElements(
+                  context,
+                  chartData: chartData,
+                  config: config,
+                ),
               ),
 
               const SizedBox(height: 24),
 
-              if (_isUsingMockData)
+              if (isUsingMockData)
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -372,12 +408,12 @@ class _ChartsView2State extends State<ChartsView2> {
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
-                        Text('Total data points: ${_chartData.length}'),
+                        Text('Total data points: ${chartData.length}'),
                         Text(
-                          'Date range: ${_chartData.first.dateTime.toString().split(' ')[0]} to ${_chartData.last.dateTime.toString().split(' ')[0]}',
+                          'Date range: ${chartData.first.dateTime.toString().split(' ')[0]} to ${chartData.last.dateTime.toString().split(' ')[0]}',
                         ),
                         Text(
-                          '${_chartConfig.title} range: ${_chartData.map((e) => e.value).reduce((a, b) => a < b ? a : b)} ${_chartConfig.unit} to ${_chartData.map((e) => e.value).reduce((a, b) => a > b ? a : b)} ${_chartConfig.unit}',
+                          '${config.title} range: ${chartData.map((e) => e.value).reduce((a, b) => a < b ? a : b)} ${config.unit} to ${chartData.map((e) => e.value).reduce((a, b) => a > b ? a : b)} ${config.unit}',
                         ),
                       ],
                     ),
@@ -387,6 +423,119 @@ class _ChartsView2State extends State<ChartsView2> {
           ),
         ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final config = _chartConfig;
+    final isUsingMockData = widget.data == null && widget.targetId == null;
+
+    if (_shouldLoadFromRepository && _chartDetailCubit != null) {
+      return BlocBuilder<ChartDetailCubit, ChartDetailState>(
+        bloc: _chartDetailCubit,
+        builder: (context, state) {
+          switch (state) {
+            case ChartDetailInitial():
+            case ChartDetailLoading():
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text(
+                    config.title,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                ),
+                body: const Center(child: CircularProgressIndicator()),
+              );
+            case ChartDetailFailure(:final message):
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text(
+                    config.title,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                ),
+                body: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.error_outline, size: 34),
+                        const SizedBox(height: 12),
+                        Text(
+                          message,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        const SizedBox(height: 16),
+                        FilledButton.icon(
+                          onPressed: () {
+                            _chartDetailCubit!.load(
+                              targetId: widget.targetId!,
+                              userId: widget.userId,
+                            );
+                          },
+                          icon: const Icon(Icons.refresh),
+                          label: const Text('Retry'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            case ChartDetailLoaded(:final measurements):
+              final safeDivisor = widget.valueDivisor == 0
+                  ? 1
+                  : widget.valueDivisor;
+              final chartData = measurements
+                  .map(
+                    (measurement) => DataPoint(
+                      dateTime: measurement.date,
+                      value: measurement.value / safeDivisor,
+                    ),
+                  )
+                  .toList();
+              return _buildScaffold(
+                context,
+                chartData: chartData,
+                config: config,
+                isUsingMockData: false,
+              );
+            default:
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text(
+                    config.title,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                ),
+                body: const Center(child: CircularProgressIndicator()),
+              );
+          }
+        },
+      );
+    }
+
+    final chartData = widget.data ?? _mockWeightData;
+
+    return _buildScaffold(
+      context,
+      chartData: chartData,
+      config: config,
+      isUsingMockData: isUsingMockData,
     );
   }
 }

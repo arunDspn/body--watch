@@ -737,6 +737,52 @@ class MeasurementRepository extends IMeasurementsFacade {
       return Left(e.toString());
     }
   }
+
+  @override
+  Future<Either<String, List<MeasurementModel>>> getMeasurementsByTarget({
+    required int targetId,
+    int userId = 1,
+  }) async {
+    try {
+      final db = await databaseService.database;
+      final result = await db.rawQuery(
+        '''
+          SELECT
+            m.id,
+            m.value,
+            m.date,
+            m.notes,
+            m.target_id,
+            m.created_at,
+            m.updated_at,
+            mt.name AS target_name,
+            mt.type,
+            met.code AS metric_code,
+            met.base_unit
+          FROM ${DatabaseService.measurementsDataTable} m
+          INNER JOIN ${DatabaseService.measurementTargetsTable} mt
+            ON m.target_id = mt.id
+          INNER JOIN ${DatabaseService.targetMetricsTable} tm
+            ON mt.id = tm.target_id
+          INNER JOIN ${DatabaseService.metricsTable} met
+            ON tm.metric_id = met.id
+          WHERE m.user_id = ? AND m.target_id = ?
+          ORDER BY m.date DESC, m.id DESC
+        ''',
+        [userId, targetId],
+      );
+
+      final measurements = result
+          .map(
+            (row) => MeasurementModel.fromJson(Map<String, dynamic>.from(row)),
+          )
+          .toList();
+
+      return Right(measurements);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
 }
 
 extension on double {
