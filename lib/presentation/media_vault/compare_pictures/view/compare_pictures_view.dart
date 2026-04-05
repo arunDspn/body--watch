@@ -5,12 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_compare_slider/image_compare_slider.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
-import 'package:watcha_body/domain/body_picture/models/image_tag_model.dart';
-import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
-import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
+import 'package:watcha_body/domain/body_picture/models/image_tag_model.dart';
+import 'package:watcha_body/presentation/core/controllers/cubit/all_available_targets_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/add_new_media/cubit/image_tag_cubit/get_all_image_tags_cubit.dart';
-import 'package:watcha_body/presentation/media_vault/compare_pictures/components/tag_dropdown_menu/view/view.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/components/view_comparison_data/cubit/comparison_data_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/components/view_comparison_data/view.dart';
 import 'package:watcha_body/presentation/media_vault/compare_pictures/cubit/compare_picture_form_cubit.dart'
@@ -38,6 +36,8 @@ class ComparePicturesView extends StatefulWidget {
 }
 
 class _ComparePicturesViewState extends State<ComparePicturesView> {
+  static const _fieldRadius = BorderRadius.all(Radius.circular(20));
+
   Future<DateTime?> selectDate(BuildContext context) async {
     return showDatePicker(
       context: context,
@@ -49,17 +49,16 @@ class _ComparePicturesViewState extends State<ComparePicturesView> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return BlocConsumer<
-        compare_picture_form_cubit_alias.ComparePictureFormCubit,
-        compare_picture_form_cubit_alias.ComparePictureFormState>(
+      compare_picture_form_cubit_alias.ComparePictureFormCubit,
+      compare_picture_form_cubit_alias.ComparePictureFormState
+    >(
       listener: (context, state) {
         switch (state) {
           case compare_picture_form_cubit_alias.ComparePictureFormStateData(
                 :final ready,
-                :final firstDate,
-                :final secondDate,
-                :final tag,
               )
               when ready:
             // context.read<LoadPictureToCompareCubit>().loadPicture(
@@ -81,8 +80,11 @@ class _ComparePicturesViewState extends State<ComparePicturesView> {
       },
       builder: (context, compareDataState) {
         return Scaffold(
+          backgroundColor: colorScheme.surface,
           appBar: AppBar(
             title: const Text('Compare Pictures'),
+            centerTitle: false,
+            scrolledUnderElevation: 0,
             actions: [
               if (compareDataState.ready)
                 TextButton(
@@ -93,12 +95,13 @@ class _ComparePicturesViewState extends State<ComparePicturesView> {
                       showDragHandle: true,
                       builder: (context) {
                         return BlocProvider(
-                          create: (context) => ComparisonDataCubit(
-                            context.read<MeasurementRepository>(),
-                          )..loadData(
-                              dateOne: compareDataState.firstDate!,
-                              dateTwo: compareDataState.secondDate!,
-                            ),
+                          create: (context) =>
+                              ComparisonDataCubit(
+                                context.read<MeasurementRepository>(),
+                              )..loadData(
+                                dateOne: compareDataState.firstDate!,
+                                dateTwo: compareDataState.secondDate!,
+                              ),
                           child: ViewComparisonDataModalView(
                             firstDate: compareDataState.firstDate!,
                             secondDate: compareDataState.secondDate!,
@@ -112,255 +115,226 @@ class _ComparePicturesViewState extends State<ComparePicturesView> {
           ),
           body: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // TagDropDownMenu(
-                  //   bodyPictureRepository:
-                  //       context.read<BodyPictureRepository>(),
-                  //   onSelected: (tag) {
-                  //     context
-                  //         .read<
-                  //             compare_picture_form_cubit_alias
-                  //             .ComparePictureFormCubit>()
-                  //         .alterTag(tag);
-                  //   },
-                  // ),
-
-                  // Tag dropdown using dropdown_textfield package
-                  BlocBuilder<GetAllImageTagsCubit, GetAllImageTagsState>(
-                    builder: (context, state) {
-                      return state.when(
-                        initial: () {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                        loading: () {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                        loaded: (tags) {
-                          // A searchable dropdown menu for tags
-                          return DropDownTextField(
-                            onChanged: (value) {
-                              if (value.value != null) {
-                                final selectedTag =
-                                    (value.value as ImageTagModel).id;
-                                context
-                                    .read<
-                                        compare_picture_form_cubit_alias
-                                        .ComparePictureFormCubit>()
-                                    .alterTag(selectedTag);
-                              }
-                            },
-                            dropDownList: tags.map(
-                              (e) {
-                                return DropDownValueModel(
-                                  name: e.tag,
-                                  value: e,
-                                );
-                              },
-                            ).toList(),
-                            // Rounded border
-                            textFieldDecoration: const InputDecoration(
-                              labelText: 'Select Tag',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(12),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        error: (message) {
-                          return Center(
-                            child: Text('Error: $message'),
-                          );
-                        },
-                      );
-                    },
-                  ),
-
-                  const SizedBox(
-                    height: 22,
-                  ),
-                  // Measurement target dropdown menu
-                  BlocBuilder<GetallwidgetsCubit, GetallwidgetsState>(
-                    builder: (context, state) {
-                      return state.when(
-                        failure: (cause) {
-                          return Center(
-                            child: Text('Error: $cause'),
-                          );
-                        },
-                        success: (widgets) {
-                          // return DropDownTextField.multiSelection(
-                          //   onChanged: (value) {},
-                          //   dropDownList: widgets.map(
-                          //     (e) {
-                          //       return DropDownValueModel(
-                          //         name: e.name,
-                          //         value: e,
-                          //       );
-                          //     },
-                          //   ).toList(),
-                          //   textFieldDecoration: const InputDecoration(
-                          //     labelText: 'Select Measurement Target',
-                          //     border: OutlineInputBorder(
-                          //       borderRadius: BorderRadius.all(
-                          //         Radius.circular(12),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // );
-                          return MultiDropdown(
-                            items: widgets.map(
-                              (e) {
-                                return DropdownItem(label: e.name, value: e);
-                              },
-                            ).toList(),
-                            onSelectionChange: (selectedItems) {
-                              final selectedIds = selectedItems
-                                  .map((e) => (e.id as dynamic).id as int)
-                                  .toList();
-                              context
-                                  .read<
-                                      compare_picture_form_cubit_alias
-                                      .ComparePictureFormCubit>()
-                                  .alerTargets(selectedIds);
-                            },
-                          );
-                        },
-                        initial: () {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                        loading: () {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                      );
-                    },
-                  ),
-
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: size.width * 0.46,
-                        child: GestureDetector(
-                          onTap: () async {
-                            selectDate(context).then((value) {
-                              context
-                                  .read<
-                                      compare_picture_form_cubit_alias
-                                      .ComparePictureFormCubit>()
-                                  .alterFirstDate(value);
-                            });
-
-                            // final selectedDate = await selectDate(context);
-                            // setState(() {
-                            //   firstDate = selectedDate;
-                            // });
-                          },
-                          child: AbsorbPointer(
-                            child: TextFormField(
-                              controller: TextEditingController(
-                                text: ComparePicturesView.format(
-                                  // state.firstDate,
-                                  // firstDate,
-                                  compareDataState.firstDate,
-                                ),
-                              ),
-                              decoration: const InputDecoration(
-                                isDense: true,
-                                labelText: 'Picture 1 Date',
-                                labelStyle: TextStyle(
-                                  fontSize: 14,
-                                ),
-                                prefixIcon: Icon(Icons.date_range),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(12),
-                                  ),
-                                ),
-                              ),
-                            ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      // gradient: LinearGradient(
+                      //   colors: [
+                      //     colorScheme.primaryContainer,
+                      //     colorScheme.tertiaryContainer,
+                      //   ],
+                      //   begin: Alignment.topLeft,
+                      //   end: Alignment.bottomRight,
+                      // ),
+                      color: colorScheme.primaryContainer,
+                      borderRadius: const BorderRadius.all(Radius.circular(28)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Visual Progress Inspector',
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            color: colorScheme.onPrimaryContainer,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                      ),
-                      const Spacer(),
-                      SizedBox(
-                        width: size.width * 0.46,
-                        child: GestureDetector(
-                          onTap: () async {
-                            selectDate(context).then((value) {
-                              context
-                                  .read<
-                                      compare_picture_form_cubit_alias
-                                      .ComparePictureFormCubit>()
-                                  .alterSecondDate(value);
-                            });
-
-                            // final selectedDate = await selectDate(context);
-
-                            // setState(() {
-                            //   secondDate = selectedDate;
-                            // });
-                          },
-                          child: AbsorbPointer(
-                            child: TextFormField(
-                              controller: TextEditingController(
-                                text: ComparePicturesView.format(
-                                  compareDataState.secondDate,
-                                ),
-                              ),
-                              decoration: const InputDecoration(
-                                isDense: true,
-                                labelText: 'Picture 2 Date',
-                                labelStyle: TextStyle(
-                                  fontSize: 14,
-                                ),
-                                prefixIcon: Icon(Icons.date_range),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(12),
-                                  ),
-                                ),
-                              ),
-                            ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Choose a tag, add targets, then compare two picture dates with an interactive slider.',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: colorScheme.onPrimaryContainer,
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Card.outlined(
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Comparison Filters',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Select what and when you want to compare.',
+                            style: theme.textTheme.bodySmall,
+                          ),
+                          const SizedBox(height: 16),
+                          BlocBuilder<
+                            GetAllImageTagsCubit,
+                            GetAllImageTagsState
+                          >(
+                            builder: (context, state) {
+                              return state.when(
+                                initial: () {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                                loading: () {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                                loaded: (tags) {
+                                  return DropDownTextField(
+                                    onChanged: (value) {
+                                      if (value.value != null) {
+                                        final selectedTag =
+                                            (value.value as ImageTagModel).id;
+                                        context
+                                            .read<
+                                              compare_picture_form_cubit_alias.ComparePictureFormCubit
+                                            >()
+                                            .alterTag(selectedTag);
+                                      }
+                                    },
+                                    dropDownList: tags.map((e) {
+                                      return DropDownValueModel(
+                                        name: e.tag,
+                                        value: e,
+                                      );
+                                    }).toList(),
+                                    textFieldDecoration: const InputDecoration(
+                                      labelText: 'Tag',
+                                      hintText: 'Search and select tag',
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                        borderRadius: _fieldRadius,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                error: (message) {
+                                  return Center(child: Text('Error: $message'));
+                                },
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          BlocBuilder<
+                            AllAvailableTargetsCubit,
+                            AllAvailableTargetsState
+                          >(
+                            builder: (context, state) {
+                              return state.when(
+                                failure: (cause) {
+                                  return Center(child: Text('Error: $cause'));
+                                },
+                                success: (widgets) {
+                                  return MultiDropdown(
+                                    items: widgets.map((e) {
+                                      return DropdownItem(
+                                        label: e.name,
+                                        value: e,
+                                      );
+                                    }).toList(),
+                                    onSelectionChange: (selectedItems) {
+                                      final selectedIds = selectedItems
+                                          .map(
+                                            (e) => (e.id as dynamic).id as int,
+                                          )
+                                          .toList();
+                                      context
+                                          .read<
+                                            compare_picture_form_cubit_alias.ComparePictureFormCubit
+                                          >()
+                                          .alerTargets(selectedIds);
+                                    },
+                                  );
+                                },
+                                initial: () {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                                loading: () {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _DateSelectorButton(
+                                  label: 'Picture 1 Date',
+                                  date: compareDataState.firstDate,
+                                  onTap: () async {
+                                    selectDate(context).then((value) {
+                                      context
+                                          .read<
+                                            compare_picture_form_cubit_alias.ComparePictureFormCubit
+                                          >()
+                                          .alterFirstDate(value);
+                                    });
+                                  },
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: _DateSelectorButton(
+                                  label: 'Picture 2 Date',
+                                  date: compareDataState.secondDate,
+                                  onTap: () async {
+                                    selectDate(context).then((value) {
+                                      context
+                                          .read<
+                                            compare_picture_form_cubit_alias.ComparePictureFormCubit
+                                          >()
+                                          .alterSecondDate(value);
+                                    });
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                  // ElevatedButton(
-                  //   onPressed: () {},
-                  //   child: const Text('Compare'),
-                  // ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+                  const SizedBox(height: 20),
 
                   if (compareDataState.ready)
-                    // Button to load comparison view
-                    ElevatedButton(
+                    FilledButton.icon(
+                      icon: const Icon(Icons.compare),
+                      label: const Text('Compare'),
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size.fromHeight(52),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
                       onPressed: () {
                         context.read<LoadPictureToCompareCubit>().loadPicture(
-                              tag: compareDataState.tag!,
-                              firstDate: compareDataState.firstDate!,
-                              secondDate: compareDataState.secondDate!,
-                            );
+                          tag: compareDataState.tag!,
+                          firstDate: compareDataState.firstDate!,
+                          secondDate: compareDataState.secondDate!,
+                        );
                       },
-                      child: const Text('Compare'),
                     ),
 
+                  const SizedBox(height: 12),
                   const _CompareView(),
                 ],
               ),
@@ -372,6 +346,44 @@ class _ComparePicturesViewState extends State<ComparePicturesView> {
           // ),
         );
       },
+    );
+  }
+}
+
+class _DateSelectorButton extends StatelessWidget {
+  const _DateSelectorButton({
+    required this.label,
+    required this.date,
+    required this.onTap,
+  });
+
+  final String label;
+  final DateTime? date;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return OutlinedButton.icon(
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size.fromHeight(56),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        alignment: Alignment.centerLeft,
+      ),
+      onPressed: onTap,
+      icon: const Icon(Icons.date_range),
+      label: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(label, style: theme.textTheme.labelMedium),
+          Text(
+            ComparePicturesView.format(date) ?? 'Select date',
+            style: theme.textTheme.bodyMedium,
+          ),
+        ],
+      ),
     );
   }
 }
