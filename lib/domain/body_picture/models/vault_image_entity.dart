@@ -11,6 +11,7 @@ abstract class VaultImageEntity with _$VaultImageEntity {
     @JsonKey(name: 'thumbnail_file') required String thumbnailFile,
     required DateTime date,
     required String note,
+    @JsonKey(name: 'user_id', defaultValue: 1) @Default(1) int? userId,
   }) = _VaultImageEntity;
 
   factory VaultImageEntity.fromJson(Map<String, dynamic> json) =>

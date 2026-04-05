@@ -13,6 +13,7 @@ _VaultImageEntity _$VaultImageEntityFromJson(Map<String, dynamic> json) =>
       thumbnailFile: json['thumbnail_file'] as String,
       date: DateTime.parse(json['date'] as String),
       note: json['note'] as String,
+      userId: (json['user_id'] as num?)?.toInt() ?? 1,
     );
 
 Map<String, dynamic> _$VaultImageEntityToJson(_VaultImageEntity instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$VaultImageEntityToJson(_VaultImageEntity instance) =>
       'thumbnail_file': instance.thumbnailFile,
       'date': instance.date.toIso8601String(),
       'note': instance.note,
+      'user_id': instance.userId,
     };

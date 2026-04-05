@@ -22,6 +22,9 @@ abstract class SaveVaultImageRequest with _$SaveVaultImageRequest {
 
     /// Note associated with the image
     required String note,
+
+    /// User ID associated with the image (optional)
+    @JsonKey(name: 'user_id', defaultValue: 1) int? userId,
   }) = _SaveVaultImageRequest;
 
   factory SaveVaultImageRequest.fromJson(Map<String, dynamic> json) =>

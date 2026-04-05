@@ -17,6 +17,7 @@ _SaveVaultImageRequest _$SaveVaultImageRequestFromJson(
   path: json['path'] as String,
   date: DateTime.parse(json['date'] as String),
   note: json['note'] as String,
+  userId: (json['user_id'] as num?)?.toInt() ?? 1,
 );
 
 Map<String, dynamic> _$SaveVaultImageRequestToJson(
@@ -28,4 +29,5 @@ Map<String, dynamic> _$SaveVaultImageRequestToJson(
   'path': instance.path,
   'date': instance.date.toIso8601String(),
   'note': instance.note,
+  'user_id': instance.userId,
 };

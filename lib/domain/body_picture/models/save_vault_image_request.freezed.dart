@@ -21,7 +21,8 @@ mixin _$SaveVaultImageRequest {
  List<int> get targets;/// Path where the image is stored in the device
  String get path;/// Date when the image was taken
  DateTime get date;/// Note associated with the image
- String get note;
+ String get note;/// User ID associated with the image (optional)
+@JsonKey(name: 'user_id', defaultValue: 1) int? get userId;
 /// Create a copy of SaveVaultImageRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -34,16 +35,16 @@ $SaveVaultImageRequestCopyWith<SaveVaultImageRequest> get copyWith => _$SaveVaul
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SaveVaultImageRequest&&(identical(other.tagId, tagId) || other.tagId == tagId)&&(identical(other.tag, tag) || other.tag == tag)&&const DeepCollectionEquality().equals(other.targets, targets)&&(identical(other.path, path) || other.path == path)&&(identical(other.date, date) || other.date == date)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SaveVaultImageRequest&&(identical(other.tagId, tagId) || other.tagId == tagId)&&(identical(other.tag, tag) || other.tag == tag)&&const DeepCollectionEquality().equals(other.targets, targets)&&(identical(other.path, path) || other.path == path)&&(identical(other.date, date) || other.date == date)&&(identical(other.note, note) || other.note == note)&&(identical(other.userId, userId) || other.userId == userId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,tagId,tag,const DeepCollectionEquality().hash(targets),path,date,note);
+int get hashCode => Object.hash(runtimeType,tagId,tag,const DeepCollectionEquality().hash(targets),path,date,note,userId);
 
 @override
 String toString() {
-  return 'SaveVaultImageRequest(tagId: $tagId, tag: $tag, targets: $targets, path: $path, date: $date, note: $note)';
+  return 'SaveVaultImageRequest(tagId: $tagId, tag: $tag, targets: $targets, path: $path, date: $date, note: $note, userId: $userId)';
 }
 
 
@@ -54,7 +55,7 @@ abstract mixin class $SaveVaultImageRequestCopyWith<$Res>  {
   factory $SaveVaultImageRequestCopyWith(SaveVaultImageRequest value, $Res Function(SaveVaultImageRequest) _then) = _$SaveVaultImageRequestCopyWithImpl;
 @useResult
 $Res call({
- int tagId, String tag, List<int> targets, String path, DateTime date, String note
+ int tagId, String tag, List<int> targets, String path, DateTime date, String note,@JsonKey(name: 'user_id', defaultValue: 1) int? userId
 });
 
 
@@ -71,7 +72,7 @@ class _$SaveVaultImageRequestCopyWithImpl<$Res>
 
 /// Create a copy of SaveVaultImageRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? tagId = null,Object? tag = null,Object? targets = null,Object? path = null,Object? date = null,Object? note = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? tagId = null,Object? tag = null,Object? targets = null,Object? path = null,Object? date = null,Object? note = null,Object? userId = freezed,}) {
   return _then(_self.copyWith(
 tagId: null == tagId ? _self.tagId : tagId // ignore: cast_nullable_to_non_nullable
 as int,tag: null == tag ? _self.tag : tag // ignore: cast_nullable_to_non_nullable
@@ -79,7 +80,8 @@ as String,targets: null == targets ? _self.targets : targets // ignore: cast_nul
 as List<int>,path: null == path ? _self.path : path // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,note: null == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
-as String,
+as String,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -164,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int tagId,  String tag,  List<int> targets,  String path,  DateTime date,  String note)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int tagId,  String tag,  List<int> targets,  String path,  DateTime date,  String note, @JsonKey(name: 'user_id', defaultValue: 1)  int? userId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SaveVaultImageRequest() when $default != null:
-return $default(_that.tagId,_that.tag,_that.targets,_that.path,_that.date,_that.note);case _:
+return $default(_that.tagId,_that.tag,_that.targets,_that.path,_that.date,_that.note,_that.userId);case _:
   return orElse();
 
 }
@@ -185,10 +187,10 @@ return $default(_that.tagId,_that.tag,_that.targets,_that.path,_that.date,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int tagId,  String tag,  List<int> targets,  String path,  DateTime date,  String note)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int tagId,  String tag,  List<int> targets,  String path,  DateTime date,  String note, @JsonKey(name: 'user_id', defaultValue: 1)  int? userId)  $default,) {final _that = this;
 switch (_that) {
 case _SaveVaultImageRequest():
-return $default(_that.tagId,_that.tag,_that.targets,_that.path,_that.date,_that.note);case _:
+return $default(_that.tagId,_that.tag,_that.targets,_that.path,_that.date,_that.note,_that.userId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +207,10 @@ return $default(_that.tagId,_that.tag,_that.targets,_that.path,_that.date,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int tagId,  String tag,  List<int> targets,  String path,  DateTime date,  String note)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int tagId,  String tag,  List<int> targets,  String path,  DateTime date,  String note, @JsonKey(name: 'user_id', defaultValue: 1)  int? userId)?  $default,) {final _that = this;
 switch (_that) {
 case _SaveVaultImageRequest() when $default != null:
-return $default(_that.tagId,_that.tag,_that.targets,_that.path,_that.date,_that.note);case _:
+return $default(_that.tagId,_that.tag,_that.targets,_that.path,_that.date,_that.note,_that.userId);case _:
   return null;
 
 }
@@ -220,7 +222,7 @@ return $default(_that.tagId,_that.tag,_that.targets,_that.path,_that.date,_that.
 @JsonSerializable()
 
 class _SaveVaultImageRequest implements SaveVaultImageRequest {
-  const _SaveVaultImageRequest({required this.tagId, required this.tag, required final  List<int> targets, required this.path, required this.date, required this.note}): _targets = targets;
+  const _SaveVaultImageRequest({required this.tagId, required this.tag, required final  List<int> targets, required this.path, required this.date, required this.note, @JsonKey(name: 'user_id', defaultValue: 1) this.userId}): _targets = targets;
   factory _SaveVaultImageRequest.fromJson(Map<String, dynamic> json) => _$SaveVaultImageRequestFromJson(json);
 
 /// Tag ID associated with the image
@@ -242,6 +244,8 @@ class _SaveVaultImageRequest implements SaveVaultImageRequest {
 @override final  DateTime date;
 /// Note associated with the image
 @override final  String note;
+/// User ID associated with the image (optional)
+@override@JsonKey(name: 'user_id', defaultValue: 1) final  int? userId;
 
 /// Create a copy of SaveVaultImageRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -256,16 +260,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaveVaultImageRequest&&(identical(other.tagId, tagId) || other.tagId == tagId)&&(identical(other.tag, tag) || other.tag == tag)&&const DeepCollectionEquality().equals(other._targets, _targets)&&(identical(other.path, path) || other.path == path)&&(identical(other.date, date) || other.date == date)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SaveVaultImageRequest&&(identical(other.tagId, tagId) || other.tagId == tagId)&&(identical(other.tag, tag) || other.tag == tag)&&const DeepCollectionEquality().equals(other._targets, _targets)&&(identical(other.path, path) || other.path == path)&&(identical(other.date, date) || other.date == date)&&(identical(other.note, note) || other.note == note)&&(identical(other.userId, userId) || other.userId == userId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,tagId,tag,const DeepCollectionEquality().hash(_targets),path,date,note);
+int get hashCode => Object.hash(runtimeType,tagId,tag,const DeepCollectionEquality().hash(_targets),path,date,note,userId);
 
 @override
 String toString() {
-  return 'SaveVaultImageRequest(tagId: $tagId, tag: $tag, targets: $targets, path: $path, date: $date, note: $note)';
+  return 'SaveVaultImageRequest(tagId: $tagId, tag: $tag, targets: $targets, path: $path, date: $date, note: $note, userId: $userId)';
 }
 
 
@@ -276,7 +280,7 @@ abstract mixin class _$SaveVaultImageRequestCopyWith<$Res> implements $SaveVault
   factory _$SaveVaultImageRequestCopyWith(_SaveVaultImageRequest value, $Res Function(_SaveVaultImageRequest) _then) = __$SaveVaultImageRequestCopyWithImpl;
 @override @useResult
 $Res call({
- int tagId, String tag, List<int> targets, String path, DateTime date, String note
+ int tagId, String tag, List<int> targets, String path, DateTime date, String note,@JsonKey(name: 'user_id', defaultValue: 1) int? userId
 });
 
 
@@ -293,7 +297,7 @@ class __$SaveVaultImageRequestCopyWithImpl<$Res>
 
 /// Create a copy of SaveVaultImageRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? tagId = null,Object? tag = null,Object? targets = null,Object? path = null,Object? date = null,Object? note = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? tagId = null,Object? tag = null,Object? targets = null,Object? path = null,Object? date = null,Object? note = null,Object? userId = freezed,}) {
   return _then(_SaveVaultImageRequest(
 tagId: null == tagId ? _self.tagId : tagId // ignore: cast_nullable_to_non_nullable
 as int,tag: null == tag ? _self.tag : tag // ignore: cast_nullable_to_non_nullable
@@ -301,7 +305,8 @@ as String,targets: null == targets ? _self._targets : targets // ignore: cast_nu
 as List<int>,path: null == path ? _self.path : path // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,note: null == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
-as String,
+as String,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

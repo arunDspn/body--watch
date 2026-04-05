@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$VaultImageEntity {
 
-@JsonKey(name: 'tag_id') int get tagId; String get file;@JsonKey(name: 'thumbnail_file') String get thumbnailFile; DateTime get date; String get note;
+@JsonKey(name: 'tag_id') int get tagId; String get file;@JsonKey(name: 'thumbnail_file') String get thumbnailFile; DateTime get date; String get note;@JsonKey(name: 'user_id', defaultValue: 1) int? get userId;
 /// Create a copy of VaultImageEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $VaultImageEntityCopyWith<VaultImageEntity> get copyWith => _$VaultImageEntityCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is VaultImageEntity&&(identical(other.tagId, tagId) || other.tagId == tagId)&&(identical(other.file, file) || other.file == file)&&(identical(other.thumbnailFile, thumbnailFile) || other.thumbnailFile == thumbnailFile)&&(identical(other.date, date) || other.date == date)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is VaultImageEntity&&(identical(other.tagId, tagId) || other.tagId == tagId)&&(identical(other.file, file) || other.file == file)&&(identical(other.thumbnailFile, thumbnailFile) || other.thumbnailFile == thumbnailFile)&&(identical(other.date, date) || other.date == date)&&(identical(other.note, note) || other.note == note)&&(identical(other.userId, userId) || other.userId == userId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,tagId,file,thumbnailFile,date,note);
+int get hashCode => Object.hash(runtimeType,tagId,file,thumbnailFile,date,note,userId);
 
 @override
 String toString() {
-  return 'VaultImageEntity(tagId: $tagId, file: $file, thumbnailFile: $thumbnailFile, date: $date, note: $note)';
+  return 'VaultImageEntity(tagId: $tagId, file: $file, thumbnailFile: $thumbnailFile, date: $date, note: $note, userId: $userId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $VaultImageEntityCopyWith<$Res>  {
   factory $VaultImageEntityCopyWith(VaultImageEntity value, $Res Function(VaultImageEntity) _then) = _$VaultImageEntityCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'tag_id') int tagId, String file,@JsonKey(name: 'thumbnail_file') String thumbnailFile, DateTime date, String note
+@JsonKey(name: 'tag_id') int tagId, String file,@JsonKey(name: 'thumbnail_file') String thumbnailFile, DateTime date, String note,@JsonKey(name: 'user_id', defaultValue: 1) int? userId
 });
 
 
@@ -65,14 +65,15 @@ class _$VaultImageEntityCopyWithImpl<$Res>
 
 /// Create a copy of VaultImageEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? tagId = null,Object? file = null,Object? thumbnailFile = null,Object? date = null,Object? note = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? tagId = null,Object? file = null,Object? thumbnailFile = null,Object? date = null,Object? note = null,Object? userId = freezed,}) {
   return _then(_self.copyWith(
 tagId: null == tagId ? _self.tagId : tagId // ignore: cast_nullable_to_non_nullable
 as int,file: null == file ? _self.file : file // ignore: cast_nullable_to_non_nullable
 as String,thumbnailFile: null == thumbnailFile ? _self.thumbnailFile : thumbnailFile // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,note: null == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
-as String,
+as String,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'tag_id')  int tagId,  String file, @JsonKey(name: 'thumbnail_file')  String thumbnailFile,  DateTime date,  String note)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'tag_id')  int tagId,  String file, @JsonKey(name: 'thumbnail_file')  String thumbnailFile,  DateTime date,  String note, @JsonKey(name: 'user_id', defaultValue: 1)  int? userId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _VaultImageEntity() when $default != null:
-return $default(_that.tagId,_that.file,_that.thumbnailFile,_that.date,_that.note);case _:
+return $default(_that.tagId,_that.file,_that.thumbnailFile,_that.date,_that.note,_that.userId);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.tagId,_that.file,_that.thumbnailFile,_that.date,_that.note
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'tag_id')  int tagId,  String file, @JsonKey(name: 'thumbnail_file')  String thumbnailFile,  DateTime date,  String note)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'tag_id')  int tagId,  String file, @JsonKey(name: 'thumbnail_file')  String thumbnailFile,  DateTime date,  String note, @JsonKey(name: 'user_id', defaultValue: 1)  int? userId)  $default,) {final _that = this;
 switch (_that) {
 case _VaultImageEntity():
-return $default(_that.tagId,_that.file,_that.thumbnailFile,_that.date,_that.note);case _:
+return $default(_that.tagId,_that.file,_that.thumbnailFile,_that.date,_that.note,_that.userId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.tagId,_that.file,_that.thumbnailFile,_that.date,_that.note
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'tag_id')  int tagId,  String file, @JsonKey(name: 'thumbnail_file')  String thumbnailFile,  DateTime date,  String note)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'tag_id')  int tagId,  String file, @JsonKey(name: 'thumbnail_file')  String thumbnailFile,  DateTime date,  String note, @JsonKey(name: 'user_id', defaultValue: 1)  int? userId)?  $default,) {final _that = this;
 switch (_that) {
 case _VaultImageEntity() when $default != null:
-return $default(_that.tagId,_that.file,_that.thumbnailFile,_that.date,_that.note);case _:
+return $default(_that.tagId,_that.file,_that.thumbnailFile,_that.date,_that.note,_that.userId);case _:
   return null;
 
 }
@@ -213,7 +214,7 @@ return $default(_that.tagId,_that.file,_that.thumbnailFile,_that.date,_that.note
 @JsonSerializable()
 
 class _VaultImageEntity implements VaultImageEntity {
-  const _VaultImageEntity({@JsonKey(name: 'tag_id') required this.tagId, required this.file, @JsonKey(name: 'thumbnail_file') required this.thumbnailFile, required this.date, required this.note});
+  const _VaultImageEntity({@JsonKey(name: 'tag_id') required this.tagId, required this.file, @JsonKey(name: 'thumbnail_file') required this.thumbnailFile, required this.date, required this.note, @JsonKey(name: 'user_id', defaultValue: 1) this.userId = 1});
   factory _VaultImageEntity.fromJson(Map<String, dynamic> json) => _$VaultImageEntityFromJson(json);
 
 @override@JsonKey(name: 'tag_id') final  int tagId;
@@ -221,6 +222,7 @@ class _VaultImageEntity implements VaultImageEntity {
 @override@JsonKey(name: 'thumbnail_file') final  String thumbnailFile;
 @override final  DateTime date;
 @override final  String note;
+@override@JsonKey(name: 'user_id', defaultValue: 1) final  int? userId;
 
 /// Create a copy of VaultImageEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VaultImageEntity&&(identical(other.tagId, tagId) || other.tagId == tagId)&&(identical(other.file, file) || other.file == file)&&(identical(other.thumbnailFile, thumbnailFile) || other.thumbnailFile == thumbnailFile)&&(identical(other.date, date) || other.date == date)&&(identical(other.note, note) || other.note == note));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VaultImageEntity&&(identical(other.tagId, tagId) || other.tagId == tagId)&&(identical(other.file, file) || other.file == file)&&(identical(other.thumbnailFile, thumbnailFile) || other.thumbnailFile == thumbnailFile)&&(identical(other.date, date) || other.date == date)&&(identical(other.note, note) || other.note == note)&&(identical(other.userId, userId) || other.userId == userId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,tagId,file,thumbnailFile,date,note);
+int get hashCode => Object.hash(runtimeType,tagId,file,thumbnailFile,date,note,userId);
 
 @override
 String toString() {
-  return 'VaultImageEntity(tagId: $tagId, file: $file, thumbnailFile: $thumbnailFile, date: $date, note: $note)';
+  return 'VaultImageEntity(tagId: $tagId, file: $file, thumbnailFile: $thumbnailFile, date: $date, note: $note, userId: $userId)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$VaultImageEntityCopyWith<$Res> implements $VaultImageEnti
   factory _$VaultImageEntityCopyWith(_VaultImageEntity value, $Res Function(_VaultImageEntity) _then) = __$VaultImageEntityCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'tag_id') int tagId, String file,@JsonKey(name: 'thumbnail_file') String thumbnailFile, DateTime date, String note
+@JsonKey(name: 'tag_id') int tagId, String file,@JsonKey(name: 'thumbnail_file') String thumbnailFile, DateTime date, String note,@JsonKey(name: 'user_id', defaultValue: 1) int? userId
 });
 
 
@@ -272,14 +274,15 @@ class __$VaultImageEntityCopyWithImpl<$Res>
 
 /// Create a copy of VaultImageEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? tagId = null,Object? file = null,Object? thumbnailFile = null,Object? date = null,Object? note = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? tagId = null,Object? file = null,Object? thumbnailFile = null,Object? date = null,Object? note = null,Object? userId = freezed,}) {
   return _then(_VaultImageEntity(
 tagId: null == tagId ? _self.tagId : tagId // ignore: cast_nullable_to_non_nullable
 as int,file: null == file ? _self.file : file // ignore: cast_nullable_to_non_nullable
 as String,thumbnailFile: null == thumbnailFile ? _self.thumbnailFile : thumbnailFile // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,note: null == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
-as String,
+as String,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

@@ -74,9 +74,7 @@ class BodyPictureRepository implements IBodyPictureFacade {
 
       final db = await databaseService.database;
 
-      final data = await db.delete(
-        'pictures',
-      );
+      final data = await db.delete('pictures');
 
       if (data != 1) {
         return left('BAD HAPPENED');
@@ -134,12 +132,8 @@ class BodyPictureRepository implements IBodyPictureFacade {
       final orginalFileName = itemDetails.file;
       final thumbnailFileName = itemDetails.thumbnailFile;
 
-      final orginalFile = File(
-        '$imagesFolderPath/$orginalFileName',
-      );
-      final thumbnailFile = File(
-        '$thumbnailsFolderPath/$thumbnailFileName',
-      );
+      final orginalFile = File('$imagesFolderPath/$orginalFileName');
+      final thumbnailFile = File('$thumbnailsFolderPath/$thumbnailFileName');
 
       // Deleting from directories
       await orginalFile.delete();
@@ -168,8 +162,7 @@ class BodyPictureRepository implements IBodyPictureFacade {
     try {
       final db = await databaseService.database;
 
-      final data = await db.rawQuery(
-        '''
+      final data = await db.rawQuery('''
           SELECT 
             p.id,
             p.file,
@@ -184,8 +177,7 @@ class BodyPictureRepository implements IBodyPictureFacade {
           LEFT JOIN ${DatabaseService.measurementTargetsTable} mt ON pt.target_id = mt.id
           GROUP BY p.id
           ORDER BY p.date DESC
-        ''',
-      );
+        ''');
 
       final dataList = data.map((row) {
         final targets = row['targets'] != null
@@ -276,7 +268,8 @@ class BodyPictureRepository implements IBodyPictureFacade {
 
   @override
   Future<Either<String, List<VaultImageModel>>> getBodyPicturesByTag(
-      String tag) {
+    String tag,
+  ) {
     // TODO: implement getBodyPicturesByTag
     throw UnimplementedError();
   }
@@ -292,10 +285,7 @@ class BodyPictureRepository implements IBodyPictureFacade {
     SaveVaultImageRequest request,
   ) async {
     final imageName = _fileNameCreator(request.path, request.tag);
-    final thumbnailName = _thumbnailFileNameCreator(
-      request.path,
-      request.tag,
-    );
+    final thumbnailName = _thumbnailFileNameCreator(request.path, request.tag);
 
     try {
       final imageNameWithPathToSave = '$imagesFolderPath/$imageName';
@@ -324,9 +314,7 @@ class BodyPictureRepository implements IBodyPictureFacade {
 
       // Create the thumbnail file
       final thumbnailFile = File(imageThumbnailNameWithPathToSave);
-      await thumbnailFile.writeAsBytes(
-        thumbnailBytes,
-      );
+      await thumbnailFile.writeAsBytes(thumbnailBytes);
 
       final dbData = VaultImageEntity(
         tagId: request.tagId,
@@ -334,6 +322,7 @@ class BodyPictureRepository implements IBodyPictureFacade {
         thumbnailFile: thumbnailName,
         date: request.date,
         note: request.note,
+        // userId: 1, // Assuming a default user ID for now, can be modified later
       );
 
       final db = await databaseService.database;
@@ -393,7 +382,8 @@ class BodyPictureRepository implements IBodyPictureFacade {
 
   @override
   Future<Either<String, VaultImageModel>> updateBodyPicture(
-      VaultImageModel bodyPicture) {
+    VaultImageModel bodyPicture,
+  ) {
     // TODO: implement updateBodyPicture
     throw UnimplementedError();
   }
@@ -479,16 +469,8 @@ class BodyPictureRepository implements IBodyPictureFacade {
         );
       }).toList();
 
-      final firstImages = firstImagesSet
-          .map(
-            (e) => e.file,
-          )
-          .toList();
-      final secondImages = secondImagesSet
-          .map(
-            (e) => e.file,
-          )
-          .toList();
+      final firstImages = firstImagesSet.map((e) => e.file).toList();
+      final secondImages = secondImagesSet.map((e) => e.file).toList();
 
       return right(
         CompareImagesModel(
@@ -548,8 +530,9 @@ class BodyPictureRepository implements IBodyPictureFacade {
       final db = await databaseService.database;
       final result = await db.query('muscle_groups');
 
-      final muscleGroups =
-          result.map((e) => e['muscle_group']! as String).toList();
+      final muscleGroups = result
+          .map((e) => e['muscle_group']! as String)
+          .toList();
 
       return right(muscleGroups);
     } catch (e) {
