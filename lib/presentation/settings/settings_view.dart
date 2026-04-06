@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
@@ -27,6 +26,18 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    SnackBar _buildFloatingSnackBar(String message, {Color? backgroundColor}) {
+      return SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: backgroundColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        content: Text(message),
+      );
+    }
+
     Future<void> _showDeleteAllDataConfirmation() async {
       return showDialog<void>(
         context: context,
@@ -35,6 +46,11 @@ class SettingsView extends StatelessWidget {
           return BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
             child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              backgroundColor: colorScheme.surfaceContainerHigh,
+              surfaceTintColor: Colors.transparent,
               title: Text(
                 'Do you want delete previous data?',
                 style: Theme.of(context).textTheme.titleLarge,
@@ -67,11 +83,21 @@ class SettingsView extends StatelessWidget {
         (context.watch<UserPreferencesCubit>().state as UserPreferencesLoaded)
             .preferences;
     return Scaffold(
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
         centerTitle: true,
-        title: Text(AppLocalizations.of(context).settingsTitle),
+        title: Text(
+          AppLocalizations.of(context).settingsTitle,
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.2,
+          ),
+        ),
+        backgroundColor: colorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         actions: [
-          IconButton.filled(
+          IconButton.filledTonal(
             onPressed: () {
               Navigator.of(context).pushNamed(VaultGalleryView.routeName);
             },
@@ -92,16 +118,16 @@ class SettingsView extends StatelessWidget {
                         break;
                       case BackupRestoreDataStateLoading():
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Loading...'),
-                            backgroundColor: Colors.blue,
+                          _buildFloatingSnackBar(
+                            'Loading...',
+                            backgroundColor: colorScheme.primary,
                           ),
                         );
                         break;
                       case BackupRestoreDataStateSuccess():
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Success'),
+                          _buildFloatingSnackBar(
+                            'Success',
                             backgroundColor: Colors.green,
                           ),
                         );
@@ -123,8 +149,8 @@ class SettingsView extends StatelessWidget {
                         break;
                       case BackupRestoreDataStateFailed(msg: final s):
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(s),
+                          _buildFloatingSnackBar(
+                            s,
                             backgroundColor: Colors.red,
                           ),
                         );
@@ -154,16 +180,16 @@ class SettingsView extends StatelessWidget {
                         //       ),
                         //     );
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Success'),
+                          _buildFloatingSnackBar(
+                            'Success',
                             backgroundColor: Colors.green,
                           ),
                         );
                         break;
                       case DeleteAllDataStateFailed(msg: final s):
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(s),
+                          _buildFloatingSnackBar(
+                            s,
                             backgroundColor: Colors.red,
                           ),
                         );
@@ -201,7 +227,42 @@ class SettingsView extends StatelessWidget {
                     //     ],
                     //   ),
                     // ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 14),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+                      child: Container(
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: colorScheme.surfaceContainerHigh,
+                          borderRadius: BorderRadius.circular(22),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: colorScheme.primaryContainer,
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                              child: Icon(
+                                Icons.tune_rounded,
+                                color: colorScheme.onPrimaryContainer,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'Personalize units and backups with your preferred defaults.',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                  height: 1.35,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     // LanguageSelector(
                     //   appPreferences: (state as SavedAndReady).appPreferences,
                     // ),
@@ -264,17 +325,17 @@ class SettingsView extends StatelessWidget {
                     SettingsChildContainer(
                       child: TextButton(
                         onPressed: _showDeleteAllDataConfirmation,
-                        child: const Padding(
-                          padding: EdgeInsets.all(12),
-                          child: Text(
-                            'Delete all data',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.red,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          textStyle: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
+                        child: const Text('Delete all data'),
                       ),
                     ),
                     // HereChoiceChiper<WeightUnit>(
@@ -340,6 +401,9 @@ class RestoreOrBackup extends StatefulWidget {
 class _RestoreOrBackupState extends State<RestoreOrBackup> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     // Restore Options Dialog
     Future<void> _showRestoreOptions(String path) async {
       return showDialog<void>(
@@ -349,6 +413,11 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
           return BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
             child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              backgroundColor: colorScheme.surfaceContainerHigh,
+              surfaceTintColor: Colors.transparent,
               title: Text(
                 'Do you want delete previous data?',
                 style: Theme.of(context).textTheme.titleLarge,
@@ -394,9 +463,9 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
           children: [
             Text(
               'Backup or Restore',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
 
             // Padding(
@@ -479,11 +548,17 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     if (Platform.operatingSystem == 'android') ...[
-                      FilledButton(
+                      FilledButton.icon(
+                        style: FilledButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
                         onPressed: () {
                           context.read<BackupRestoreDataCubit>().backupData();
                         },
-                        child: const Text(
+                        icon: const Icon(Icons.backup_outlined),
+                        label: const Text(
                           'Backup',
                           style: TextStyle(
                             fontSize: 14,
@@ -494,11 +569,19 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
                       const SizedBox(width: 6),
                     ] else
                       const SizedBox.shrink(),
-                    FilledButton(
+                    FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        backgroundColor: colorScheme.secondaryContainer,
+                        foregroundColor: colorScheme.onSecondaryContainer,
+                      ),
                       onPressed: () {
                         context.read<BackupRestoreDataCubit>().shareDatabase();
                       },
-                      child: const Text(
+                      icon: const Icon(Icons.share_outlined),
+                      label: const Text(
                         'Share Backup',
                         style: TextStyle(
                           fontSize: 14,
@@ -507,7 +590,12 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
                       ),
                     ),
                     const SizedBox(width: 6),
-                    FilledButton(
+                    FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
                       onPressed: () async {
                         final result = await FilePicker.platform.pickFiles(
                           type: FileType.custom,
@@ -518,7 +606,8 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
                           await _showRestoreOptions(result.files.first.path!);
                         }
                       },
-                      child: const Text(
+                      icon: const Icon(Icons.restore_page_outlined),
+                      label: const Text(
                         'Restore',
                         style: TextStyle(
                           fontSize: 14,
@@ -554,7 +643,6 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
 
   @override
   Widget build(BuildContext context) {
-    final currentValue = widget.appPreferences.weightUnit;
     return SettingsChildContainer(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -729,7 +817,6 @@ class _LengthChoiceChipState extends State<LengthChoiceChip> {
 
   @override
   Widget build(BuildContext context) {
-    final currentValue = widget.appPreferences.lengthUnit;
     return SettingsChildContainer(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -976,14 +1063,22 @@ class SettingsChildContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Theme.of(
-            context,
-          ).colorScheme.tertiaryContainer.withOpacity(.3),
+          color: colorScheme.surfaceContainer,
+          border: Border.all(color: colorScheme.outlineVariant.withOpacity(.5)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 18,
+              offset: const Offset(0, 6),
+            ),
+          ],
         ),
         width: double.infinity,
         child: child,
