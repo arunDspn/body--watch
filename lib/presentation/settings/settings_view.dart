@@ -69,15 +69,11 @@ class SettingsView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
-          AppLocalizations.of(context).settingsTitle,
-        ),
+        title: Text(AppLocalizations.of(context).settingsTitle),
         actions: [
           IconButton.filled(
             onPressed: () {
-              Navigator.of(context).pushNamed(
-                VaultGalleryView.routeName,
-              );
+              Navigator.of(context).pushNamed(VaultGalleryView.routeName);
             },
             icon: const Icon(Icons.settings_backup_restore_outlined),
           ),
@@ -167,9 +163,7 @@ class SettingsView extends StatelessWidget {
                       case DeleteAllDataStateFailed(msg: final s):
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(
-                              s,
-                            ),
+                            content: Text(s),
                             backgroundColor: Colors.red,
                           ),
                         );
@@ -207,9 +201,7 @@ class SettingsView extends StatelessWidget {
                     //     ],
                     //   ),
                     // ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     // LanguageSelector(
                     //   appPreferences: (state as SavedAndReady).appPreferences,
                     // ),
@@ -222,8 +214,10 @@ class SettingsView extends StatelessWidget {
                     // ThemeChoiceChip(
                     //   appTheme: context.read<AppthemeBloc>().state,
                     // ),
-                    BlocBuilder<GetAllMetricUnitsAvailableCubit,
-                        GetAllMetricUnitsAvailableState>(
+                    BlocBuilder<
+                      GetAllMetricUnitsAvailableCubit,
+                      GetAllMetricUnitsAvailableState
+                    >(
                       builder: (context, state) {
                         return state.maybeWhen(
                           orElse: () {
@@ -233,16 +227,15 @@ class SettingsView extends StatelessWidget {
                             return Column(
                               children: allUnits!.keys.map((e) {
                                 return ReusableSegmentedButton<
-                                    MetricUnitsModel>(
+                                  MetricUnitsModel
+                                >(
                                   selectedItem: allUnits[e]!.firstWhereOrNull(
                                     (metricUnitElement) =>
                                         metricUnitElement.unit ==
-                                        userPref.firstWhere(
-                                          (prefElement) {
-                                            return prefElement.metricCode ==
-                                                allUnits[e]!.first.code;
-                                          },
-                                        ).preferredUnit,
+                                        userPref.firstWhere((prefElement) {
+                                          return prefElement.metricCode ==
+                                              allUnits[e]!.first.code;
+                                        }).preferredUnit,
                                   ),
                                   sectionName: e,
                                   items: allUnits[e]!,
@@ -365,9 +358,9 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
                   child: const Text('Yes'),
                   onPressed: () {
                     context.read<BackupRestoreDataCubit>().restoreData(
-                          merge: false,
-                          path: path,
-                        );
+                      merge: false,
+                      path: path,
+                    );
                     Navigator.of(context).pop();
                   },
                 ),
@@ -375,8 +368,8 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
                   child: const Text('No'),
                   onPressed: () {
                     context.read<BackupRestoreDataCubit>().restoreData(
-                          path: path,
-                        );
+                      path: path,
+                    );
                     Navigator.of(context).pop();
                   },
                 ),
@@ -401,11 +394,11 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
           children: [
             Text(
               'Backup or Restore',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(fontWeight: FontWeight.w600),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
+
             // Padding(
             //   padding: const EdgeInsets.all(4),
             //   child: Row(
@@ -478,7 +471,6 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
             //     ],
             //   ),
             // ),
-
             Padding(
               padding: const EdgeInsets.all(4),
               child: SingleChildScrollView(
@@ -546,10 +538,8 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
 }
 
 class WeightChoiceChip extends StatefulWidget {
-  const WeightChoiceChip({
-    Key? key,
-    required this.appPreferences,
-  }) : super(key: key);
+  const WeightChoiceChip({Key? key, required this.appPreferences})
+    : super(key: key);
   final AppPreferences appPreferences;
 
   @override
@@ -573,9 +563,9 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
           children: [
             Text(
               'Weigth Unit',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
             // Padding(
             //   padding: const EdgeInsets.all(4),
@@ -651,10 +641,7 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
 }
 
 class ThemeChoiceChip extends StatefulWidget {
-  const ThemeChoiceChip({
-    Key? key,
-    required this.appTheme,
-  }) : super(key: key);
+  const ThemeChoiceChip({Key? key, required this.appTheme}) : super(key: key);
 
   final AppTheme appTheme;
 
@@ -677,10 +664,7 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Theme',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            Text('Theme', style: Theme.of(context).textTheme.titleLarge),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Row(
@@ -712,10 +696,10 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
                     ),
                     onSelected: (value) {
                       context.read<AppthemeBloc>().add(
-                            AppthemeEvent.changeTheme(
-                              appTheme: AppTheme.values[index],
-                            ),
-                          );
+                        AppthemeEvent.changeTheme(
+                          appTheme: AppTheme.values[index],
+                        ),
+                      );
                     },
                   );
                 }),
@@ -729,10 +713,8 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
 }
 
 class LengthChoiceChip extends StatefulWidget {
-  const LengthChoiceChip({
-    Key? key,
-    required this.appPreferences,
-  }) : super(key: key);
+  const LengthChoiceChip({Key? key, required this.appPreferences})
+    : super(key: key);
   final AppPreferences appPreferences;
 
   @override
@@ -756,9 +738,9 @@ class _LengthChoiceChipState extends State<LengthChoiceChip> {
           children: [
             Text(
               'Length Unit',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
             // Padding(
             //   padding: const EdgeInsets.all(4),
@@ -879,10 +861,7 @@ class _HereChoiceChiperState<T> extends State<HereChoiceChiper> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Time',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
+            Text('Time', style: Theme.of(context).textTheme.bodyLarge),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: List.generate(widget.items.length, (index) {
@@ -922,10 +901,8 @@ class _HereChoiceChiperState<T> extends State<HereChoiceChiper> {
 }
 
 class LanguageSelector extends StatefulWidget {
-  const LanguageSelector({
-    Key? key,
-    required this.appPreferences,
-  }) : super(key: key);
+  const LanguageSelector({Key? key, required this.appPreferences})
+    : super(key: key);
 
   final AppPreferences appPreferences;
 
@@ -953,9 +930,9 @@ class _LanguageSelectorState extends State<LanguageSelector> {
         children: [
           Text(
             'Language',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
           ),
           DropdownButton<Locale>(
             value: _currentLocale,
@@ -966,9 +943,7 @@ class _LanguageSelectorState extends State<LanguageSelector> {
                 .map(
                   (e) => DropdownMenuItem(
                     value: e,
-                    child: Text(
-                      e.toString().split('.').last,
-                    ),
+                    child: Text(e.toString().split('.').last),
                   ),
                 )
                 .toList(),
@@ -994,10 +969,8 @@ class _LanguageSelectorState extends State<LanguageSelector> {
 }
 
 class SettingsChildContainer extends StatelessWidget {
-  const SettingsChildContainer({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
+  const SettingsChildContainer({Key? key, required this.child})
+    : super(key: key);
 
   final Widget child;
 
@@ -1008,8 +981,9 @@ class SettingsChildContainer extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color:
-              Theme.of(context).colorScheme.tertiaryContainer.withOpacity(.3),
+          color: Theme.of(
+            context,
+          ).colorScheme.tertiaryContainer.withOpacity(.3),
         ),
         width: double.infinity,
         child: child,

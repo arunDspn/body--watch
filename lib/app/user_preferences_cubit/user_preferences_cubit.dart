@@ -11,8 +11,8 @@ part 'user_preferences_cubit.freezed.dart';
 /// This cubit will handle fetching, updating, and storing user preferences
 class UserPreferencesCubit extends Cubit<UserPreferencesState> {
   UserPreferencesCubit(IUserPreferencesRepository repository)
-      : _repository = repository,
-        super(const UserPreferencesState.initial());
+    : _repository = repository,
+      super(const UserPreferencesState.initial());
 
   final IUserPreferencesRepository _repository;
 
@@ -35,7 +35,7 @@ class UserPreferencesCubit extends Cubit<UserPreferencesState> {
   Future<void> updateAllPreferences(
     List<UserUnitPreferenceModel> preferences,
   ) async {
-    emit(const UserPreferencesState.loading());
+    // emit(const UserPreferencesState.loading());
     try {
       emit(UserPreferencesState.loaded(preferences: preferences));
     } catch (e) {
@@ -49,7 +49,7 @@ class UserPreferencesCubit extends Cubit<UserPreferencesState> {
     int userId,
   ) async {
     final currentState = state as UserPreferencesLoaded;
-    emit(const UserPreferencesState.loading());
+    // emit(const UserPreferencesState.loading());
     try {
       final userPrefEntity = UserUnitPreferencesEntity(
         userId: userId,

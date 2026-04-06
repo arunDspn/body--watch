@@ -49,8 +49,9 @@ class _ReusableSegmentedButtonState<T>
   void initState() {
     super.initState();
     // Always start with empty selection to allow nullable/no initial selection
-    _selectedItems =
-        widget.selectedItem != null ? {widget.selectedItem!} : <T>{};
+    _selectedItems = widget.selectedItem != null
+        ? {widget.selectedItem!}
+        : <T>{};
   }
 
   @override
@@ -58,8 +59,9 @@ class _ReusableSegmentedButtonState<T>
     super.didUpdateWidget(oldWidget);
     if (!widget.multipleSelection &&
         widget.selectedItem != oldWidget.selectedItem) {
-      _selectedItems =
-          widget.selectedItem != null ? {widget.selectedItem!} : <T>{};
+      _selectedItems = widget.selectedItem != null
+          ? {widget.selectedItem!}
+          : <T>{};
     }
   }
 
@@ -86,9 +88,9 @@ class _ReusableSegmentedButtonState<T>
           children: [
             Text(
               widget.sectionName,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 12),
             Center(
@@ -105,6 +107,13 @@ class _ReusableSegmentedButtonState<T>
                 selected: _selectedItems,
                 multiSelectionEnabled: widget.multipleSelection,
                 onSelectionChanged: (Set<T> selection) {
+                  // Keep at least one selected item once a selection exists.
+                  if (!widget.multipleSelection &&
+                      selection.isEmpty &&
+                      _selectedItems.isNotEmpty) {
+                    return;
+                  }
+
                   setState(() {
                     _selectedItems = selection;
                   });
@@ -113,7 +122,8 @@ class _ReusableSegmentedButtonState<T>
                     widget.onSelectionChanged(selection.first);
                   } else {
                     widget.onSelectionChanged(
-                        selection.isNotEmpty ? selection.first : null);
+                      selection.isNotEmpty ? selection.first : null,
+                    );
                   }
                 },
               ),

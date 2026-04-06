@@ -1,7 +1,6 @@
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
 import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
@@ -26,43 +25,37 @@ class AppIniter extends StatefulWidget {
 }
 
 class _AppIniterState extends State<AppIniter> {
-  String? _selectedLanguage;
   Map<String, dynamic> dynamicStates = {};
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     SizeConfig().init(context);
-    void _updateAppPreferences() {
-      // final appPreferences = AppPreferences(
-      //   weightUnit: 1,
-      //   lengthUnit: 1,
-      //   heightUnit: 1,
-      //   lang: 'en',
-      // );
-      // context.read<ApppreferencesBloc>().add(
-      //       ApppreferencesEvent.updatePreferences(
-      //         appPreferences: appPreferences,
-      //       ),
-      //     );
-      // Navigator.pushReplacementNamed(context, HomeView.routeName);
-    }
 
     return Scaffold(
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: const Text('Choose your Defaults'),
+        title: Text(
+          'Choose your defaults',
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.2,
+          ),
+        ),
+        backgroundColor: colorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         centerTitle: true,
       ),
-      body: BlocListener<SetUserUnitPreferencesCubit,
-          SetUserUnitPreferencesState>(
+      body: BlocListener<SetUserUnitPreferencesCubit, SetUserUnitPreferencesState>(
         listener: (context, state) {
           state.whenOrNull(
             error: (message) {
               // Snackbar
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Error: $message'),
-                ),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('Error: $message')));
             },
             loading: () {},
             success: () {
@@ -74,121 +67,203 @@ class _AppIniterState extends State<AppIniter> {
               // );
               // Snackbar
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Preferences saved successfully!'),
+                SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  content: const Text('Preferences saved successfully!'),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
                 ),
+              );
+
+              // Reload UserPreferencesCubit to fetch the updated preferences from the database
+              context.read<UserPreferencesCubit>().fetchUserPreferences(1);
+
+              // Navigate to HomeView and remove all previous routes
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                HomeView.routeName,
+                (route) => false,
               );
             },
           );
         },
-        child: Center(
-          child: BlocConsumer<GetAllMetricUnitsAvailableCubit,
-              GetAllMetricUnitsAvailableState>(
-            listener: (context, state) {
-              state.whenOrNull(
-                loaded: (metricUnits) {
-                  // Initialize dynamicStates with null values for each metric type
-                  // to ensure user makes a selection for each
-                  if (dynamicStates.isEmpty) {
-                    metricUnits!.forEach(
-                      (key, value) {
-                        dynamicStates[key] = null;
-                      },
-                    );
-                  }
-                },
-              );
-            },
-            builder: (context, state) {
-              return state.when(
-                error: (message) {
-                  return Center(
-                    child: Text('Error: $message'),
+        child: SafeArea(
+          child:
+              BlocConsumer<
+                GetAllMetricUnitsAvailableCubit,
+                GetAllMetricUnitsAvailableState
+              >(
+                listener: (context, state) {
+                  state.whenOrNull(
+                    loaded: (metricUnits) {
+                      // Initialize dynamicStates with null values for each metric type
+                      // to ensure user makes a selection for each
+                      if (dynamicStates.isEmpty) {
+                        metricUnits!.forEach((key, value) {
+                          dynamicStates[key] = null;
+                        });
+                      }
+                    },
                   );
                 },
-                initial: () {
-                  return const Center(
-                    child: Text('Initializing...'),
-                  );
-                },
-                loading: () {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-                loaded: (metricUnits) {
-                  return Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Column(
-                            children: metricUnits!.keys.map((e) {
-                              return ReusableSegmentedButton<MetricUnitsModel>(
-                                sectionName: e,
-                                items: metricUnits[e]!,
-                                getLabel: (item) {
-                                  return item.unit;
-                                },
-                                onSelectionChanged: (selection) {
-                                  setState(() {
-                                    dynamicStates[e] = selection?.unit;
-                                  });
-                                },
-                              );
-                            }).toList(),
-                          ),
-                          const SizedBox(height: 15),
-                          Padding(
-                            padding: const EdgeInsets.all(18),
-                            child: SizedBox(
-                              width: double.infinity,
-                              child: FilledButton(
-                                onPressed: dynamicStates.values
-                                        .any((element) => element == null)
-                                    ? null
-                                    : () {
-                                        // convert dynamicStates to UserPreferencesEntity
-                                        final userPreferences =
-                                            <UserUnitPreferencesEntity>[];
-                                        dynamicStates.forEach((key, value) {
-                                          final pref =
-                                              UserUnitPreferencesEntity(
-                                            userId: 1,
-                                            metricCode: metricUnits[key]!
-                                                .firstWhere(
-                                                  (element) =>
-                                                      element.unit == value,
-                                                )
-                                                .code,
-                                            preferredUnit: value,
-                                          );
+                builder: (context, state) {
+                  return state.when(
+                    error: (message) {
+                      return Center(child: Text('Error: $message'));
+                    },
+                    initial: () {
+                      return const Center(child: Text('Initializing...'));
+                    },
+                    loading: () {
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                    loaded: (metricUnits) {
+                      final hasPendingSelections = dynamicStates.values.any(
+                        (element) => element == null,
+                      );
 
-                                          userPreferences.add(pref);
-                                        });
-
-                                        // Save to database
-                                        context
-                                            .read<SetUserUnitPreferencesCubit>()
-                                            .setUserUnitPreferences(
-                                              userUnitPreferences:
-                                                  userPreferences,
-                                            );
-                                      },
-                                child: const Text(
-                                  'Continue',
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: colorScheme.surfaceContainerHigh,
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: colorScheme.primaryContainer,
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: Icon(
+                                        Icons.tune_rounded,
+                                        color: colorScheme.onPrimaryContainer,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Text(
+                                        'Pick your preferred units once and we will use them across the app.',
+                                        style: theme.textTheme.bodyMedium
+                                            ?.copyWith(
+                                              color:
+                                                  colorScheme.onSurfaceVariant,
+                                              height: 1.35,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
+                              const SizedBox(height: 18),
+                              Column(
+                                children: metricUnits!.keys.map((e) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 12),
+                                    child: Material(
+                                      color: colorScheme.surfaceContainer,
+                                      elevation: 0,
+                                      borderRadius: BorderRadius.circular(20),
+                                      child:
+                                          ReusableSegmentedButton<
+                                            MetricUnitsModel
+                                          >(
+                                            sectionName: e,
+                                            items: metricUnits[e]!,
+                                            getLabel: (item) {
+                                              return item.unit;
+                                            },
+                                            onSelectionChanged: (selection) {
+                                              setState(() {
+                                                dynamicStates[e] =
+                                                    selection?.unit;
+                                              });
+                                            },
+                                          ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                              const SizedBox(height: 10),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: FilledButton.icon(
+                                    style: FilledButton.styleFrom(
+                                      minimumSize: const Size.fromHeight(54),
+                                      textStyle: theme.textTheme.titleMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(18),
+                                      ),
+                                    ),
+                                    onPressed: hasPendingSelections
+                                        ? null
+                                        : () {
+                                            // convert dynamicStates to UserPreferencesEntity
+                                            final userPreferences =
+                                                <UserUnitPreferencesEntity>[];
+                                            dynamicStates.forEach((key, value) {
+                                              final pref =
+                                                  UserUnitPreferencesEntity(
+                                                    userId: 1,
+                                                    metricCode:
+                                                        metricUnits[key]!
+                                                            .firstWhere(
+                                                              (element) =>
+                                                                  element
+                                                                      .unit ==
+                                                                  value,
+                                                            )
+                                                            .code,
+                                                    preferredUnit: value,
+                                                  );
+
+                                              userPreferences.add(pref);
+                                            });
+
+                                            // Save to database
+                                            context
+                                                .read<
+                                                  SetUserUnitPreferencesCubit
+                                                >()
+                                                .setUserUnitPreferences(
+                                                  userUnitPreferences:
+                                                      userPreferences,
+                                                );
+                                          },
+                                    icon: const Icon(
+                                      Icons.arrow_forward_rounded,
+                                    ),
+                                    label: Text(
+                                      hasPendingSelections
+                                          ? 'Select all units'
+                                          : 'Continue',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   );
                 },
-              );
-            },
-          ),
+              ),
         ),
       ),
     );
@@ -196,10 +271,8 @@ class _AppIniterState extends State<AppIniter> {
 }
 
 class WeightChoiceChip extends StatefulWidget {
-  const WeightChoiceChip({
-    Key? key,
-    required this.onSelected,
-  }) : super(key: key);
+  const WeightChoiceChip({Key? key, required this.onSelected})
+    : super(key: key);
 
   final void Function(WeightUnit weightUnit) onSelected;
 
@@ -220,20 +293,15 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
           children: [
             Text(
               'Weigth Unit',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
 
             Center(
               child: SegmentedButton<WeightUnit?>(
                 segments: WeightUnit.values
-                    .map(
-                      (e) => ButtonSegment(
-                        value: e,
-                        label: Text(e.name),
-                      ),
-                    )
+                    .map((e) => ButtonSegment(value: e, label: Text(e.name)))
                     .toList(),
                 selected: {_selectedWeightUnit},
                 onSelectionChanged: (p0) {
@@ -243,7 +311,7 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
                   }
                 },
               ),
-            )
+            ),
             // Padding(
             //   padding: const EdgeInsets.all(4),
             //   child: Row(
@@ -288,9 +356,7 @@ class _WeightChoiceChipState extends State<WeightChoiceChip> {
 }
 
 class ThemeChoiceChip extends StatefulWidget {
-  const ThemeChoiceChip({
-    Key? key,
-  }) : super(key: key);
+  const ThemeChoiceChip({Key? key}) : super(key: key);
 
   @override
   State<ThemeChoiceChip> createState() => _ThemeChoiceChipState();
@@ -307,10 +373,7 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Theme',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            Text('Theme', style: Theme.of(context).textTheme.titleLarge),
             Padding(
               padding: const EdgeInsets.all(8),
               child: Row(
@@ -320,10 +383,7 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
                     label: Padding(
                       padding: const EdgeInsets.all(4),
                       child: Text(
-                        EnumToString.convertToString(
-                          e,
-                          camelCase: true,
-                        ),
+                        EnumToString.convertToString(e, camelCase: true),
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -343,10 +403,8 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
                     onSelected: (value) {
                       _selectedTheme = e;
                       context.read<AppthemeBloc>().add(
-                            AppthemeEvent.changeTheme(
-                              appTheme: e,
-                            ),
-                          );
+                        AppthemeEvent.changeTheme(appTheme: e),
+                      );
                     },
                   );
                 }).toList(),
@@ -360,10 +418,8 @@ class _ThemeChoiceChipState extends State<ThemeChoiceChip> {
 }
 
 class LengthChoiceChip extends StatefulWidget {
-  const LengthChoiceChip({
-    Key? key,
-    required this.onSelected,
-  }) : super(key: key);
+  const LengthChoiceChip({Key? key, required this.onSelected})
+    : super(key: key);
 
   final void Function(LengthUnit weightUnit) onSelected;
 
@@ -384,9 +440,9 @@ class _LengthChoiceChipState extends State<LengthChoiceChip> {
           children: [
             Text(
               'Length Unit',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
             ),
             // Padding(
             //   padding: const EdgeInsets.all(4),
@@ -427,12 +483,7 @@ class _LengthChoiceChipState extends State<LengthChoiceChip> {
             Center(
               child: SegmentedButton<LengthUnit?>(
                 segments: LengthUnit.values
-                    .map(
-                      (e) => ButtonSegment(
-                        value: e,
-                        label: Text(e.name),
-                      ),
-                    )
+                    .map((e) => ButtonSegment(value: e, label: Text(e.name)))
                     .toList(),
                 selected: {_selectedLengthUnit},
                 onSelectionChanged: (p0) {
@@ -442,7 +493,7 @@ class _LengthChoiceChipState extends State<LengthChoiceChip> {
                   }
                 },
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -487,10 +538,7 @@ class _HereChoiceChiperState<T> extends State<HereChoiceChiper> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Time',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            Text('Time', style: Theme.of(context).textTheme.titleLarge),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: List.generate(widget.items.length, (index) {
@@ -530,9 +578,7 @@ class _HereChoiceChiperState<T> extends State<HereChoiceChiper> {
 }
 
 class LanguageSelector extends StatefulWidget {
-  const LanguageSelector({
-    Key? key,
-  }) : super(key: key);
+  const LanguageSelector({Key? key}) : super(key: key);
 
   @override
   State<LanguageSelector> createState() => _LanguageSelectorState();
@@ -551,10 +597,7 @@ class _LanguageSelectorState extends State<LanguageSelector> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(
-            'Language',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          Text('Language', style: Theme.of(context).textTheme.titleLarge),
           DropdownButton<Locale>(
             value: _currentLocale,
             borderRadius: BorderRadius.circular(10),
@@ -564,9 +607,7 @@ class _LanguageSelectorState extends State<LanguageSelector> {
                 .map(
                   (e) => DropdownMenuItem(
                     value: e,
-                    child: Text(
-                      e.toString().split('.').last,
-                    ),
+                    child: Text(e.toString().split('.').last),
                   ),
                 )
                 .toList(),
