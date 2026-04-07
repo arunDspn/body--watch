@@ -3,6 +3,7 @@ import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
 import 'package:watcha_body/domain/measurement/models/overview_widget_model.dart';
 import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
+import 'package:watcha_body/domain/models/restore_summary.dart';
 import 'package:watcha_body/domain/models/two_dates_record_model.dart';
 
 abstract class IMeasurementsFacade {
@@ -68,7 +69,7 @@ abstract class IMeasurementsFacade {
 
   Future<Either<String, String>> backupDatabase();
 
-  Future<Either<String, Unit>> restoreDatabase({
+  Future<Either<String, RestoreSummary>> restoreDatabase({
     bool merge = false,
     required String stringifiedDatas,
   });

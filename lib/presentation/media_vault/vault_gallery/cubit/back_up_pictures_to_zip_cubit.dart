@@ -8,38 +8,60 @@ part 'back_up_pictures_to_zip_cubit.freezed.dart';
 
 class BackUpPicturesToZipCubit extends Cubit<BackUpPicturesToZipState> {
   BackUpPicturesToZipCubit(this.bodyPictureRepository)
-      : super(const BackUpPicturesToZipState.initial());
+    : super(const BackUpPicturesToZipState.initial());
 
   final BodyPictureRepository bodyPictureRepository;
+  String _successMessage = 'Success';
+
+  String get successMessage => _successMessage;
 
   Future<void> backupPictures() async {
     emit(const BackUpPicturesToZipState.loading());
 
-    // Permissions
     final permissionStatus = await _checkPermission(false);
     if (!permissionStatus.isGranted) {
-      final newP = await _requestPermission(false);
-      if (!newP.isGranted) {
+      final newPermission = await _requestPermission(false);
+      if (!newPermission.isGranted) {
         emit(
           const BackUpPicturesToZipState.failure('Permission Scene ann Mone'),
         );
+        return;
       }
     }
 
-    // 3 sec lag
-    // await Future.delayed(const Duration(seconds: 3));
-
     final result = await bodyPictureRepository.backupPhotosToZip();
+    result.fold((l) => emit(BackUpPicturesToZipState.failure(l)), (path) {
+      _successMessage = 'Backup successful\nBackup Path: $path';
+      emit(BackUpPicturesToZipState.success('backup::$path'));
+    });
+  }
 
-    result.fold(
-      (l) => emit(BackUpPicturesToZipState.failure(l)),
-      (r) => emit(BackUpPicturesToZipState.success(r)),
+  Future<void> restorePictures({
+    required String path,
+    bool merge = true,
+  }) async {
+    emit(const BackUpPicturesToZipState.loading());
+
+    final permissionStatus = await _checkPermission(false);
+    if (!permissionStatus.isGranted) {
+      final newPermission = await _requestPermission(false);
+      if (!newPermission.isGranted) {
+        emit(
+          const BackUpPicturesToZipState.failure('Permission Scene ann Mone'),
+        );
+        return;
+      }
+    }
+
+    final result = await bodyPictureRepository.restorePhotosFromZip(
+      zipPath: path,
+      merge: merge,
     );
 
-    // emit(const BackUpPicturesToZipState.success());
-
-    // failed
-    // emit(const BackUpPicturesToZipState.failed());
+    result.fold((l) => emit(BackUpPicturesToZipState.failure(l)), (summary) {
+      _successMessage = summary.toUserMessage();
+      emit(BackUpPicturesToZipState.success('restore::$path'));
+    });
   }
 }
 

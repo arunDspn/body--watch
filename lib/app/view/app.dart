@@ -15,6 +15,7 @@ import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/data/app_data.dart';
 import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
 import 'package:watcha_body/data/repositories/bodypicture_repository.dart';
+import 'package:watcha_body/data/repositories/app_backup_repository.dart';
 import 'package:watcha_body/data/repositories/goals_repository.dart';
 import 'package:watcha_body/data/repositories/local_auth_repository_impl.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
@@ -24,7 +25,6 @@ import 'package:watcha_body/domain/auth/i_auth_repository.dart';
 import 'package:watcha_body/l10n/arb/app_localizations.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
-import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
 import 'package:watcha_body/presentation/app_initializer/app_initer.dart';
 import 'package:watcha_body/presentation/app_initializer/cubit/get_all_metrics/get_all_metric_units_available_cubit.dart';
 import 'package:watcha_body/presentation/app_initializer/cubit/set_user_unit_preferences/set_user_unit_preferences_cubit.dart';
@@ -112,6 +112,12 @@ class App extends StatelessWidget {
             );
           },
         ),
+        RepositoryProvider<AppBackupRepository>(
+          create: (context) => AppBackupRepository(
+            measurementRepository: context.read<MeasurementRepository>(),
+            bodyPictureRepository: context.read<BodyPictureRepository>(),
+          ),
+        ),
         RepositoryProvider<IAuthRepository>.value(value: authRepository),
 
         // UserPreferenceRepository
@@ -139,8 +145,10 @@ class App extends StatelessWidget {
           BlocProvider<AppthemeBloc>(create: (context) => AppthemeBloc()),
           BlocProvider<FilterchartBloc>(create: (context) => FilterchartBloc()),
           BlocProvider<BackupRestoreDataCubit>(
-            create: (context) =>
-                BackupRestoreDataCubit(context.read<MeasurementRepository>()),
+            create: (context) => BackupRestoreDataCubit(
+              context.read<MeasurementRepository>(),
+              context.read<AppBackupRepository>(),
+            ),
           ),
           BlocProvider<DeleteAllDataCubit>(
             create: (context) =>

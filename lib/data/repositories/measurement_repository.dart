@@ -12,12 +12,26 @@ import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
 import 'package:watcha_body/domain/measurement/models/overview_widget_model.dart';
 import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
+import 'package:watcha_body/domain/models/restore_summary.dart';
 import 'package:watcha_body/domain/models/two_dates_record_model.dart';
 
 class MeasurementRepository extends IMeasurementsFacade {
   MeasurementRepository(this.databaseService);
 
   final DatabaseService databaseService;
+  static const int _backupSchemaVersion = 1;
+  static const String _backupFormat = 'watcha_body.measurements.v1';
+  static const List<String> _measurementBackupTables = <String>[
+    DatabaseService.userTable,
+    DatabaseService.userUnitPreferencesTable,
+    DatabaseService.userSettingsTable,
+    DatabaseService.measurementsDataTable,
+    DatabaseService.measurementGoalsTable,
+    DatabaseService.measurementTargetsTable,
+    DatabaseService.metricsTable,
+    DatabaseService.metricUnitsTable,
+    DatabaseService.targetMetricsTable,
+  ];
 
   // static const _latestDetailsQuery = '''
   //   WITH ranked AS
@@ -66,15 +80,30 @@ class MeasurementRepository extends IMeasurementsFacade {
 
   @override
   Future<Either<String, Unit>> deleteAllData({String? id}) async {
-    // try {
-    //   await databaseService.delete(
-    //     id: id,
-    //   );
-    //   return const Right(unit);
-    // } catch (e) {
-    //   return Left(e.toString());
-    // }
-    throw UnimplementedError();
+    try {
+      final db = await databaseService.database;
+      await db.transaction((txn) async {
+        if (id == null) {
+          await txn.delete(DatabaseService.measurementGoalsTable);
+          await txn.delete(DatabaseService.measurementsDataTable);
+        } else {
+          final parsedId = int.parse(id);
+          await txn.delete(
+            DatabaseService.measurementGoalsTable,
+            where: 'target_id = ?',
+            whereArgs: [parsedId],
+          );
+          await txn.delete(
+            DatabaseService.measurementsDataTable,
+            where: 'target_id = ?',
+            whereArgs: [parsedId],
+          );
+        }
+      });
+      return const Right(unit);
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 
   // @override
@@ -362,52 +391,145 @@ class MeasurementRepository extends IMeasurementsFacade {
 
   @override
   Future<Either<String, String>> backupDatabase() async {
-    // try {
-    //   final _data = await databaseService.getData();
-    //   final _jsonData = const JsonEncoder().convert(_data);
-    //   return Right(_jsonData);
-    // } catch (e) {
-    //   return Left(e.toString());
-    // }
-    throw UnimplementedError();
+    try {
+      final db = await databaseService.database;
+      final tables = <String, List<Map<String, dynamic>>>{};
+
+      for (final tableName in _measurementBackupTables) {
+        final rows = await db.query(tableName);
+        tables[tableName] = rows
+            .map((row) => Map<String, dynamic>.from(row))
+            .toList();
+      }
+
+      final payload = <String, dynamic>{
+        'manifest': <String, dynamic>{
+          'format': _backupFormat,
+          'schemaVersion': _backupSchemaVersion,
+          'createdAt': DateTime.now().toIso8601String(),
+        },
+        'tables': tables,
+      };
+
+      return Right(const JsonEncoder.withIndent('  ').convert(payload));
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 
   @override
-  Future<Either<String, Unit>> restoreDatabase({
+  Future<Either<String, RestoreSummary>> restoreDatabase({
     bool merge = false,
     required String stringifiedDatas,
   }) async {
-    // try {
-    //   //
-    //   final dynamic _datas = const JsonDecoder().convert(stringifiedDatas);
-    //   // as List<Map<String, dynamic>>;
-    //   // Merge or delete all data and insert new data
-    //   if (!merge) {
-    //     await databaseService.delete();
-    //   }
-    //   await databaseService.restoreData(
-    //     datas: _datas,
-    //   );
-    //   return const Right(unit);
-    // } catch (e) {
-    //   return Left(e.toString());
-    // }
+    try {
+      final decoded = jsonDecode(stringifiedDatas);
+      if (decoded is! Map<String, dynamic>) {
+        return const Left('Invalid backup format: root object expected.');
+      }
 
-    throw UnimplementedError();
+      final manifest = decoded['manifest'];
+      final tablesNode = decoded['tables'];
+
+      if (manifest is! Map<String, dynamic> ||
+          tablesNode is! Map<String, dynamic>) {
+        return const Left('Invalid backup format: missing manifest/tables.');
+      }
+
+      final schemaVersion = manifest['schemaVersion'];
+      if (schemaVersion != _backupSchemaVersion) {
+        return Left(
+          'Unsupported backup schema version: $schemaVersion. '
+          'Expected $_backupSchemaVersion.',
+        );
+      }
+
+      final db = await databaseService.database;
+      final tableSummaries = <RestoreTableSummary>[];
+
+      await db.transaction((txn) async {
+        if (!merge) {
+          await txn.delete(DatabaseService.measurementGoalsTable);
+          await txn.delete(DatabaseService.measurementsDataTable);
+          await txn.delete(DatabaseService.userUnitPreferencesTable);
+          await txn.delete(DatabaseService.userSettingsTable);
+        }
+
+        for (final tableName in _measurementBackupTables) {
+          var insertedCount = 0;
+          var skippedCount = 0;
+          final rows = _rowsFromTablesNode(
+            tablesNode: tablesNode,
+            tableName: tableName,
+          );
+
+          for (final row in rows) {
+            if (merge) {
+              final shouldInsert = await _shouldInsertRowOnMerge(
+                txn: txn,
+                tableName: tableName,
+                row: row,
+              );
+
+              if (!shouldInsert) {
+                skippedCount++;
+                continue;
+              }
+            }
+
+            final insertedId = await txn.insert(
+              tableName,
+              row,
+              conflictAlgorithm: merge
+                  ? ConflictAlgorithm.ignore
+                  : ConflictAlgorithm.replace,
+            );
+
+            if (merge && insertedId == 0) {
+              skippedCount++;
+            } else {
+              insertedCount++;
+            }
+          }
+
+          tableSummaries.add(
+            RestoreTableSummary(
+              name: tableName,
+              insertedCount: insertedCount,
+              skippedCount: skippedCount,
+            ),
+          );
+        }
+      });
+
+      return Right(
+        RestoreSummary(
+          scope: 'measurements',
+          merge: merge,
+          tables: tableSummaries,
+        ),
+      );
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 
   @override
   Future<Either<String, Unit>> deleteMeasurement({required String id}) async {
-    // try {
-    //   await databaseService.delete(
-    //     id: id,
-    //   );
-    //   return const Right(unit);
-    // } catch (e) {
-    //   return Left(e.toString());
-    // }
-
-    throw UnimplementedError();
+    try {
+      final db = await databaseService.database;
+      final deletedCount = await db.delete(
+        DatabaseService.measurementsDataTable,
+        where: 'id = ?',
+        whereArgs: [int.parse(id)],
+      );
+      if (deletedCount == 0) {
+        return Left('No measurement found for id $id');
+      }
+      return const Right(unit);
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 
   @override
@@ -782,6 +904,81 @@ class MeasurementRepository extends IMeasurementsFacade {
     } catch (e) {
       return Left(e.toString());
     }
+  }
+
+  List<Map<String, dynamic>> _rowsFromTablesNode({
+    required Map<String, dynamic> tablesNode,
+    required String tableName,
+  }) {
+    final dynamic value = tablesNode[tableName];
+    if (value is! List<dynamic>) {
+      return const <Map<String, dynamic>>[];
+    }
+
+    return value
+        .whereType<Map>()
+        .map((row) => Map<String, dynamic>.from(row))
+        .toList();
+  }
+
+  Future<bool> _shouldInsertRowOnMerge({
+    required Transaction txn,
+    required String tableName,
+    required Map<String, dynamic> row,
+  }) async {
+    switch (tableName) {
+      case DatabaseService.measurementsDataTable:
+        return _isUniqueMeasurementRow(txn: txn, row: row);
+      case DatabaseService.measurementGoalsTable:
+        return _isUniqueGoalRow(txn: txn, row: row);
+      default:
+        return true;
+    }
+  }
+
+  Future<bool> _isUniqueMeasurementRow({
+    required Transaction txn,
+    required Map<String, dynamic> row,
+  }) async {
+    final matches = await txn.query(
+      DatabaseService.measurementsDataTable,
+      columns: ['id'],
+      where:
+          'user_id = ? AND target_id = ? AND date = ? AND value = ? AND '
+          'COALESCE(notes, "") = COALESCE(?, "")',
+      whereArgs: [
+        row['user_id'],
+        row['target_id'],
+        row['date'],
+        row['value'],
+        row['notes'],
+      ],
+      limit: 1,
+    );
+    return matches.isEmpty;
+  }
+
+  Future<bool> _isUniqueGoalRow({
+    required Transaction txn,
+    required Map<String, dynamic> row,
+  }) async {
+    final matches = await txn.query(
+      DatabaseService.measurementGoalsTable,
+      columns: ['id'],
+      where:
+          'user_id = ? AND target_id = ? AND target_value = ? AND '
+          'start_date = ? AND status = ? AND direction = ?',
+      whereArgs: [
+        row['user_id'],
+        row['target_id'],
+        row['target_value'],
+        row['start_date'],
+        row['status'],
+        row['direction'],
+      ],
+      limit: 1,
+    );
+    return matches.isEmpty;
   }
 }
 

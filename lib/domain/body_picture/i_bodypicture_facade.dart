@@ -3,6 +3,7 @@ import 'package:watcha_body/domain/body_picture/models/image_tag_model.dart';
 import 'package:watcha_body/domain/body_picture/models/save_vault_image_request.dart';
 import 'package:watcha_body/domain/body_picture/models/vault_image_model.dart';
 import 'package:watcha_body/domain/models/compare_images_model.dart';
+import 'package:watcha_body/domain/models/restore_summary.dart';
 
 abstract interface class IBodyPictureFacade {
   // Save a new body picture
@@ -21,7 +22,8 @@ abstract interface class IBodyPictureFacade {
 
   // // Update a body picture
   Future<Either<String, VaultImageModel>> updateBodyPicture(
-      VaultImageModel bodyPicture);
+    VaultImageModel bodyPicture,
+  );
 
   // // Delete all body pictures
   Future<Either<String, Unit>> deleteAllBodyPictures();
@@ -49,6 +51,11 @@ abstract interface class IBodyPictureFacade {
   });
 
   Future<Either<String, String>> backupPhotosToZip();
+
+  Future<Either<String, RestoreSummary>> restorePhotosFromZip({
+    required String zipPath,
+    bool merge = true,
+  });
 
   // // Used as callback for decrypting image provider
   // Future<Uint8List> decryptImageFromPath({

@@ -15,7 +15,10 @@ import 'package:watcha_body/domain/user_preferences/models/user_unit_preference_
 import 'package:watcha_body/l10n/arb/app_localizations.dart';
 import 'package:watcha_body/presentation/app_initializer/cubit/get_all_metrics/get_all_metric_units_available_cubit.dart';
 import 'package:watcha_body/presentation/common_widgets/reusable_segmented_button.dart';
+import 'package:watcha_body/presentation/core/controllers/cubit/all_available_targets_cubit.dart';
 import 'package:watcha_body/presentation/media_vault/vault_gallery/components/gallery_view/vault_gallery_view.dart';
+import 'package:watcha_body/presentation/media_vault/vault_gallery/cubit/load_pictures_cubit.dart';
+import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/settings/cubits/backup_restore_cubit/backup_data_cubit.dart';
 import 'package:watcha_body/presentation/settings/cubits/delete_all_data_cubit/delete_all_data_cubit.dart';
 
@@ -127,25 +130,23 @@ class SettingsView extends StatelessWidget {
                       case BackupRestoreDataStateSuccess():
                         ScaffoldMessenger.of(context).showSnackBar(
                           _buildFloatingSnackBar(
-                            'Success',
+                            context
+                                .read<BackupRestoreDataCubit>()
+                                .successMessage,
                             backgroundColor: Colors.green,
                           ),
                         );
-
-                        // Update Chart and Overview
-                        // context.read<GetallwidgetsdataBloc>().add(
-                        //       GetallwidgetsdataEvent.fetchAllData(
-                        //         appPreferences:
-                        //             (state as SavedAndReady).appPreferences,
-                        //       ),
-                        //     );
-
-                        // context.read<ChartdataBloc>().add(
-                        //       ChartdataEvent.fetchData(
-                        //         appPreferences: state.appPreferences,
-                        //         duration: DurationsEnum.month1,
-                        //       ),
-                        //     );
+                        context.read<GetallwidgetsdataBloc>().add(
+                          const GetallwidgetsdataEvent.fetchAllData(),
+                        );
+                        context.read<AllAvailableTargetsCubit>().fetch();
+                        context
+                            .read<UserPreferencesCubit>()
+                            .fetchUserPreferences(1);
+                        context
+                            .read<GetAllMetricUnitsAvailableCubit>()
+                            .fetchAllMetricUnitsAvailable();
+                        context.read<LoadPicturesCubit>().load();
                         break;
                       case BackupRestoreDataStateFailed(msg: final s):
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -165,26 +166,17 @@ class SettingsView extends StatelessWidget {
                         // Do nothing
                         break;
                       case DeleteAllDataStateSuccess():
-                        // Update Chart and Overview
-                        // context.read<GetallwidgetsdataBloc>().add(
-                        //       GetallwidgetsdataEvent.fetchAllData(
-                        //         appPreferences:
-                        //             (state as SavedAndReady).appPreferences,
-                        //       ),
-                        //     );
-
-                        // context.read<ChartdataBloc>().add(
-                        //       ChartdataEvent.fetchData(
-                        //         appPreferences: state.appPreferences,
-                        //         duration: DurationsEnum.month1,
-                        //       ),
-                        //     );
                         ScaffoldMessenger.of(context).showSnackBar(
                           _buildFloatingSnackBar(
                             'Success',
                             backgroundColor: Colors.green,
                           ),
                         );
+                        context.read<GetallwidgetsdataBloc>().add(
+                          const GetallwidgetsdataEvent.fetchAllData(),
+                        );
+                        context.read<AllAvailableTargetsCubit>().fetch();
+                        context.read<LoadPicturesCubit>().load();
                         break;
                       case DeleteAllDataStateFailed(msg: final s):
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -404,8 +396,73 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    Future<void> _showBackupModeOptions() async {
+      return showDialog<void>(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text('Backup type'),
+            content: const Text('Choose what you want to back up.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                  context.read<BackupRestoreDataCubit>().backupData();
+                },
+                child: const Text('Measurements'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                  context.read<BackupRestoreDataCubit>().backupFullData();
+                },
+                child: const Text('Full App'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: const Text('Cancel'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    Future<void> _showShareModeOptions() async {
+      return showDialog<void>(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: const Text('Share backup type'),
+            content: const Text('Choose what you want to share.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                  context.read<BackupRestoreDataCubit>().shareDatabase();
+                },
+                child: const Text('Measurements'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                  context.read<BackupRestoreDataCubit>().shareFullBackup();
+                },
+                child: const Text('Full App'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                child: const Text('Cancel'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
     // Restore Options Dialog
     Future<void> _showRestoreOptions(String path) async {
+      final isFullBackup = path.toLowerCase().endsWith('.zip');
       return showDialog<void>(
         context: context,
         barrierDismissible: false, // user must tap button!
@@ -419,26 +476,41 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
               backgroundColor: colorScheme.surfaceContainerHigh,
               surfaceTintColor: Colors.transparent,
               title: Text(
-                'Do you want delete previous data?',
+                isFullBackup
+                    ? 'Replace existing full app data?'
+                    : 'Do you want delete previous data?',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               actions: <Widget>[
                 TextButton(
                   child: const Text('Yes'),
                   onPressed: () {
-                    context.read<BackupRestoreDataCubit>().restoreData(
-                      merge: false,
-                      path: path,
-                    );
+                    if (isFullBackup) {
+                      context.read<BackupRestoreDataCubit>().restoreFullData(
+                        merge: false,
+                        path: path,
+                      );
+                    } else {
+                      context.read<BackupRestoreDataCubit>().restoreData(
+                        merge: false,
+                        path: path,
+                      );
+                    }
                     Navigator.of(context).pop();
                   },
                 ),
                 TextButton(
                   child: const Text('No'),
                   onPressed: () {
-                    context.read<BackupRestoreDataCubit>().restoreData(
-                      path: path,
-                    );
+                    if (isFullBackup) {
+                      context.read<BackupRestoreDataCubit>().restoreFullData(
+                        path: path,
+                      );
+                    } else {
+                      context.read<BackupRestoreDataCubit>().restoreData(
+                        path: path,
+                      );
+                    }
                     Navigator.of(context).pop();
                   },
                 ),
@@ -555,7 +627,7 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
                           ),
                         ),
                         onPressed: () {
-                          context.read<BackupRestoreDataCubit>().backupData();
+                          _showBackupModeOptions();
                         },
                         icon: const Icon(Icons.backup_outlined),
                         label: const Text(
@@ -578,7 +650,7 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
                         foregroundColor: colorScheme.onSecondaryContainer,
                       ),
                       onPressed: () {
-                        context.read<BackupRestoreDataCubit>().shareDatabase();
+                        _showShareModeOptions();
                       },
                       icon: const Icon(Icons.share_outlined),
                       label: const Text(
@@ -599,7 +671,7 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
                       onPressed: () async {
                         final result = await FilePicker.platform.pickFiles(
                           type: FileType.custom,
-                          allowedExtensions: ['json'],
+                          allowedExtensions: ['json', 'zip'],
                         );
 
                         if (result != null) {
