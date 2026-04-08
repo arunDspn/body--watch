@@ -4,6 +4,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
 
 class UserMetricHelper {
+  /// Format centimeters as compound feet+inches (e.g., "5' 10\"")
+  static String _formatFeetInches(double cm) {
+    final totalInches = cm / 2.54;
+    final feet = totalInches ~/ 12;
+    final inches = (totalInches % 12).round();
+    return "$feet' $inches\"";
+  }
+
+  /// Format a value as feet+inches or a decimal with unit
+  static String formatWithUnit({
+    required double value,
+    required String unit,
+    int decimalPlaces = 2,
+  }) {
+    if (unit == 'ft') {
+      return _formatFeetInches(value);
+    }
+    return value.toStringAsFixed(decimalPlaces);
+  }
+
   static String convertToUserPref({
     required double value,
     required String metricCode,
@@ -24,6 +44,11 @@ class UserMetricHelper {
 
     if (preference == null) {
       throw Exception('No preference found for metric code: $metricCode');
+    }
+
+    // Special handling for feet+inches compound format
+    if (preference.preferredUnit == 'ft') {
+      return _formatFeetInches(value);
     }
 
     // Convert the value based on the preferred unit

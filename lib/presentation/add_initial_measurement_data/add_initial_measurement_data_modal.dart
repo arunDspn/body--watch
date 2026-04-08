@@ -28,6 +28,7 @@ class _AddInitialMeasurementDataModalState
   final _decimalInputFormatter = FilteringTextInputFormatter.allow(
     RegExp(r'^\d*\.?\d{0,2}'),
   );
+  final _intInputFormatter = FilteringTextInputFormatter.allow(RegExp(r'^\d+'));
 
   late String _measurementUnit;
   DateTime? _selectedDate;
@@ -40,6 +41,8 @@ class _AddInitialMeasurementDataModalState
   late final TextEditingController _goalNoteController;
   late final TextEditingController _goalDueDateController;
   late final TextEditingController _notesController;
+  late final TextEditingController _feetController;
+  late final TextEditingController _inchesController;
 
   final _formKey = GlobalKey<FormState>();
   bool _didSetPreferredUnit = false;
@@ -52,6 +55,8 @@ class _AddInitialMeasurementDataModalState
     _selectedDate = DateTime.now();
 
     _measurementController = TextEditingController();
+    _feetController = TextEditingController();
+    _inchesController = TextEditingController();
     _dateController = TextEditingController(
       text: _dateFormatter.format(_selectedDate!),
     );
@@ -91,12 +96,20 @@ class _AddInitialMeasurementDataModalState
   @override
   void dispose() {
     _measurementController.dispose();
+    _feetController.dispose();
+    _inchesController.dispose();
     _dateController.dispose();
     _goalController.dispose();
     _goalNoteController.dispose();
     _goalDueDateController.dispose();
     _notesController.dispose();
     super.dispose();
+  }
+
+  double _composeFeetInchesToCm() {
+    final feet = int.tryParse(_feetController.text.trim()) ?? 0;
+    final inches = int.tryParse(_inchesController.text.trim()) ?? 0;
+    return (feet * 12 + inches) * 2.54;
   }
 
   @override
@@ -196,64 +209,118 @@ class _AddInitialMeasurementDataModalState
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    'Initial Value',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge,
-                                  ),
-                                  const Spacer(),
-                                  SizedBox(
-                                    width: SizeConfig.screenWidth! * 0.3,
-                                    child: TextFormField(
-                                      textAlign: TextAlign.end,
-                                      validator: _validatePositiveNumber,
-                                      inputFormatters: [_decimalInputFormatter],
-                                      controller: _measurementController,
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                            decimal: true,
-                                          ),
-                                      textInputAction: TextInputAction.next,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                              if (_measurementUnit == 'ft')
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Initial Value',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge,
                                     ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  DropdownButton<String>(
-                                    value: _measurementUnit,
-                                    onChanged: (newValue) {
-                                      if (newValue == null) {
-                                        return;
-                                      }
-                                      setState(() {
-                                        _measurementUnit = newValue;
-                                      });
-                                    },
-                                    items: widget.type.units
-                                        .map<DropdownMenuItem<String>>((
-                                          MetricUnitsModel value,
-                                        ) {
-                                          return DropdownMenuItem<String>(
-                                            value: value.unit,
-                                            child: Text(
-                                              value.unit,
-                                              style: Theme.of(
-                                                context,
-                                              ).textTheme.bodyLarge,
+                                    const Spacer(),
+                                    SizedBox(
+                                      width: SizeConfig.screenWidth! * 0.15,
+                                      child: TextFormField(
+                                        textAlign: TextAlign.end,
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty)
+                                            return 'Enter ft';
+                                          if (int.tryParse(value) == null)
+                                            return 'Invalid';
+                                          return null;
+                                        },
+                                        inputFormatters: [_intInputFormatter],
+                                        controller: _feetController,
+                                        keyboardType: TextInputType.number,
+                                        textInputAction: TextInputAction.next,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
                                             ),
-                                          );
-                                        })
-                                        .toList(),
-                                  ),
-                                ],
-                              ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      "'",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    SizedBox(
+                                      width: SizeConfig.screenWidth! * 0.12,
+                                      child: TextFormField(
+                                        textAlign: TextAlign.end,
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty)
+                                            return 'Enter in';
+                                          final num = int.tryParse(value);
+                                          if (num == null || num > 11)
+                                            return 'Invalid';
+                                          return null;
+                                        },
+                                        inputFormatters: [_intInputFormatter],
+                                        controller: _inchesController,
+                                        keyboardType: TextInputType.number,
+                                        textInputAction: TextInputAction.next,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 2),
+                                    Text(
+                                      '"',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    _buildUnitDropdown(),
+                                  ],
+                                )
+                              else
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Initial Value',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyLarge,
+                                    ),
+                                    const Spacer(),
+                                    SizedBox(
+                                      width: SizeConfig.screenWidth! * 0.3,
+                                      child: TextFormField(
+                                        textAlign: TextAlign.end,
+                                        validator: _validatePositiveNumber,
+                                        inputFormatters: [
+                                          _decimalInputFormatter,
+                                        ],
+                                        controller: _measurementController,
+                                        keyboardType:
+                                            const TextInputType.numberWithOptions(
+                                              decimal: true,
+                                            ),
+                                        textInputAction: TextInputAction.next,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    _buildUnitDropdown(),
+                                  ],
+                                ),
                               const Divider(),
                               Row(
                                 children: [
@@ -552,16 +619,49 @@ class _AddInitialMeasurementDataModalState
     return null;
   }
 
+  Widget _buildUnitDropdown() {
+    return DropdownButton<String>(
+      value: _measurementUnit,
+      onChanged: (newValue) {
+        if (newValue == null) return;
+        setState(() {
+          _measurementUnit = newValue;
+          _feetController.clear();
+          _inchesController.clear();
+          _measurementController.clear();
+        });
+      },
+      items: widget.type.units
+          .map<DropdownMenuItem<String>>(
+            (MetricUnitsModel value) => DropdownMenuItem<String>(
+              value: value.unit,
+              child: Text(
+                value.unit,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+
   Future<void> _onSavePressed() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    final value = double.parse(_measurementController.text.trim());
-    final toBaseFactor = widget.type.units
-        .firstWhere((element) => element.unit == _measurementUnit)
-        .toBaseFactor;
-    final convertedValue = value * toBaseFactor;
+    double convertedValue;
+    double toBaseFactor;
+    if (_measurementUnit == 'ft') {
+      convertedValue = _composeFeetInchesToCm();
+      toBaseFactor = 1.0;
+    } else {
+      final value = double.parse(_measurementController.text.trim());
+      toBaseFactor = widget.type.units
+          .firstWhere((element) => element.unit == _measurementUnit)
+          .toBaseFactor;
+      convertedValue = value * toBaseFactor;
+    }
     final measurement = MeasurementEntity.createNew(
       date: _selectedDate ?? DateTime.now(),
       value: convertedValue,

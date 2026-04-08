@@ -179,7 +179,9 @@ class _AppIniterState extends State<AppIniter> {
                                             sectionName: e,
                                             items: metricUnits[e]!,
                                             getLabel: (item) {
-                                              return item.unit;
+                                              return item.unit == 'ft'
+                                                  ? 'ft / in'
+                                                  : item.unit;
                                             },
                                             onSelectionChanged: (selection) {
                                               setState(() {

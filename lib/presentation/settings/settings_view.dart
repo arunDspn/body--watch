@@ -292,7 +292,8 @@ class SettingsView extends StatelessWidget {
                                   ),
                                   sectionName: e,
                                   items: allUnits[e]!,
-                                  getLabel: (item) => item.unit,
+                                  getLabel: (item) =>
+                                      item.unit == 'ft' ? 'ft / in' : item.unit,
                                   onSelectionChanged: (selection) {
                                     context
                                         .read<UserPreferencesCubit>()

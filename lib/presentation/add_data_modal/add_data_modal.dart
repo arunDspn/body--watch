@@ -53,6 +53,7 @@ class _AddorEditMeasurementTargetModalState
   final _decimalInputFormatter = FilteringTextInputFormatter.allow(
     RegExp(r'^\d*\.?\d{0,2}'),
   );
+  final _intInputFormatter = FilteringTextInputFormatter.allow(RegExp(r'^\d+'));
   late String measurementUnit;
 
   DateTime? selectedDate;
@@ -62,6 +63,8 @@ class _AddorEditMeasurementTargetModalState
   late final TextEditingController _goalController;
   late final TextEditingController _dateController;
   late final TextEditingController _notesController;
+  late final TextEditingController _feetController;
+  late final TextEditingController _inchesController;
 
   // Key for form
   final _formKey = GlobalKey<FormState>();
@@ -73,6 +76,8 @@ class _AddorEditMeasurementTargetModalState
   @override
   void initState() {
     _measurementController = TextEditingController();
+    _feetController = TextEditingController();
+    _inchesController = TextEditingController();
     //Todo: Use preferred unit as initial value
     measurementUnit = widget.type.units.first.unit;
     _dateController = TextEditingController();
@@ -97,7 +102,151 @@ class _AddorEditMeasurementTargetModalState
     _goalController.dispose();
     _dateController.dispose();
     _notesController.dispose();
+    _feetController.dispose();
+    _inchesController.dispose();
     super.dispose();
+  }
+
+  /// Decompose cm value to feet and inches
+  void _decomposeCmToFeetInches(double cm) {
+    final totalInches = cm / 2.54;
+    final feet = totalInches ~/ 12;
+    final inches = (totalInches % 12).round();
+    _feetController.text = feet.toString();
+    _inchesController.text = inches.toString();
+  }
+
+  /// Convert feet and inches to cm
+  double _composeFeetInchesToCm() {
+    final feet = int.tryParse(_feetController.text.trim()) ?? 0;
+    final inches = int.tryParse(_inchesController.text.trim()) ?? 0;
+    return (feet * 12 + inches) * 2.54;
+  }
+
+  /// Build input row for normal units
+  Widget _buildNormalUnitInput() {
+    return Row(
+      children: [
+        Text('Value', style: Theme.of(context).textTheme.bodyLarge),
+        const Spacer(),
+        SizedBox(
+          width: SizeConfig.screenWidth! * 0.3,
+          child: TextFormField(
+            textAlign: TextAlign.end,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter some value';
+              }
+              final number = double.tryParse(value);
+              if (number == null) {
+                return 'Please enter a valid number';
+              }
+              if (number <= 0) {
+                return 'Please enter a number greater than zero';
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              labelStyle: TextStyle(
+                fontSize: 23,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+            inputFormatters: [_decimalInputFormatter],
+            controller: _measurementController,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            textInputAction: TextInputAction.next,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(width: 8),
+        _buildUnitDropdown(),
+      ],
+    );
+  }
+
+  /// Build input row for feet+inches compound format
+  Widget _buildFeetInchesInput() {
+    return Row(
+      children: [
+        Text('Value', style: Theme.of(context).textTheme.bodyLarge),
+        const Spacer(),
+        SizedBox(
+          width: SizeConfig.screenWidth! * 0.15,
+          child: TextFormField(
+            textAlign: TextAlign.end,
+            validator: (value) {
+              if (value == null || value.isEmpty) return 'Enter ft';
+              if (int.tryParse(value) == null) return 'Invalid';
+              return null;
+            },
+            inputFormatters: [_intInputFormatter],
+            controller: _feetController,
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.next,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text("'", style: Theme.of(context).textTheme.bodyLarge),
+        const SizedBox(width: 4),
+        SizedBox(
+          width: SizeConfig.screenWidth! * 0.12,
+          child: TextFormField(
+            textAlign: TextAlign.end,
+            validator: (value) {
+              if (value == null || value.isEmpty) return 'Enter in';
+              final num = int.tryParse(value);
+              if (num == null || num > 11) return 'Invalid';
+              return null;
+            },
+            inputFormatters: [_intInputFormatter],
+            controller: _inchesController,
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.next,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(width: 2),
+        Text('\"', style: Theme.of(context).textTheme.bodyLarge),
+        const SizedBox(width: 8),
+        _buildUnitDropdown(),
+      ],
+    );
+  }
+
+  /// Build unit dropdown
+  Widget _buildUnitDropdown() {
+    return DropdownButton<String>(
+      value: measurementUnit,
+      onChanged: (String? newValue) {
+        if (newValue != null) {
+          setState(() {
+            measurementUnit = newValue;
+            _feetController.clear();
+            _inchesController.clear();
+            _measurementController.clear();
+          });
+        }
+      },
+      items: widget.type.units
+          .map<DropdownMenuItem<String>>(
+            (MetricUnitsModel value) => DropdownMenuItem<String>(
+              value: value.unit,
+              child: Text(
+                value.unit,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
+          )
+          .toList(),
+    );
   }
 
   @override
@@ -136,7 +285,13 @@ class _AddorEditMeasurementTargetModalState
           : null;
 
       if (valueInPrefrerredUnit != null) {
-        _measurementController.text = valueInPrefrerredUnit.toStringAsFixed(1);
+        if (measurementUnit == 'ft') {
+          _decomposeCmToFeetInches(valueInPrefrerredUnit);
+        } else {
+          _measurementController.text = valueInPrefrerredUnit.toStringAsFixed(
+            1,
+          );
+        }
       }
       _didSetInitialValue = true;
     }
@@ -288,16 +443,20 @@ class _AddorEditMeasurementTargetModalState
                             return;
                           }
 
-                          final value = double.parse(
-                            _measurementController.text.trim(),
-                          );
-                          final toBaseFactor = widget.type.units
-                              .firstWhere(
-                                (element) => element.unit == measurementUnit,
-                              )
-                              .toBaseFactor;
-
-                          final convertedValue = value * toBaseFactor;
+                          double convertedValue;
+                          if (measurementUnit == 'ft') {
+                            convertedValue = _composeFeetInchesToCm();
+                          } else {
+                            final value = double.parse(
+                              _measurementController.text.trim(),
+                            );
+                            final toBaseFactor = widget.type.units
+                                .firstWhere(
+                                  (element) => element.unit == measurementUnit,
+                                )
+                                .toBaseFactor;
+                            convertedValue = value * toBaseFactor;
+                          }
                           context.read<AdddataCubit>().insertData(
                             measurement: MeasurementEntity.createNew(
                               date: selectedDate ?? DateTime.now(),
@@ -340,84 +499,10 @@ class _AddorEditMeasurementTargetModalState
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             // Value Input
-                            Row(
-                              children: [
-                                Text(
-                                  'Value',
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-
-                                //
-                                const Spacer(),
-                                SizedBox(
-                                  width: SizeConfig.screenWidth! * 0.3,
-                                  child: TextFormField(
-                                    textAlign: TextAlign.end,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter some value';
-                                      }
-                                      final number = double.tryParse(value);
-                                      if (number == null) {
-                                        return 'Please enter a valid number';
-                                      }
-                                      if (number <= 0) {
-                                        return 'Please enter a number greater than zero';
-                                      }
-                                      return null;
-                                    },
-                                    decoration: InputDecoration(
-                                      labelStyle: TextStyle(
-                                        fontSize: 23,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSurface,
-                                      ),
-                                    ),
-                                    // maxLength: 5,
-                                    inputFormatters: [_decimalInputFormatter],
-                                    controller: _measurementController,
-                                    keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                          decimal: true,
-                                        ),
-                                    textInputAction: TextInputAction.next,
-                                    style: Theme.of(context).textTheme.bodyLarge
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                DropdownButton<String>(
-                                  value: measurementUnit,
-                                  onChanged: (String? newValue) {
-                                    if (newValue != null) {
-                                      setState(() {
-                                        measurementUnit = newValue;
-                                      });
-                                    }
-                                  },
-                                  items: widget.type.units
-                                      .map<DropdownMenuItem<String>>((
-                                        MetricUnitsModel value,
-                                      ) {
-                                        return DropdownMenuItem<String>(
-                                          value: value.unit,
-                                          child: Text(
-                                            value.unit,
-                                            style: Theme.of(
-                                              context,
-                                            ).textTheme.bodyLarge,
-                                          ),
-                                        );
-                                      })
-                                      .toList(),
-                                ),
-                                // Text(
-                                //   measurementUnit,
-                                //   style: Theme.of(context).textTheme.bodyLarge,
-                                // ),
-                              ],
-                            ),
+                            if (measurementUnit == 'ft')
+                              _buildFeetInchesInput()
+                            else
+                              _buildNormalUnitInput(),
                             const Divider(),
                             // Date Input
                             Row(

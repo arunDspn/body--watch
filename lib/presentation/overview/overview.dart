@@ -1143,9 +1143,18 @@ class _ExtraDetails extends StatelessWidget {
         .reversed
         .map((e) => e.value / toBaseFactor)
         .toList();
-    final minDisplay = (data.lowestValue / toBaseFactor).toStringAsFixed(1);
-    final maxDisplay = (data.highestValue / toBaseFactor).toStringAsFixed(1);
-    final rangeDisplay = (rangeValue / toBaseFactor).toStringAsFixed(1);
+    final minDisplay = UserMetricHelper.formatWithUnit(
+      value: data.lowestValue,
+      unit: unit,
+    );
+    final maxDisplay = UserMetricHelper.formatWithUnit(
+      value: data.highestValue,
+      unit: unit,
+    );
+    final rangeDisplay = UserMetricHelper.formatWithUnit(
+      value: rangeValue,
+      unit: unit,
+    );
     final goalDisplay = data.goalValue == null
         ? null
         : UserMetricHelper.convertToUserPref(

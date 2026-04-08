@@ -136,8 +136,14 @@ class DatabaseService {
     SELECT m.id, 'lbs', 0.45359237
     FROM $metricsTable m WHERE m.code = 'weight'
     UNION ALL
+    SELECT m.id, 'stone', 6.35029318
+    FROM $metricsTable m WHERE m.code = 'weight'
+    UNION ALL
     SELECT m.id, 'inch', 2.54
-    FROM $metricsTable m WHERE m.code IN ('height', 'length');
+    FROM $metricsTable m WHERE m.code IN ('height', 'length')
+    UNION ALL
+    SELECT m.id, 'ft', 30.48
+    FROM $metricsTable m WHERE m.code = 'height';
   ''';
 
   /// Create Measurement Targets Table
