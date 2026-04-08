@@ -1,16 +1,22 @@
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/services.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
+import 'package:watcha_body/data/repositories/measurement_repository.dart';
+import 'package:watcha_body/data/repositories/user_preference/user_preference_reposiotry.dart';
+import 'package:watcha_body/data/repositories/user_profile_repository.dart';
+import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/domain/models/app_preferences.dart';
 import 'package:watcha_body/domain/user_preferences/models/user_unit_preferences_entity.dart';
 import 'package:watcha_body/l10n/arb/app_localizations.dart';
 import 'package:watcha_body/presentation/app_initializer/cubit/get_all_metrics/get_all_metric_units_available_cubit.dart';
-import 'package:watcha_body/presentation/app_initializer/cubit/set_user_unit_preferences/set_user_unit_preferences_cubit.dart';
 import 'package:watcha_body/presentation/common_widgets/reusable_segmented_button.dart';
 import 'package:watcha_body/presentation/home/home.dart';
+import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/settings/settings_view.dart';
 
 import 'package:watcha_body/size_config.dart';
@@ -26,6 +32,235 @@ class AppIniter extends StatefulWidget {
 
 class _AppIniterState extends State<AppIniter> {
   Map<String, dynamic> dynamicStates = {};
+  final TextEditingController _heightController = TextEditingController();
+  final TextEditingController _heightFeetController = TextEditingController();
+  final TextEditingController _heightInchController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+  DateTime? _selectedDob;
+  String? _selectedGender;
+  String? _selectedHeightUnit;
+  String? _selectedWeightUnit;
+  bool _isSaving = false;
+
+  @override
+  void dispose() {
+    _heightController.dispose();
+    _heightFeetController.dispose();
+    _heightInchController.dispose();
+    _weightController.dispose();
+    super.dispose();
+  }
+
+  List<MetricUnitsModel> _unitsForCode({
+    required Map<String, List<MetricUnitsModel>> metricUnits,
+    required List<String> metricCodes,
+  }) {
+    final units = metricUnits.values
+        .expand((items) => items)
+        .where((unit) => metricCodes.contains(unit.code))
+        .toList();
+
+    final uniqueByUnit = <String, MetricUnitsModel>{};
+    for (final unit in units) {
+      uniqueByUnit[unit.unit] = unit;
+    }
+
+    return uniqueByUnit.values.toList();
+  }
+
+  double? _parseOptionalNumber(String value) {
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) {
+      return null;
+    }
+    return double.tryParse(trimmed);
+  }
+
+  Future<void> _pickDob() async {
+    final now = DateTime.now();
+    final selected = await showDatePicker(
+      context: context,
+      initialDate: _selectedDob ?? DateTime(now.year - 20, now.month, now.day),
+      firstDate: DateTime(1900),
+      lastDate: now,
+    );
+
+    if (selected != null) {
+      setState(() {
+        _selectedDob = selected;
+      });
+    }
+  }
+
+  Future<void> _saveAllSetupData(
+    Map<String, List<MetricUnitsModel>> metricUnits,
+  ) async {
+    final hasPendingSelections = dynamicStates.values.any(
+      (element) => element == null,
+    );
+
+    if (_selectedGender == null || hasPendingSelections || _isSaving) {
+      return;
+    }
+
+    final heightValue = _parseOptionalNumber(_heightController.text);
+    final weightValue = _parseOptionalNumber(_weightController.text);
+
+    double? resolvedHeightValue = heightValue;
+    String? resolvedHeightUnit = _selectedHeightUnit;
+
+    if (_selectedHeightUnit == 'ft') {
+      final feet = _parseOptionalNumber(_heightFeetController.text) ?? 0;
+      final inches = _parseOptionalNumber(_heightInchController.text) ?? 0;
+
+      if (inches >= 12) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text('Inches must be less than 12.'),
+          ),
+        );
+        return;
+      }
+
+      if (feet > 0 || inches > 0) {
+        resolvedHeightValue = ((feet * 12) + inches) * 2.54;
+        resolvedHeightUnit = 'cm';
+      } else {
+        resolvedHeightValue = null;
+      }
+    }
+
+    setState(() {
+      _isSaving = true;
+    });
+
+    try {
+      final userPreferences = <UserUnitPreferencesEntity>[];
+      dynamicStates.forEach((key, value) {
+        final pref = UserUnitPreferencesEntity(
+          userId: 1,
+          metricCode: metricUnits[key]!
+              .firstWhere((element) => element.unit == value)
+              .code,
+          preferredUnit: value,
+        );
+        userPreferences.add(pref);
+      });
+
+      await context.read<UserPreferenceRepository>().setAllPreferences(
+        userPreferences,
+      );
+
+      await context.read<UserProfileRepository>().saveProfileSetup(
+        userId: 1,
+        gender: _selectedGender!,
+        dob: _selectedDob,
+        height: resolvedHeightValue,
+        heightUnit: resolvedHeightUnit,
+        weight: weightValue,
+        weightUnit: _selectedWeightUnit,
+      );
+
+      if (weightValue != null && _selectedWeightUnit != null) {
+        final weightUnits = _unitsForCode(
+          metricUnits: metricUnits,
+          metricCodes: const ['weight'],
+        );
+        final selectedWeight = weightUnits.firstWhereOrNull(
+          (unit) => unit.unit == _selectedWeightUnit,
+        );
+
+        if (selectedWeight != null) {
+          final measurementRepository = context.read<MeasurementRepository>();
+          final allTargetsResult = await measurementRepository.getAllTargets();
+
+          await allTargetsResult.fold(
+            (failure) async {
+              throw Exception(failure);
+            },
+            (targets) async {
+              final weightTarget = targets.firstWhereOrNull(
+                (target) => target.code == 'weight',
+              );
+              if (weightTarget == null) {
+                return;
+              }
+
+              final existingWeightResult = await measurementRepository
+                  .getMeasurementsByTarget(
+                    targetId: weightTarget.id,
+                    userId: 1,
+                  );
+
+              final hasWeightMeasurement = existingWeightResult.fold(
+                (_) => false,
+                (measurements) => measurements.isNotEmpty,
+              );
+
+              if (hasWeightMeasurement) {
+                return;
+              }
+
+              final createResult = await measurementRepository
+                  .createMeasurement(
+                    measurement: MeasurementEntity.createNew(
+                      date: DateTime.now(),
+                      value: weightValue * selectedWeight.toBaseFactor,
+                      notes: 'Initial profile setup',
+                      targetId: weightTarget.id,
+                    ),
+                  );
+
+              createResult.fold((failure) => throw Exception(failure), (_) {});
+            },
+          );
+        }
+      }
+
+      await context.read<UserPreferencesCubit>().fetchUserPreferences(1);
+      context.read<GetallwidgetsdataBloc>().add(
+        const GetallwidgetsdataEvent.fetchAllData(),
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: const Text('Setup completed successfully!'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+      );
+
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        HomeView.routeName,
+        (route) => false,
+      );
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text('Failed to save setup: $e'),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,224 +283,376 @@ class _AppIniterState extends State<AppIniter> {
         scrolledUnderElevation: 0,
         centerTitle: true,
       ),
-      body: BlocListener<SetUserUnitPreferencesCubit, SetUserUnitPreferencesState>(
-        listener: (context, state) {
-          state.whenOrNull(
-            error: (message) {
-              // Snackbar
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('Error: $message')));
-            },
-            loading: () {},
-            success: () {
-              // Navigate to HomeView and remove all previous routes
-              // Navigator.pushNamedAndRemoveUntil(
-              //   context,
-              //   HomeView.routeName,
-              //   (route) => false,
-              // );
-              // Snackbar
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  behavior: SnackBarBehavior.floating,
-                  content: const Text('Preferences saved successfully!'),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-              );
+      body: SafeArea(
+        child: BlocConsumer<GetAllMetricUnitsAvailableCubit, GetAllMetricUnitsAvailableState>(
+          listener: (context, state) {
+            state.whenOrNull(
+              loaded: (metricUnits) {
+                if (dynamicStates.isEmpty) {
+                  metricUnits!.forEach((key, value) {
+                    dynamicStates[key] = null;
+                  });
+                }
 
-              // Reload UserPreferencesCubit to fetch the updated preferences from the database
-              context.read<UserPreferencesCubit>().fetchUserPreferences(1);
+                final weightUnits = _unitsForCode(
+                  metricUnits: metricUnits!,
+                  metricCodes: const ['weight'],
+                );
+                if (_selectedWeightUnit == null && weightUnits.isNotEmpty) {
+                  _selectedWeightUnit = weightUnits.first.unit;
+                }
 
-              // Navigate to HomeView and remove all previous routes
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                HomeView.routeName,
-                (route) => false,
-              );
-            },
-          );
-        },
-        child: SafeArea(
-          child:
-              BlocConsumer<
-                GetAllMetricUnitsAvailableCubit,
-                GetAllMetricUnitsAvailableState
-              >(
-                listener: (context, state) {
-                  state.whenOrNull(
-                    loaded: (metricUnits) {
-                      // Initialize dynamicStates with null values for each metric type
-                      // to ensure user makes a selection for each
-                      if (dynamicStates.isEmpty) {
-                        metricUnits!.forEach((key, value) {
-                          dynamicStates[key] = null;
-                        });
-                      }
-                    },
-                  );
-                },
-                builder: (context, state) {
-                  return state.when(
-                    error: (message) {
-                      return Center(child: Text('Error: $message'));
-                    },
-                    initial: () {
-                      return const Center(child: Text('Initializing...'));
-                    },
-                    loading: () {
-                      return const Center(child: CircularProgressIndicator());
-                    },
-                    loaded: (metricUnits) {
-                      final hasPendingSelections = dynamicStates.values.any(
-                        (element) => element == null,
-                      );
+                final heightUnits = _unitsForCode(
+                  metricUnits: metricUnits,
+                  metricCodes: const ['height', 'length'],
+                );
+                if (_selectedHeightUnit == null && heightUnits.isNotEmpty) {
+                  _selectedHeightUnit = heightUnits.first.unit;
+                }
+              },
+            );
+          },
+          builder: (context, state) {
+            return state.when(
+              error: (message) {
+                return Center(child: Text('Error: $message'));
+              },
+              initial: () {
+                return const Center(child: Text('Initializing...'));
+              },
+              loading: () {
+                return const Center(child: CircularProgressIndicator());
+              },
+              loaded: (metricUnits) {
+                final hasPendingSelections = dynamicStates.values.any(
+                  (element) => element == null,
+                );
 
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
-                        child: SingleChildScrollView(
+                final heightUnits = _unitsForCode(
+                  metricUnits: metricUnits!,
+                  metricCodes: const ['height', 'length'],
+                );
+                final weightUnits = _unitsForCode(
+                  metricUnits: metricUnits,
+                  metricCodes: const ['weight'],
+                );
+
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: colorScheme.surfaceContainerHighest,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Profile setup',
+                                style: theme.textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'Gender is required for formula-based features. Height, date of birth, and weight are optional.',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                  height: 1.35,
+                                ),
+                              ),
+                              const SizedBox(height: 14),
+                              Text(
+                                'Gender *',
+                                style: theme.textTheme.labelLarge,
+                              ),
+                              const SizedBox(height: 8),
+                              SegmentedButton<String>(
+                                emptySelectionAllowed: true,
+                                segments: const [
+                                  ButtonSegment<String>(
+                                    value: 'male',
+                                    label: Text('Male'),
+                                  ),
+                                  ButtonSegment<String>(
+                                    value: 'female',
+                                    label: Text('Female'),
+                                  ),
+                                ],
+                                selected: {
+                                  if (_selectedGender != null) _selectedGender!,
+                                },
+                                onSelectionChanged: (selection) {
+                                  setState(() {
+                                    _selectedGender = selection.firstOrNull;
+                                  });
+                                },
+                              ),
+                              const SizedBox(height: 14),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _selectedHeightUnit == 'ft'
+                                        ? Row(
+                                            children: [
+                                              Expanded(
+                                                child: TextField(
+                                                  controller:
+                                                      _heightFeetController,
+                                                  keyboardType:
+                                                      const TextInputType.numberWithOptions(
+                                                        decimal: false,
+                                                      ),
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly,
+                                                  ],
+                                                  decoration:
+                                                      const InputDecoration(
+                                                        labelText:
+                                                            'Feet (optional)',
+                                                      ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: TextField(
+                                                  controller:
+                                                      _heightInchController,
+                                                  keyboardType:
+                                                      const TextInputType.numberWithOptions(
+                                                        decimal: false,
+                                                      ),
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly,
+                                                  ],
+                                                  decoration:
+                                                      const InputDecoration(
+                                                        labelText:
+                                                            'Inches (0-11)',
+                                                      ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : TextField(
+                                            controller: _heightController,
+                                            keyboardType:
+                                                const TextInputType.numberWithOptions(
+                                                  decimal: true,
+                                                ),
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(
+                                                RegExp(r'^\d*\.?\d{0,2}'),
+                                              ),
+                                            ],
+                                            decoration: const InputDecoration(
+                                              labelText: 'Height (optional)',
+                                            ),
+                                          ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  SizedBox(
+                                    width: 110,
+                                    child: DropdownButtonFormField<String>(
+                                      value: _selectedHeightUnit,
+                                      decoration: const InputDecoration(
+                                        labelText: 'Unit',
+                                      ),
+                                      items: heightUnits
+                                          .map(
+                                            (unit) => DropdownMenuItem<String>(
+                                              value: unit.unit,
+                                              child: Text(
+                                                unit.unit == 'ft'
+                                                    ? 'ft / in'
+                                                    : unit.unit,
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedHeightUnit = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _weightController,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                            decimal: true,
+                                          ),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                          RegExp(r'^\d*\.?\d{0,2}'),
+                                        ),
+                                      ],
+                                      decoration: const InputDecoration(
+                                        labelText: 'Weight (optional)',
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  SizedBox(
+                                    width: 110,
+                                    child: DropdownButtonFormField<String>(
+                                      value: _selectedWeightUnit,
+                                      decoration: const InputDecoration(
+                                        labelText: 'Unit',
+                                      ),
+                                      items: weightUnits
+                                          .map(
+                                            (unit) => DropdownMenuItem<String>(
+                                              value: unit.unit,
+                                              child: Text(unit.unit),
+                                            ),
+                                          )
+                                          .toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedWeightUnit = value;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              OutlinedButton.icon(
+                                onPressed: _pickDob,
+                                icon: const Icon(Icons.calendar_today_rounded),
+                                label: Text(
+                                  _selectedDob == null
+                                      ? 'Date of birth (optional)'
+                                      : 'DOB: ${_selectedDob!.year}-${_selectedDob!.month.toString().padLeft(2, '0')}-${_selectedDob!.day.toString().padLeft(2, '0')}',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: colorScheme.surfaceContainerHigh,
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(16),
+                                padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: colorScheme.surfaceContainerHigh,
-                                  borderRadius: BorderRadius.circular(24),
+                                  color: colorScheme.primaryContainer,
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: colorScheme.primaryContainer,
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                      child: Icon(
-                                        Icons.tune_rounded,
-                                        color: colorScheme.onPrimaryContainer,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        'Pick your preferred units once and we will use them across the app.',
-                                        style: theme.textTheme.bodyMedium
-                                            ?.copyWith(
-                                              color:
-                                                  colorScheme.onSurfaceVariant,
-                                              height: 1.35,
-                                            ),
-                                      ),
-                                    ),
-                                  ],
+                                child: Icon(
+                                  Icons.tune_rounded,
+                                  color: colorScheme.onPrimaryContainer,
                                 ),
                               ),
-                              const SizedBox(height: 18),
-                              Column(
-                                children: metricUnits!.keys.map((e) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 12),
-                                    child: Material(
-                                      color: colorScheme.surfaceContainer,
-                                      elevation: 0,
-                                      borderRadius: BorderRadius.circular(20),
-                                      child:
-                                          ReusableSegmentedButton<
-                                            MetricUnitsModel
-                                          >(
-                                            sectionName: e,
-                                            items: metricUnits[e]!,
-                                            getLabel: (item) {
-                                              return item.unit == 'ft'
-                                                  ? 'ft / in'
-                                                  : item.unit;
-                                            },
-                                            onSelectionChanged: (selection) {
-                                              setState(() {
-                                                dynamicStates[e] =
-                                                    selection?.unit;
-                                              });
-                                            },
-                                          ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                              const SizedBox(height: 10),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: FilledButton.icon(
-                                    style: FilledButton.styleFrom(
-                                      minimumSize: const Size.fromHeight(54),
-                                      textStyle: theme.textTheme.titleMedium
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(18),
-                                      ),
-                                    ),
-                                    onPressed: hasPendingSelections
-                                        ? null
-                                        : () {
-                                            // convert dynamicStates to UserPreferencesEntity
-                                            final userPreferences =
-                                                <UserUnitPreferencesEntity>[];
-                                            dynamicStates.forEach((key, value) {
-                                              final pref =
-                                                  UserUnitPreferencesEntity(
-                                                    userId: 1,
-                                                    metricCode:
-                                                        metricUnits[key]!
-                                                            .firstWhere(
-                                                              (element) =>
-                                                                  element
-                                                                      .unit ==
-                                                                  value,
-                                                            )
-                                                            .code,
-                                                    preferredUnit: value,
-                                                  );
-
-                                              userPreferences.add(pref);
-                                            });
-
-                                            // Save to database
-                                            context
-                                                .read<
-                                                  SetUserUnitPreferencesCubit
-                                                >()
-                                                .setUserUnitPreferences(
-                                                  userUnitPreferences:
-                                                      userPreferences,
-                                                );
-                                          },
-                                    icon: const Icon(
-                                      Icons.arrow_forward_rounded,
-                                    ),
-                                    label: Text(
-                                      hasPendingSelections
-                                          ? 'Select all units'
-                                          : 'Continue',
-                                    ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Pick your preferred units once and we will use them across the app.',
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: colorScheme.onSurfaceVariant,
+                                    height: 1.35,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      );
-                    },
-                  );
-                },
-              ),
+                        const SizedBox(height: 18),
+                        Column(
+                          children: metricUnits.keys.map((e) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: Material(
+                                color: colorScheme.surfaceContainer,
+                                elevation: 0,
+                                borderRadius: BorderRadius.circular(20),
+                                child:
+                                    ReusableSegmentedButton<MetricUnitsModel>(
+                                      sectionName: e,
+                                      items: metricUnits[e]!,
+                                      getLabel: (item) {
+                                        return item.unit == 'ft'
+                                            ? 'ft / in'
+                                            : item.unit;
+                                      },
+                                      onSelectionChanged: (selection) {
+                                        setState(() {
+                                          dynamicStates[e] = selection?.unit;
+                                        });
+                                      },
+                                    ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: FilledButton.icon(
+                              style: FilledButton.styleFrom(
+                                minimumSize: const Size.fromHeight(54),
+                                textStyle: theme.textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.w700),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                              ),
+                              onPressed:
+                                  (hasPendingSelections ||
+                                      _selectedGender == null ||
+                                      _isSaving)
+                                  ? null
+                                  : () => _saveAllSetupData(metricUnits),
+                              icon: _isSaving
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : const Icon(Icons.arrow_forward_rounded),
+                              label: Text(
+                                _isSaving
+                                    ? 'Saving setup...'
+                                    : hasPendingSelections
+                                    ? 'Select all units'
+                                    : _selectedGender == null
+                                    ? 'Select gender'
+                                    : 'Continue',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
         ),
       ),
     );

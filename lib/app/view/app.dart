@@ -19,6 +19,7 @@ import 'package:watcha_body/data/repositories/app_backup_repository.dart';
 import 'package:watcha_body/data/repositories/goals_repository.dart';
 import 'package:watcha_body/data/repositories/local_auth_repository_impl.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
+import 'package:watcha_body/data/repositories/user_profile_repository.dart';
 import 'package:watcha_body/data/repositories/user_preference/user_preference_reposiotry.dart';
 import 'package:watcha_body/data/services/database_service.dart';
 import 'package:watcha_body/domain/auth/i_auth_repository.dart';
@@ -123,6 +124,9 @@ class App extends StatelessWidget {
         // UserPreferenceRepository
         RepositoryProvider<UserPreferenceRepository>(
           create: (context) => UserPreferenceRepository(databaseService),
+        ),
+        RepositoryProvider<UserProfileRepository>(
+          create: (context) => UserProfileRepository(databaseService),
         ),
       ],
       child: MultiBlocProvider(

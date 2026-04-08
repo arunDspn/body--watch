@@ -313,7 +313,8 @@ class MeasurementRepository extends IMeasurementsFacade {
       log(_data.toString());
 
       final _dData = _transformUnitsToNestedStructureInTarget(_data);
-      return Right(_dData);
+      final filteredData = _dData.where((target) => target.code != 'height');
+      return Right(filteredData.toList());
     } catch (e) {
       return Left(e.toString());
     }

@@ -6,9 +6,13 @@ import 'package:enum_to_string/enum_to_string.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/services.dart';
 import 'package:watcha_body/app/app_preferences_bloc/apppreferences_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
+import 'package:watcha_body/data/repositories/measurement_repository.dart';
+import 'package:watcha_body/data/repositories/user_profile_repository.dart';
+import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/domain/models/app_preferences.dart';
 import 'package:watcha_body/domain/user_preferences/models/user_unit_preference_model.dart';
@@ -255,6 +259,7 @@ class SettingsView extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const ProfileSettingsSection(),
                     // LanguageSelector(
                     //   appPreferences: (state as SavedAndReady).appPreferences,
                     // ),
@@ -380,6 +385,486 @@ class SettingsView extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+}
+
+class ProfileSettingsSection extends StatefulWidget {
+  const ProfileSettingsSection({Key? key}) : super(key: key);
+
+  @override
+  State<ProfileSettingsSection> createState() => _ProfileSettingsSectionState();
+}
+
+class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
+  final TextEditingController _heightController = TextEditingController();
+  final TextEditingController _heightFeetController = TextEditingController();
+  final TextEditingController _heightInchController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+
+  DateTime? _selectedDob;
+  String? _selectedGender;
+  String? _selectedHeightUnit;
+  String? _selectedWeightUnit;
+  bool _isLoading = true;
+  bool _isSaving = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
+
+  @override
+  void dispose() {
+    _heightController.dispose();
+    _heightFeetController.dispose();
+    _heightInchController.dispose();
+    _weightController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadProfile() async {
+    try {
+      final profile = await context
+          .read<UserProfileRepository>()
+          .getProfileSetup(userId: 1);
+
+      _selectedGender = profile.gender;
+      _selectedDob = profile.dob;
+      _selectedHeightUnit = profile.heightUnit;
+      _selectedWeightUnit = profile.weightUnit;
+
+      if (profile.height != null) {
+        if (profile.heightUnit == 'cm' || profile.heightUnit == null) {
+          _heightController.text = profile.height!.toStringAsFixed(1);
+        } else if (profile.heightUnit == 'ft') {
+          final totalInches = profile.height! / 2.54;
+          final feet = totalInches ~/ 12;
+          final inches = (totalInches - (feet * 12)).round();
+          _heightFeetController.text = feet.toString();
+          _heightInchController.text = inches.toString();
+        } else {
+          _heightController.text = profile.height!.toStringAsFixed(1);
+        }
+      }
+
+      if (profile.weight != null) {
+        _weightController.text = profile.weight!.toStringAsFixed(1);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  List<MetricUnitsModel> _unitsForCode({
+    required Map<String, List<MetricUnitsModel>> metricUnits,
+    required List<String> metricCodes,
+  }) {
+    final units = metricUnits.values
+        .expand((items) => items)
+        .where((unit) => metricCodes.contains(unit.code))
+        .toList();
+    final uniqueByUnit = <String, MetricUnitsModel>{};
+    for (final unit in units) {
+      uniqueByUnit[unit.unit] = unit;
+    }
+    return uniqueByUnit.values.toList();
+  }
+
+  double? _parseOptionalNumber(String value) {
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) {
+      return null;
+    }
+    return double.tryParse(trimmed);
+  }
+
+  Future<void> _pickDob() async {
+    final now = DateTime.now();
+    final selected = await showDatePicker(
+      context: context,
+      initialDate: _selectedDob ?? DateTime(now.year - 20, now.month, now.day),
+      firstDate: DateTime(1900),
+      lastDate: now,
+    );
+
+    if (selected != null && mounted) {
+      setState(() {
+        _selectedDob = selected;
+      });
+    }
+  }
+
+  Future<void> _saveProfile(
+    Map<String, List<MetricUnitsModel>> metricUnits,
+    List<MetricUnitsModel> weightUnits,
+  ) async {
+    if (_selectedGender == null || _isSaving) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text('Please select gender first.'),
+        ),
+      );
+      return;
+    }
+
+    double? resolvedHeightValue = _parseOptionalNumber(_heightController.text);
+    String? resolvedHeightUnit = _selectedHeightUnit;
+    final weightValue = _parseOptionalNumber(_weightController.text);
+
+    if (_selectedHeightUnit == 'ft') {
+      final feet = _parseOptionalNumber(_heightFeetController.text) ?? 0;
+      final inches = _parseOptionalNumber(_heightInchController.text) ?? 0;
+
+      if (inches >= 12) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text('Inches must be less than 12.'),
+          ),
+        );
+        return;
+      }
+
+      if (feet > 0 || inches > 0) {
+        resolvedHeightValue = ((feet * 12) + inches) * 2.54;
+        resolvedHeightUnit = 'cm';
+      } else {
+        resolvedHeightValue = null;
+      }
+    }
+
+    setState(() {
+      _isSaving = true;
+    });
+
+    try {
+      await context.read<UserProfileRepository>().saveProfileSetup(
+        userId: 1,
+        gender: _selectedGender!,
+        dob: _selectedDob,
+        height: resolvedHeightValue,
+        heightUnit: resolvedHeightUnit,
+        weight: weightValue,
+        weightUnit: _selectedWeightUnit,
+      );
+
+      if (weightValue != null && _selectedWeightUnit != null) {
+        final selectedWeightUnit = weightUnits.firstWhereOrNull(
+          (unit) => unit.unit == _selectedWeightUnit,
+        );
+
+        if (selectedWeightUnit != null) {
+          final measurementRepository = context.read<MeasurementRepository>();
+          final allTargetsResult = await measurementRepository.getAllTargets();
+
+          await allTargetsResult.fold((_) async {}, (targets) async {
+            final weightTarget = targets.firstWhereOrNull(
+              (target) => target.code == 'weight',
+            );
+            if (weightTarget == null) {
+              return;
+            }
+
+            final existingWeightResult = await measurementRepository
+                .getMeasurementsByTarget(targetId: weightTarget.id, userId: 1);
+            final hasWeightMeasurement = existingWeightResult.fold(
+              (_) => false,
+              (measurements) => measurements.isNotEmpty,
+            );
+
+            if (!hasWeightMeasurement) {
+              await measurementRepository.createMeasurement(
+                measurement: MeasurementEntity.createNew(
+                  date: DateTime.now(),
+                  value: weightValue * selectedWeightUnit.toBaseFactor,
+                  notes: 'Profile updated from settings',
+                  targetId: weightTarget.id,
+                ),
+              );
+            }
+          });
+        }
+      }
+
+      if (!mounted) {
+        return;
+      }
+
+      context.read<GetallwidgetsdataBloc>().add(
+        const GetallwidgetsdataEvent.fetchAllData(),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text('Profile updated successfully.'),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text('Failed to save profile: $e'),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    if (_isLoading) {
+      return const SettingsChildContainer(
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Center(child: CircularProgressIndicator()),
+        ),
+      );
+    }
+
+    return BlocBuilder<
+      GetAllMetricUnitsAvailableCubit,
+      GetAllMetricUnitsAvailableState
+    >(
+      builder: (context, state) {
+        return state.maybeWhen(
+          orElse: () => const SizedBox.shrink(),
+          loaded: (allUnits) {
+            final heightUnits = _unitsForCode(
+              metricUnits: allUnits!,
+              metricCodes: const ['height', 'length'],
+            );
+            final weightUnits = _unitsForCode(
+              metricUnits: allUnits,
+              metricCodes: const ['weight'],
+            );
+
+            _selectedHeightUnit ??= heightUnits.firstOrNull?.unit;
+            _selectedWeightUnit ??= weightUnits.firstOrNull?.unit;
+
+            return SettingsChildContainer(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Profile',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Gender is required for formulas. Height, date of birth, and weight are optional.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    Text('Gender *', style: theme.textTheme.labelLarge),
+                    const SizedBox(height: 8),
+                    SegmentedButton<String>(
+                      emptySelectionAllowed: true,
+                      segments: const [
+                        ButtonSegment<String>(
+                          value: 'male',
+                          label: Text('Male'),
+                        ),
+                        ButtonSegment<String>(
+                          value: 'female',
+                          label: Text('Female'),
+                        ),
+                      ],
+                      selected: {if (_selectedGender != null) _selectedGender!},
+                      onSelectionChanged: (selection) {
+                        setState(() {
+                          _selectedGender = selection.firstOrNull;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _selectedHeightUnit == 'ft'
+                              ? Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _heightFeetController,
+                                        keyboardType:
+                                            const TextInputType.numberWithOptions(
+                                              decimal: false,
+                                            ),
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
+                                        decoration: const InputDecoration(
+                                          labelText: 'Feet (optional)',
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _heightInchController,
+                                        keyboardType:
+                                            const TextInputType.numberWithOptions(
+                                              decimal: false,
+                                            ),
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
+                                        decoration: const InputDecoration(
+                                          labelText: 'Inches (0-11)',
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : TextField(
+                                  controller: _heightController,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(r'^\d*\.?\d{0,2}'),
+                                    ),
+                                  ],
+                                  decoration: const InputDecoration(
+                                    labelText: 'Height (optional)',
+                                  ),
+                                ),
+                        ),
+                        const SizedBox(width: 12),
+                        SizedBox(
+                          width: 110,
+                          child: DropdownButtonFormField<String>(
+                            value: _selectedHeightUnit,
+                            decoration: const InputDecoration(
+                              labelText: 'Unit',
+                            ),
+                            items: heightUnits
+                                .map(
+                                  (unit) => DropdownMenuItem<String>(
+                                    value: unit.unit,
+                                    child: Text(
+                                      unit.unit == 'ft' ? 'ft / in' : unit.unit,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedHeightUnit = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _weightController,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d*\.?\d{0,2}'),
+                              ),
+                            ],
+                            decoration: const InputDecoration(
+                              labelText: 'Weight (optional)',
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        SizedBox(
+                          width: 110,
+                          child: DropdownButtonFormField<String>(
+                            value: _selectedWeightUnit,
+                            decoration: const InputDecoration(
+                              labelText: 'Unit',
+                            ),
+                            items: weightUnits
+                                .map(
+                                  (unit) => DropdownMenuItem<String>(
+                                    value: unit.unit,
+                                    child: Text(unit.unit),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedWeightUnit = value;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    OutlinedButton.icon(
+                      onPressed: _pickDob,
+                      icon: const Icon(Icons.calendar_today_rounded),
+                      label: Text(
+                        _selectedDob == null
+                            ? 'Date of birth (optional)'
+                            : 'DOB: ${_selectedDob!.year}-${_selectedDob!.month.toString().padLeft(2, '0')}-${_selectedDob!.day.toString().padLeft(2, '0')}',
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: _isSaving
+                            ? null
+                            : () => _saveProfile(allUnits, weightUnits),
+                        icon: _isSaving
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.save_outlined),
+                        label: Text(_isSaving ? 'Saving...' : 'Save profile'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
