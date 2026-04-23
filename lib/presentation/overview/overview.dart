@@ -596,6 +596,7 @@ class _WidgetBoxState extends State<_WidgetBox> {
               builder: (context) {
                 return ChartsView2(
                   targetId: widget.data.targetId,
+                  targetCode: widget.data.metricCode,
                   valueDivisor: safeFactor,
                   initialSourceFilter: widget.data.metricCode == 'bmi'
                       ? MeasurementSourceFilter.estimated

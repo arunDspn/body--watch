@@ -15,6 +15,7 @@ class ChartsView2 extends StatefulWidget {
     super.key,
     this.data,
     this.targetId,
+    this.targetCode,
     this.userId = 1,
     this.valueDivisor = 1,
     this.config,
@@ -25,6 +26,7 @@ class ChartsView2 extends StatefulWidget {
 
   final List<DataPoint>? data;
   final int? targetId;
+  final String? targetCode;
   final int userId;
   final double valueDivisor;
   final ChartConfig? config;
@@ -46,6 +48,17 @@ class _ChartsView2State extends State<ChartsView2> {
 
   bool get _shouldLoadFromRepository =>
       widget.targetId != null && widget.data == null;
+
+  bool get _shouldShowMeasurementSourceBadge {
+    const supportedTargetCodes = <String>{
+      'skeletal_muscle_mass',
+      'skeletal_muscle_mass_percentage',
+      'body_fat_percentage',
+      'bmi',
+    };
+
+    return supportedTargetCodes.contains(widget.targetCode);
+  }
 
   @override
   void initState() {
@@ -816,30 +829,33 @@ class _ChartsView2State extends State<ChartsView2> {
                               color: colorScheme.onSurfaceVariant,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(999),
-                              color: measurement.source == 'estimated_formula'
-                                  ? colorScheme.tertiaryContainer
-                                  : colorScheme.secondaryContainer,
-                            ),
-                            child: Text(
-                              measurement.source == 'estimated_formula'
-                                  ? 'Estimated'
-                                  : 'Manual',
-                              style: textTheme.labelSmall?.copyWith(
-                                fontWeight: FontWeight.w700,
+                          if (_shouldShowMeasurementSourceBadge) ...[
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(999),
                                 color: measurement.source == 'estimated_formula'
-                                    ? colorScheme.onTertiaryContainer
-                                    : colorScheme.onSecondaryContainer,
+                                    ? colorScheme.tertiaryContainer
+                                    : colorScheme.secondaryContainer,
+                              ),
+                              child: Text(
+                                measurement.source == 'estimated_formula'
+                                    ? 'Estimated'
+                                    : 'Manual',
+                                style: textTheme.labelSmall?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color:
+                                      measurement.source == 'estimated_formula'
+                                      ? colorScheme.onTertiaryContainer
+                                      : colorScheme.onSecondaryContainer,
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ],
                       ),
                       trailing: delta == null

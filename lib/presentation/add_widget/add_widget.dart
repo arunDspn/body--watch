@@ -147,9 +147,12 @@ class _Boxes extends StatelessWidget {
             return;
           }
 
+          final navigator = Navigator.of(context);
+          final scaffoldMessenger = ScaffoldMessenger.maybeOf(context);
+
           result.fold(
             (failure) {
-              ScaffoldMessenger.of(context).showSnackBar(
+              scaffoldMessenger?.showSnackBar(
                 SnackBar(
                   content: Text('Failed to enable BMI tracking: $failure'),
                 ),
@@ -176,10 +179,8 @@ class _Boxes extends StatelessWidget {
                   'BMI tracking enabled. Add height and weight to start automatic BMI updates.',
               };
 
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(message)));
-              Navigator.pop(context);
+              scaffoldMessenger?.showSnackBar(SnackBar(content: Text(message)));
+              navigator.pop();
             },
           );
           return;
