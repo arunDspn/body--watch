@@ -9,6 +9,7 @@ import 'package:watcha_body/presentation/chart_2/widgets/chart_navigation_row.da
 /// A reusable chart widget for visualizing body measurements
 class BodyMeasurementChart extends StatefulWidget {
   final List<DataPoint> data;
+  final List<DataPoint> secondaryData;
   final ChartConfig config;
   final ChartFilter defaultFilter;
   final double? goalValue;
@@ -16,6 +17,7 @@ class BodyMeasurementChart extends StatefulWidget {
   const BodyMeasurementChart({
     super.key,
     required this.data,
+    this.secondaryData = const <DataPoint>[],
     required this.config,
     this.defaultFilter = ChartFilter.month,
     this.goalValue,
@@ -29,29 +31,30 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
   // State variables for chart management
   late ChartFilter _currentFilter;
   late DateTime _currentPeriod;
-  int? _selectedPointIndex;
+  DataPoint? _selectedDataPoint;
 
   @override
   void initState() {
     super.initState();
     _currentFilter = widget.defaultFilter;
     _currentPeriod = _calculateCurrentPeriod();
-    _selectedPointIndex = null;
+    _selectedDataPoint = null;
   }
 
   @override
   void didUpdateWidget(BodyMeasurementChart oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Reset period if data changed
-    if (oldWidget.data != widget.data) {
+    if (oldWidget.data != widget.data ||
+        oldWidget.secondaryData != widget.secondaryData) {
       _currentPeriod = _calculateCurrentPeriod();
-      _selectedPointIndex = null;
+      _selectedDataPoint = null;
     }
 
     if (oldWidget.defaultFilter != widget.defaultFilter) {
       _currentFilter = widget.defaultFilter;
       _currentPeriod = _calculateCurrentPeriod();
-      _selectedPointIndex = null;
+      _selectedDataPoint = null;
     }
   }
 
@@ -73,7 +76,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     setState(() {
       _currentFilter = filter;
       _currentPeriod = _calculateCurrentPeriod();
-      _selectedPointIndex = null; // Clear selection when changing filters
+      _selectedDataPoint = null; // Clear selection when changing filters
     });
   }
 
@@ -91,7 +94,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
       _currentPeriod = isNext
           ? _getNextPeriod(_currentPeriod, _currentFilter)
           : _getPreviousPeriod(_currentPeriod, _currentFilter);
-      _selectedPointIndex = null; // Clear selection when navigating
+      _selectedDataPoint = null; // Clear selection when navigating
     });
   }
 
@@ -106,18 +109,19 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
   }
 
   /// Select a data point for tooltip display
-  void _selectDataPoint(int? index) {
+  void _selectDataPoint(DataPoint? dataPoint) {
     setState(() {
-      _selectedPointIndex = index;
+      _selectedDataPoint = dataPoint;
     });
   }
 
   /// Get the latest data entry date, or current date if no data
   DateTime _getLatestDataDate() {
-    if (widget.data.isEmpty) {
+    final combinedData = <DataPoint>[...widget.data, ...widget.secondaryData];
+    if (combinedData.isEmpty) {
       return DateTime.now();
     }
-    return widget.data
+    return combinedData
         .map((point) => point.dateTime)
         .reduce((a, b) => a.isAfter(b) ? a : b);
   }
@@ -165,6 +169,14 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
   List<DataPoint> _getFilteredData() {
     return ChartDataTransformer.filterDataByPeriod(
       widget.data,
+      _currentPeriod,
+      _currentFilter,
+    );
+  }
+
+  List<DataPoint> _getFilteredSecondaryData() {
+    return ChartDataTransformer.filterDataByPeriod(
+      widget.secondaryData,
       _currentPeriod,
       _currentFilter,
     );
@@ -449,13 +461,17 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
   }
 
   /// Find the closest data point to a given spot
-  int _findClosestDataPoint(FlSpot spot, List<DataPoint> filteredData) {
-    return ChartDataTransformer.findClosestDataPoint(
+  DataPoint? _findClosestDataPoint(FlSpot spot, List<DataPoint> filteredData) {
+    final closestIndex = ChartDataTransformer.findClosestDataPoint(
       spot,
       filteredData,
       _currentPeriod,
       _currentFilter,
     );
+    if (closestIndex == -1 || closestIndex >= filteredData.length) {
+      return null;
+    }
+    return filteredData[closestIndex];
   }
 
   /// Generate spots for chart with proper positioning
@@ -493,6 +509,10 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
           if (widget.goalValue != null) ...[
             const SizedBox(height: 10),
             _buildGoalLegend(context),
+          ],
+          if (widget.config.rangeBands.isNotEmpty) ...[
+            const SizedBox(height: 10),
+            _buildRangeBandStatus(context),
           ],
           const SizedBox(height: 16),
 
@@ -551,7 +571,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
           ),
           const SizedBox(width: 8),
           Text(
-            'Goal ${_formatYAxisValue(widget.goalValue!)} ${widget.config.unit}',
+            'Goal ${_formatValueWithUnit(widget.goalValue!)}',
             style: TextStyle(
               color: colorScheme.onSurface,
               fontWeight: FontWeight.w600,
@@ -561,6 +581,84 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
         ],
       ),
     );
+  }
+
+  String _formatValueWithUnit(double value) {
+    final baseText = _formatYAxisValue(value);
+    final unit = widget.config.unit.trim();
+    if (unit.isEmpty) {
+      return baseText;
+    }
+    return '$baseText $unit';
+  }
+
+  ChartRangeBand? _bandForValue(double value) {
+    for (final band in widget.config.rangeBands) {
+      final isWithinLower = value >= band.start;
+      final isWithinUpper = band.end == double.infinity || value < band.end;
+      if (isWithinLower && isWithinUpper) {
+        return band;
+      }
+    }
+    return null;
+  }
+
+  Widget _buildRangeBandStatus(BuildContext context) {
+    if (widget.config.rangeBands.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final combinedData = <DataPoint>[...widget.data, ...widget.secondaryData];
+    if (combinedData.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    combinedData.sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    final activeBand = _bandForValue(combinedData.first.value);
+    if (activeBand == null) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: activeBand.color.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: activeBand.color.withValues(alpha: 0.4)),
+      ),
+      child: Text(
+        'Current status: ${activeBand.label}',
+        style: TextStyle(
+          color: activeBand.color,
+          fontWeight: FontWeight.w700,
+          fontSize: 12,
+        ),
+      ),
+    );
+  }
+
+  RangeAnnotations _buildRangeAnnotations(double minY, double maxY) {
+    if (widget.config.rangeBands.isEmpty) {
+      return const RangeAnnotations();
+    }
+
+    final clippedBands = widget.config.rangeBands
+        .map((band) {
+          final y1 = band.start < minY ? minY : band.start;
+          final y2 = band.end > maxY ? maxY : band.end;
+          if (y2 <= y1) {
+            return null;
+          }
+          return HorizontalRangeAnnotation(
+            y1: y1,
+            y2: y2,
+            color: band.color.withValues(alpha: 0.08),
+          );
+        })
+        .whereType<HorizontalRangeAnnotation>()
+        .toList();
+
+    return RangeAnnotations(horizontalRangeAnnotations: clippedBands);
   }
 
   HorizontalLine? _buildGoalReferenceLine() {
@@ -668,6 +766,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
           maxX: _getMaxXValue(),
           minY: minY,
           maxY: maxY,
+          rangeAnnotations: _buildRangeAnnotations(minY, maxY),
           lineTouchData: LineTouchData(enabled: false),
           lineBarsData: [], // No data to display
           extraLinesData: _buildExtraLinesData([], minY, maxY),
@@ -754,6 +853,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
           maxX: _getMaxXValue(),
           minY: minY,
           maxY: maxY,
+          rangeAnnotations: _buildRangeAnnotations(minY, maxY),
           lineTouchData: LineTouchData(
             enabled: true,
             touchTooltipData: LineTouchTooltipData(
@@ -769,7 +869,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
               ),
               getTooltipItems: (spots) {
                 return spots.map((spot) {
-                  final valueText = '${dataPoint.value} ${widget.config.unit}';
+                  final valueText = _formatValueWithUnit(dataPoint.value);
                   final dateText = _formatDate(dataPoint.dateTime);
 
                   return LineTooltipItem(
@@ -930,26 +1030,27 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
 
   Widget _buildChartArea() {
     final filteredData = _getFilteredData();
+    final filteredSecondaryData = _getFilteredSecondaryData();
+    final combinedFilteredData = <DataPoint>[
+      ...filteredData,
+      ...filteredSecondaryData,
+    ]..sort((a, b) => a.dateTime.compareTo(b.dateTime));
 
-    // If no data, show empty chart with axes and grid lines (no message)
-    if (filteredData.isEmpty) {
+    if (combinedFilteredData.isEmpty) {
       return _buildEmptyChart();
     }
 
-    // Handle single data point edge case
-    if (filteredData.length == 1) {
-      return _buildSinglePointChart(filteredData);
+    if (combinedFilteredData.length == 1) {
+      return _buildSinglePointChart(combinedFilteredData);
     }
 
-    // Get min and max values for Y-axis scaling
-    final yValues = filteredData.map((point) => point.value).toList();
+    final yValues = combinedFilteredData.map((point) => point.value).toList();
     if (widget.goalValue != null) {
       yValues.add(widget.goalValue!);
     }
     final minY = yValues.reduce((a, b) => a < b ? a : b);
     final maxY = yValues.reduce((a, b) => a > b ? a : b);
 
-    // Add a small padding to the top and bottom
     final yRange = maxY - minY;
     final rawPaddedMinY = minY - (yRange * 0.1);
     final rawPaddedMaxY = maxY + (yRange * 0.1);
@@ -958,6 +1059,97 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
     final paddedMaxY = _roundUpToStep(rawPaddedMaxY, yAxisInterval);
 
     final colorScheme = Theme.of(context).colorScheme;
+    final seriesByBarIndex = <List<DataPoint>>[
+      if (filteredData.isNotEmpty) filteredData,
+      if (filteredSecondaryData.isNotEmpty) filteredSecondaryData,
+    ];
+
+    final lineBarsData = <LineChartBarData>[
+      if (filteredData.isNotEmpty)
+        LineChartBarData(
+          spots: _generateSpots(filteredData),
+          isCurved: true,
+          curveSmoothness: 0.35,
+          color: widget.config.color,
+          barWidth: 2.5,
+          isStrokeCapRound: true,
+          gradient: LinearGradient(
+            colors: [
+              widget.config.color.withValues(alpha: 0.8),
+              widget.config.color,
+            ],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          dotData: FlDotData(
+            show: true,
+            getDotPainter: (spot, percent, barData, index) {
+              final dataPoint = index < filteredData.length
+                  ? filteredData[index]
+                  : null;
+              final isCurrentPoint = dataPoint != null
+                  ? _isInCurrentPeriod(dataPoint.dateTime)
+                  : false;
+              final isSelected =
+                  dataPoint != null && dataPoint == _selectedDataPoint;
+
+              double radius;
+              Color dotColor;
+              double strokeWidth;
+
+              if (isSelected) {
+                radius = 7;
+                dotColor = widget.config.color;
+                strokeWidth = 3;
+              } else if (isCurrentPoint) {
+                radius = 5;
+                dotColor = widget.config.color;
+                strokeWidth = 2.5;
+              } else {
+                radius = 3.5;
+                dotColor = widget.config.color.withValues(alpha: 0.85);
+                strokeWidth = 2;
+              }
+
+              return FlDotCirclePainter(
+                radius: radius,
+                color: dotColor,
+                strokeWidth: strokeWidth,
+                strokeColor: Colors.white,
+              );
+            },
+          ),
+          belowBarData: BarAreaData(
+            show: widget.config.backgroundColor != null,
+            color: widget.config.backgroundColor?.withValues(alpha: 0.2),
+          ),
+        ),
+      if (filteredSecondaryData.isNotEmpty)
+        LineChartBarData(
+          spots: _generateSpots(filteredSecondaryData),
+          isCurved: true,
+          curveSmoothness: 0.35,
+          color: colorScheme.tertiary,
+          barWidth: 2,
+          isStrokeCapRound: true,
+          dotData: FlDotData(
+            show: true,
+            getDotPainter: (spot, percent, barData, index) {
+              final dataPoint = index < filteredSecondaryData.length
+                  ? filteredSecondaryData[index]
+                  : null;
+              final isSelected =
+                  dataPoint != null && dataPoint == _selectedDataPoint;
+              return FlDotCirclePainter(
+                radius: isSelected ? 6 : 3,
+                color: colorScheme.tertiary,
+                strokeWidth: isSelected ? 3 : 1.5,
+                strokeColor: Colors.white,
+              );
+            },
+          ),
+        ),
+    ];
 
     return SizedBox(
       height: 340,
@@ -980,7 +1172,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
               sideTitles: SideTitles(
                 showTitles: true,
                 getTitlesWidget: (value, meta) =>
-                    _buildBottomTitleWidgets(value, meta, filteredData),
+                    _buildBottomTitleWidgets(value, meta, combinedFilteredData),
                 reservedSize: 30,
               ),
             ),
@@ -1013,6 +1205,7 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
           maxX: _getMaxXValue(),
           minY: paddedMinY,
           maxY: paddedMaxY,
+          rangeAnnotations: _buildRangeAnnotations(paddedMinY, paddedMaxY),
           lineTouchData: LineTouchData(
             enabled: true,
             touchTooltipData: LineTouchTooltipData(
@@ -1028,124 +1221,59 @@ class _BodyMeasurementChartState extends State<BodyMeasurementChart> {
               ),
               getTooltipItems: (spots) {
                 return spots.map((spot) {
-                  // Find the closest data point to this spot
-                  final closestPointIndex = _findClosestDataPoint(
-                    spot,
-                    filteredData,
-                  );
-                  if (closestPointIndex != -1) {
-                    final dataPoint = filteredData[closestPointIndex];
-                    // Format as "84 kg - Sep 16" according to spec
-                    final valueText =
-                        '${dataPoint.value} ${widget.config.unit}';
-                    final dateText = _formatDate(dataPoint.dateTime);
-
-                    return LineTooltipItem(
-                      '$valueText - $dateText',
-                      TextStyle(
-                        color: widget.config.color,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                        letterSpacing: 0.2,
-                      ),
-                      textAlign: TextAlign.center,
-                    );
+                  final barIndex = spot.barIndex;
+                  if (barIndex >= seriesByBarIndex.length) {
+                    return null;
                   }
-                  return null;
+                  final dataPoint = _findClosestDataPoint(
+                    spot,
+                    seriesByBarIndex[barIndex],
+                  );
+                  if (dataPoint == null) {
+                    return null;
+                  }
+                  final valueText = _formatValueWithUnit(dataPoint.value);
+                  final dateText = _formatDate(dataPoint.dateTime);
+                  return LineTooltipItem(
+                    '$valueText - $dateText (${dataPoint.sourceLabel})',
+                    TextStyle(
+                      color: barIndex == 0
+                          ? widget.config.color
+                          : colorScheme.tertiary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                      letterSpacing: 0.2,
+                    ),
+                    textAlign: TextAlign.center,
+                  );
                 }).toList();
               },
             ),
             touchCallback: (event, touchResponse) {
               if (event is FlTapUpEvent) {
-                // Handle tap on data point
                 if (touchResponse?.lineBarSpots != null &&
                     touchResponse!.lineBarSpots!.isNotEmpty) {
                   final spot = touchResponse.lineBarSpots!.first;
-                  final closestPointIndex = _findClosestDataPoint(
-                    spot,
-                    filteredData,
-                  );
-                  _selectDataPoint(closestPointIndex);
+                  final barIndex = spot.barIndex;
+                  final series = barIndex < seriesByBarIndex.length
+                      ? seriesByBarIndex[barIndex]
+                      : combinedFilteredData;
+                  _selectDataPoint(_findClosestDataPoint(spot, series));
                 } else {
-                  // Tap outside - deselect
                   _selectDataPoint(null);
                 }
               } else if (event is FlLongPressEnd || event is FlPanEndEvent) {
-                // Clear selection when user stops interacting
                 setState(() {
-                  _selectedPointIndex = null;
+                  _selectedDataPoint = null;
                 });
               }
             },
             handleBuiltInTouches: true,
-            // Enable touch threshold for better tap detection
             touchSpotThreshold: 20,
           ),
-          lineBarsData: [
-            LineChartBarData(
-              spots: _generateSpots(filteredData),
-              isCurved: true,
-              curveSmoothness: 0.35,
-              color: widget.config.color,
-              barWidth: 2.5,
-              isStrokeCapRound: true,
-              gradient: LinearGradient(
-                colors: [
-                  widget.config.color.withValues(alpha: 0.8),
-                  widget.config.color,
-                ],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-              dotData: FlDotData(
-                show: true,
-                getDotPainter: (spot, percent, barData, index) {
-                  // Get the original datapoint for this index
-                  final isCurrentPoint = index < filteredData.length
-                      ? _isInCurrentPeriod(filteredData[index].dateTime)
-                      : false;
-
-                  // Check if this point is selected
-                  final isSelected = _selectedPointIndex == index;
-
-                  // Determine dot appearance based on state
-                  double radius;
-                  Color dotColor;
-                  double strokeWidth;
-
-                  if (isSelected) {
-                    // Selected point - largest and most prominent
-                    radius = 7;
-                    dotColor = widget.config.color;
-                    strokeWidth = 3;
-                  } else if (isCurrentPoint) {
-                    // Current period point - emphasized
-                    radius = 5;
-                    dotColor = widget.config.color;
-                    strokeWidth = 2.5;
-                  } else {
-                    // Regular point - smaller and slightly transparent
-                    radius = 3.5;
-                    dotColor = widget.config.color.withValues(alpha: 0.85);
-                    strokeWidth = 2;
-                  }
-
-                  return FlDotCirclePainter(
-                    radius: radius,
-                    color: dotColor,
-                    strokeWidth: strokeWidth,
-                    strokeColor: Colors.white,
-                  );
-                },
-              ),
-              belowBarData: BarAreaData(
-                show: widget.config.backgroundColor != null,
-                color: widget.config.backgroundColor?.withValues(alpha: 0.2),
-              ),
-            ),
-          ],
+          lineBarsData: lineBarsData,
           extraLinesData: _buildExtraLinesData(
-            filteredData,
+            combinedFilteredData,
             paddedMinY,
             paddedMaxY,
           ),

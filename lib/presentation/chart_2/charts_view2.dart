@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
 import 'package:watcha_body/data/repositories/goals_repository.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
+import 'package:watcha_body/domain/measurement/i_measurements.dart';
 import 'package:watcha_body/domain/measurement/models/goal_entity.dart';
 import 'cubit/chart_detail_cubit.dart';
 import 'models/chart_models.dart';
@@ -17,6 +19,8 @@ class ChartsView2 extends StatefulWidget {
     this.valueDivisor = 1,
     this.config,
     this.defaultFilter = ChartFilter.month,
+    this.showSourceFilter = false,
+    this.initialSourceFilter = MeasurementSourceFilter.manual,
   });
 
   final List<DataPoint>? data;
@@ -25,6 +29,8 @@ class ChartsView2 extends StatefulWidget {
   final double valueDivisor;
   final ChartConfig? config;
   final ChartFilter defaultFilter;
+  final bool showSourceFilter;
+  final MeasurementSourceFilter initialSourceFilter;
 
   @override
   State<ChartsView2> createState() => _ChartsView2State();
@@ -34,6 +40,7 @@ class _ChartsView2State extends State<ChartsView2> {
   final DateFormat _dateFormatter = DateFormat('yyyy-MM-dd');
   final DateFormat _dayMonthFormatter = DateFormat('d MMM');
   ChartDetailCubit? _chartDetailCubit;
+  late MeasurementSourceFilter _sourceFilter;
 
   double get _safeDivisor => widget.valueDivisor == 0 ? 1 : widget.valueDivisor;
 
@@ -43,11 +50,36 @@ class _ChartsView2State extends State<ChartsView2> {
   @override
   void initState() {
     super.initState();
+    _sourceFilter = widget.initialSourceFilter;
+    _loadPreferencesAndInitialize();
+  }
+
+  Future<void> _loadPreferencesAndInitialize() async {
+    if (widget.showSourceFilter) {
+      final userPrefCubit = context.read<UserPreferencesCubit>();
+      final savedFilter = await userPrefCubit.getChartSourceFilter(
+        widget.userId,
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _sourceFilter = savedFilter;
+      });
+    }
+
     if (_shouldLoadFromRepository) {
-      _chartDetailCubit = ChartDetailCubit(
-        context.read<MeasurementRepository>(),
-        context.read<GoalsRepository>(),
-      )..load(targetId: widget.targetId!, userId: widget.userId);
+      _chartDetailCubit =
+          ChartDetailCubit(
+            context.read<MeasurementRepository>(),
+            context.read<GoalsRepository>(),
+          )..load(
+            targetId: widget.targetId!,
+            userId: widget.userId,
+            sourceFilter: _sourceFilter,
+          );
     }
   }
 
@@ -519,6 +551,103 @@ class _ChartsView2State extends State<ChartsView2> {
     );
   }
 
+  Future<void> _changeSourceFilter(MeasurementSourceFilter sourceFilter) async {
+    if (!_shouldLoadFromRepository || _chartDetailCubit == null) {
+      return;
+    }
+
+    setState(() {
+      _sourceFilter = sourceFilter;
+    });
+
+    if (widget.showSourceFilter) {
+      final userPrefCubit = context.read<UserPreferencesCubit>();
+      await userPrefCubit.setChartSourceFilter(
+        userId: widget.userId,
+        filter: sourceFilter,
+      );
+    }
+
+    await _chartDetailCubit!.load(
+      targetId: widget.targetId!,
+      userId: widget.userId,
+      sourceFilter: sourceFilter,
+    );
+  }
+
+  Widget _buildSourceFilterChips(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children:
+          [
+            (label: 'Manual', filter: MeasurementSourceFilter.manual),
+            (label: 'Estimated', filter: MeasurementSourceFilter.estimated),
+            (label: 'Both', filter: MeasurementSourceFilter.both),
+          ].map((option) {
+            final selected = _sourceFilter == option.filter;
+            return ChoiceChip(
+              label: Text(option.label),
+              selected: selected,
+              onSelected: (_) => _changeSourceFilter(option.filter),
+              selectedColor: colorScheme.primaryContainer,
+              backgroundColor: colorScheme.surfaceContainerHighest,
+              labelStyle: TextStyle(
+                color: selected
+                    ? colorScheme.onPrimaryContainer
+                    : colorScheme.onSurfaceVariant,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+              ),
+              side: BorderSide(
+                color: selected
+                    ? colorScheme.primary
+                    : colorScheme.outlineVariant,
+              ),
+            );
+          }).toList(),
+    );
+  }
+
+  Widget _buildSourceLegend(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    Widget legendItem({
+      required Color color,
+      required String label,
+      bool dashed = false,
+    }) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: 22,
+            child: CustomPaint(
+              painter: _LegendLinePainter(color: color, dashed: dashed),
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: textTheme.labelMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Wrap(
+      spacing: 14,
+      runSpacing: 8,
+      children: [
+        legendItem(color: _chartConfig.color, label: 'Manual'),
+        legendItem(color: colorScheme.tertiary, label: 'Estimated'),
+      ],
+    );
+  }
+
   Widget _buildMeasurementElements(
     BuildContext context, {
     required List<DataPoint> chartData,
@@ -679,11 +808,39 @@ class _ChartsView2State extends State<ChartsView2> {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      subtitle: Text(
-                        _dateFormatter.format(measurement.dateTime),
-                        style: textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
+                      subtitle: Row(
+                        children: [
+                          Text(
+                            _dateFormatter.format(measurement.dateTime),
+                            style: textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(999),
+                              color: measurement.source == 'estimated_formula'
+                                  ? colorScheme.tertiaryContainer
+                                  : colorScheme.secondaryContainer,
+                            ),
+                            child: Text(
+                              measurement.source == 'estimated_formula'
+                                  ? 'Estimated'
+                                  : 'Manual',
+                              style: textTheme.labelSmall?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: measurement.source == 'estimated_formula'
+                                    ? colorScheme.onTertiaryContainer
+                                    : colorScheme.onSecondaryContainer,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       trailing: delta == null
                           ? Text(
@@ -769,8 +926,25 @@ class _ChartsView2State extends State<ChartsView2> {
                 const SizedBox(height: 24),
               ],
 
+              if (_shouldLoadFromRepository && widget.showSourceFilter) ...[
+                _buildSourceFilterChips(context),
+                const SizedBox(height: 8),
+                _buildSourceLegend(context),
+                const SizedBox(height: 16),
+              ],
               BodyMeasurementChart(
-                data: chartData,
+                data: _sourceFilter == MeasurementSourceFilter.estimated
+                    ? chartData
+                          .where((point) => point.source == 'estimated_formula')
+                          .toList()
+                    : chartData
+                          .where((point) => point.source == 'manual')
+                          .toList(),
+                secondaryData: _sourceFilter == MeasurementSourceFilter.both
+                    ? chartData
+                          .where((point) => point.source == 'estimated_formula')
+                          .toList()
+                    : const <DataPoint>[],
                 config: config,
                 defaultFilter: widget.defaultFilter,
                 goalValue: activeGoal == null
@@ -897,12 +1071,19 @@ class _ChartsView2State extends State<ChartsView2> {
                   ),
                 ),
               );
-            case ChartDetailLoaded(:final measurements, :final activeGoal):
+            case ChartDetailLoaded(
+              :final measurements,
+              :final activeGoal,
+              :final sourceFilter,
+            ):
+              _sourceFilter = sourceFilter;
               final chartData = measurements
                   .map(
                     (measurement) => DataPoint(
                       dateTime: measurement.date,
                       value: measurement.value / _safeDivisor,
+                      source: measurement.source,
+                      method: measurement.method,
                     ),
                   )
                   .toList();
@@ -940,6 +1121,41 @@ class _ChartsView2State extends State<ChartsView2> {
       config: config,
       isUsingMockData: isUsingMockData,
     );
+  }
+}
+
+class _LegendLinePainter extends CustomPainter {
+  const _LegendLinePainter({required this.color, required this.dashed});
+
+  final Color color;
+  final bool dashed;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 2
+      ..strokeCap = StrokeCap.round;
+
+    final y = size.height / 2;
+    if (!dashed) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+      return;
+    }
+
+    const dashWidth = 5.0;
+    const dashSpace = 3.0;
+    double startX = 0;
+    while (startX < size.width) {
+      final endX = (startX + dashWidth).clamp(0, size.width).toDouble();
+      canvas.drawLine(Offset(startX, y), Offset(endX, y), paint);
+      startX += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _LegendLinePainter oldDelegate) {
+    return oldDelegate.color != color || oldDelegate.dashed != dashed;
   }
 }
 

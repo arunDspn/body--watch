@@ -1,3 +1,4 @@
+import 'package:watcha_body/domain/measurement/i_measurements.dart';
 import 'package:watcha_body/domain/user_preferences/models/user_unit_preference_model.dart';
 import 'package:watcha_body/domain/user_preferences/models/user_unit_preferences_entity.dart';
 
@@ -16,5 +17,12 @@ abstract class IUserPreferencesRepository {
   /// Update a specific preference
   Future<void> updateAPreference(UserUnitPreferencesEntity preference);
 
-  /// User Settings
+  /// Get chart source filter preference for chart views.
+  Future<MeasurementSourceFilter> getChartSourceFilter({required int userId});
+
+  /// Persist chart source filter preference.
+  Future<void> setChartSourceFilter({
+    required int userId,
+    required MeasurementSourceFilter filter,
+  });
 }

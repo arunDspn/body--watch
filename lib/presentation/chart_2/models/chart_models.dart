@@ -4,15 +4,22 @@ import 'package:flutter/material.dart';
 class DataPoint {
   final DateTime dateTime;
   final double value;
+  final String source;
+  final String? method;
 
   const DataPoint({
     required this.dateTime,
     required this.value,
+    this.source = 'manual',
+    this.method,
   });
+
+  String get sourceLabel =>
+      source == 'estimated_formula' ? 'Estimated' : 'Manual';
 
   @override
   String toString() {
-    return 'DataPoint(dateTime: $dateTime, value: $value)';
+    return 'DataPoint(dateTime: $dateTime, value: $value, source: $source, method: $method)';
   }
 
   @override
@@ -21,11 +28,27 @@ class DataPoint {
 
     return other is DataPoint &&
         other.dateTime == dateTime &&
-        other.value == value;
+        other.value == value &&
+        other.source == source &&
+        other.method == method;
   }
 
   @override
-  int get hashCode => dateTime.hashCode ^ value.hashCode;
+  int get hashCode => Object.hash(dateTime, value, source, method);
+}
+
+class ChartRangeBand {
+  const ChartRangeBand({
+    required this.start,
+    required this.end,
+    required this.color,
+    required this.label,
+  });
+
+  final double start;
+  final double end;
+  final Color color;
+  final String label;
 }
 
 /// Configuration class for chart styling and behavior
@@ -35,6 +58,7 @@ class ChartConfig {
   final Color color; // Line and point color
   final Color? backgroundColor;
   final bool showGridLines; // Default: true (horizontal only)
+  final List<ChartRangeBand> rangeBands;
 
   const ChartConfig({
     required this.unit,
@@ -42,6 +66,7 @@ class ChartConfig {
     required this.color,
     this.backgroundColor,
     this.showGridLines = true,
+    this.rangeBands = const <ChartRangeBand>[],
   });
 
   @override

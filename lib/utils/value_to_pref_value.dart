@@ -43,6 +43,9 @@ class UserMetricHelper {
     );
 
     if (preference == null) {
+      if (metricCode == 'bmi') {
+        return value.toStringAsFixed(decimalPlaces);
+      }
       throw Exception('No preference found for metric code: $metricCode');
     }
 
@@ -65,7 +68,7 @@ class UserMetricHelper {
   }) {
     // Get user preferred units from context
     final userPref =
-        (context.read<UserPreferencesCubit>() as UserPreferencesLoaded)
+        (context.read<UserPreferencesCubit>().state as UserPreferencesLoaded)
             .preferences;
 
     // Find the preference for the given metric code
@@ -74,6 +77,9 @@ class UserMetricHelper {
     );
 
     if (preference == null) {
+      if (metricCode == 'bmi') {
+        return value;
+      }
       throw Exception('No preference found for metric code: $metricCode');
     }
 

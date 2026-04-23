@@ -9,6 +9,7 @@ import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/presentation/add_initial_measurement_data/cubit/add_initial_measurement_data_cubit.dart';
+import 'package:watcha_body/presentation/body_composition/body_composition_entry_modal.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/size_config.dart';
 
@@ -114,6 +115,48 @@ class _AddInitialMeasurementDataModalState
 
   @override
   Widget build(BuildContext context) {
+    if (widget.type.code == 'body_fat_percentage' ||
+        widget.type.code == 'skeletal_muscle_mass') {
+      return BodyCompositionEntryModal(
+        type: widget.type,
+        enableGoal: true,
+        closeParentOnSuccess: true,
+      );
+    }
+
+    if (widget.type.code == 'bmi') {
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'BMI is auto-calculated',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'BMI does not support manual entry. Enable BMI tracking from Add Widget, then the app will calculate BMI automatically whenever a new weight entry is saved and height is available.',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 20),
+              Align(
+                alignment: Alignment.centerRight,
+                child: FilledButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final maxModalHeight = MediaQuery.of(context).size.height * 0.82;
 
     return SafeArea(

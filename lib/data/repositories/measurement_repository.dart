@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:dartz/dartz.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:watcha_body/domain/measurement/models/goal_entity.dart';
+import 'package:watcha_body/data/services/body_composition_estimator_service.dart';
 import 'package:watcha_body/data/services/database_service.dart';
 import 'package:watcha_body/domain/measurement/i_measurements.dart';
 import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
@@ -19,8 +20,9 @@ class MeasurementRepository extends IMeasurementsFacade {
   MeasurementRepository(this.databaseService);
 
   final DatabaseService databaseService;
-  static const int _backupSchemaVersion = 1;
-  static const String _backupFormat = 'watcha_body.measurements.v1';
+  static const String _bmiActivationSettingKey = 'auto_target_active:bmi';
+  static const int _backupSchemaVersion = 2;
+  static const String _backupFormat = 'watcha_body.measurements.v2';
   static const List<String> _measurementBackupTables = <String>[
     DatabaseService.userTable,
     DatabaseService.userUnitPreferencesTable,
@@ -33,46 +35,88 @@ class MeasurementRepository extends IMeasurementsFacade {
     DatabaseService.targetMetricsTable,
   ];
 
-  // static const _latestDetailsQuery = '''
-  //   WITH ranked AS
-  //   (SELECT id, value, date, type, unit,row_number()
-  //   OVER (PARTITION BY type ORDER BY date DESC) AS rn
-  //   FROM measurements)
-  //   SELECT id, value, date, type, unit
-  //   FROM ranked
-  //   WHERE rn <= 2
-  //   ORDER BY type, date DESC;
-  //   ''';
-
-  final _lastestQueryBard1 = '''
-    SELECT id, value, date, type, unit
-    FROM (
-      SELECT id, value, date, type, unit,
-        DENSE_RANK() OVER (PARTITION BY type ORDER BY date DESC) AS rank
-      FROM measurements
-    ) AS ranked
-    WHERE rank <= 2
-    ORDER BY type, date DESC;
-  ''';
-
   @override
   Future<Either<String, Unit>> createMeasurement({
     required MeasurementEntity measurement,
   }) async {
+    return saveMeasurements(measurements: <MeasurementEntity>[measurement]);
+  }
+
+  Future<Either<String, Unit>> saveMeasurements({
+    required List<MeasurementEntity> measurements,
+  }) async {
+    if (measurements.isEmpty) {
+      return const Right(unit);
+    }
+
     try {
       final db = await databaseService.database;
       await db.transaction((txn) async {
-        await txn.insert(
-          DatabaseService.measurementsDataTable,
-          measurement.toJson()..remove('id'),
-          conflictAlgorithm: ConflictAlgorithm.abort,
-        );
-        await _completeGoalIfMeasurementMatchesTarget(
-          dbExecutor: txn,
-          measurement: measurement,
-        );
+        for (final measurement in measurements) {
+          await _assertMeasurementAllowed(
+            dbExecutor: txn,
+            measurement: measurement,
+          );
+          await _saveMeasurementInTransaction(
+            txn: txn,
+            measurement: measurement,
+          );
+        }
       });
+      await _refreshBodyCompositionEstimates(measurements: measurements);
       return const Right(unit);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  Future<Either<String, BmiTrackingActivationResult>> activateBmiTracking({
+    int userId = 1,
+  }) async {
+    try {
+      final db = await databaseService.database;
+      await db.insert(
+        DatabaseService.userSettingsTable,
+        <String, Object?>{
+          'user_id': userId,
+          'setting_key': _bmiActivationSettingKey,
+          'setting_value': 'true',
+        },
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+
+      final latestWeight = await _latestManualMeasurementByCode(
+        db: db,
+        userId: userId,
+        targetCode: 'weight',
+      );
+      final hasWeightData = latestWeight != null;
+      final hasHeightData =
+          await _resolveHeightForDate(
+            db: db,
+            userId: userId,
+            anchorDate: latestWeight?.date ?? DateTime.now(),
+          ) !=
+          null;
+
+      var didTriggerInitialCalculation = false;
+      if (latestWeight != null && hasHeightData) {
+        final estimatorService = BodyCompositionEstimatorService(
+          databaseService: databaseService,
+        );
+        await estimatorService.refreshForManualMeasurements(
+          measurements: <MeasurementEntity>[latestWeight],
+        );
+        didTriggerInitialCalculation = true;
+      }
+
+      return Right(
+        BmiTrackingActivationResult(
+          hasWeightData: hasWeightData,
+          hasHeightData: hasHeightData,
+          didTriggerInitialCalculation: didTriggerInitialCalculation,
+        ),
+      );
     } catch (e) {
       return Left(e.toString());
     }
@@ -134,11 +178,6 @@ class MeasurementRepository extends IMeasurementsFacade {
   //   // }
   // }
 
-  double _convertInchToCm(double inch) => (inch * 2.54).toFixedOfTwo();
-  double _convertCmToInch(double cm) => (cm / 2.54).toFixedOfTwo();
-  double _convertPoundToKg(double pound) => (pound / 2.20462262).toFixedOfTwo();
-  double _convertKgToPound(double kg) => (kg * 2.20462262).toFixedOfTwo();
-
   @override
   Future<Either<String, List<MeasurementEntity>>> getLatestDetails() async {
     // try {
@@ -162,40 +201,6 @@ class MeasurementRepository extends IMeasurementsFacade {
     throw UnimplementedError();
   }
 
-  List<MeasurementEntity> _convertToPreferredUnits(
-    List<MeasurementEntity> measurements,
-    String preferredWeightUnit,
-    String preferredLengthUnit,
-  ) {
-    // return measurements.map((e) {
-    //   if (e.unit == 'inch' || e.unit == 'cm') {
-    //     if (e.unit != preferredLengthUnit) {
-    //       if (preferredLengthUnit == 'inch') {
-    //         return e.copyWith(value: _convertCmToInch(e.value));
-    //       } else {
-    //         return e.copyWith(value: _convertInchToCm(e.value));
-    //       }
-    //       // e.copyWith(unit: preferredLengthUnit);
-    //     }
-    //     return e;
-    //   } else if (e.unit == 'kg' || e.unit == 'lbs') {
-    //     if (e.unit != preferredWeightUnit) {
-    //       if (preferredWeightUnit == 'kg') {
-    //         return e.copyWith(value: _convertPoundToKg(e.value));
-    //       } else {
-    //         return e.copyWith(value: _convertKgToPound(e.value));
-    //       }
-    //       // e.copyWith(unit: preferredWeightUnit);
-    //     }
-    //     return e;
-    //   } else {
-    //     return e;
-    //   }
-    // }).toList();
-
-    throw UnimplementedError();
-  }
-
   @override
   Future<Either<String, Unit>> updateMeasurement({
     required MeasurementEntity measurement,
@@ -204,48 +209,107 @@ class MeasurementRepository extends IMeasurementsFacade {
       return const Left('Measurement id is required for update');
     }
 
-    try {
-      final db = await databaseService.database;
-      final now = DateTime.now().toIso8601String();
-      var updatedRows = 0;
+    return saveMeasurements(measurements: <MeasurementEntity>[measurement]);
+  }
 
-      await db.transaction((txn) async {
-        updatedRows = await txn.update(
-          DatabaseService.measurementsDataTable,
-          {
-            'value': measurement.value,
-            'date': measurement.date.toIso8601String(),
-            'target_id': measurement.targetId,
-            'notes': measurement.notes,
-            'updated_at': now,
-          },
-          where: 'id = ? AND user_id = ?',
-          whereArgs: [measurement.id, measurement.userId],
-          conflictAlgorithm: ConflictAlgorithm.abort,
-        );
-
-        if (updatedRows > 0) {
-          await _completeGoalIfMeasurementMatchesTarget(
-            dbExecutor: txn,
-            measurement: measurement,
-          );
-        }
-      });
-
-      if (updatedRows == 0) {
-        return Left('No measurement found for id ${measurement.id}');
-      }
-
-      return const Right(unit);
-    } catch (e) {
-      return Left(e.toString());
+  Future<void> _saveMeasurementInTransaction({
+    required Transaction txn,
+    required MeasurementEntity measurement,
+  }) async {
+    if (measurement.id == null) {
+      await txn.insert(
+        DatabaseService.measurementsDataTable,
+        measurement.toJson()..remove('id'),
+        conflictAlgorithm: ConflictAlgorithm.abort,
+      );
+      await _completeGoalIfMeasurementMatchesTarget(
+        dbExecutor: txn,
+        measurement: measurement,
+      );
+      return;
     }
+
+    final updatedRows = await txn.update(
+      DatabaseService.measurementsDataTable,
+      {
+        'value': measurement.value,
+        'date': measurement.date.toIso8601String(),
+        'target_id': measurement.targetId,
+        'notes': measurement.notes,
+        'source': measurement.source,
+        'method': measurement.method,
+        'estimate_bucket_key': measurement.estimateBucketKey,
+        'updated_at': DateTime.now().toIso8601String(),
+      },
+      where: 'id = ? AND user_id = ?',
+      whereArgs: [measurement.id, measurement.userId],
+      conflictAlgorithm: ConflictAlgorithm.abort,
+    );
+
+    if (updatedRows == 0) {
+      throw StateError('No measurement found for id ${measurement.id}');
+    }
+
+    await _completeGoalIfMeasurementMatchesTarget(
+      dbExecutor: txn,
+      measurement: measurement,
+    );
+  }
+
+  Future<void> _assertMeasurementAllowed({
+    required DatabaseExecutor dbExecutor,
+    required MeasurementEntity measurement,
+  }) async {
+    if (measurement.source == 'estimated_formula') {
+      return;
+    }
+
+    final targetRows = await dbExecutor.query(
+      DatabaseService.measurementTargetsTable,
+      columns: <String>['code'],
+      where: 'id = ?',
+      whereArgs: <Object?>[measurement.targetId],
+      limit: 1,
+    );
+
+    if (targetRows.isEmpty) {
+      throw StateError('Unknown measurement target: ${measurement.targetId}');
+    }
+
+    final targetCode = targetRows.first['code'] as String?;
+    if (targetCode == 'bmi') {
+      throw StateError(
+        'BMI is calculated automatically from height and weight.',
+      );
+    }
+  }
+
+  Future<void> _refreshBodyCompositionEstimates({
+    required List<MeasurementEntity> measurements,
+  }) async {
+    final manualMeasurements = measurements
+        .where((measurement) => measurement.source == 'manual')
+        .toList();
+    if (manualMeasurements.isEmpty) {
+      return;
+    }
+
+    final estimatorService = BodyCompositionEstimatorService(
+      databaseService: databaseService,
+    );
+    await estimatorService.refreshForManualMeasurements(
+      measurements: manualMeasurements,
+    );
   }
 
   Future<void> _completeGoalIfMeasurementMatchesTarget({
     required DatabaseExecutor dbExecutor,
     required MeasurementEntity measurement,
   }) async {
+    if (measurement.source != 'manual') {
+      return;
+    }
+
     // Fetch active goal for this user and target to check direction
     final activeGoal = await dbExecutor.query(
       DatabaseService.measurementGoalsTable,
@@ -313,11 +377,117 @@ class MeasurementRepository extends IMeasurementsFacade {
       log(_data.toString());
 
       final _dData = _transformUnitsToNestedStructureInTarget(_data);
-      final filteredData = _dData.where((target) => target.code != 'height');
+      final bmiTrackingActive = await _isAutomaticTargetActive(
+        db: _db,
+        userId: 1,
+        settingKey: _bmiActivationSettingKey,
+      );
+      final filteredData = _dData.where(
+        (target) =>
+            target.code != 'height' &&
+            !(target.code == 'bmi' && bmiTrackingActive),
+      );
       return Right(filteredData.toList());
     } catch (e) {
       return Left(e.toString());
     }
+  }
+
+  Future<bool> _isAutomaticTargetActive({
+    required Database db,
+    required int userId,
+    required String settingKey,
+  }) async {
+    final rows = await db.query(
+      DatabaseService.userSettingsTable,
+      columns: <String>['setting_value'],
+      where: 'user_id = ? AND setting_key = ?',
+      whereArgs: <Object?>[userId, settingKey],
+      limit: 1,
+    );
+
+    if (rows.isEmpty) {
+      return false;
+    }
+
+    return rows.first['setting_value'] == 'true';
+  }
+
+  Future<MeasurementEntity?> _latestManualMeasurementByCode({
+    required Database db,
+    required int userId,
+    required String targetCode,
+  }) async {
+    final rows = await db.rawQuery(
+      '''
+      SELECT m.*
+      FROM ${DatabaseService.measurementsDataTable} m
+      INNER JOIN ${DatabaseService.measurementTargetsTable} mt
+        ON mt.id = m.target_id
+      WHERE m.user_id = ?
+        AND mt.code = ?
+        AND m.source = 'manual'
+      ORDER BY m.date DESC, m.id DESC
+      LIMIT 1
+      ''',
+      <Object?>[userId, targetCode],
+    );
+
+    if (rows.isEmpty) {
+      return null;
+    }
+
+    return MeasurementEntity.fromJson(Map<String, dynamic>.from(rows.first));
+  }
+
+  Future<double?> _resolveHeightForDate({
+    required Database db,
+    required int userId,
+    required DateTime anchorDate,
+  }) async {
+    final measuredHeight = await db.rawQuery(
+      '''
+      SELECT m.value
+      FROM ${DatabaseService.measurementsDataTable} m
+      INNER JOIN ${DatabaseService.measurementTargetsTable} mt
+        ON mt.id = m.target_id
+      WHERE m.user_id = ?
+        AND mt.code = 'height'
+        AND m.date <= ?
+      ORDER BY m.date DESC, m.id DESC
+      LIMIT 1
+      ''',
+      <Object?>[userId, anchorDate.toIso8601String()],
+    );
+
+    if (measuredHeight.isNotEmpty) {
+      return (measuredHeight.first['value'] as num).toDouble();
+    }
+
+    final settingsRows = await db.query(
+      DatabaseService.userSettingsTable,
+      columns: <String>['setting_key', 'setting_value'],
+      where: 'user_id = ? AND setting_key IN (?, ?)',
+      whereArgs: <Object?>[userId, 'profile_height', 'profile_height_unit'],
+    );
+
+    final settings = <String, String>{
+      for (final row in settingsRows)
+        row['setting_key'] as String: row['setting_value'] as String,
+    };
+
+    final rawHeight = double.tryParse(settings['profile_height'] ?? '');
+    final unit = settings['profile_height_unit'];
+    if (rawHeight == null || unit == null) {
+      return null;
+    }
+
+    return switch (unit) {
+      'cm' => rawHeight,
+      'inch' => rawHeight * 2.54,
+      'ft' => rawHeight * 30.48,
+      _ => rawHeight,
+    };
   }
 
   @override
@@ -370,10 +540,12 @@ class MeasurementRepository extends IMeasurementsFacade {
         return MetricUnitsModel(
           unit: row['unit'] as String,
           toBaseFactor: (row['to_base_factor'] as num).toDouble(),
-          // baseUnit: row['base_unit'] as String,
           code: row['code'] as String,
         );
       }).toList();
+      units.addAll(
+        _specialUnitsForMetricCode(firstRow['metric_code'] as String),
+      );
 
       return MeasurementTargetModel(
         id: id,
@@ -388,6 +560,18 @@ class MeasurementRepository extends IMeasurementsFacade {
     }).toList();
 
     return targets;
+  }
+
+  List<MetricUnitsModel> _specialUnitsForMetricCode(String metricCode) {
+    if (metricCode != 'body_fat_percentage' &&
+        metricCode != 'skeletal_muscle_mass_percentage') {
+      return const <MetricUnitsModel>[];
+    }
+
+    return <MetricUnitsModel>[
+      MetricUnitsModel(unit: 'kg', code: metricCode, toBaseFactor: 1),
+      MetricUnitsModel(unit: 'lbs', code: metricCode, toBaseFactor: 1),
+    ];
   }
 
   @override
@@ -560,6 +744,9 @@ class MeasurementRepository extends IMeasurementsFacade {
               m.value,
               m.date,
               m.notes,
+              m.source,
+              m.method,
+              m.estimate_bucket_key,
               m.target_id,
               m.created_at,
               m.updated_at,
@@ -581,7 +768,7 @@ class MeasurementRepository extends IMeasurementsFacade {
             ORDER BY m.target_id, m.date DESC
           ''', whereArgs);
 
-      final _dData = result.map(MeasurementModel.fromJson).toList();
+      final _dData = result.map(_measurementModelFromDbRow).toList();
       return Right(_dData);
     } catch (e) {
       return Left(e.toString());
@@ -602,6 +789,9 @@ class MeasurementRepository extends IMeasurementsFacade {
         SELECT 
           m.value,
           m.date,
+              m.source,
+              m.method,
+              m.estimate_bucket_key,
           mt.name as target_name,
           met.code as metric_code
         FROM ${DatabaseService.measurementsDataTable} m
@@ -620,6 +810,9 @@ class MeasurementRepository extends IMeasurementsFacade {
         SELECT 
           m.value,
           m.date,
+              m.source,
+              m.method,
+              m.estimate_bucket_key,
           mt.name as target_name,
           met.code as metric_code
         FROM ${DatabaseService.measurementsDataTable} m
@@ -715,6 +908,9 @@ class MeasurementRepository extends IMeasurementsFacade {
               m.value,
               m.date,
               m.notes,
+              m.source,
+              m.method,
+              m.estimate_bucket_key,
               m.target_id,
               m.created_at,
               m.updated_at,
@@ -737,7 +933,7 @@ class MeasurementRepository extends IMeasurementsFacade {
           ''',
         [userId],
       );
-      final _dData = result.map(MeasurementModel.fromJson).toList();
+      final _dData = result.map(_measurementModelFromDbRow).toList();
 
       final groupedData = <String, List<MeasurementModel>>{};
       for (final measurement in _dData) {
@@ -794,6 +990,9 @@ class MeasurementRepository extends IMeasurementsFacade {
             r.value,
             r.date,
             r.notes,
+            r.source,
+            r.method,
+            r.estimate_bucket_key,
             r.target_id,
             r.created_at,
             r.updated_at,
@@ -821,6 +1020,9 @@ class MeasurementRepository extends IMeasurementsFacade {
         [userId, userId, userId, latestLimit],
       );
 
+      final strnigData = result.map((e) => e.toString()).join('\n');
+      log('Raw overview widget data:\n$strnigData');
+
       final groupedRows = <int, List<Map<String, Object?>>>{};
       for (final row in result) {
         final targetId = row['target_id'] as int;
@@ -835,10 +1037,7 @@ class MeasurementRepository extends IMeasurementsFacade {
 
         final first = rows.first;
         final latestMeasurements = rows
-            .map(
-              (row) =>
-                  MeasurementModel.fromJson(Map<String, dynamic>.from(row)),
-            )
+            .map(_measurementModelFromDbRow)
             .toList();
 
         widgets.add(
@@ -865,9 +1064,16 @@ class MeasurementRepository extends IMeasurementsFacade {
   Future<Either<String, List<MeasurementModel>>> getMeasurementsByTarget({
     required int targetId,
     int userId = 1,
+    MeasurementSourceFilter sourceFilter = MeasurementSourceFilter.both,
   }) async {
     try {
       final db = await databaseService.database;
+      final filterClause = switch (sourceFilter) {
+        MeasurementSourceFilter.manual => " AND m.source = 'manual'",
+        MeasurementSourceFilter.estimated =>
+          " AND m.source = 'estimated_formula'",
+        MeasurementSourceFilter.both => '',
+      };
       final result = await db.rawQuery(
         '''
           SELECT
@@ -875,6 +1081,9 @@ class MeasurementRepository extends IMeasurementsFacade {
             m.value,
             m.date,
             m.notes,
+            m.source,
+            m.method,
+            m.estimate_bucket_key,
             m.target_id,
             m.created_at,
             m.updated_at,
@@ -889,17 +1098,13 @@ class MeasurementRepository extends IMeasurementsFacade {
             ON mt.id = tm.target_id
           INNER JOIN ${DatabaseService.metricsTable} met
             ON tm.metric_id = met.id
-          WHERE m.user_id = ? AND m.target_id = ?
+          WHERE m.user_id = ? AND m.target_id = ?$filterClause
           ORDER BY m.date DESC, m.id DESC
         ''',
         [userId, targetId],
       );
 
-      final measurements = result
-          .map(
-            (row) => MeasurementModel.fromJson(Map<String, dynamic>.from(row)),
-          )
-          .toList();
+      final measurements = result.map(_measurementModelFromDbRow).toList();
 
       return Right(measurements);
     } catch (e) {
@@ -920,6 +1125,16 @@ class MeasurementRepository extends IMeasurementsFacade {
         .whereType<Map>()
         .map((row) => Map<String, dynamic>.from(row))
         .toList();
+  }
+
+  MeasurementModel _measurementModelFromDbRow(Map<String, Object?> row) {
+    final normalizedRow = Map<String, dynamic>.from(row);
+    final dateValue = normalizedRow['date'];
+
+    normalizedRow['created_at'] ??= dateValue;
+    normalizedRow['updated_at'] ??= normalizedRow['created_at'] ?? dateValue;
+
+    return MeasurementModel.fromJson(normalizedRow);
   }
 
   Future<bool> _shouldInsertRowOnMerge({
@@ -983,6 +1198,14 @@ class MeasurementRepository extends IMeasurementsFacade {
   }
 }
 
-extension on double {
-  double toFixedOfTwo() => num.parse(toStringAsFixed(2)) as double;
+class BmiTrackingActivationResult {
+  const BmiTrackingActivationResult({
+    required this.hasWeightData,
+    required this.hasHeightData,
+    required this.didTriggerInitialCalculation,
+  });
+
+  final bool hasWeightData;
+  final bool hasHeightData;
+  final bool didTriggerInitialCalculation;
 }

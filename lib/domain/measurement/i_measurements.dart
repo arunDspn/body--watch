@@ -6,6 +6,8 @@ import 'package:watcha_body/domain/measurement_target/model/measurement_target_m
 import 'package:watcha_body/domain/models/restore_summary.dart';
 import 'package:watcha_body/domain/models/two_dates_record_model.dart';
 
+enum MeasurementSourceFilter { manual, estimated, both }
+
 abstract class IMeasurementsFacade {
   /// Will return a list of each latest Measurement from
   /// all added Measurement Targets
@@ -57,6 +59,7 @@ abstract class IMeasurementsFacade {
   Future<Either<String, List<MeasurementModel>>> getMeasurementsByTarget({
     required int targetId,
     int userId = 1,
+    MeasurementSourceFilter sourceFilter = MeasurementSourceFilter.both,
   });
 
   /// Returns List of Types added in table as String

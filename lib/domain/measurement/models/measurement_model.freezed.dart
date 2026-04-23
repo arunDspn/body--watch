@@ -17,7 +17,7 @@ mixin _$MeasurementModel {
 
  int get id; double get value; DateTime get date;@JsonKey(name: 'goal_value') double? get goalValue;/// Measurement target name, e.g., "Weight", "Height"
 @JsonKey(name: 'target_name') String get targetName;@JsonKey(name: 'metric_code') String get metricCode;/// Measurement type, e.g., "body", "fitness"
- String get type;@JsonKey(name: '') String? get notes;/// Foreign key to the measurement target
+ String get type;@JsonKey(name: '') String? get notes; String get source; String get method;@JsonKey(name: 'estimate_bucket_key') String? get estimateBucketKey;/// Foreign key to the measurement target
 @JsonKey(name: 'target_id') int get targetId;/// Timestamps
 @JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
 /// Create a copy of MeasurementModel
@@ -32,16 +32,16 @@ $MeasurementModelCopyWith<MeasurementModel> get copyWith => _$MeasurementModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeasurementModel&&(identical(other.id, id) || other.id == id)&&(identical(other.value, value) || other.value == value)&&(identical(other.date, date) || other.date == date)&&(identical(other.goalValue, goalValue) || other.goalValue == goalValue)&&(identical(other.targetName, targetName) || other.targetName == targetName)&&(identical(other.metricCode, metricCode) || other.metricCode == metricCode)&&(identical(other.type, type) || other.type == type)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.targetId, targetId) || other.targetId == targetId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeasurementModel&&(identical(other.id, id) || other.id == id)&&(identical(other.value, value) || other.value == value)&&(identical(other.date, date) || other.date == date)&&(identical(other.goalValue, goalValue) || other.goalValue == goalValue)&&(identical(other.targetName, targetName) || other.targetName == targetName)&&(identical(other.metricCode, metricCode) || other.metricCode == metricCode)&&(identical(other.type, type) || other.type == type)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.source, source) || other.source == source)&&(identical(other.method, method) || other.method == method)&&(identical(other.estimateBucketKey, estimateBucketKey) || other.estimateBucketKey == estimateBucketKey)&&(identical(other.targetId, targetId) || other.targetId == targetId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,value,date,goalValue,targetName,metricCode,type,notes,targetId,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,value,date,goalValue,targetName,metricCode,type,notes,source,method,estimateBucketKey,targetId,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'MeasurementModel(id: $id, value: $value, date: $date, goalValue: $goalValue, targetName: $targetName, metricCode: $metricCode, type: $type, notes: $notes, targetId: $targetId, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'MeasurementModel(id: $id, value: $value, date: $date, goalValue: $goalValue, targetName: $targetName, metricCode: $metricCode, type: $type, notes: $notes, source: $source, method: $method, estimateBucketKey: $estimateBucketKey, targetId: $targetId, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -52,7 +52,7 @@ abstract mixin class $MeasurementModelCopyWith<$Res>  {
   factory $MeasurementModelCopyWith(MeasurementModel value, $Res Function(MeasurementModel) _then) = _$MeasurementModelCopyWithImpl;
 @useResult
 $Res call({
- int id, double value, DateTime date,@JsonKey(name: 'goal_value') double? goalValue,@JsonKey(name: 'target_name') String targetName,@JsonKey(name: 'metric_code') String metricCode, String type,@JsonKey(name: '') String? notes,@JsonKey(name: 'target_id') int targetId,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ int id, double value, DateTime date,@JsonKey(name: 'goal_value') double? goalValue,@JsonKey(name: 'target_name') String targetName,@JsonKey(name: 'metric_code') String metricCode, String type,@JsonKey(name: '') String? notes, String source, String method,@JsonKey(name: 'estimate_bucket_key') String? estimateBucketKey,@JsonKey(name: 'target_id') int targetId,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -69,7 +69,7 @@ class _$MeasurementModelCopyWithImpl<$Res>
 
 /// Create a copy of MeasurementModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? value = null,Object? date = null,Object? goalValue = freezed,Object? targetName = null,Object? metricCode = null,Object? type = null,Object? notes = freezed,Object? targetId = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? value = null,Object? date = null,Object? goalValue = freezed,Object? targetName = null,Object? metricCode = null,Object? type = null,Object? notes = freezed,Object? source = null,Object? method = null,Object? estimateBucketKey = freezed,Object? targetId = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
@@ -79,6 +79,9 @@ as double?,targetName: null == targetName ? _self.targetName : targetName // ign
 as String,metricCode: null == metricCode ? _self.metricCode : metricCode // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as String?,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as String,method: null == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
+as String,estimateBucketKey: freezed == estimateBucketKey ? _self.estimateBucketKey : estimateBucketKey // ignore: cast_nullable_to_non_nullable
 as String?,targetId: null == targetId ? _self.targetId : targetId // ignore: cast_nullable_to_non_nullable
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -167,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  double value,  DateTime date, @JsonKey(name: 'goal_value')  double? goalValue, @JsonKey(name: 'target_name')  String targetName, @JsonKey(name: 'metric_code')  String metricCode,  String type, @JsonKey(name: '')  String? notes, @JsonKey(name: 'target_id')  int targetId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  double value,  DateTime date, @JsonKey(name: 'goal_value')  double? goalValue, @JsonKey(name: 'target_name')  String targetName, @JsonKey(name: 'metric_code')  String metricCode,  String type, @JsonKey(name: '')  String? notes,  String source,  String method, @JsonKey(name: 'estimate_bucket_key')  String? estimateBucketKey, @JsonKey(name: 'target_id')  int targetId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MeasurementModel() when $default != null:
-return $default(_that.id,_that.value,_that.date,_that.goalValue,_that.targetName,_that.metricCode,_that.type,_that.notes,_that.targetId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.value,_that.date,_that.goalValue,_that.targetName,_that.metricCode,_that.type,_that.notes,_that.source,_that.method,_that.estimateBucketKey,_that.targetId,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -188,10 +191,10 @@ return $default(_that.id,_that.value,_that.date,_that.goalValue,_that.targetName
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  double value,  DateTime date, @JsonKey(name: 'goal_value')  double? goalValue, @JsonKey(name: 'target_name')  String targetName, @JsonKey(name: 'metric_code')  String metricCode,  String type, @JsonKey(name: '')  String? notes, @JsonKey(name: 'target_id')  int targetId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  double value,  DateTime date, @JsonKey(name: 'goal_value')  double? goalValue, @JsonKey(name: 'target_name')  String targetName, @JsonKey(name: 'metric_code')  String metricCode,  String type, @JsonKey(name: '')  String? notes,  String source,  String method, @JsonKey(name: 'estimate_bucket_key')  String? estimateBucketKey, @JsonKey(name: 'target_id')  int targetId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _MeasurementModel():
-return $default(_that.id,_that.value,_that.date,_that.goalValue,_that.targetName,_that.metricCode,_that.type,_that.notes,_that.targetId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.value,_that.date,_that.goalValue,_that.targetName,_that.metricCode,_that.type,_that.notes,_that.source,_that.method,_that.estimateBucketKey,_that.targetId,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +211,10 @@ return $default(_that.id,_that.value,_that.date,_that.goalValue,_that.targetName
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  double value,  DateTime date, @JsonKey(name: 'goal_value')  double? goalValue, @JsonKey(name: 'target_name')  String targetName, @JsonKey(name: 'metric_code')  String metricCode,  String type, @JsonKey(name: '')  String? notes, @JsonKey(name: 'target_id')  int targetId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  double value,  DateTime date, @JsonKey(name: 'goal_value')  double? goalValue, @JsonKey(name: 'target_name')  String targetName, @JsonKey(name: 'metric_code')  String metricCode,  String type, @JsonKey(name: '')  String? notes,  String source,  String method, @JsonKey(name: 'estimate_bucket_key')  String? estimateBucketKey, @JsonKey(name: 'target_id')  int targetId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _MeasurementModel() when $default != null:
-return $default(_that.id,_that.value,_that.date,_that.goalValue,_that.targetName,_that.metricCode,_that.type,_that.notes,_that.targetId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.value,_that.date,_that.goalValue,_that.targetName,_that.metricCode,_that.type,_that.notes,_that.source,_that.method,_that.estimateBucketKey,_that.targetId,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -223,7 +226,7 @@ return $default(_that.id,_that.value,_that.date,_that.goalValue,_that.targetName
 @JsonSerializable()
 
 class _MeasurementModel implements MeasurementModel {
-  const _MeasurementModel({required this.id, required this.value, required this.date, @JsonKey(name: 'goal_value') this.goalValue, @JsonKey(name: 'target_name') required this.targetName, @JsonKey(name: 'metric_code') required this.metricCode, required this.type, @JsonKey(name: '') this.notes, @JsonKey(name: 'target_id') required this.targetId, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
+  const _MeasurementModel({required this.id, required this.value, required this.date, @JsonKey(name: 'goal_value') this.goalValue, @JsonKey(name: 'target_name') required this.targetName, @JsonKey(name: 'metric_code') required this.metricCode, required this.type, @JsonKey(name: '') this.notes, this.source = 'manual', this.method = 'manual_entry', @JsonKey(name: 'estimate_bucket_key') this.estimateBucketKey, @JsonKey(name: 'target_id') required this.targetId, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
   factory _MeasurementModel.fromJson(Map<String, dynamic> json) => _$MeasurementModelFromJson(json);
 
 @override final  int id;
@@ -236,6 +239,9 @@ class _MeasurementModel implements MeasurementModel {
 /// Measurement type, e.g., "body", "fitness"
 @override final  String type;
 @override@JsonKey(name: '') final  String? notes;
+@override@JsonKey() final  String source;
+@override@JsonKey() final  String method;
+@override@JsonKey(name: 'estimate_bucket_key') final  String? estimateBucketKey;
 /// Foreign key to the measurement target
 @override@JsonKey(name: 'target_id') final  int targetId;
 /// Timestamps
@@ -255,16 +261,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeasurementModel&&(identical(other.id, id) || other.id == id)&&(identical(other.value, value) || other.value == value)&&(identical(other.date, date) || other.date == date)&&(identical(other.goalValue, goalValue) || other.goalValue == goalValue)&&(identical(other.targetName, targetName) || other.targetName == targetName)&&(identical(other.metricCode, metricCode) || other.metricCode == metricCode)&&(identical(other.type, type) || other.type == type)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.targetId, targetId) || other.targetId == targetId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeasurementModel&&(identical(other.id, id) || other.id == id)&&(identical(other.value, value) || other.value == value)&&(identical(other.date, date) || other.date == date)&&(identical(other.goalValue, goalValue) || other.goalValue == goalValue)&&(identical(other.targetName, targetName) || other.targetName == targetName)&&(identical(other.metricCode, metricCode) || other.metricCode == metricCode)&&(identical(other.type, type) || other.type == type)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.source, source) || other.source == source)&&(identical(other.method, method) || other.method == method)&&(identical(other.estimateBucketKey, estimateBucketKey) || other.estimateBucketKey == estimateBucketKey)&&(identical(other.targetId, targetId) || other.targetId == targetId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,value,date,goalValue,targetName,metricCode,type,notes,targetId,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,value,date,goalValue,targetName,metricCode,type,notes,source,method,estimateBucketKey,targetId,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'MeasurementModel(id: $id, value: $value, date: $date, goalValue: $goalValue, targetName: $targetName, metricCode: $metricCode, type: $type, notes: $notes, targetId: $targetId, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'MeasurementModel(id: $id, value: $value, date: $date, goalValue: $goalValue, targetName: $targetName, metricCode: $metricCode, type: $type, notes: $notes, source: $source, method: $method, estimateBucketKey: $estimateBucketKey, targetId: $targetId, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -275,7 +281,7 @@ abstract mixin class _$MeasurementModelCopyWith<$Res> implements $MeasurementMod
   factory _$MeasurementModelCopyWith(_MeasurementModel value, $Res Function(_MeasurementModel) _then) = __$MeasurementModelCopyWithImpl;
 @override @useResult
 $Res call({
- int id, double value, DateTime date,@JsonKey(name: 'goal_value') double? goalValue,@JsonKey(name: 'target_name') String targetName,@JsonKey(name: 'metric_code') String metricCode, String type,@JsonKey(name: '') String? notes,@JsonKey(name: 'target_id') int targetId,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ int id, double value, DateTime date,@JsonKey(name: 'goal_value') double? goalValue,@JsonKey(name: 'target_name') String targetName,@JsonKey(name: 'metric_code') String metricCode, String type,@JsonKey(name: '') String? notes, String source, String method,@JsonKey(name: 'estimate_bucket_key') String? estimateBucketKey,@JsonKey(name: 'target_id') int targetId,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -292,7 +298,7 @@ class __$MeasurementModelCopyWithImpl<$Res>
 
 /// Create a copy of MeasurementModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? value = null,Object? date = null,Object? goalValue = freezed,Object? targetName = null,Object? metricCode = null,Object? type = null,Object? notes = freezed,Object? targetId = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? value = null,Object? date = null,Object? goalValue = freezed,Object? targetName = null,Object? metricCode = null,Object? type = null,Object? notes = freezed,Object? source = null,Object? method = null,Object? estimateBucketKey = freezed,Object? targetId = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_MeasurementModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
@@ -302,6 +308,9 @@ as double?,targetName: null == targetName ? _self.targetName : targetName // ign
 as String,metricCode: null == metricCode ? _self.metricCode : metricCode // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
+as String?,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as String,method: null == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
+as String,estimateBucketKey: freezed == estimateBucketKey ? _self.estimateBucketKey : estimateBucketKey // ignore: cast_nullable_to_non_nullable
 as String?,targetId: null == targetId ? _self.targetId : targetId // ignore: cast_nullable_to_non_nullable
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable

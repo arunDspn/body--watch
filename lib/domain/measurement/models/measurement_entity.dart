@@ -9,6 +9,9 @@ abstract class MeasurementEntity with _$MeasurementEntity {
     required DateTime date,
     @JsonKey(name: 'target_id') required int targetId,
     required String notes,
+    @Default('manual') String source,
+    @Default('manual_entry') String method,
+    @JsonKey(name: 'estimate_bucket_key') String? estimateBucketKey,
     @JsonKey(name: 'created_at') @Default(null) DateTime? createdAt,
     @JsonKey(name: 'updated_at') @Default(null) DateTime? updatedAt,
     // user_id

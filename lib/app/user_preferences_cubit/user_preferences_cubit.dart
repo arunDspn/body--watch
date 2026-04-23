@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:watcha_body/domain/measurement/i_measurements.dart';
 import 'package:watcha_body/domain/user_preferences/i_user_preferences_repository.dart';
 import 'package:watcha_body/domain/user_preferences/models/user_unit_preference_model.dart';
 import 'package:watcha_body/domain/user_preferences/models/user_unit_preferences_entity.dart';
@@ -7,8 +8,6 @@ import 'package:watcha_body/domain/user_preferences/models/user_unit_preferences
 part 'user_preferences_state.dart';
 part 'user_preferences_cubit.freezed.dart';
 
-/// Cubit to manage user preferences such as preferred units and settings
-/// This cubit will handle fetching, updating, and storing user preferences
 class UserPreferencesCubit extends Cubit<UserPreferencesState> {
   UserPreferencesCubit(IUserPreferencesRepository repository)
     : _repository = repository,
@@ -16,7 +15,6 @@ class UserPreferencesCubit extends Cubit<UserPreferencesState> {
 
   final IUserPreferencesRepository _repository;
 
-  /// Fetch user preferences from the repository
   Future<void> fetchUserPreferences(int userId) async {
     emit(const UserPreferencesState.loading());
     try {
@@ -26,20 +24,17 @@ class UserPreferencesCubit extends Cubit<UserPreferencesState> {
       } else {
         emit(UserPreferencesState.loaded(preferences: preferences));
       }
-    } catch (e) {
+    } catch (_) {
       emit(const UserPreferencesState.error('Failed to load preferences'));
     }
   }
 
-  /// Update all user preferences
   Future<void> updateAllPreferences(
     List<UserUnitPreferenceModel> preferences,
   ) async {
-    // emit(const UserPreferencesState.loading());
     try {
       emit(UserPreferencesState.loaded(preferences: preferences));
-    } catch (e) {
-      // emit(const UserPreferencesState.error('Failed to update preferences'));
+    } catch (_) {
       emit(const UserPreferencesState.initial());
     }
   }
@@ -48,8 +43,11 @@ class UserPreferencesCubit extends Cubit<UserPreferencesState> {
     UserUnitPreferenceModel preference,
     int userId,
   ) async {
-    final currentState = state as UserPreferencesLoaded;
-    // emit(const UserPreferencesState.loading());
+    final currentState = state;
+    if (currentState is! UserPreferencesLoaded) {
+      return;
+    }
+
     try {
       final userPrefEntity = UserUnitPreferencesEntity(
         userId: userId,
@@ -59,17 +57,27 @@ class UserPreferencesCubit extends Cubit<UserPreferencesState> {
 
       await _repository.updateAPreference(userPrefEntity);
 
-      // Update the item in state by metric_code
-
       final newPrefsList = currentState.preferences.map((e) {
         if (e.metricCode == preference.metricCode) {
           return preference;
         }
         return e;
       }).toList();
+
       emit(UserPreferencesState.loaded(preferences: newPrefsList));
     } catch (e) {
       emit(UserPreferencesState.error(e.toString()));
     }
+  }
+
+  Future<MeasurementSourceFilter> getChartSourceFilter(int userId) {
+    return _repository.getChartSourceFilter(userId: userId);
+  }
+
+  Future<void> setChartSourceFilter({
+    required int userId,
+    required MeasurementSourceFilter filter,
+  }) {
+    return _repository.setChartSourceFilter(userId: userId, filter: filter);
   }
 }

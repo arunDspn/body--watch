@@ -13,6 +13,7 @@ import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.da
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
 import 'package:watcha_body/data/repositories/user_profile_repository.dart';
 import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
+import 'package:watcha_body/domain/measurement/i_measurements.dart';
 import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/domain/models/app_preferences.dart';
 import 'package:watcha_body/domain/user_preferences/models/user_unit_preference_model.dart';
@@ -260,6 +261,7 @@ class SettingsView extends StatelessWidget {
                       ),
                     ),
                     const ProfileSettingsSection(),
+                    const ChartSourceFilterPreferenceSection(),
                     // LanguageSelector(
                     //   appPreferences: (state as SavedAndReady).appPreferences,
                     // ),
@@ -1608,6 +1610,104 @@ class _LanguageSelectorState extends State<LanguageSelector> {
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ChartSourceFilterPreferenceSection extends StatefulWidget {
+  const ChartSourceFilterPreferenceSection({super.key});
+
+  @override
+  State<ChartSourceFilterPreferenceSection> createState() =>
+      _ChartSourceFilterPreferenceSectionState();
+}
+
+class _ChartSourceFilterPreferenceSectionState
+    extends State<ChartSourceFilterPreferenceSection> {
+  MeasurementSourceFilter _selectedFilter = MeasurementSourceFilter.manual;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFilter();
+  }
+
+  Future<void> _loadFilter() async {
+    final selected = await context
+        .read<UserPreferencesCubit>()
+        .getChartSourceFilter(1);
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _selectedFilter = selected;
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _changeFilter(MeasurementSourceFilter filter) async {
+    setState(() {
+      _selectedFilter = filter;
+    });
+    await context.read<UserPreferencesCubit>().setChartSourceFilter(
+      userId: 1,
+      filter: filter,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return SettingsChildContainer(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Chart Source Filter',
+              style: textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Default filter used by chart views.',
+              style: textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 12),
+            if (_isLoading)
+              const LinearProgressIndicator(minHeight: 2)
+            else
+              SegmentedButton<MeasurementSourceFilter>(
+                selected: <MeasurementSourceFilter>{_selectedFilter},
+                showSelectedIcon: false,
+                segments: const [
+                  ButtonSegment(
+                    value: MeasurementSourceFilter.manual,
+                    label: Text('Manual'),
+                  ),
+                  ButtonSegment(
+                    value: MeasurementSourceFilter.estimated,
+                    label: Text('Estimated'),
+                  ),
+                  ButtonSegment(
+                    value: MeasurementSourceFilter.both,
+                    label: Text('Both'),
+                  ),
+                ],
+                onSelectionChanged: (selection) {
+                  if (selection.isEmpty) {
+                    return;
+                  }
+                  _changeFilter(selection.first);
+                },
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -8,6 +8,7 @@ import 'package:watcha_body/domain/measurement/models/measurement_entity.dart';
 import 'package:watcha_body/domain/measurement_target/model/measurement_target_model.dart';
 import 'package:watcha_body/domain/metrics_units/models/metric_units_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
+import 'package:watcha_body/presentation/body_composition/body_composition_entry_modal.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/size_config.dart';
 
@@ -299,6 +300,17 @@ class _AddorEditMeasurementTargetModalState
 
   @override
   Widget build(BuildContext context) {
+    if (widget.type.code == 'body_fat_percentage' ||
+        widget.type.code == 'skeletal_muscle_mass') {
+      return BodyCompositionEntryModal(
+        type: widget.type,
+        measurementId: widget.addedId,
+        initialValue: widget.addedValue,
+        initialDate: widget.addedDate,
+        initialNotes: widget.notes,
+      );
+    }
+
     // final appPrefState =
     //     // context.read<ApppreferencesBloc>().state as SavedAndReady;
     //     context.read<UserPreferencesCubit>().state as UserPreferencesLoaded;

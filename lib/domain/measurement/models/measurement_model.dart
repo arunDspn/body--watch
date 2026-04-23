@@ -3,7 +3,6 @@ part 'measurement_model.freezed.dart';
 part 'measurement_model.g.dart';
 
 @freezed
-
 /// Used to represent a measurement taken by the user.
 abstract class MeasurementModel with _$MeasurementModel {
   const factory MeasurementModel({
@@ -19,6 +18,9 @@ abstract class MeasurementModel with _$MeasurementModel {
     /// Measurement type, e.g., "body", "fitness"
     required String type,
     @JsonKey(name: '') String? notes,
+    @Default('manual') String source,
+    @Default('manual_entry') String method,
+    @JsonKey(name: 'estimate_bucket_key') String? estimateBucketKey,
 
     /// Foreign key to the measurement target
     @JsonKey(name: 'target_id') required int targetId,
@@ -31,6 +33,7 @@ abstract class MeasurementModel with _$MeasurementModel {
   factory MeasurementModel.fromJson(Map<String, dynamic> json) =>
       _$MeasurementModelFromJson(json);
 }
+
 
 
 /**

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
+import 'package:watcha_body/domain/measurement/i_measurements.dart';
 import 'package:watcha_body/domain/measurement/models/overview_widget_model.dart';
 import 'package:watcha_body/presentation/add_data_modal/add_data_modal.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
@@ -565,14 +566,21 @@ class _WidgetBoxState extends State<_WidgetBox> {
       (element) => element.metricCode == widget.data.metricCode,
     );
 
-    final preferredUnit = metricCode?.preferredUnit ?? '';
+    final preferredUnit = widget.data.metricCode == 'bmi'
+        ? ''
+        : metricCode?.preferredUnit ?? '';
     final metricCodeValue = metricCode?.metricCode ?? latestData.metricCode;
-    final toBaseFactor = metricCode?.toBaseFactor ?? 1;
+    final toBaseFactor = widget.data.metricCode == 'bmi'
+        ? 1.0
+        : metricCode?.toBaseFactor ?? 1;
     final convertedValue = UserMetricHelper.convertToUserPref(
       value: latestData.value,
       metricCode: metricCodeValue,
       context: context,
     );
+    final displayValue = preferredUnit.isEmpty
+        ? convertedValue
+        : '$convertedValue $preferredUnit';
 
     final theme = Theme.of(context);
 
@@ -589,14 +597,49 @@ class _WidgetBoxState extends State<_WidgetBox> {
                 return ChartsView2(
                   targetId: widget.data.targetId,
                   valueDivisor: safeFactor,
+                  initialSourceFilter: widget.data.metricCode == 'bmi'
+                      ? MeasurementSourceFilter.estimated
+                      : MeasurementSourceFilter.manual,
                   config: ChartConfig(
                     title: latestData.targetName,
                     unit: preferredUnit,
                     color: theme.colorScheme.primary,
                     backgroundColor: theme.colorScheme.primaryContainer,
                     showGridLines: true,
+                    rangeBands: widget.data.metricCode == 'bmi'
+                        ? const <ChartRangeBand>[
+                            ChartRangeBand(
+                              start: 0,
+                              end: 18.5,
+                              color: Colors.blue,
+                              label: 'Underweight',
+                            ),
+                            ChartRangeBand(
+                              start: 18.5,
+                              end: 25,
+                              color: Colors.green,
+                              label: 'Healthy Weight',
+                            ),
+                            ChartRangeBand(
+                              start: 25,
+                              end: 30,
+                              color: Colors.orange,
+                              label: 'Overweight',
+                            ),
+                            ChartRangeBand(
+                              start: 30,
+                              end: double.infinity,
+                              color: Colors.red,
+                              label: 'Obesity',
+                            ),
+                          ]
+                        : const <ChartRangeBand>[],
                   ),
                   defaultFilter: ChartFilter.threeMonth,
+                  showSourceFilter:
+                      widget.data.metricCode == 'body_fat_percentage' ||
+                      widget.data.metricCode ==
+                          'skeletal_muscle_mass_percentage',
                 );
               },
             ),
@@ -645,7 +688,7 @@ class _WidgetBoxState extends State<_WidgetBox> {
                             color: theme.colorScheme.secondaryContainer,
                           ),
                           child: Text(
-                            '$convertedValue $preferredUnit',
+                            displayValue,
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w700,
                               color: theme.colorScheme.onSecondaryContainer,

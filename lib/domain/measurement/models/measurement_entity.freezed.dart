@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MeasurementEntity {
 
- double get value; DateTime get date;@JsonKey(name: 'target_id') int get targetId; String get notes;@JsonKey(name: 'created_at') DateTime? get createdAt;@JsonKey(name: 'updated_at') DateTime? get updatedAt;// user_id
+ double get value; DateTime get date;@JsonKey(name: 'target_id') int get targetId; String get notes; String get source; String get method;@JsonKey(name: 'estimate_bucket_key') String? get estimateBucketKey;@JsonKey(name: 'created_at') DateTime? get createdAt;@JsonKey(name: 'updated_at') DateTime? get updatedAt;// user_id
 @JsonKey(name: 'user_id') int get userId; int? get id;
 /// Create a copy of MeasurementEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -29,16 +29,16 @@ $MeasurementEntityCopyWith<MeasurementEntity> get copyWith => _$MeasurementEntit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeasurementEntity&&(identical(other.value, value) || other.value == value)&&(identical(other.date, date) || other.date == date)&&(identical(other.targetId, targetId) || other.targetId == targetId)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.id, id) || other.id == id));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeasurementEntity&&(identical(other.value, value) || other.value == value)&&(identical(other.date, date) || other.date == date)&&(identical(other.targetId, targetId) || other.targetId == targetId)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.source, source) || other.source == source)&&(identical(other.method, method) || other.method == method)&&(identical(other.estimateBucketKey, estimateBucketKey) || other.estimateBucketKey == estimateBucketKey)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.id, id) || other.id == id));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,value,date,targetId,notes,createdAt,updatedAt,userId,id);
+int get hashCode => Object.hash(runtimeType,value,date,targetId,notes,source,method,estimateBucketKey,createdAt,updatedAt,userId,id);
 
 @override
 String toString() {
-  return 'MeasurementEntity(value: $value, date: $date, targetId: $targetId, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, id: $id)';
+  return 'MeasurementEntity(value: $value, date: $date, targetId: $targetId, notes: $notes, source: $source, method: $method, estimateBucketKey: $estimateBucketKey, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, id: $id)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $MeasurementEntityCopyWith<$Res>  {
   factory $MeasurementEntityCopyWith(MeasurementEntity value, $Res Function(MeasurementEntity) _then) = _$MeasurementEntityCopyWithImpl;
 @useResult
 $Res call({
- double value, DateTime date,@JsonKey(name: 'target_id') int targetId, String notes,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt,@JsonKey(name: 'user_id') int userId, int? id
+ double value, DateTime date,@JsonKey(name: 'target_id') int targetId, String notes, String source, String method,@JsonKey(name: 'estimate_bucket_key') String? estimateBucketKey,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt,@JsonKey(name: 'user_id') int userId, int? id
 });
 
 
@@ -66,13 +66,16 @@ class _$MeasurementEntityCopyWithImpl<$Res>
 
 /// Create a copy of MeasurementEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? value = null,Object? date = null,Object? targetId = null,Object? notes = null,Object? createdAt = freezed,Object? updatedAt = freezed,Object? userId = null,Object? id = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? value = null,Object? date = null,Object? targetId = null,Object? notes = null,Object? source = null,Object? method = null,Object? estimateBucketKey = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? userId = null,Object? id = freezed,}) {
   return _then(_self.copyWith(
 value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as double,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,targetId: null == targetId ? _self.targetId : targetId // ignore: cast_nullable_to_non_nullable
 as int,notes: null == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
-as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as String,method: null == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
+as String,estimateBucketKey: freezed == estimateBucketKey ? _self.estimateBucketKey : estimateBucketKey // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as int,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
@@ -161,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double value,  DateTime date, @JsonKey(name: 'target_id')  int targetId,  String notes, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt, @JsonKey(name: 'user_id')  int userId,  int? id)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double value,  DateTime date, @JsonKey(name: 'target_id')  int targetId,  String notes,  String source,  String method, @JsonKey(name: 'estimate_bucket_key')  String? estimateBucketKey, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt, @JsonKey(name: 'user_id')  int userId,  int? id)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MeasurementEntity() when $default != null:
-return $default(_that.value,_that.date,_that.targetId,_that.notes,_that.createdAt,_that.updatedAt,_that.userId,_that.id);case _:
+return $default(_that.value,_that.date,_that.targetId,_that.notes,_that.source,_that.method,_that.estimateBucketKey,_that.createdAt,_that.updatedAt,_that.userId,_that.id);case _:
   return orElse();
 
 }
@@ -182,10 +185,10 @@ return $default(_that.value,_that.date,_that.targetId,_that.notes,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double value,  DateTime date, @JsonKey(name: 'target_id')  int targetId,  String notes, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt, @JsonKey(name: 'user_id')  int userId,  int? id)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double value,  DateTime date, @JsonKey(name: 'target_id')  int targetId,  String notes,  String source,  String method, @JsonKey(name: 'estimate_bucket_key')  String? estimateBucketKey, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt, @JsonKey(name: 'user_id')  int userId,  int? id)  $default,) {final _that = this;
 switch (_that) {
 case _MeasurementEntity():
-return $default(_that.value,_that.date,_that.targetId,_that.notes,_that.createdAt,_that.updatedAt,_that.userId,_that.id);case _:
+return $default(_that.value,_that.date,_that.targetId,_that.notes,_that.source,_that.method,_that.estimateBucketKey,_that.createdAt,_that.updatedAt,_that.userId,_that.id);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +205,10 @@ return $default(_that.value,_that.date,_that.targetId,_that.notes,_that.createdA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double value,  DateTime date, @JsonKey(name: 'target_id')  int targetId,  String notes, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt, @JsonKey(name: 'user_id')  int userId,  int? id)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double value,  DateTime date, @JsonKey(name: 'target_id')  int targetId,  String notes,  String source,  String method, @JsonKey(name: 'estimate_bucket_key')  String? estimateBucketKey, @JsonKey(name: 'created_at')  DateTime? createdAt, @JsonKey(name: 'updated_at')  DateTime? updatedAt, @JsonKey(name: 'user_id')  int userId,  int? id)?  $default,) {final _that = this;
 switch (_that) {
 case _MeasurementEntity() when $default != null:
-return $default(_that.value,_that.date,_that.targetId,_that.notes,_that.createdAt,_that.updatedAt,_that.userId,_that.id);case _:
+return $default(_that.value,_that.date,_that.targetId,_that.notes,_that.source,_that.method,_that.estimateBucketKey,_that.createdAt,_that.updatedAt,_that.userId,_that.id);case _:
   return null;
 
 }
@@ -217,13 +220,16 @@ return $default(_that.value,_that.date,_that.targetId,_that.notes,_that.createdA
 @JsonSerializable()
 
 class _MeasurementEntity implements MeasurementEntity {
-  const _MeasurementEntity({required this.value, required this.date, @JsonKey(name: 'target_id') required this.targetId, required this.notes, @JsonKey(name: 'created_at') this.createdAt = null, @JsonKey(name: 'updated_at') this.updatedAt = null, @JsonKey(name: 'user_id') required this.userId, this.id});
+  const _MeasurementEntity({required this.value, required this.date, @JsonKey(name: 'target_id') required this.targetId, required this.notes, this.source = 'manual', this.method = 'manual_entry', @JsonKey(name: 'estimate_bucket_key') this.estimateBucketKey, @JsonKey(name: 'created_at') this.createdAt = null, @JsonKey(name: 'updated_at') this.updatedAt = null, @JsonKey(name: 'user_id') required this.userId, this.id});
   factory _MeasurementEntity.fromJson(Map<String, dynamic> json) => _$MeasurementEntityFromJson(json);
 
 @override final  double value;
 @override final  DateTime date;
 @override@JsonKey(name: 'target_id') final  int targetId;
 @override final  String notes;
+@override@JsonKey() final  String source;
+@override@JsonKey() final  String method;
+@override@JsonKey(name: 'estimate_bucket_key') final  String? estimateBucketKey;
 @override@JsonKey(name: 'created_at') final  DateTime? createdAt;
 @override@JsonKey(name: 'updated_at') final  DateTime? updatedAt;
 // user_id
@@ -243,16 +249,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeasurementEntity&&(identical(other.value, value) || other.value == value)&&(identical(other.date, date) || other.date == date)&&(identical(other.targetId, targetId) || other.targetId == targetId)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.id, id) || other.id == id));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeasurementEntity&&(identical(other.value, value) || other.value == value)&&(identical(other.date, date) || other.date == date)&&(identical(other.targetId, targetId) || other.targetId == targetId)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.source, source) || other.source == source)&&(identical(other.method, method) || other.method == method)&&(identical(other.estimateBucketKey, estimateBucketKey) || other.estimateBucketKey == estimateBucketKey)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.id, id) || other.id == id));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,value,date,targetId,notes,createdAt,updatedAt,userId,id);
+int get hashCode => Object.hash(runtimeType,value,date,targetId,notes,source,method,estimateBucketKey,createdAt,updatedAt,userId,id);
 
 @override
 String toString() {
-  return 'MeasurementEntity(value: $value, date: $date, targetId: $targetId, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, id: $id)';
+  return 'MeasurementEntity(value: $value, date: $date, targetId: $targetId, notes: $notes, source: $source, method: $method, estimateBucketKey: $estimateBucketKey, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId, id: $id)';
 }
 
 
@@ -263,7 +269,7 @@ abstract mixin class _$MeasurementEntityCopyWith<$Res> implements $MeasurementEn
   factory _$MeasurementEntityCopyWith(_MeasurementEntity value, $Res Function(_MeasurementEntity) _then) = __$MeasurementEntityCopyWithImpl;
 @override @useResult
 $Res call({
- double value, DateTime date,@JsonKey(name: 'target_id') int targetId, String notes,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt,@JsonKey(name: 'user_id') int userId, int? id
+ double value, DateTime date,@JsonKey(name: 'target_id') int targetId, String notes, String source, String method,@JsonKey(name: 'estimate_bucket_key') String? estimateBucketKey,@JsonKey(name: 'created_at') DateTime? createdAt,@JsonKey(name: 'updated_at') DateTime? updatedAt,@JsonKey(name: 'user_id') int userId, int? id
 });
 
 
@@ -280,13 +286,16 @@ class __$MeasurementEntityCopyWithImpl<$Res>
 
 /// Create a copy of MeasurementEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? date = null,Object? targetId = null,Object? notes = null,Object? createdAt = freezed,Object? updatedAt = freezed,Object? userId = null,Object? id = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? value = null,Object? date = null,Object? targetId = null,Object? notes = null,Object? source = null,Object? method = null,Object? estimateBucketKey = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? userId = null,Object? id = freezed,}) {
   return _then(_MeasurementEntity(
 value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
 as double,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,targetId: null == targetId ? _self.targetId : targetId // ignore: cast_nullable_to_non_nullable
 as int,notes: null == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
-as String,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
+as String,method: null == method ? _self.method : method // ignore: cast_nullable_to_non_nullable
+as String,estimateBucketKey: freezed == estimateBucketKey ? _self.estimateBucketKey : estimateBucketKey // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as int,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable

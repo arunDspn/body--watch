@@ -62,7 +62,7 @@ class DatabaseService {
 
   /// Database name
   static const String _databaseName = 'database.db';
-  static const _databaseVersion = 1;
+  static const _databaseVersion = 2;
 
   /**
    * Database Schema
@@ -124,6 +124,7 @@ class DatabaseService {
       ('height', 'Height', 'cm'),
       ('length', 'Length/Circumference', 'cm'),
       ('body_fat_percentage', 'Body Fat Percentage', '%'),
+      ('skeletal_muscle_mass_percentage', 'Skeletal Muscle Mass Percentage', '%'),
       ('bmi', 'Body Mass Index', 'kg/m2');
   ''';
 
@@ -209,12 +210,14 @@ class DatabaseService {
       ('Body Weight', 'weight', 'body', 'vitals', 10),
       ('Height', 'height', 'body', 'vitals', 20),
       ('Body Fat Percentage', 'body_fat_percentage', 'body', 'composition', 30),
+      ('Skeletal Muscle Mass', 'skeletal_muscle_mass', 'body', 'composition', 35),
       ('BMI', 'bmi', 'body', 'composition', 40),
       
       -- Upper Body
       ('Chest', 'chest', 'muscle', 'upper_body', 100),
       ('Back', 'back', 'muscle', 'upper_body', 110),
       ('Shoulders', 'shoulders', 'muscle', 'upper_body', 120),
+      ('Neck', 'neck', 'muscle', 'upper_body', 130),
       ('Biceps - Left', 'biceps_left', 'muscle', 'arms', 200),
       ('Biceps - Right', 'biceps_right', 'muscle', 'arms', 210),
       ('Triceps - Left', 'triceps_left', 'muscle', 'arms', 220),
@@ -261,6 +264,7 @@ class DatabaseService {
       (t.code = 'weight' AND m.code = 'weight') OR
       (t.code = 'height' AND m.code = 'height') OR
       (t.code = 'body_fat_percentage' AND m.code = 'body_fat_percentage') OR
+        (t.code = 'skeletal_muscle_mass' AND m.code = 'skeletal_muscle_mass_percentage') OR
       (t.code = 'bmi' AND m.code = 'bmi') OR
       (t.type = 'muscle' AND m.code = 'length');
   ''';
@@ -275,12 +279,22 @@ class DatabaseService {
       "date"	TEXT NOT NULL,
       "target_id" INTEGER NOT NULL,
       "notes" TEXT DEFAULT NULL,
+      "source" TEXT NOT NULL DEFAULT 'manual' CHECK(source IN ('manual', 'estimated_formula')),
+      "method" TEXT NOT NULL DEFAULT 'manual_entry',
+      "estimate_bucket_key" TEXT DEFAULT NULL,
       "created_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       "updated_at" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       PRIMARY KEY("id" AUTOINCREMENT),
       FOREIGN KEY("user_id") REFERENCES "users"("id") ON DELETE CASCADE,
       FOREIGN KEY("target_id") REFERENCES "measurement_targets"("id")
     )
+  ''';
+
+  static const String _createEstimatedMeasurementBucketUniqueIndex =
+      '''
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_measurements_estimate_bucket_unique
+    ON $measurementsDataTable ("user_id", "target_id", "source", "estimate_bucket_key")
+    WHERE source = 'estimated_formula'
   ''';
 
   /// Create measurement goals table - stores target goals separately
@@ -379,24 +393,23 @@ class DatabaseService {
       join(await getDatabasesPath(), _databaseName),
       version: _databaseVersion,
       onCreate: _onCreateDB,
-      onUpgrade: (db, oldVersion, newVersion) {
-        // log('NEW VERSION: $newVersion');
-        // // new data named pictures
-        // if (oldVersion < 4) {
-        //   db.execute(createPictureTable);
-        // }
-        // // new data named tags
-        // if (oldVersion < 5) {
-        //   db
-        //     ..execute(createTagTable)
-        //     ..execute(insertTagsQuery);
-        // }
-      },
+      onUpgrade: _onUpgradeDB,
     );
     return database;
   }
 
   Future _onCreateDB(Database db, int version) async {
+    await _createSchema(db);
+    await _seedReferenceData(db);
+  }
+
+  Future<void> _onUpgradeDB(Database db, int oldVersion, int newVersion) async {
+    await _dropAllTables(db);
+    await _createSchema(db);
+    await _seedReferenceData(db);
+  }
+
+  Future<void> _createSchema(Database db) async {
     // Create tables in proper order (referenced tables first)
     await db.execute(_createMetricsTable);
     await db.execute(_createMetricUnitsTable);
@@ -408,16 +421,34 @@ class DatabaseService {
     await db.execute(_createMeasurementGoalsTable);
     await db.execute(_createActiveGoalUniqueIndex);
     await db.execute(_createMeasurementTable);
+    await db.execute(_createEstimatedMeasurementBucketUniqueIndex);
     await db.execute(_createTagTable);
     await db.execute(_createPictureTable);
     await db.execute(_createPictureTargetsTable);
+  }
 
+  Future<void> _seedReferenceData(Database db) async {
     // Seed reference data
     await db.execute(_insertMetrics);
     await db.execute(_insertMetricUnits);
     await db.execute(_insertMeasurementTargets);
     await db.execute(_insertTargetMetrics);
     await db.execute(_insertTagsQuery);
+  }
+
+  Future<void> _dropAllTables(Database db) async {
+    await db.execute('DROP TABLE IF EXISTS $pictureTargetsTable');
+    await db.execute('DROP TABLE IF EXISTS $picturesTable');
+    await db.execute('DROP TABLE IF EXISTS $tagsTable');
+    await db.execute('DROP TABLE IF EXISTS $measurementGoalsTable');
+    await db.execute('DROP TABLE IF EXISTS $measurementsDataTable');
+    await db.execute('DROP TABLE IF EXISTS $userSettingsTable');
+    await db.execute('DROP TABLE IF EXISTS $userUnitPreferencesTable');
+    await db.execute('DROP TABLE IF EXISTS $targetMetricsTable');
+    await db.execute('DROP TABLE IF EXISTS $measurementTargetsTable');
+    await db.execute('DROP TABLE IF EXISTS $metricUnitsTable');
+    await db.execute('DROP TABLE IF EXISTS $metricsTable');
+    await db.execute('DROP TABLE IF EXISTS $userTable');
   }
 
   //   Future<void> insert({

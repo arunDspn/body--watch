@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:watcha_body/data/repositories/goals_repository.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
+import 'package:watcha_body/domain/measurement/i_measurements.dart';
 import 'package:watcha_body/domain/measurement/models/goal_entity.dart';
 import 'package:watcha_body/domain/measurement/models/measurement_model.dart';
 
@@ -11,11 +12,19 @@ class ChartDetailCubit extends Cubit<ChartDetailState> {
   final MeasurementRepository _measurementRepository;
   final GoalsRepository _goalsRepository;
 
-  Future<void> load({required int targetId, int userId = 1}) async {
-    emit(const ChartDetailLoading());
+  Future<void> load({
+    required int targetId,
+    int userId = 1,
+    MeasurementSourceFilter sourceFilter = MeasurementSourceFilter.manual,
+  }) async {
+    emit(ChartDetailLoading(sourceFilter: sourceFilter));
 
     final measurementsResult = await _measurementRepository
-        .getMeasurementsByTarget(targetId: targetId, userId: userId);
+        .getMeasurementsByTarget(
+          targetId: targetId,
+          userId: userId,
+          sourceFilter: sourceFilter,
+        );
     final goalResult = await _goalsRepository.getActiveGoal(
       userId: userId,
       targetId: targetId,
@@ -25,9 +34,18 @@ class ChartDetailCubit extends Cubit<ChartDetailState> {
       measurements,
     ) {
       goalResult.fold(
-        (_) => emit(ChartDetailLoaded(measurements: measurements)),
+        (_) => emit(
+          ChartDetailLoaded(
+            measurements: measurements,
+            sourceFilter: sourceFilter,
+          ),
+        ),
         (activeGoal) => emit(
-          ChartDetailLoaded(measurements: measurements, activeGoal: activeGoal),
+          ChartDetailLoaded(
+            measurements: measurements,
+            activeGoal: activeGoal,
+            sourceFilter: sourceFilter,
+          ),
         ),
       );
     });
@@ -58,14 +76,23 @@ class ChartDetailInitial extends ChartDetailState {
 }
 
 class ChartDetailLoading extends ChartDetailState {
-  const ChartDetailLoading();
+  const ChartDetailLoading({
+    this.sourceFilter = MeasurementSourceFilter.manual,
+  });
+
+  final MeasurementSourceFilter sourceFilter;
 }
 
 class ChartDetailLoaded extends ChartDetailState {
-  const ChartDetailLoaded({required this.measurements, this.activeGoal});
+  const ChartDetailLoaded({
+    required this.measurements,
+    this.activeGoal,
+    this.sourceFilter = MeasurementSourceFilter.manual,
+  });
 
   final List<MeasurementModel> measurements;
   final GoalEntity? activeGoal;
+  final MeasurementSourceFilter sourceFilter;
 }
 
 class ChartDetailFailure extends ChartDetailState {

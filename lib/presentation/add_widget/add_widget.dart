@@ -7,6 +7,7 @@ import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart
 import 'package:watcha_body/presentation/add_initial_measurement_data/add_initial_measurement_data_modal.dart';
 import 'package:watcha_body/presentation/add_initial_measurement_data/cubit/add_initial_measurement_data_cubit.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
+import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 
 class AddWidget extends StatelessWidget {
   const AddWidget({Key? key}) : super(key: key);
@@ -108,8 +109,83 @@ class _Boxes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        showModalBottomSheet<void>(
+      onTap: () async {
+        if (target.code == 'bmi') {
+          final shouldEnable =
+              await showDialog<bool>(
+                context: context,
+                builder: (dialogContext) {
+                  return AlertDialog(
+                    title: const Text('Enable BMI tracking?'),
+                    content: const Text(
+                      'BMI is auto-calculated from your height and weight. Do you want to enable BMI tracking now?',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(dialogContext).pop(false),
+                        child: const Text('Cancel'),
+                      ),
+                      FilledButton(
+                        onPressed: () => Navigator.of(dialogContext).pop(true),
+                        child: const Text('Enable'),
+                      ),
+                    ],
+                  );
+                },
+              ) ??
+              false;
+
+          if (!shouldEnable || !context.mounted) {
+            return;
+          }
+
+          final result = await context
+              .read<MeasurementRepository>()
+              .activateBmiTracking();
+
+          if (!context.mounted) {
+            return;
+          }
+
+          result.fold(
+            (failure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Failed to enable BMI tracking: $failure'),
+                ),
+              );
+            },
+            (status) {
+              context.read<GetallwidgetsdataBloc>().add(
+                const GetallwidgetsdataEvent.fetchAllData(),
+              );
+
+              final message = switch ((
+                status.hasHeightData,
+                status.hasWeightData,
+              )) {
+                (true, true) =>
+                  status.didTriggerInitialCalculation
+                      ? 'BMI tracking enabled. BMI has been calculated from your latest data.'
+                      : 'BMI tracking enabled. New weight entries will update BMI automatically.',
+                (false, true) =>
+                  'BMI tracking enabled. Add height to start automatic BMI updates.',
+                (true, false) =>
+                  'BMI tracking enabled. Add weight to start automatic BMI updates.',
+                (false, false) =>
+                  'BMI tracking enabled. Add height and weight to start automatic BMI updates.',
+              };
+
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(message)));
+              Navigator.pop(context);
+            },
+          );
+          return;
+        }
+
+        await showModalBottomSheet<void>(
           context: context,
           builder: (context) {
             // return AddorEditMeasurementTargetModal.add(type: target);
