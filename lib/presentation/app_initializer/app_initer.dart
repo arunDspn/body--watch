@@ -1,8 +1,8 @@
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:collection/collection.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:watcha_body/app/app_theme_bloc/apptheme_bloc.dart';
 import 'package:watcha_body/app/user_preferences_cubit/user_preferences_cubit.dart';
 import 'package:watcha_body/data/repositories/measurement_repository.dart';
@@ -18,7 +18,6 @@ import 'package:watcha_body/presentation/common_widgets/reusable_segmented_butto
 import 'package:watcha_body/presentation/home/home.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 import 'package:watcha_body/presentation/settings/settings_view.dart';
-
 import 'package:watcha_body/size_config.dart';
 
 class AppIniter extends StatefulWidget {
@@ -308,6 +307,12 @@ class _AppIniterState extends State<AppIniter> {
                 );
                 if (_selectedHeightUnit == null && heightUnits.isNotEmpty) {
                   _selectedHeightUnit = heightUnits.first.unit;
+                  final heightSectionKey = metricUnits.keys.firstWhereOrNull(
+                    (key) => key.toLowerCase() == 'height',
+                  );
+                  if (heightSectionKey != null) {
+                    dynamicStates[heightSectionKey] = _selectedHeightUnit;
+                  }
                 }
               },
             );
@@ -327,9 +332,12 @@ class _AppIniterState extends State<AppIniter> {
                 final hasPendingSelections = dynamicStates.values.any(
                   (element) => element == null,
                 );
+                final heightSectionKey = metricUnits!.keys.firstWhereOrNull(
+                  (key) => key.toLowerCase() == 'height',
+                );
 
                 final heightUnits = _unitsForCode(
-                  metricUnits: metricUnits!,
+                  metricUnits: metricUnits,
                   metricCodes: const ['height', 'length'],
                 );
                 final weightUnits = _unitsForCode(
@@ -480,6 +488,10 @@ class _AppIniterState extends State<AppIniter> {
                                       onChanged: (value) {
                                         setState(() {
                                           _selectedHeightUnit = value;
+                                          if (heightSectionKey != null) {
+                                            dynamicStates[heightSectionKey] =
+                                                value;
+                                          }
                                         });
                                       },
                                     ),
@@ -580,6 +592,9 @@ class _AppIniterState extends State<AppIniter> {
                         const SizedBox(height: 18),
                         Column(
                           children: metricUnits.keys.map((e) {
+                            if (e == 'Height') {
+                              return const SizedBox.shrink();
+                            }
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 12),
                               child: Material(
