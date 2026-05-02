@@ -40,9 +40,7 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
   final _formKey = GlobalKey<FormState>();
 
   final _muscleGroups = <MeasurementTargetModel>{};
-
-  // Note
-  String note = '';
+  final TextEditingController _noteController = TextEditingController();
 
   Widget _buildSectionCard({
     required BuildContext context,
@@ -382,6 +380,7 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
                               icon: Icons.note_alt_outlined,
                               title: 'Optional Notes',
                               child: TextFormField(
+                                controller: _noteController,
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: colorScheme.surface,
@@ -396,11 +395,6 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
                                   ),
                                 ),
                                 maxLines: 3,
-                                onChanged: (value) {
-                                  setState(() {
-                                    note = value;
-                                  });
-                                },
                               ),
                             ),
                             const SizedBox(height: 14),
@@ -454,7 +448,7 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
               path: imagePath,
               targets: _muscleGroups.map((e) => e.id).toList(),
               tagId: tag!.id,
-              note: note,
+              note: _noteController.text,
             );
           } else if (tag == null) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -464,6 +458,12 @@ class _AddNewMediaViewState extends State<AddNewMediaView> {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
   }
 }
 

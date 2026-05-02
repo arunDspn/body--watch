@@ -72,11 +72,15 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
 
   @override
   void dispose() {
-    _searchController.removeListener(_onSearchChanged);
-    _searchController.dispose();
-    _focusNode.removeListener(_onFocusChanged);
-    _focusNode.dispose();
-    _closeDropdown();
+    _searchController
+      ..removeListener(_onSearchChanged)
+      ..dispose();
+    _focusNode
+      ..removeListener(_onFocusChanged)
+      ..dispose();
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    _isDropdownOpen = false;
     super.dispose();
   }
 
@@ -151,6 +155,10 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
   void _closeDropdown() {
     _overlayEntry?.remove();
     _overlayEntry = null;
+    if (!mounted) {
+      _isDropdownOpen = false;
+      return;
+    }
     setState(() {
       _isDropdownOpen = false;
     });
@@ -190,9 +198,7 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
             elevation: 8.0,
             borderRadius: BorderRadius.circular(8.0),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxHeight: 300.0,
-              ),
+              constraints: const BoxConstraints(maxHeight: 300.0),
               child: _buildDropdownContent(),
             ),
           ),
@@ -205,9 +211,7 @@ class _CustomDropDownState<T> extends State<CustomDropDown<T>> {
     if (widget.isLoading) {
       return const Padding(
         padding: EdgeInsets.all(16.0),
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: Center(child: CircularProgressIndicator()),
       );
     }
 

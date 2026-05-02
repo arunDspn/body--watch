@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
 class PictureNotesModal extends StatelessWidget {
-  const PictureNotesModal({
-    super.key,
-    required this.notes,
-  });
+  const PictureNotesModal({super.key, required this.notes});
 
   final String notes;
 
   @override
   Widget build(BuildContext context) {
+    final maxHeight = MediaQuery.sizeOf(context).height * 0.5;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -19,10 +18,7 @@ class PictureNotesModal extends StatelessWidget {
         children: [
           const Text(
             'Picture Notes',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           Container(
@@ -31,7 +27,8 @@ class PictureNotesModal extends StatelessWidget {
               color: Theme.of(context).colorScheme.surfaceContainerHighest,
             ),
             width: double.infinity,
-            child: Flexible(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: maxHeight),
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: SingleChildScrollView(
