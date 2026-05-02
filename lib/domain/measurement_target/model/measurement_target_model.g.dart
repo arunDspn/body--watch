@@ -19,6 +19,7 @@ _MeasurementTargetModel _$MeasurementTargetModelFromJson(
   units: (json['units'] as List<dynamic>)
       .map((e) => MetricUnitsModel.fromJson(e as Map<String, dynamic>))
       .toList(),
+  isCustom: json['is_custom'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$MeasurementTargetModelToJson(
@@ -32,4 +33,5 @@ Map<String, dynamic> _$MeasurementTargetModelToJson(
   'metric_code': instance.metricCode,
   'display_order': instance.displayOrder,
   'units': instance.units,
+  'is_custom': instance.isCustom,
 };

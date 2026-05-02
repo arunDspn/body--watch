@@ -88,6 +88,44 @@ class MockMeasurementRepository extends _i1.Mock
           as _i5.Future<_i3.Either<String, _i3.Unit>>);
 
   @override
+  _i5.Future<_i3.Either<String, _i3.Unit>> saveMeasurements({
+    required List<_i6.MeasurementEntity>? measurements,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#saveMeasurements, [], {
+              #measurements: measurements,
+            }),
+            returnValue: _i5.Future<_i3.Either<String, _i3.Unit>>.value(
+              _FakeEither_1<String, _i3.Unit>(
+                this,
+                Invocation.method(#saveMeasurements, [], {
+                  #measurements: measurements,
+                }),
+              ),
+            ),
+          )
+          as _i5.Future<_i3.Either<String, _i3.Unit>>);
+
+  @override
+  _i5.Future<_i3.Either<String, _i4.BmiTrackingActivationResult>>
+  activateBmiTracking({int? userId = 1}) =>
+      (super.noSuchMethod(
+            Invocation.method(#activateBmiTracking, [], {#userId: userId}),
+            returnValue:
+                _i5.Future<
+                  _i3.Either<String, _i4.BmiTrackingActivationResult>
+                >.value(
+                  _FakeEither_1<String, _i4.BmiTrackingActivationResult>(
+                    this,
+                    Invocation.method(#activateBmiTracking, [], {
+                      #userId: userId,
+                    }),
+                  ),
+                ),
+          )
+          as _i5.Future<_i3.Either<String, _i4.BmiTrackingActivationResult>>);
+
+  @override
   _i5.Future<_i3.Either<String, _i3.Unit>> deleteAllData({String? id}) =>
       (super.noSuchMethod(
             Invocation.method(#deleteAllData, [], {#id: id}),
@@ -165,6 +203,92 @@ class MockMeasurementRepository extends _i1.Mock
                   _FakeEither_1<String, List<_i7.MeasurementTargetModel>>(
                     this,
                     Invocation.method(#getAllTargets, []),
+                  ),
+                ),
+          )
+          as _i5.Future<_i3.Either<String, List<_i7.MeasurementTargetModel>>>);
+
+  @override
+  _i5.Future<_i3.Either<String, _i7.MeasurementTargetModel>>
+  createCustomTarget({
+    required String? name,
+    required String? metricCode,
+    required String? category,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#createCustomTarget, [], {
+              #name: name,
+              #metricCode: metricCode,
+              #category: category,
+            }),
+            returnValue:
+                _i5.Future<
+                  _i3.Either<String, _i7.MeasurementTargetModel>
+                >.value(
+                  _FakeEither_1<String, _i7.MeasurementTargetModel>(
+                    this,
+                    Invocation.method(#createCustomTarget, [], {
+                      #name: name,
+                      #metricCode: metricCode,
+                      #category: category,
+                    }),
+                  ),
+                ),
+          )
+          as _i5.Future<_i3.Either<String, _i7.MeasurementTargetModel>>);
+
+  @override
+  _i5.Future<_i3.Either<String, _i3.Unit>> updateCustomTarget({
+    required int? id,
+    required String? name,
+    required String? category,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateCustomTarget, [], {
+              #id: id,
+              #name: name,
+              #category: category,
+            }),
+            returnValue: _i5.Future<_i3.Either<String, _i3.Unit>>.value(
+              _FakeEither_1<String, _i3.Unit>(
+                this,
+                Invocation.method(#updateCustomTarget, [], {
+                  #id: id,
+                  #name: name,
+                  #category: category,
+                }),
+              ),
+            ),
+          )
+          as _i5.Future<_i3.Either<String, _i3.Unit>>);
+
+  @override
+  _i5.Future<_i3.Either<String, _i3.Unit>> deleteCustomTarget({
+    required int? id,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteCustomTarget, [], {#id: id}),
+            returnValue: _i5.Future<_i3.Either<String, _i3.Unit>>.value(
+              _FakeEither_1<String, _i3.Unit>(
+                this,
+                Invocation.method(#deleteCustomTarget, [], {#id: id}),
+              ),
+            ),
+          )
+          as _i5.Future<_i3.Either<String, _i3.Unit>>);
+
+  @override
+  _i5.Future<_i3.Either<String, List<_i7.MeasurementTargetModel>>>
+  getCustomTargets() =>
+      (super.noSuchMethod(
+            Invocation.method(#getCustomTargets, []),
+            returnValue:
+                _i5.Future<
+                  _i3.Either<String, List<_i7.MeasurementTargetModel>>
+                >.value(
+                  _FakeEither_1<String, List<_i7.MeasurementTargetModel>>(
+                    this,
+                    Invocation.method(#getCustomTargets, []),
                   ),
                 ),
           )

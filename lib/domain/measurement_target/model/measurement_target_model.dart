@@ -14,6 +14,7 @@ abstract class MeasurementTargetModel with _$MeasurementTargetModel {
     @JsonKey(name: 'metric_code') required String metricCode,
     @JsonKey(name: 'display_order') required int displayOrder,
     required List<MetricUnitsModel> units,
+    @JsonKey(name: 'is_custom') @Default(false) bool isCustom,
   }) = _MeasurementTargetModel;
 
   // Private constructor for freezed

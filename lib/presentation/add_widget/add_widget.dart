@@ -7,12 +7,57 @@ import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart
 import 'package:watcha_body/presentation/add_initial_measurement_data/add_initial_measurement_data_modal.dart';
 import 'package:watcha_body/presentation/add_initial_measurement_data/cubit/add_initial_measurement_data_cubit.dart';
 import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
+import 'package:watcha_body/presentation/custom_target_editor/custom_target_editor_sheet.dart';
 import 'package:watcha_body/presentation/overview/bloc/getallwidgetsdata_bloc.dart';
 
-class AddWidget extends StatelessWidget {
+class AddWidget extends StatefulWidget {
   const AddWidget({Key? key}) : super(key: key);
 
   static const routeName = '/addWidget';
+
+  @override
+  State<AddWidget> createState() => _AddWidgetState();
+}
+
+class _AddWidgetState extends State<AddWidget> {
+  Future<void> _showCustomTargetEditorSheet() async {
+    final formData = await showModalBottomSheet<CustomTargetEditorFormData>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      useRootNavigator: true,
+      builder: (sheetContext) {
+        return const CustomTargetEditorSheet(isEditMode: false);
+      },
+    );
+
+    if (formData != null && mounted) {
+      final repository = context.read<MeasurementRepository>();
+      final result = await repository.createCustomTarget(
+        name: formData.name,
+        metricCode: formData.metricType,
+        category: formData.category,
+      );
+
+      if (!mounted) return;
+
+      result.fold(
+        (error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to create target: $error')),
+          );
+        },
+        (target) {
+          // Reload the target list
+          context.read<GetallwidgetsCubit>().fetch();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Created target: ${target.name}')),
+          );
+        },
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +66,11 @@ class AddWidget extends StatelessWidget {
           GetallwidgetsCubit(context.read<MeasurementRepository>())..fetch(),
 
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: _showCustomTargetEditorSheet,
+          tooltip: 'Create custom target',
+          child: const Icon(Icons.add),
+        ),
         body: BlocListener<AdddataCubit, AdddataState>(
           listener: (context, state) {
             switch (state) {
@@ -106,9 +156,156 @@ class _Boxes extends StatelessWidget {
 
   final MeasurementTargetModel target;
 
+  Future<void> _showCustomTargetMenu(BuildContext context) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      builder: (sheetContext) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                target.name,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 16),
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text('Edit'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _showEditCustomTargetSheet(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.delete,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+                title: Text(
+                  'Delete',
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _showDeleteConfirmation(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _showEditCustomTargetSheet(BuildContext context) async {
+    final formData = await showModalBottomSheet<CustomTargetEditorFormData>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      useRootNavigator: true,
+      builder: (sheetContext) {
+        return CustomTargetEditorSheet(
+          initialName: target.name,
+          initialMetricType: target.metricCode,
+          initialCategory: target.category,
+          isEditMode: true,
+        );
+      },
+    );
+
+    if (formData != null && context.mounted) {
+      final repository = context.read<MeasurementRepository>();
+      final result = await repository.updateCustomTarget(
+        id: target.id,
+        name: formData.name,
+        category: formData.category,
+      );
+
+      if (!context.mounted) return;
+
+      result.fold(
+        (error) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to update target: $error')),
+          );
+        },
+        (_) {
+          // Reload the target list
+          context.read<GetallwidgetsCubit>().fetch();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Updated target: ${formData.name}')),
+          );
+        },
+      );
+    }
+  }
+
+  Future<void> _showDeleteConfirmation(BuildContext context) async {
+    final shouldDelete =
+        await showDialog<bool>(
+          context: context,
+          builder: (dialogContext) {
+            final colorScheme = Theme.of(dialogContext).colorScheme;
+            return AlertDialog(
+              title: const Text('Delete Custom Target?'),
+              content: Text(
+                "Delete '${target.name}' and its measurements? This action cannot be undone.",
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext, false),
+                  child: const Text('Cancel'),
+                ),
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: colorScheme.error,
+                    foregroundColor: colorScheme.onError,
+                  ),
+                  onPressed: () => Navigator.pop(dialogContext, true),
+                  child: const Text('Delete'),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false;
+
+    if (!shouldDelete || !context.mounted) return;
+
+    final repository = context.read<MeasurementRepository>();
+    final result = await repository.deleteCustomTarget(id: target.id);
+
+    if (!context.mounted) return;
+
+    result.fold(
+      (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to delete target: $error')),
+        );
+      },
+      (_) {
+        // Reload the target list
+        context.read<GetallwidgetsCubit>().fetch();
+
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Deleted '${target.name}'")));
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: target.isCustom
+          ? () => _showCustomTargetMenu(context)
+          : null,
       onTap: () async {
         if (target.code == 'bmi') {
           final shouldEnable =

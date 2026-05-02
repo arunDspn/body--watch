@@ -26,6 +26,7 @@ import 'package:watcha_body/domain/auth/i_auth_repository.dart';
 import 'package:watcha_body/l10n/arb/app_localizations.dart';
 import 'package:watcha_body/presentation/add_data_modal/cubit/adddata_cubit.dart';
 import 'package:watcha_body/presentation/add_widget/add_widget.dart';
+import 'package:watcha_body/presentation/add_widget/cubit/getallwidgets_cubit.dart';
 import 'package:watcha_body/presentation/app_initializer/app_initer.dart';
 import 'package:watcha_body/presentation/app_initializer/cubit/get_all_metrics/get_all_metric_units_available_cubit.dart';
 import 'package:watcha_body/presentation/app_initializer/cubit/set_user_unit_preferences/set_user_unit_preferences_cubit.dart';
@@ -363,7 +364,11 @@ Route<dynamic>? _onGenerateRoutes(RouteSettings settings) {
     case AddWidget.routeName:
       return MaterialPageRoute<void>(
         builder: (context) {
-          return const AddWidget();
+          return BlocProvider(
+            create: (context) =>
+                GetallwidgetsCubit(context.read<MeasurementRepository>()),
+            child: const AddWidget(),
+          );
         },
       );
     case SettingsView.routeName:

@@ -574,6 +574,223 @@ class MeasurementRepository extends IMeasurementsFacade {
     ];
   }
 
+  /// Create a custom measurement target
+  /// Returns the created target or error
+  Future<Either<String, MeasurementTargetModel>> createCustomTarget({
+    required String name,
+    required String metricCode,
+    required String category,
+  }) async {
+    try {
+      final db = await databaseService.database;
+
+      // Validate metricCode is either 'length' or 'body_composition' (custom targets only)
+      const allowedMetricCodes = {'length', 'body_composition'};
+      if (!allowedMetricCodes.contains(metricCode)) {
+        return Left('Invalid metric type: $metricCode');
+      }
+
+      // Generate code from name
+      final code =
+          'custom_${name.toLowerCase().replaceAll(' ', '_')}_${DateTime.now().millisecondsSinceEpoch}';
+
+      // Insert custom target
+      final targetId = await db.insert(
+        DatabaseService.measurementTargetsTable,
+        {
+          'name': name,
+          'code': code,
+          'type': 'muscle',
+          'category': category,
+          'display_order': 1000, // Custom targets at the end
+          'is_custom': 1, // Mark as custom
+        },
+      );
+
+      // Find metric ID for the given metricCode
+      final metricRows = await db.query(
+        DatabaseService.metricsTable,
+        where: 'code = ?',
+        whereArgs: [metricCode],
+        limit: 1,
+      );
+
+      if (metricRows.isEmpty) {
+        // Delete the target we just created
+        await db.delete(
+          DatabaseService.measurementTargetsTable,
+          where: 'id = ?',
+          whereArgs: [targetId],
+        );
+        return Left('Metric type not found: $metricCode');
+      }
+
+      final metricId = metricRows.first['id'] as int;
+
+      // Link target with metric
+      await db.insert(DatabaseService.targetMetricsTable, {
+        'target_id': targetId,
+        'metric_id': metricId,
+      });
+
+      // Fetch and return the created target
+      return _fetchTargetById(db, targetId);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  /// Update a custom target (name and category only)
+  /// Metric type cannot be changed after creation
+  Future<Either<String, Unit>> updateCustomTarget({
+    required int id,
+    required String name,
+    required String category,
+  }) async {
+    try {
+      final db = await databaseService.database;
+
+      // Verify target exists and is custom
+      final targetRows = await db.query(
+        DatabaseService.measurementTargetsTable,
+        where: 'id = ? AND is_custom = 1',
+        whereArgs: [id],
+        limit: 1,
+      );
+
+      if (targetRows.isEmpty) {
+        return Left('Custom target not found or target is predefined');
+      }
+
+      // Update target
+      await db.update(
+        DatabaseService.measurementTargetsTable,
+        {'name': name, 'category': category},
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+
+      return const Right(unit);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  /// Delete a custom target and cascade delete all its measurements
+  Future<Either<String, Unit>> deleteCustomTarget({required int id}) async {
+    try {
+      final db = await databaseService.database;
+
+      // Verify target exists and is custom
+      final targetRows = await db.query(
+        DatabaseService.measurementTargetsTable,
+        where: 'id = ? AND is_custom = 1',
+        whereArgs: [id],
+        limit: 1,
+      );
+
+      if (targetRows.isEmpty) {
+        return Left('Custom target not found or target is predefined');
+      }
+
+      await db.transaction((txn) async {
+        // Delete all measurements for this target
+        await txn.delete(
+          DatabaseService.measurementsDataTable,
+          where: 'target_id = ?',
+          whereArgs: [id],
+        );
+
+        // Delete all goals for this target
+        await txn.delete(
+          DatabaseService.measurementGoalsTable,
+          where: 'target_id = ?',
+          whereArgs: [id],
+        );
+
+        // Delete target-metric links
+        await txn.delete(
+          DatabaseService.targetMetricsTable,
+          where: 'target_id = ?',
+          whereArgs: [id],
+        );
+
+        // Delete the target itself
+        await txn.delete(
+          DatabaseService.measurementTargetsTable,
+          where: 'id = ?',
+          whereArgs: [id],
+        );
+      });
+
+      return const Right(unit);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  /// Get all custom targets (app-wide)
+  Future<Either<String, List<MeasurementTargetModel>>>
+  getCustomTargets() async {
+    try {
+      final db = await databaseService.database;
+
+      final _data = await db.rawQuery('''
+        SELECT 
+          mt.*,
+          m.code as metric_code,
+          m.base_unit,
+          mu.unit,
+          mu.to_base_factor
+        FROM ${DatabaseService.measurementTargetsTable} mt
+        JOIN ${DatabaseService.targetMetricsTable} tm ON tm.target_id = mt.id
+        JOIN ${DatabaseService.metricsTable} m ON m.id = tm.metric_id
+        JOIN ${DatabaseService.metricUnitsTable} mu ON mu.metric_id = m.id
+        WHERE mt.is_custom = 1
+        ORDER BY mt.display_order;
+      ''');
+
+      final _dData = _transformUnitsToNestedStructureInTarget(_data);
+      return Right(_dData);
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  /// Helper method to fetch a target by ID
+  Future<Either<String, MeasurementTargetModel>> _fetchTargetById(
+    Database db,
+    int targetId,
+  ) async {
+    final _data = await db.rawQuery(
+      '''
+        SELECT 
+          mt.*,
+          m.code as metric_code,
+          m.base_unit,
+          mu.unit,
+          mu.to_base_factor
+        FROM ${DatabaseService.measurementTargetsTable} mt
+        JOIN ${DatabaseService.targetMetricsTable} tm ON tm.target_id = mt.id
+        JOIN ${DatabaseService.metricsTable} m ON m.id = tm.metric_id
+        JOIN ${DatabaseService.metricUnitsTable} mu ON mu.metric_id = m.id
+        WHERE mt.id = ?;
+      ''',
+      [targetId],
+    );
+
+    if (_data.isEmpty) {
+      return Left('Target not found');
+    }
+
+    final transformed = _transformUnitsToNestedStructureInTarget(_data);
+    if (transformed.isEmpty) {
+      return Left('Failed to transform target data');
+    }
+
+    return Right(transformed.first);
+  }
+
   @override
   Future<Either<String, String>> backupDatabase() async {
     try {

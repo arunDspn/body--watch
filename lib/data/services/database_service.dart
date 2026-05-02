@@ -123,6 +123,7 @@ class DatabaseService {
       ('weight', 'Weight', 'kg'),
       ('height', 'Height', 'cm'),
       ('length', 'Length/Circumference', 'cm'),
+      ('body_composition', 'Body Composition', '%'),
       ('body_fat_percentage', 'Body Fat Percentage', '%'),
       ('skeletal_muscle_mass_percentage', 'Skeletal Muscle Mass Percentage', '%'),
       ('bmi', 'Body Mass Index', 'kg/m2');
@@ -149,6 +150,7 @@ class DatabaseService {
 
   /// Create Measurement Targets Table
   /// This table stores all measurable items (muscles and body metrics)
+  /// is_custom: 0 = predefined system target, 1 = user-created custom target
   static const String _createMeasurementTargetsTable =
       '''
     CREATE TABLE $measurementTargetsTable (
@@ -158,6 +160,7 @@ class DatabaseService {
       "type" TEXT NOT NULL CHECK(type IN ('muscle', 'body')),
       "category" TEXT NOT NULL,
       "display_order" INTEGER NOT NULL DEFAULT 0,
+      "is_custom" INTEGER NOT NULL DEFAULT 0,
       PRIMARY KEY("id" AUTOINCREMENT)
     )
   ''';
