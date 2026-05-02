@@ -22,6 +22,20 @@ class AppBackupRepository {
   static const String _backupFormat = 'watcha_body.full_backup.v1';
   static const int _backupSchemaVersion = 1;
 
+  Future<Either<String, String>> backupDatabase() {
+    return measurementRepository.backupDatabase();
+  }
+
+  Future<Either<String, RestoreSummary>> restoreDatabase({
+    bool merge = false,
+    required String stringifiedDatas,
+  }) {
+    return measurementRepository.restoreDatabase(
+      merge: merge,
+      stringifiedDatas: stringifiedDatas,
+    );
+  }
+
   Future<Either<String, String>> backupFullApp({
     bool storeExternally = true,
   }) async {
@@ -31,7 +45,7 @@ class AppBackupRepository {
       final formatter = DateFormat('dd_MM_yyyy_HH_mm_ss');
       final timestamp = formatter.format(DateTime.now());
 
-      final measurementResult = await measurementRepository.backupDatabase();
+      final measurementResult = await backupDatabase();
       final measurementJson = measurementResult.fold((l) => null, (r) => r);
       if (measurementJson == null) {
         return Left(measurementResult.swap().getOrElse(() => 'Backup failed'));
@@ -156,8 +170,10 @@ class AppBackupRepository {
         );
       }
 
-      final measurementRestoreResult = await measurementRepository
-          .restoreDatabase(stringifiedDatas: measurementsJson, merge: merge);
+      final measurementRestoreResult = await restoreDatabase(
+        stringifiedDatas: measurementsJson,
+        merge: merge,
+      );
       if (measurementRestoreResult.isLeft()) {
         return Left(
           measurementRestoreResult.swap().getOrElse(

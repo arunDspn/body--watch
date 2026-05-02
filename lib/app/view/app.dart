@@ -150,10 +150,8 @@ class App extends StatelessWidget {
           BlocProvider<AppthemeBloc>(create: (context) => AppthemeBloc()),
           BlocProvider<FilterchartBloc>(create: (context) => FilterchartBloc()),
           BlocProvider<BackupRestoreDataCubit>(
-            create: (context) => BackupRestoreDataCubit(
-              context.read<MeasurementRepository>(),
-              context.read<AppBackupRepository>(),
-            ),
+            create: (context) =>
+                BackupRestoreDataCubit(context.read<AppBackupRepository>()),
           ),
           BlocProvider<DeleteAllDataCubit>(
             create: (context) =>

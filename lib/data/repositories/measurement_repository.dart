@@ -791,7 +791,6 @@ class MeasurementRepository extends IMeasurementsFacade {
     return Right(transformed.first);
   }
 
-  @override
   Future<Either<String, String>> backupDatabase() async {
     try {
       final db = await databaseService.database;
@@ -819,7 +818,6 @@ class MeasurementRepository extends IMeasurementsFacade {
     }
   }
 
-  @override
   Future<Either<String, RestoreSummary>> restoreDatabase({
     bool merge = false,
     required String stringifiedDatas,

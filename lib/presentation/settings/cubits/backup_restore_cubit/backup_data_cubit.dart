@@ -10,16 +10,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:watcha_body/data/repositories/app_backup_repository.dart';
-import 'package:watcha_body/data/repositories/measurement_repository.dart';
 
 part 'backup_data_state.dart';
 part 'backup_data_cubit.freezed.dart';
 
 class BackupRestoreDataCubit extends Cubit<BackupRestoreDataState> {
-  BackupRestoreDataCubit(this.measurementRepository, this.appBackupRepository)
+  BackupRestoreDataCubit(this.appBackupRepository)
     : super(const BackupRestoreDataState.initial());
 
-  final MeasurementRepository measurementRepository;
   final AppBackupRepository appBackupRepository;
   String _successMessage = 'Success';
 
@@ -28,7 +26,7 @@ class BackupRestoreDataCubit extends Cubit<BackupRestoreDataState> {
   Future<void> backupData() async {
     emit(const BackupRestoreDataState.loading());
 
-    final result = await measurementRepository.backupDatabase();
+    final result = await appBackupRepository.backupDatabase();
 
     await result.fold(
       (l) {
@@ -96,7 +94,7 @@ class BackupRestoreDataCubit extends Cubit<BackupRestoreDataState> {
     emit(const BackupRestoreDataState.loading());
 
     final data = await File(path).readAsString();
-    final result = await measurementRepository.restoreDatabase(
+    final result = await appBackupRepository.restoreDatabase(
       stringifiedDatas: data,
       merge: merge,
     );
@@ -136,7 +134,7 @@ class BackupRestoreDataCubit extends Cubit<BackupRestoreDataState> {
 
   Future<void> shareDatabase({bool isIos = false}) async {
     emit(const BackupRestoreDataState.loading());
-    final result = await measurementRepository.backupDatabase();
+    final result = await appBackupRepository.backupDatabase();
 
     await result.fold(
       (l) {
