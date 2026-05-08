@@ -55,14 +55,15 @@ extension BackupRestoreDataStatePatterns on BackupRestoreDataState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( BackupRestoreDataStateInitial value)?  initial,TResult Function( BackupRestoreDataStateSuccess value)?  success,TResult Function( BackupRestoreDataStateLoading value)?  loading,TResult Function( BackupRestoreDataStateFailed value)?  failed,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( BackupRestoreDataStateInitial value)?  initial,TResult Function( BackupRestoreDataStateSuccess value)?  success,TResult Function( BackupRestoreDataStateLoading value)?  loading,TResult Function( BackupRestoreDataStateFailed value)?  failed,TResult Function( BackupRestoreDataStateSuccessWithPath value)?  successWithPath,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case BackupRestoreDataStateInitial() when initial != null:
 return initial(_that);case BackupRestoreDataStateSuccess() when success != null:
 return success(_that);case BackupRestoreDataStateLoading() when loading != null:
 return loading(_that);case BackupRestoreDataStateFailed() when failed != null:
-return failed(_that);case _:
+return failed(_that);case BackupRestoreDataStateSuccessWithPath() when successWithPath != null:
+return successWithPath(_that);case _:
   return orElse();
 
 }
@@ -80,14 +81,15 @@ return failed(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( BackupRestoreDataStateInitial value)  initial,required TResult Function( BackupRestoreDataStateSuccess value)  success,required TResult Function( BackupRestoreDataStateLoading value)  loading,required TResult Function( BackupRestoreDataStateFailed value)  failed,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( BackupRestoreDataStateInitial value)  initial,required TResult Function( BackupRestoreDataStateSuccess value)  success,required TResult Function( BackupRestoreDataStateLoading value)  loading,required TResult Function( BackupRestoreDataStateFailed value)  failed,required TResult Function( BackupRestoreDataStateSuccessWithPath value)  successWithPath,}){
 final _that = this;
 switch (_that) {
 case BackupRestoreDataStateInitial():
 return initial(_that);case BackupRestoreDataStateSuccess():
 return success(_that);case BackupRestoreDataStateLoading():
 return loading(_that);case BackupRestoreDataStateFailed():
-return failed(_that);}
+return failed(_that);case BackupRestoreDataStateSuccessWithPath():
+return successWithPath(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -101,14 +103,15 @@ return failed(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( BackupRestoreDataStateInitial value)?  initial,TResult? Function( BackupRestoreDataStateSuccess value)?  success,TResult? Function( BackupRestoreDataStateLoading value)?  loading,TResult? Function( BackupRestoreDataStateFailed value)?  failed,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( BackupRestoreDataStateInitial value)?  initial,TResult? Function( BackupRestoreDataStateSuccess value)?  success,TResult? Function( BackupRestoreDataStateLoading value)?  loading,TResult? Function( BackupRestoreDataStateFailed value)?  failed,TResult? Function( BackupRestoreDataStateSuccessWithPath value)?  successWithPath,}){
 final _that = this;
 switch (_that) {
 case BackupRestoreDataStateInitial() when initial != null:
 return initial(_that);case BackupRestoreDataStateSuccess() when success != null:
 return success(_that);case BackupRestoreDataStateLoading() when loading != null:
 return loading(_that);case BackupRestoreDataStateFailed() when failed != null:
-return failed(_that);case _:
+return failed(_that);case BackupRestoreDataStateSuccessWithPath() when successWithPath != null:
+return successWithPath(_that);case _:
   return null;
 
 }
@@ -125,13 +128,14 @@ return failed(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  success,TResult Function()?  loading,TResult Function( String msg)?  failed,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  success,TResult Function()?  loading,TResult Function( String msg)?  failed,TResult Function( String path)?  successWithPath,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case BackupRestoreDataStateInitial() when initial != null:
 return initial();case BackupRestoreDataStateSuccess() when success != null:
 return success();case BackupRestoreDataStateLoading() when loading != null:
 return loading();case BackupRestoreDataStateFailed() when failed != null:
-return failed(_that.msg);case _:
+return failed(_that.msg);case BackupRestoreDataStateSuccessWithPath() when successWithPath != null:
+return successWithPath(_that.path);case _:
   return orElse();
 
 }
@@ -149,13 +153,14 @@ return failed(_that.msg);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  success,required TResult Function()  loading,required TResult Function( String msg)  failed,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  success,required TResult Function()  loading,required TResult Function( String msg)  failed,required TResult Function( String path)  successWithPath,}) {final _that = this;
 switch (_that) {
 case BackupRestoreDataStateInitial():
 return initial();case BackupRestoreDataStateSuccess():
 return success();case BackupRestoreDataStateLoading():
 return loading();case BackupRestoreDataStateFailed():
-return failed(_that.msg);}
+return failed(_that.msg);case BackupRestoreDataStateSuccessWithPath():
+return successWithPath(_that.path);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -169,13 +174,14 @@ return failed(_that.msg);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  success,TResult? Function()?  loading,TResult? Function( String msg)?  failed,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  success,TResult? Function()?  loading,TResult? Function( String msg)?  failed,TResult? Function( String path)?  successWithPath,}) {final _that = this;
 switch (_that) {
 case BackupRestoreDataStateInitial() when initial != null:
 return initial();case BackupRestoreDataStateSuccess() when success != null:
 return success();case BackupRestoreDataStateLoading() when loading != null:
 return loading();case BackupRestoreDataStateFailed() when failed != null:
-return failed(_that.msg);case _:
+return failed(_that.msg);case BackupRestoreDataStateSuccessWithPath() when successWithPath != null:
+return successWithPath(_that.path);case _:
   return null;
 
 }
@@ -338,6 +344,72 @@ class _$BackupRestoreDataStateFailedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? msg = null,}) {
   return _then(BackupRestoreDataStateFailed(
 null == msg ? _self.msg : msg // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class BackupRestoreDataStateSuccessWithPath implements BackupRestoreDataState {
+  const BackupRestoreDataStateSuccessWithPath(this.path);
+  
+
+ final  String path;
+
+/// Create a copy of BackupRestoreDataState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$BackupRestoreDataStateSuccessWithPathCopyWith<BackupRestoreDataStateSuccessWithPath> get copyWith => _$BackupRestoreDataStateSuccessWithPathCopyWithImpl<BackupRestoreDataStateSuccessWithPath>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BackupRestoreDataStateSuccessWithPath&&(identical(other.path, path) || other.path == path));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,path);
+
+@override
+String toString() {
+  return 'BackupRestoreDataState.successWithPath(path: $path)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $BackupRestoreDataStateSuccessWithPathCopyWith<$Res> implements $BackupRestoreDataStateCopyWith<$Res> {
+  factory $BackupRestoreDataStateSuccessWithPathCopyWith(BackupRestoreDataStateSuccessWithPath value, $Res Function(BackupRestoreDataStateSuccessWithPath) _then) = _$BackupRestoreDataStateSuccessWithPathCopyWithImpl;
+@useResult
+$Res call({
+ String path
+});
+
+
+
+
+}
+/// @nodoc
+class _$BackupRestoreDataStateSuccessWithPathCopyWithImpl<$Res>
+    implements $BackupRestoreDataStateSuccessWithPathCopyWith<$Res> {
+  _$BackupRestoreDataStateSuccessWithPathCopyWithImpl(this._self, this._then);
+
+  final BackupRestoreDataStateSuccessWithPath _self;
+  final $Res Function(BackupRestoreDataStateSuccessWithPath) _then;
+
+/// Create a copy of BackupRestoreDataState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? path = null,}) {
+  return _then(BackupRestoreDataStateSuccessWithPath(
+null == path ? _self.path : path // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

@@ -10,4 +10,6 @@ sealed class BackupRestoreDataState with _$BackupRestoreDataState {
       BackupRestoreDataStateLoading;
   const factory BackupRestoreDataState.failed(String msg) =
       BackupRestoreDataStateFailed;
+  const factory BackupRestoreDataState.successWithPath(String path) =
+      BackupRestoreDataStateSuccessWithPath;
 }

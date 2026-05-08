@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
@@ -133,6 +132,27 @@ class SettingsView extends StatelessWidget {
                         );
                         break;
                       case BackupRestoreDataStateSuccess():
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          _buildFloatingSnackBar(
+                            context
+                                .read<BackupRestoreDataCubit>()
+                                .successMessage,
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        context.read<GetallwidgetsdataBloc>().add(
+                          const GetallwidgetsdataEvent.fetchAllData(),
+                        );
+                        context.read<AllAvailableTargetsCubit>().fetch();
+                        context
+                            .read<UserPreferencesCubit>()
+                            .fetchUserPreferences(1);
+                        context
+                            .read<GetAllMetricUnitsAvailableCubit>()
+                            .fetchAllMetricUnitsAvailable();
+                        context.read<LoadPicturesCubit>().load();
+                        break;
+                      case BackupRestoreDataStateSuccessWithPath():
                         ScaffoldMessenger.of(context).showSnackBar(
                           _buildFloatingSnackBar(
                             context
@@ -884,136 +904,37 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    Future<void> _showBackupModeOptions() async {
-      return showDialog<void>(
-        context: context,
-        builder: (dialogContext) {
-          return AlertDialog(
-            title: const Text('Backup type'),
-            content: const Text('Choose what you want to back up.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop();
-                  context.read<BackupRestoreDataCubit>().backupData();
-                },
-                child: const Text('Measurements'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop();
-                  context.read<BackupRestoreDataCubit>().backupFullData();
-                },
-                child: const Text('Full App'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(dialogContext).pop(),
-                child: const Text('Cancel'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-
-    Future<void> _showShareModeOptions() async {
-      return showDialog<void>(
-        context: context,
-        builder: (dialogContext) {
-          return AlertDialog(
-            title: const Text('Share backup type'),
-            content: const Text('Choose what you want to share.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop();
-                  context.read<BackupRestoreDataCubit>().shareDatabase();
-                },
-                child: const Text('Measurements'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(dialogContext).pop();
-                  context.read<BackupRestoreDataCubit>().shareFullBackup();
-                },
-                child: const Text('Full App'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(dialogContext).pop(),
-                child: const Text('Cancel'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-
-    // Restore Options Dialog
-    Future<void> _showRestoreOptions(String path) async {
-      final isFullBackup = path.toLowerCase().endsWith('.zip');
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: false, // user must tap button!
-        builder: (BuildContext context) {
-          return BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-            child: AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
-              ),
-              backgroundColor: colorScheme.surfaceContainerHigh,
-              surfaceTintColor: Colors.transparent,
-              title: Text(
-                isFullBackup
-                    ? 'Replace existing full app data?'
-                    : 'Do you want delete previous data?',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Yes'),
-                  onPressed: () {
-                    if (isFullBackup) {
-                      context.read<BackupRestoreDataCubit>().restoreFullData(
-                        merge: false,
-                        path: path,
-                      );
-                    } else {
-                      context.read<BackupRestoreDataCubit>().restoreData(
-                        merge: false,
-                        path: path,
-                      );
-                    }
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: const Text('No'),
-                  onPressed: () {
-                    if (isFullBackup) {
-                      context.read<BackupRestoreDataCubit>().restoreFullData(
-                        path: path,
-                      );
-                    } else {
-                      context.read<BackupRestoreDataCubit>().restoreData(
-                        path: path,
-                      );
-                    }
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: const Text('Cancel'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    }
+    // Future<void> _showShareModeOptions() async {
+    //   return showDialog<void>(
+    //     context: context,
+    //     builder: (dialogContext) {
+    //       return AlertDialog(
+    //         title: const Text('Share backup type'),
+    //         content: const Text('Choose what you want to share.'),
+    //         actions: [
+    //           TextButton(
+    //             onPressed: () {
+    //               Navigator.of(dialogContext).pop();
+    //               context.read<BackupRestoreDataCubit>().shareDatabase();
+    //             },
+    //             child: const Text('Measurements'),
+    //           ),
+    //           TextButton(
+    //             onPressed: () {
+    //               Navigator.of(dialogContext).pop();
+    //               context.read<BackupRestoreDataCubit>().shareFullBackup();
+    //             },
+    //             child: const Text('Full App'),
+    //           ),
+    //           TextButton(
+    //             onPressed: () => Navigator.of(dialogContext).pop(),
+    //             child: const Text('Cancel'),
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //   );
+    // }
 
     return SettingsChildContainer(
       child: Padding(
@@ -1022,166 +943,209 @@ class _RestoreOrBackupState extends State<RestoreOrBackup> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Backup or Restore',
+              'Backup, Restore & Export',
               style: theme.textTheme.bodyLarge?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
             ),
-
-            // Padding(
-            //   padding: const EdgeInsets.all(4),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //     children: [
-            //       if (Platform.operatingSystem == 'android')
-            //         MaterialButton(
-            //           elevation: 0,
-            //           onPressed: () {
-            //             context.read<BackupRestoreDataCubit>().backupData();
-            //           },
-            //           color: Colors.blueAccent,
-            //           textColor: Colors.white,
-            //           shape: const RoundedRectangleBorder(
-            //             borderRadius: BorderRadius.all(Radius.circular(20)),
-            //           ),
-            //           child: const Text(
-            //             'Backup',
-            //             style: TextStyle(
-            //               fontSize: 14,
-            //               fontWeight: FontWeight.bold,
-            //             ),
-            //           ),
-            //         )
-            //       else
-            //         const SizedBox.shrink(),
-            //       MaterialButton(
-            //         elevation: 0,
-            //         onPressed: () {
-            //           context.read<BackupRestoreDataCubit>().shareDatabase();
-            //         },
-            //         color: Colors.blueAccent,
-            //         textColor: Colors.white,
-            //         shape: const RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.all(Radius.circular(20)),
-            //         ),
-            //         child: const Text(
-            //           'Share Backup',
-            //           style: TextStyle(
-            //             fontSize: 14,
-            //             fontWeight: FontWeight.bold,
-            //           ),
-            //         ),
-            //       ),
-            //       MaterialButton(
-            //         elevation: 0,
-            //         onPressed: () async {
-            //           final result = await FilePicker.platform.pickFiles(
-            //             type: FileType.custom,
-            //             allowedExtensions: ['json'],
-            //           );
-
-            //           if (result != null) {
-            //             await _showRestoreOptions(result.files.first.path!);
-            //           }
-            //         },
-            //         color: Colors.blueAccent,
-            //         textColor: Colors.white,
-            //         shape: const RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.all(Radius.circular(20)),
-            //         ),
-            //         child: const Text(
-            //           'Restore',
-            //           style: TextStyle(
-            //             fontSize: 14,
-            //             fontWeight: FontWeight.bold,
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            Padding(
-              padding: const EdgeInsets.all(4),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    if (Platform.operatingSystem == 'android') ...[
-                      FilledButton.icon(
-                        style: FilledButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        ),
-                        onPressed: () {
-                          _showBackupModeOptions();
-                        },
-                        icon: const Icon(Icons.backup_outlined),
-                        label: const Text(
-                          'Backup',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                    ] else
-                      const SizedBox.shrink(),
-                    FilledButton.icon(
-                      style: FilledButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        backgroundColor: colorScheme.secondaryContainer,
-                        foregroundColor: colorScheme.onSecondaryContainer,
-                      ),
-                      onPressed: () {
-                        _showShareModeOptions();
-                      },
-                      icon: const Icon(Icons.share_outlined),
-                      label: const Text(
-                        'Share Backup',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+            const SizedBox(height: 16),
+            _buildSectionHeader(context, 'Backup', 'Save your data locally'),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
                     ),
-                    const SizedBox(width: 6),
-                    FilledButton.icon(
-                      style: FilledButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                      ),
-                      onPressed: () async {
-                        final result = await FilePicker.platform.pickFiles(
-                          type: FileType.custom,
-                          allowedExtensions: ['json', 'zip'],
-                        );
-
-                        if (result != null) {
-                          await _showRestoreOptions(result.files.first.path!);
-                        }
-                      },
-                      icon: const Icon(Icons.restore_page_outlined),
-                      label: const Text(
-                        'Restore',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                  ),
+                  onPressed: () {
+                    context
+                        .read<BackupRestoreDataCubit>()
+                        .backupMeasurementsOnly();
+                  },
+                  icon: const Icon(Icons.assessment_outlined),
+                  label: const Text('Measurements'),
+                ),
+                FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
                     ),
-                  ],
+                  ),
+                  onPressed: () {
+                    context.read<BackupRestoreDataCubit>().backupPicturesOnly();
+                  },
+                  icon: const Icon(Icons.image_outlined),
+                  label: const Text('Pictures'),
+                ),
+                FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  onPressed: () {
+                    context.read<BackupRestoreDataCubit>().backupFullData();
+                  },
+                  icon: const Icon(Icons.backup_outlined),
+                  label: const Text('Complete'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            _buildSectionHeader(context, 'Export', 'Share as reports or files'),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    backgroundColor: colorScheme.tertiaryContainer,
+                    foregroundColor: colorScheme.onTertiaryContainer,
+                  ),
+                  onPressed: () {
+                    context
+                        .read<BackupRestoreDataCubit>()
+                        .exportMeasurementsCsv();
+                  },
+                  icon: const Icon(Icons.table_chart_outlined),
+                  label: const Text('CSV Report'),
+                ),
+                FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    backgroundColor: colorScheme.tertiaryContainer,
+                    foregroundColor: colorScheme.onTertiaryContainer,
+                  ),
+                  onPressed: () {
+                    context
+                        .read<BackupRestoreDataCubit>()
+                        .exportMeasurementsPdf();
+                  },
+                  icon: const Icon(Icons.picture_as_pdf_outlined),
+                  label: const Text('PDF Report'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            _buildSectionHeader(context, 'Restore', 'Recover from backup'),
+            const SizedBox(height: 8),
+            FilledButton.icon(
+              style: FilledButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
                 ),
               ),
+              onPressed: () async {
+                final result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ['json', 'zip'],
+                );
+
+                if (result != null) {
+                  await _showRestoreOptions(result.files.first.path!);
+                }
+              },
+              icon: const Icon(Icons.restore_page_outlined),
+              label: const Text('Select Backup File'),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSectionHeader(
+    BuildContext context,
+    String title,
+    String subtitle,
+  ) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: colorScheme.onSurface,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          subtitle,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _showRestoreOptions(String path) async {
+    final isFullBackup = path.toLowerCase().endsWith('.zip');
+    final colorScheme = Theme.of(context).colorScheme;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+          child: AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24),
+            ),
+            backgroundColor: colorScheme.surfaceContainerHigh,
+            surfaceTintColor: Colors.transparent,
+            title: Text(
+              'Replace or merge existing data?',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            content: Text(
+              isFullBackup
+                  ? 'This will restore a complete backup. Choose to replace or merge with existing data.'
+                  : 'Choose to replace or merge with existing data.',
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Replace All'),
+                onPressed: () {
+                  context.read<BackupRestoreDataCubit>().restoreFromFile(
+                    merge: false,
+                    path: path,
+                  );
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Merge'),
+                onPressed: () {
+                  context.read<BackupRestoreDataCubit>().restoreFromFile(
+                    path: path,
+                  );
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

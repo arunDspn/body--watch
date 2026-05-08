@@ -555,6 +555,7 @@ class BodyPictureRepository implements IBodyPictureFacade {
           'format': _picturesBackupFormat,
           'createdAt': DateTime.now().toIso8601String(),
           'schemaVersion': _picturesBackupSchemaVersion,
+          'packageKind': 'pictures',
         },
         'tables': <String, dynamic>{
           DatabaseService.picturesTable: pictures,
@@ -574,6 +575,48 @@ class BodyPictureRepository implements IBodyPictureFacade {
         sourceDir: tempRootDir,
         zipFile: outputFile,
         recurseSubDirs: true,
+      );
+
+      return Right(outputFile.path);
+    } catch (e) {
+      return Left(e.toString());
+    } finally {
+      if (tempRootDir != null && tempRootDir.existsSync()) {
+        await tempRootDir.delete(recursive: true);
+      }
+    }
+  }
+
+  Future<Either<String, String>> createPicturesOnlyArchive({
+    required String outputZipPath,
+  }) async {
+    Directory? tempRootDir;
+    try {
+      final db = await databaseService.database;
+      final pictures = await db.query(DatabaseService.picturesTable);
+
+      final tempParent = await getTemporaryDirectory();
+      tempRootDir = Directory(
+        '${tempParent.path}/watchbody_picture_only_${DateTime.now().millisecondsSinceEpoch}',
+      );
+
+      final imagesDir = Directory('${tempRootDir.path}/images');
+      await imagesDir.create(recursive: true);
+
+      for (final picture in pictures) {
+        final imageName = picture['file'] as String;
+        final sourceImage = File('$imagesFolderPath/$imageName');
+        if (sourceImage.existsSync()) {
+          await sourceImage.copy('${imagesDir.path}/$imageName');
+        }
+      }
+
+      final outputFile = File(outputZipPath);
+      await outputFile.create(recursive: true);
+      await ZipFile.createFromDirectory(
+        sourceDir: imagesDir,
+        zipFile: outputFile,
+        recurseSubDirs: false,
       );
 
       return Right(outputFile.path);
@@ -643,6 +686,13 @@ class BodyPictureRepository implements IBodyPictureFacade {
       if (manifest['schemaVersion'] != _picturesBackupSchemaVersion) {
         return Left(
           'Unsupported backup schema version: ${manifest['schemaVersion']}',
+        );
+      }
+
+      final packageKind = manifest['packageKind'] as String?;
+      if (packageKind != null && packageKind != 'pictures') {
+        return Left(
+          'Invalid package type. Expected "pictures" backup, got "$packageKind".',
         );
       }
 

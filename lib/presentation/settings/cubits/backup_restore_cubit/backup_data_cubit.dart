@@ -132,6 +132,185 @@ class BackupRestoreDataCubit extends Cubit<BackupRestoreDataState> {
     );
   }
 
+  Future<void> backupMeasurementsOnly() async {
+    emit(const BackupRestoreDataState.loading());
+
+    try {
+      if (!await Permission.manageExternalStorage.status.isGranted) {
+        if (!await Permission.manageExternalStorage.request().isGranted) {
+          emit(const BackupRestoreDataState.failed('Permission denied'));
+          return;
+        }
+      }
+
+      final result = await appBackupRepository.backupDatabase();
+      result.fold((l) => emit(BackupRestoreDataState.failed(l)), (
+        jsonData,
+      ) async {
+        try {
+          final saveDir = await ExternalPath.getExternalStoragePublicDirectory(
+            ExternalPath.DIRECTORY_DOCUMENTS,
+          );
+          final formatter = DateFormat('dd_MM_yyyy_HH_mm_ss');
+          final file = await File(
+            '$saveDir/watchbody/wb_measurements_${formatter.format(DateTime.now())}.json',
+          ).create(recursive: true);
+          await file.writeAsString(jsonData);
+          _successMessage = 'Measurements backup created\nPath: ${file.path}';
+          emit(const BackupRestoreDataState.success());
+        } catch (e) {
+          emit(BackupRestoreDataState.failed(e.toString()));
+        }
+      });
+    } catch (e) {
+      emit(BackupRestoreDataState.failed(e.toString()));
+    }
+  }
+
+  Future<void> backupPicturesOnly() async {
+    emit(const BackupRestoreDataState.loading());
+
+    try {
+      if (!await Permission.manageExternalStorage.status.isGranted) {
+        if (!await Permission.manageExternalStorage.request().isGranted) {
+          emit(const BackupRestoreDataState.failed('Permission denied'));
+          return;
+        }
+      }
+
+      final result = await appBackupRepository.backupPicturesOnly();
+      result.fold((l) => emit(BackupRestoreDataState.failed(l)), (path) {
+        _successMessage = 'Pictures-only backup created\nPath: $path';
+        emit(const BackupRestoreDataState.success());
+      });
+    } catch (e) {
+      emit(BackupRestoreDataState.failed(e.toString()));
+    }
+  }
+
+  Future<void> exportMeasurementsCsv() async {
+    emit(const BackupRestoreDataState.loading());
+
+    try {
+      if (!await Permission.manageExternalStorage.status.isGranted) {
+        if (!await Permission.manageExternalStorage.request().isGranted) {
+          emit(const BackupRestoreDataState.failed('Permission denied'));
+          return;
+        }
+      }
+
+      final result = await appBackupRepository.exportMeasurementsCsv();
+      result.fold((l) => emit(BackupRestoreDataState.failed(l)), (path) {
+        _successMessage = 'Measurements CSV exported\nPath: $path';
+        emit(const BackupRestoreDataState.success());
+      });
+    } catch (e) {
+      emit(BackupRestoreDataState.failed(e.toString()));
+    }
+  }
+
+  Future<void> exportMeasurementsPdf() async {
+    emit(const BackupRestoreDataState.loading());
+
+    try {
+      if (!await Permission.manageExternalStorage.status.isGranted) {
+        if (!await Permission.manageExternalStorage.request().isGranted) {
+          emit(const BackupRestoreDataState.failed('Permission denied'));
+          return;
+        }
+      }
+
+      final result = await appBackupRepository.exportMeasurementsPdf();
+      result.fold((l) => emit(BackupRestoreDataState.failed(l)), (path) {
+        _successMessage = 'Measurements PDF exported\nPath: $path';
+        emit(const BackupRestoreDataState.success());
+      });
+    } catch (e) {
+      emit(BackupRestoreDataState.failed(e.toString()));
+    }
+  }
+
+  Future<void> restorePicturesOnly({
+    required String path,
+    bool merge = true,
+  }) async {
+    emit(const BackupRestoreDataState.loading());
+
+    try {
+      final result = await appBackupRepository.bodyPictureRepository
+          .restorePhotosFromZip(zipPath: path, merge: merge);
+      result.fold((l) => emit(BackupRestoreDataState.failed(l)), (summary) {
+        _successMessage = summary.toUserMessage();
+        emit(const BackupRestoreDataState.success());
+      });
+    } catch (e) {
+      emit(BackupRestoreDataState.failed(e.toString()));
+    }
+  }
+
+  Future<void> restoreFromFile({
+    required String path,
+    bool merge = true,
+  }) async {
+    emit(const BackupRestoreDataState.loading());
+
+    try {
+      final typeResult = await appBackupRepository.identifyBackupType(
+        backupPath: path,
+      );
+
+      await typeResult.fold(
+        (error) async {
+          emit(BackupRestoreDataState.failed(error));
+        },
+        (backupType) async {
+          switch (backupType) {
+            case 'complete':
+              final result = await appBackupRepository.restoreFullApp(
+                backupPath: path,
+                merge: merge,
+              );
+              result.fold((l) => emit(BackupRestoreDataState.failed(l)), (
+                summary,
+              ) {
+                _successMessage = summary.toUserMessage();
+                emit(const BackupRestoreDataState.success());
+              });
+            case 'measurements':
+              final data = await File(path).readAsString();
+              final result = await appBackupRepository.restoreDatabase(
+                stringifiedDatas: data,
+                merge: merge,
+              );
+              result.fold((l) => emit(BackupRestoreDataState.failed(l)), (
+                summary,
+              ) {
+                _successMessage = summary.toUserMessage();
+                emit(const BackupRestoreDataState.success());
+              });
+            case 'pictures':
+              final result = await appBackupRepository.bodyPictureRepository
+                  .restorePhotosFromZip(zipPath: path, merge: merge);
+              result.fold((l) => emit(BackupRestoreDataState.failed(l)), (
+                summary,
+              ) {
+                _successMessage = summary.toUserMessage();
+                emit(const BackupRestoreDataState.success());
+              });
+            default:
+              emit(
+                BackupRestoreDataState.failed(
+                  'Unknown backup type: $backupType',
+                ),
+              );
+          }
+        },
+      );
+    } catch (e) {
+      emit(BackupRestoreDataState.failed(e.toString()));
+    }
+  }
+
   Future<void> shareDatabase({bool isIos = false}) async {
     emit(const BackupRestoreDataState.loading());
     final result = await appBackupRepository.backupDatabase();
